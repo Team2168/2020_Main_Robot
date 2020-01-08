@@ -4,6 +4,7 @@ Robot code for the 2020 FRC season
 NOTE:  
 For motor controllers, use a PWMSpeedController class.  
 When creating subsystems and commands, use the old commands and subsystems in the WPILib creator.
+When creating your branch, use the style: subsystem_initials ie Drivetrain_CJH
 
 # Drivetrain
 ## Liam
