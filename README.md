@@ -27,7 +27,7 @@ Kaleb
   1 IR sensor (check if full)
 
 # Indexer
-## Nathan
+## Nathan K.
   1 double solenoid  
   1 ir sensor
 
