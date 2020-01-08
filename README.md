@@ -2,11 +2,12 @@
 Robot code for the 2020 FRC season
 
 NOTE:  
-For motor controllers, use a PWMSpeedController class.
+For motor controllers, use a PWMSpeedController class.  
+When creating subsystems and commands, use the old commands and subsystems in the WPILib creator.
 
 # Drivetrain
 ## Liam
-  6 Motor Controllers (3 per side)
+  6 Motor Controllers (3 per side) This will be CanSparkMax (look at last years drivetrain to get an idea)
 
 # Shooter
 ## Kaleb
