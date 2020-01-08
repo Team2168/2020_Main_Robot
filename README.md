@@ -1,6 +1,9 @@
 # 2020_Main_Robot
 Robot code for the 2020 FRC season
 
+NOTE:  
+For motor controllers, use a PWMSpeedController class.
+
 # Drivetrain
 ## Liam
   6 Motor Controllers (3 per side)
