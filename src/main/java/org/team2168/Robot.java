@@ -50,7 +50,7 @@ public class Robot extends TimedRobot {
     _talon.configFactoryDefault();
 
     /* Config sensor used for Primary PID [Velocity] */
-        _talon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative,
+        _talon.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder,
                                             Constants.kPIDLoopIdx, 
                                             Constants.kTimeoutMs);
 
@@ -140,22 +140,21 @@ public class Robot extends TimedRobot {
 		_sb.append(_talon.getSelectedSensorVelocity(Constants.kPIDLoopIdx));
 		_sb.append("u"); 	// Native units
 
-        /** 
+    /** 
 		 * When button 1 is held, start and run Velocity Closed loop.
-		 * Velocity Closed Loop is controlled by joystick position x500 RPM, [-500, 500] RPM
+		 * Velocity Closed Loop is controlled by joystick position
 		 */
 		if (_joy.getRawButton(1)) {
 			/* Velocity Closed Loop */
 
 			/**
-			 * Convert 500 RPM to units / 100ms.
-			 * 4096 Units/Rev * 500 RPM / 600 100ms/min in either direction:
+			 * Convert target RPM to ticks / 100ms.
+			 * 256*4x (quadrature encoder) Ticks/Rev *  RPM / 600 100ms/min in either direction:
 			 * velocity setpoint is in units/100ms
 			 */
-      double ticks_per_rev = 256.0;
+      double ticks_per_rev = 256.0 * 4.0; //one event per edge on each quadrature channel
       double speed_limit = 4000.0; //RPM
 			double targetVelocity_UnitsPer100ms = leftYstick * speed_limit * ticks_per_rev / 600;
-			/* 500 RPM in either direction */
 			_talon.set(ControlMode.Velocity, targetVelocity_UnitsPer100ms);
 
 			/* Append more signals to print when in speed mode. */
