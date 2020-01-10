@@ -65,7 +65,13 @@ public class RobotMap {
 	/*************************************************************************
 	*                         PDP/CAN DEVICES                                 *
     *************************************************************************/
-    
+	public static final int DRIVETRAIN_LEFT_MOTOR_1_PDP = 0;
+	public static final int DRIVETRAIN_LEFT_MOTOR_2_PDP = 1;
+	public static final int DRIVETRAIN_LEFT_MOTOR_3_PDP = 2;
+	public static final int DRIVETRAIN_RIGHT_MOTOR_1_PDP = 3;
+	public static final int DRIVETRAIN_RIGHT_MOTOR_2_PDP = 4;
+	public static final int DRIVETRAIN_RIGHT_MOTOR_3_PDP = 5;
+
 	// Relay Channels///////////////////////////////////////////////////////////
 
 	/*************************************************************************
@@ -98,6 +104,7 @@ public class RobotMap {
 	// public static final double MIN_DRIVE_SPEED = 0.2;
 	// public static final double AUTO_NORMAL_SPEED = 0.5;
 	// public static final double WHEEL_BASE = 26; //units must match PositionReturnType (inch)
+	
 
 	/*************************************************************************
 	 *                         PID PARAMETERS                                *
