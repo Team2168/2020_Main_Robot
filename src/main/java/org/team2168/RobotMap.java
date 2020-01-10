@@ -17,7 +17,7 @@ public class RobotMap {
     public static final double MAIN_PERIOD_S = 1.0/50.0; // Main loop 200Hz
 
 	/*************************************************************************
-	 *                        ROBORIO WIRING MAP                             *
+	 *                        ROBORIO WIRING MAP                             *pcm
 	 *************************************************************************/
 
 	// Joysticks///////////////////////////////////////////////////////////////
@@ -65,7 +65,8 @@ public class RobotMap {
 	*************************************************************************/
 
 	//Double Soldenoids PCM ID = 0 ///////////////////////////////////////////
-	
+	public static int Indexer_Engage_PCM = 0;
+	public static int Indexer_Disengage_PCM = 1;
 	//Double Soldenoids PCM ID = 1 ///////////////////////////////////////////
 
 	/*************************************************************************
