@@ -59,7 +59,8 @@ public class RobotMap {
 	*************************************************************************/
 
 	//Double Soldenoids PCM ID = 0 ///////////////////////////////////////////
-	
+	public static final int COLORWHEEL_ENGAGE_PCM = 1;
+	public static final int COLORWHEEL_DISENGAGE_PCM = 0;
 	//Double Soldenoids PCM ID = 1 ///////////////////////////////////////////
 
 	/*************************************************************************
