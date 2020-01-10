@@ -35,6 +35,21 @@ public class Robot extends TimedRobot {
   StringBuilder _sb = new StringBuilder();
 
   int _loops = 0;
+/**
+   * Convert target RPM to ticks / 100ms.
+   * 256*4x (quadrature encoder) Ticks/Rev *  RPM / 600 100ms/min in either direction:
+   * velocity setpoint is in units/100ms
+   */
+  double ticks_per_rev = 256.0 * 4.0; //one event per edge on each quadrature channel
+  double ticks_per_100ms = ticks_per_rev / 600.0;
+
+	/**
+	 * PID Gains may have to be adjusted based on the responsiveness of control loop.
+     * kF: 1023 represents output value to Talon at 100%, 7200 represents Velocity units at 100% output
+     * 
+	 * 	                                      kP    kI   kD          kF               Iz   PeakOut */
+  final Gains kGains_Velocity = new Gains( 0.875, 0.000, 0, 0.1625/ticks_per_100ms,  300,  1.00); // kF = 1023*0.00016/ticks_per_100ms
+
 
   /**
    * This function is run when the robot is first started up and should be
@@ -42,6 +57,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
+
     m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
     m_chooser.addOption("My Auto", kCustomAuto);
     SmartDashboard.putData("Auto choices", m_chooser);
@@ -66,11 +82,16 @@ public class Robot extends TimedRobot {
     _talon.configPeakOutputForward(1, Constants.kTimeoutMs);
     _talon.configPeakOutputReverse(-1, Constants.kTimeoutMs);
 
+    _talon.configPeakCurrentLimit(30);
+
     /* Config the Velocity closed loop gains in slot0 */
-    _talon.config_kF(Constants.kPIDLoopIdx, Constants.kGains_Velocit.kF, Constants.kTimeoutMs);
-    _talon.config_kP(Constants.kPIDLoopIdx, Constants.kGains_Velocit.kP, Constants.kTimeoutMs);
-    _talon.config_kI(Constants.kPIDLoopIdx, Constants.kGains_Velocit.kI, Constants.kTimeoutMs);
-    _talon.config_kD(Constants.kPIDLoopIdx, Constants.kGains_Velocit.kD, Constants.kTimeoutMs);
+    _talon.config_kF(Constants.kPIDLoopIdx, kGains_Velocity.kF, Constants.kTimeoutMs);
+    _talon.config_kP(Constants.kPIDLoopIdx, kGains_Velocity.kP, Constants.kTimeoutMs);
+    _talon.config_kI(Constants.kPIDLoopIdx, kGains_Velocity.kI, Constants.kTimeoutMs);
+    _talon.config_kD(Constants.kPIDLoopIdx, kGains_Velocity.kD, Constants.kTimeoutMs);
+
+    _talon.configClosedloopRamp(1.0);
+    _talon.configOpenloopRamp(1.0);
   }
 
   /**
@@ -125,7 +146,9 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     /* Get gamepad axis */
-		double leftYstick = -1 * _joy.getY();
+    double leftYstick = -1 * _joy.getY();
+
+    double speed_limit = 4000.0; //RPM;
 
 		/* Get Talon/Victor's current output percentage */
 		double motorOutput = _talon.getMotorOutputPercent();
@@ -137,7 +160,7 @@ public class Robot extends TimedRobot {
 		_sb.append("%");	// Percent
 
 		_sb.append("\tspd:");
-		_sb.append(_talon.getSelectedSensorVelocity(Constants.kPIDLoopIdx));
+		_sb.append(_talon.getSelectedSensorVelocity(Constants.kPIDLoopIdx)/ticks_per_100ms);
 		_sb.append("u"); 	// Native units
 
     /** 
@@ -146,27 +169,19 @@ public class Robot extends TimedRobot {
 		 */
 		if (_joy.getRawButton(1)) {
 			/* Velocity Closed Loop */
-
-			/**
-			 * Convert target RPM to ticks / 100ms.
-			 * 256*4x (quadrature encoder) Ticks/Rev *  RPM / 600 100ms/min in either direction:
-			 * velocity setpoint is in units/100ms
-			 */
-      double ticks_per_rev = 256.0 * 4.0; //one event per edge on each quadrature channel
-      double speed_limit = 4000.0; //RPM
-			double targetVelocity_UnitsPer100ms = leftYstick * speed_limit * ticks_per_rev / 600;
+			double targetVelocity_UnitsPer100ms = leftYstick * speed_limit * ticks_per_100ms;
 			_talon.set(ControlMode.Velocity, targetVelocity_UnitsPer100ms);
 
 			/* Append more signals to print when in speed mode. */
 			_sb.append("\terr:");
-			_sb.append(_talon.getClosedLoopError(Constants.kPIDLoopIdx));
+			_sb.append(_talon.getClosedLoopError(Constants.kPIDLoopIdx)/ticks_per_100ms);
 			_sb.append("\ttrg:");
-      _sb.append(targetVelocity_UnitsPer100ms);
+      _sb.append(targetVelocity_UnitsPer100ms/ticks_per_100ms);
       
       SmartDashboard.putNumber("Out%", (int) (motorOutput * 100));
-      SmartDashboard.putNumber("speed", _talon.getSelectedSensorVelocity(Constants.kPIDLoopIdx));
-      SmartDashboard.putNumber("error", _talon.getClosedLoopError(Constants.kPIDLoopIdx));
-      SmartDashboard.putNumber("target", targetVelocity_UnitsPer100ms);
+      SmartDashboard.putNumber("speed", _talon.getSelectedSensorVelocity(Constants.kPIDLoopIdx)/ticks_per_100ms);
+      SmartDashboard.putNumber("error", _talon.getClosedLoopError(Constants.kPIDLoopIdx)/ticks_per_100ms);
+      SmartDashboard.putNumber("target", targetVelocity_UnitsPer100ms/ticks_per_100ms);
 		} else {
 			/* Percent Output */
 

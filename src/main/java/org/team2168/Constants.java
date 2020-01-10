@@ -24,11 +24,4 @@ class Constants {
     public static final int kTimeoutMs = 30;
 	
 	public static final double max_velocity = 8000.0;
-
-	/**
-	 * PID Gains may have to be adjusted based on the responsiveness of control loop.
-     * kF: 1023 represents output value to Talon at 100%, 7200 represents Velocity units at 100% output
-     * 
-	 * 	                                    			  kP   kI   kD   kF       Iz             PeakOut */
-    public final static Gains kGains_Velocit = new Gains( 0.25, 0.001, 0, 1023.0/max_velocity,  300,  1.00);
 }
