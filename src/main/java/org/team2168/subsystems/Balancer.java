@@ -25,7 +25,7 @@ public class Balancer extends Subsystem {
   private DoubleSolenoid Brakes;
   private Brakes();
   {
-    Brakes = new DoubleSolenoid();
+    Brakes = new DoubleSolenoid(RobotMap.BALANCER_ENGAGE_PCM, RobotMap.BALANCER_DISENGAGE_PCM);
   }
 
   @Override
