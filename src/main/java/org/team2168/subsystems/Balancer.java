@@ -11,12 +11,22 @@ package org.team2168.subsystems;
 
 import edu.wpi.first.wpilibj.command.Subsystem;
 
+import org.team2168.RobotMap;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
+
+
 /**
  * Add your docs here.
  */
 public class Balancer extends Subsystem {
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
+
+  private DoubleSolenoid Brakes;
+  private Brakes();
+  {
+    Brakes = new DoubleSolenoid();
+  }
 
   @Override
   public void initDefaultCommand() {

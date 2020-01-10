@@ -59,8 +59,11 @@ public class RobotMap {
 	*************************************************************************/
 
 	//Double Soldenoids PCM ID = 0 ///////////////////////////////////////////
+	public static final int BALANCER_ENGAGE_PCM = 0
+	public static final int BALANCE_DISENGAGE_PCM = 1
 	
 	//Double Soldenoids PCM ID = 1 ///////////////////////////////////////////
+
 
 	/*************************************************************************
 	*                         PDP/CAN DEVICES                                 *
