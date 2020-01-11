@@ -24,8 +24,23 @@ public class Balancer extends Subsystem {
 
   private DoubleSolenoid Brakes;
   private Brakes();
-  {
+  { 
     Brakes = new DoubleSolenoid(RobotMap.BALANCER_ENGAGE_PCM, RobotMap.BALANCER_DISENGAGE_PCM);
+  }
+  
+  public void engageBrakes();
+  {
+    Brakes.set(DoubleSolenoid.Value.kForward);
+  }
+
+  public void disengageBreaks();
+  {
+    Brakes.set(DoubleSolenoid.Value.kReverse);
+  }
+
+  public boolean areBrakesEngaged();
+  {
+    return _Brakes.get() == DoubleSolenoid.Value.kforward;
   }
 
   @Override
