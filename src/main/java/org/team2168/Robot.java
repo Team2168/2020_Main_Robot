@@ -9,6 +9,7 @@ package org.team2168;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.FollowerType;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import edu.wpi.first.wpilibj.Joystick;
@@ -30,6 +31,7 @@ public class Robot extends TimedRobot {
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
 
   TalonSRX _talon = new TalonSRX(11);
+  TalonSRX _talonFollow = new TalonSRX(10);
   Joystick _joy = new Joystick(0);
 
   StringBuilder _sb = new StringBuilder();
@@ -48,7 +50,7 @@ public class Robot extends TimedRobot {
      * kF: 1023 represents output value to Talon at 100%, 7200 represents Velocity units at 100% output
      * 
 	 * 	                                      kP    kI   kD          kF               Iz   PeakOut */
-  final Gains kGains_Velocity = new Gains( 0.875, 0.000, 0, 0.1625/ticks_per_100ms,  300,  1.00); // kF = 1023*0.00016/ticks_per_100ms
+  final Gains kGains_Velocity = new Gains( 0.775, 0.000, 0, 0.17825/ticks_per_100ms,  300,  1.00); // kF = 1023*0.00016/ticks_per_100ms
 
 
   /**
@@ -76,13 +78,26 @@ public class Robot extends TimedRobot {
          */
     _talon.setSensorPhase(true);
 
+    /***
+     * invert motors if necessary
+     */
+    _talon.setInverted(true);
+    _talonFollow.setInverted(true);
+
     /* Config the peak and nominal outputs */
     _talon.configNominalOutputForward(0, Constants.kTimeoutMs);
     _talon.configNominalOutputReverse(0, Constants.kTimeoutMs);
     _talon.configPeakOutputForward(1, Constants.kTimeoutMs);
     _talon.configPeakOutputReverse(-1, Constants.kTimeoutMs);
 
-    _talon.configPeakCurrentLimit(30);
+    _talon.enableCurrentLimit(true);
+    _talonFollow.enableCurrentLimit(true);
+    _talon.configContinuousCurrentLimit(30);
+    _talonFollow.configContinuousCurrentLimit(30);
+    _talon.configPeakCurrentDuration(500);
+    _talonFollow.configPeakCurrentDuration(500);
+    _talon.configPeakCurrentLimit(60);
+    _talon.configPeakCurrentLimit(60);
 
     /* Config the Velocity closed loop gains in slot0 */
     _talon.config_kF(Constants.kPIDLoopIdx, kGains_Velocity.kF, Constants.kTimeoutMs);
@@ -90,7 +105,7 @@ public class Robot extends TimedRobot {
     _talon.config_kI(Constants.kPIDLoopIdx, kGains_Velocity.kI, Constants.kTimeoutMs);
     _talon.config_kD(Constants.kPIDLoopIdx, kGains_Velocity.kD, Constants.kTimeoutMs);
 
-    _talon.configClosedloopRamp(1.0);
+    //_talon.configClosedloopRamp(0.1);
     _talon.configOpenloopRamp(1.0);
   }
 
@@ -147,8 +162,9 @@ public class Robot extends TimedRobot {
   public void teleopPeriodic() {
     /* Get gamepad axis */
     double leftYstick = -1 * _joy.getY();
+    _talonFollow.follow(_talon, FollowerType.PercentOutput);
 
-    double speed_limit = 4000.0; //RPM;
+    double speed_limit = 6000.0; //RPM;
 
 		/* Get Talon/Victor's current output percentage */
 		double motorOutput = _talon.getMotorOutputPercent();
@@ -185,7 +201,8 @@ public class Robot extends TimedRobot {
 		} else {
 			/* Percent Output */
 
-			_talon.set(ControlMode.PercentOutput, leftYstick);
+      _talon.set(ControlMode.PercentOutput, leftYstick);
+      //_talonFollow.set(ControlMode.PercentOutput, leftYstick);
 		}
 
     /* Print built string every 10 loops */
