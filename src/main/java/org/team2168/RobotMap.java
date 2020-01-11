@@ -29,7 +29,6 @@ public class RobotMap {
 
 	// PWM (0 to 9) on RoboRio/////////////////////////////////////////////////
 
-
 	// Digital IO Channels//////////////////////////////////////////////////////
 	// Channels 0-9 on RoboRio
 
@@ -59,8 +58,8 @@ public class RobotMap {
 	*************************************************************************/
 
 	//Double Soldenoids PCM ID = 0 ///////////////////////////////////////////
-	public static final int BALANCER_ENGAGE_PCM = 0
-	public static final int BALANCE_DISENGAGE_PCM = 1
+	public static final int BALANCER_ENGAGE_PCM = 0;
+	public static final int BALANCE_DISENGAGE_PCM = 1;
 	
 	//Double Soldenoids PCM ID = 1 ///////////////////////////////////////////
 
@@ -68,7 +67,7 @@ public class RobotMap {
 	/*************************************************************************
 	*                         PDP/CAN DEVICES                                 *
     *************************************************************************/
-    
+    public static final int BALANCER_MOTOR_PDP = 0;
 	// Relay Channels///////////////////////////////////////////////////////////
 
 	/*************************************************************************
@@ -188,5 +187,10 @@ public class RobotMap {
 	// public static final int I2C_ADDRESS = 8;
 	// public static final boolean LEDS_REVERSE = true; //true if 0 is at the top
 	// public static final boolean LEDS_VERTICAL = true;
+
+	/*************************************************************************
+	*                        BALANCER PARAMETERS                             *
+	*************************************************************************/
+	public static final boolean BALANCER_MOTOR_REVERSE = false;
 	
 }
