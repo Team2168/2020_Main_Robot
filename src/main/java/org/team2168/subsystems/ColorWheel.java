@@ -10,6 +10,8 @@ package org.team2168.subsystems;
 import org.team2168.RobotMap;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.PWMSpeedController;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
 /**
@@ -19,12 +21,39 @@ public class ColorWheel extends Subsystem {
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
 
-  private DoubleSolenoid pistonPush;
+  private DoubleSolenoid pistonMove;
+  private PWMSpeedController spinner;
+  private static ColorWheel instance = null;
 
   private ColorWheel()
   {
-    pistonPush = new DoubleSolenoid(RobotMap.COLORWHEEL_ENGAGE_PCM,RobotMap.COLORWHEEL_DISENGAGE_PCM);
+    pistonMove = new DoubleSolenoid(RobotMap.COLORWHEEL_ENGAGE_PCM,RobotMap.COLORWHEEL_DISENGAGE_PCM);
+    spinner = new PWMSpeedController(RobotMap.COLORWHEEL_MOTOR_PDP);
   }
+
+  public static ColorWheel getInstance()
+  {
+    if (instance == null)
+    {
+      instance = new ColorWheel();
+    }
+    return instance;
+  }
+
+  public void extendPiston()
+  {
+    pistonMove.set(DoubleSolenoid.Value.kForward);
+  }
+  public void retractPiston()
+  {
+    pistonMove.set(DoubleSolenoid.Value.kReverse);
+  }
+
+  public boolean isExtended()
+  {
+    return pistonMove.get() == Value.kForward; 
+  }
+
 
 
 
