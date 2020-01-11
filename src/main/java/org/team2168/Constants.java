@@ -30,11 +30,5 @@ public class Constants {
 	 * Choose based on what direction you want to be positive,
 	 * this does not affect motor invert. 
 	 */
-	public static boolean kMotorInvert = false;
-
-	/**
-	 * Gains used in Positon Closed Loop, to be adjusted accordingly
-     * Gains(kp, ki, kd, kf, izone, peak output);
-     */
-    static final Gains kGains = new Gains(0.2, 0.00001, 0.06, 0.0, 0, 0.4 );
+	public static boolean kMotorInvert = true;
 }

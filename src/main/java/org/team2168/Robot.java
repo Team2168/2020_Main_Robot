@@ -9,6 +9,7 @@ package org.team2168;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.FollowerType;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import edu.wpi.first.wpilibj.Joystick;
@@ -30,7 +31,8 @@ public class Robot extends TimedRobot {
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
 
   /** Hardware */
-	TalonSRX _talon = new TalonSRX(11);
+  TalonSRX _talon = new TalonSRX(11);
+  TalonSRX _talonFollow = new TalonSRX(10);
 	Joystick _joy = new Joystick(0);
 	
   /** Used to create string thoughout loop */
@@ -45,7 +47,15 @@ public class Robot extends TimedRobot {
 
 
   final double TICKS_PER_REV = 256.0 * 4.0;
-  final double NUM_REVOLUTIONS = 1.0; 
+  final double NUM_REVOLUTIONS = 32.0; 
+
+  
+	/**
+	  *Gains used in Positon Closed Loop, to be adjusted accordingly
+    * Gains(kp, ki, kd, kf, izone, peak output);
+
+                                  kP    kI    kD   kF IZone PeakOut*/
+  final Gains kGains = new Gains(0.2, 0.000, 0.06, 0.0, 0, 0.4 ); //kD=0.06, kI=0.00001
 
   /**
    * This function is run when the robot is first started up and should be
@@ -72,13 +82,16 @@ public class Robot extends TimedRobot {
 		 * Set based on what direction you want forward/positive to be.
 		 * This does not affect sensor phase. 
 		 */ 
-		_talon.setInverted(Constants.kMotorInvert);
+    _talon.setInverted(Constants.kMotorInvert);
+    _talonFollow.setInverted(Constants.kMotorInvert);
+
+    
 
 		/* Config the peak and nominal outputs, 12V means full */
 		_talon.configNominalOutputForward(0, Constants.kTimeoutMs);
 		_talon.configNominalOutputReverse(0, Constants.kTimeoutMs);
-		_talon.configPeakOutputForward(Constants.kGains.kPeakOutput, Constants.kTimeoutMs);
-		_talon.configPeakOutputReverse(-Constants.kGains.kPeakOutput, Constants.kTimeoutMs);
+		_talon.configPeakOutputForward(kGains.kPeakOutput, Constants.kTimeoutMs);
+		_talon.configPeakOutputReverse(-kGains.kPeakOutput, Constants.kTimeoutMs);
 
 		/**
 		 * Config the allowable closed-loop error, Closed-Loop output will be
@@ -88,10 +101,10 @@ public class Robot extends TimedRobot {
 		_talon.configAllowableClosedloopError(0, Constants.kPIDLoopIdx, Constants.kTimeoutMs);
 
 		/* Config Position Closed Loop gains in slot0, tsypically kF stays zero. */
-		_talon.config_kF(Constants.kPIDLoopIdx, Constants.kGains.kF, Constants.kTimeoutMs);
-		_talon.config_kP(Constants.kPIDLoopIdx, Constants.kGains.kP, Constants.kTimeoutMs);
-		_talon.config_kI(Constants.kPIDLoopIdx, Constants.kGains.kI, Constants.kTimeoutMs);
-		_talon.config_kD(Constants.kPIDLoopIdx, Constants.kGains.kD, Constants.kTimeoutMs);
+		_talon.config_kF(Constants.kPIDLoopIdx, kGains.kF, Constants.kTimeoutMs);
+		_talon.config_kP(Constants.kPIDLoopIdx, kGains.kP, Constants.kTimeoutMs);
+		_talon.config_kI(Constants.kPIDLoopIdx, kGains.kI, Constants.kTimeoutMs);
+		_talon.config_kD(Constants.kPIDLoopIdx, kGains.kD, Constants.kTimeoutMs);
 
 		/**
 		 * Grab the 360 degree position of the MagEncoder's absolute
@@ -105,7 +118,17 @@ public class Robot extends TimedRobot {
 		if (Constants.kMotorInvert) { absolutePosition *= -1; }
 		
 		/* Set the quadrature (relative) sensor to match absolute */
-		_talon.setSelectedSensorPosition(absolutePosition, Constants.kPIDLoopIdx, Constants.kTimeoutMs);
+    _talon.setSelectedSensorPosition(absolutePosition, Constants.kPIDLoopIdx, Constants.kTimeoutMs);
+    
+    _talon.configContinuousCurrentLimit(30);
+    _talonFollow.configContinuousCurrentLimit(30);
+    _talon.configPeakCurrentDuration(500);
+    _talonFollow.configPeakCurrentDuration(500);
+    _talon.configPeakCurrentLimit(60);
+    _talonFollow.configPeakCurrentLimit(60);
+
+
+
   }
 
   /**
@@ -172,8 +195,11 @@ public class Robot extends TimedRobot {
   void commonLoop() {
 		/* Gamepad processing */
 		double leftYstick = _joy.getY();
-		boolean button1 = _joy.getRawButton(1);	// X-Button
-		boolean button2 = _joy.getRawButton(2);	// A-Button
+		boolean button1 = _joy.getRawButton(1);	// A-Button
+    boolean button2 = _joy.getRawButton(2);	// B-Button
+    
+    /* Set second motor to follow first */
+    _talonFollow.follow(_talon, FollowerType.PercentOutput);
 
 		/* Get Talon/Victor's current output percentage */
 		double motorOutput = _talon.getMotorOutputPercent();
@@ -191,7 +217,7 @@ public class Robot extends TimedRobot {
 		_sb.append("%");	// Percent
 
 		_sb.append("\tpos:");
-		_sb.append(_talon.getSelectedSensorPosition(0));
+		_sb.append(_talon.getSelectedSensorPosition(0)/TICKS_PER_REV);
 		_sb.append("u"); 	// Native units
 
 		/**
@@ -217,11 +243,11 @@ public class Robot extends TimedRobot {
 		if (_talon.getControlMode() == ControlMode.Position) {
 			/* ppend more signals to print when in speed mode. */
 			_sb.append("\terr:");
-			_sb.append(_talon.getClosedLoopError(0));
+			_sb.append(_talon.getClosedLoopError(0)/TICKS_PER_REV);
 			_sb.append("u");	// Native Units
 
 			_sb.append("\ttrg:");
-			_sb.append(targetPositionRotations);
+			_sb.append(targetPositionRotations/TICKS_PER_REV);
 			_sb.append("u");	/// Native Units
 		}
 
