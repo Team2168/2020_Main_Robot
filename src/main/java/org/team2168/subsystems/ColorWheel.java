@@ -7,10 +7,12 @@
 
 package org.team2168.subsystems;
 
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+
 import org.team2168.RobotMap;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
-import edu.wpi.first.wpilibj.PWMSpeedController;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
@@ -22,13 +24,22 @@ public class ColorWheel extends Subsystem {
   // here. Call these from Commands.
 
   private DoubleSolenoid pistonMove;
-  private PWMSpeedController spinner;
+  private CANSparkMax spinner;
   private static ColorWheel instance = null;
 
   private ColorWheel()
   {
     pistonMove = new DoubleSolenoid(RobotMap.COLORWHEEL_ENGAGE_PCM,RobotMap.COLORWHEEL_DISENGAGE_PCM);
-    spinner = new PWMSpeedController(RobotMap.COLORWHEEL_MOTOR_PDP);
+    spinner = new CANSparkMax(RobotMap.COLORWHEEL_MOTOR_PDP,MotorType.kBrushless);
+  }
+
+  public void spin(double speed)
+  {
+    if (RobotMap.CW_REVERSE == true)
+    {
+      speed = speed * -1;
+    }
+    spinner.set(speed);
   }
 
   public static ColorWheel getInstance()

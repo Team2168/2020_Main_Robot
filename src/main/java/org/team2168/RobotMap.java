@@ -179,6 +179,12 @@ public class RobotMap {
 	// public static final long SmartDashThreadPeriod = 200; // ms
 	// public static final long CONSOLE_PRINTER_LOG_RATE_MS = 200; // ms
 
+	/*******************************************************************
+	 *                         COLORWHEEL PARAMETERS                   *
+	 *******************************************************************/
+	public static final boolean CW_REVERSE = false;
+
+
 	/******************************************************************
 	 *                         Lights I2C                             *
 	 ******************************************************************/

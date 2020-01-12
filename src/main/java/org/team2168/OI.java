@@ -150,5 +150,9 @@ public class OI
 	{
 		return driverJoystick.getRightStickRaw_Y();
 	}
+	public double getColorWheelJoystick()
+	{
+		return operatorJoystick.getRightStickRaw_X();
+	}
 
 }
