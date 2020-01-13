@@ -10,6 +10,9 @@ package org.team2168;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import org.team2168.subsystems.Drivetrain;
+import org.team2168.utils.Debouncer;
+import org.team2168.utils.PowerDistribution;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -23,7 +26,21 @@ public class Robot extends TimedRobot {
   private static final String kCustomAuto = "My Auto";
   private String m_autoSelected;
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
+  public static Drivetrain drivetrain;
+  public static PowerDistribution pdp;
 
+  static int controlStyle;
+  static int throttleStyle;
+  public static SendableChooser<Number> controlStyleChooser;
+  public static SendableChooser<Number> throttleVibeChooser;
+  
+  static boolean autoMode;
+  private static boolean matchStarted = false;
+  public static int gyroReinits;
+  private double lastAngle;
+  private Debouncer gyroDriftDetector = new Debouncer(1.0);
+  public static boolean gyroCalibrating = false;
+  private boolean lastGyroCalibrating = false;
   /**
    * This function is run when the robot is first started up and should be
    * used for any initialization code.
@@ -33,16 +50,10 @@ public class Robot extends TimedRobot {
     m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
     m_chooser.addOption("My Auto", kCustomAuto);
     SmartDashboard.putData("Auto choices", m_chooser);
+    drivetrain = Drivetrain.getInstance();
+    pdp = new PowerDistribution(RobotMap.PDPThreadPeriod);
+    pdp.startThread();    
   }
-
-  /**
-   * This function is called every robot packet, no matter the mode. Use
-   * this for items like diagnostics that you want ran during disabled,
-   * autonomous, teleoperated and test.
-   *
-   * <p>This runs after the mode specific periodic functions, but before
-   * LiveWindow and SmartDashboard integrated updating.
-   */
   @Override
   public void robotPeriodic() {
   }
@@ -78,6 +89,7 @@ public class Robot extends TimedRobot {
       default:
         // Put default auto code here
         break;
+
     }
   }
 
@@ -93,5 +105,17 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void testPeriodic() {
+  }
+  @Override
+  public void disabledPeriodic()
+  {
+    getControlStyleInt();
+    controlStyle = (int) controlStyleChooser.getSelected();
+    throttleStyle = (int) throttleVibeChooser.getSelected();
+  }
+  
+  public static int getControlStyleInt()
+  {
+    return (int) controlStyleChooser.getSelected();
   }
 }
