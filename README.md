@@ -121,55 +121,70 @@ Our repository and workflow loosely follows the gitflow workflow. This workflow 
 Robot code for the 2020 FRC season
 
 NOTE:  
-For motor controllers, use a PWMSpeedController class.  
-When creating subsystems and commands, use the old commands and subsystems in the WPILib creator.
-When creating your branch, use the style: subsystem_initials ie Drivetrain_CJH
+When using NEO motors:
+ - Use the CANSparkMax class. http://www.revrobotics.com/content/sw/max/sw-docs/java/com/revrobotics/CANSparkMax.html
+ - When initializing, for the type put `kBrushless`.
+ - In the construtor of your subsystem,
+   - *instance*.setSmartCurrentLimit(60)
+   - *instance*.setControlFramePeriodMs(20)
+   - *instance*.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 500)
+   - *instance*.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 500)
+   - *instance*.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 500)
+When using Falcon motors:
+ - Use the TalonFX class. http://www.ctr-electronics.com/downloads/api/java/html/classcom_1_1ctre_1_1phoenix_1_1motorcontrol_1_1can_1_1_talon_f_x.html
+ - In the contructor of your subsystem,
+   - The constructor of the motor is the same as PWMSpeedController.
+   - Create a new SupplyCurrentLimitConfiguration. Use that to configure the current.
+   - An example can be found in the Drivetrain subsystem, on the `Drivetrain_WZ` branch.
 
 ## Drivetrain
 ### Liam
-  6x Motor Controllers (3 per side) will be CanSparkMax (look at last years drivetrain to get an idea)
+  6x Motors (Falcons) (3 per side) will be TalonFX (look at last years drivetrain to get an idea)
 
 ## Shooter
 ### Kaleb
-  2x Motor Controllers
+  2x Motors (Falcons)
 
 ## Hood_Adjust
 ### Kaleb
-  1x Motor Controller
+  2x Pneumatics
+   - One pushes the hood
+   - One activates a hard stop
+   - This creates 4 positions to shoot.
 
 ## Intake
 ### Ian
-  1x Motor Controller to spin wheels  
-  1x double solenoid to pivot intake
+  1x Motor (Neo) to spin wheels  
+  1x Pneumatic to pivot intake
 
 ## Hopper
-### Greyson
-  1x Motor Controller to spin  
+### Cierra
+  1x Motor (Neo) to spin  
   1x IR sensor (check if full)
 
 ## Indexer
 ### Nathan K.
-  1x double solenoid  
+  1x Motor (Neo)
   1x ir sensor
 
 ## Climber
 ### Conor
-  2x Motor Controllers to control pulley system
+  2x Motors (775, use TalonSRX) to control pulley system
 
 ## Color Wheel
 ### Derek
-  1x Motor Controller to spin wheel  
-  1x color sensor to read the color for position control (Sensor comes from vendor)  
-  1x double solenoid to adjust position  
+  1x Motor (Neo) to spin wheel
+  1x Pneumatic to adjust position 
+  1x color sensor to read the color for position control (Sensor comes from vendor)    
   1x Encoder to read the number of rotations for rotation control  
 
 ## Balancer
 ### Caeden
-  2x Motor Controllers to move along the bar  
-  1x double solenoid to brake
+  1x Motor (Neo) to move along the bar  
+  1x Pneumatic to brake
 
 ## LED
-  TBD
+### Greyson
   
 ## Vision
   TBD
