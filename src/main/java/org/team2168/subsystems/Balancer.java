@@ -9,6 +9,9 @@
 
 package org.team2168.subsystems;
 
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.CANSparkMaxLowLevel.PeriodicFrame;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import org.team2168.RobotMap;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
