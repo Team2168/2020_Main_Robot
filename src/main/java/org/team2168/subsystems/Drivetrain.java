@@ -460,7 +460,7 @@ public class Drivetrain extends Subsystem
     rightMotor3Voltage = Robot.pdp.getBatteryVoltage() * speed;
   }
   
-  private void driveRight(double speed)
+  public void driveRight(double speed)
   {
     if(RobotMap.DT_3_MOTORS_PER_SIDE)
     {

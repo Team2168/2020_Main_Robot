@@ -53,6 +53,8 @@ public class Robot extends TimedRobot {
     drivetrain = Drivetrain.getInstance();
     pdp = new PowerDistribution(RobotMap.PDPThreadPeriod);
     pdp.startThread();    
+
+
   }
   @Override
   public void robotPeriodic() {
@@ -113,7 +115,7 @@ public class Robot extends TimedRobot {
     controlStyle = (int) controlStyleChooser.getSelected();
     throttleStyle = (int) throttleVibeChooser.getSelected();
   }
-  
+
   public static int getControlStyleInt()
   {
     return (int) controlStyleChooser.getSelected();
