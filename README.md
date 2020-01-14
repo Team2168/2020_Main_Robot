@@ -137,9 +137,14 @@ When using Falcon motors:
    - Create a new SupplyCurrentLimitConfiguration. Use that to configure the current.
    - An example can be found in the Drivetrain subsystem, on the `Drivetrain_WZ` branch.
 
+### Style and Architecture Guidelines
 When creating member variables:
+  - Parameters for subsystems (ie LIFT_HOLDING_VOLTAGE, POT_MAX_ROTATION) should be added to their respective subsystems as a `public static final` variable.
   - Set the accessibility to `private`.
   - Use a `_` before the name.
+
+When creating a subsystem:
+  - Every subsystem should use Singleton design, and access the instance using the `getInstance` method in the subsystem.
 
 When creating methods in the subsystem:
   - Motors:
@@ -157,7 +162,7 @@ When creating methods in the subsystem:
       - The method name should be `retract`.
       - Unless there are multiple pneumatics, then extend the specific pneumatic.
 
-When adding an instance of the subsystem:
+When adding an instance of the subsystem to Robot:
   - Set that to private.
   - Any instance of that subsystem should be retrieved from the getInstance method from the respective subsystem.
 
