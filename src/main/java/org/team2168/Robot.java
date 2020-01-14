@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.team2168.subsystems.Drivetrain;
-import org.team2168.utils.Debouncer;
+//import org.team2168.utils.Debouncer;
 import org.team2168.utils.PowerDistribution;
 
 /**
@@ -33,17 +33,18 @@ public class Robot extends TimedRobot {
   static int throttleStyle;
   public static SendableChooser<Number> controlStyleChooser;
   public static SendableChooser<Number> throttleVibeChooser;
-  
+
   static boolean autoMode;
-  private static boolean matchStarted = false;
+  // private static boolean matchStarted = false;
   public static int gyroReinits;
-  private double lastAngle;
-  private Debouncer gyroDriftDetector = new Debouncer(1.0);
+  // private double lastAngle;
+  // private Debouncer gyroDriftDetector = new Debouncer(1.0);
   public static boolean gyroCalibrating = false;
-  private boolean lastGyroCalibrating = false;
+
+  // private boolean lastGyroCalibrating = false;
   /**
-   * This function is run when the robot is first started up and should be
-   * used for any initialization code.
+   * This function is run when the robot is first started up and should be used
+   * for any initialization code.
    */
   @Override
   public void robotInit() {
@@ -52,24 +53,25 @@ public class Robot extends TimedRobot {
     SmartDashboard.putData("Auto choices", m_chooser);
     drivetrain = Drivetrain.getInstance();
     pdp = new PowerDistribution(RobotMap.PDPThreadPeriod);
-    pdp.startThread();    
-
+    pdp.startThread();
 
   }
+
   @Override
   public void robotPeriodic() {
   }
 
   /**
    * This autonomous (along with the chooser code above) shows how to select
-   * between different autonomous modes using the dashboard. The sendable
-   * chooser code works with the Java SmartDashboard. If you prefer the
-   * LabVIEW Dashboard, remove all of the chooser code and uncomment the
-   * getString line to get the auto name from the text box below the Gyro
+   * between different autonomous modes using the dashboard. The sendable chooser
+   * code works with the Java SmartDashboard. If you prefer the LabVIEW Dashboard,
+   * remove all of the chooser code and uncomment the getString line to get the
+   * auto name from the text box below the Gyro
    *
-   * <p>You can add additional auto modes by adding additional comparisons to
-   * the switch structure below with additional strings. If using the
-   * SendableChooser make sure to add them to the chooser code above as well.
+   * <p>
+   * You can add additional auto modes by adding additional comparisons to the
+   * switch structure below with additional strings. If using the SendableChooser
+   * make sure to add them to the chooser code above as well.
    */
   @Override
   public void autonomousInit() {
@@ -84,13 +86,13 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousPeriodic() {
     switch (m_autoSelected) {
-      case kCustomAuto:
-        // Put custom auto code here
-        break;
-      case kDefaultAuto:
-      default:
-        // Put default auto code here
-        break;
+    case kCustomAuto:
+      // Put custom auto code here
+      break;
+    case kDefaultAuto:
+    default:
+      // Put default auto code here
+      break;
 
     }
   }
@@ -108,16 +110,15 @@ public class Robot extends TimedRobot {
   @Override
   public void testPeriodic() {
   }
+
   @Override
-  public void disabledPeriodic()
-  {
+  public void disabledPeriodic() {
     getControlStyleInt();
     controlStyle = (int) controlStyleChooser.getSelected();
     throttleStyle = (int) throttleVibeChooser.getSelected();
   }
 
-  public static int getControlStyleInt()
-  {
+  public static int getControlStyleInt() {
     return (int) controlStyleChooser.getSelected();
   }
 }

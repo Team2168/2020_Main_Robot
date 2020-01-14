@@ -21,7 +21,7 @@ public class DriveWithJoystick extends Command
    * Controller Styles 0 = Tank Drive (Default) 1 = Gun Style 2 = Arcade Drive 3 =
    * GTA
    */
-  private double speed;
+  //private double speed;
 
   double rightSpeed = 0;
   double leftSpeed = 0;
@@ -68,7 +68,7 @@ public class DriveWithJoystick extends Command
 	 */
   @Override
   protected void execute() {
-    double headingCorrection = 0.0;
+    //double headingCorrection = 0.0;
     ctrlStyle = Robot.getControlStyleInt();
 
     switch (ctrlStyle) {
