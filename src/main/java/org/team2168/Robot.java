@@ -7,6 +7,8 @@
 
 package org.team2168;
 
+import org.team2168.subsystems.Intake;
+
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
