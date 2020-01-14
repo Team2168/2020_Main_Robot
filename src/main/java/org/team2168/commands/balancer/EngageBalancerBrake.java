@@ -7,12 +7,12 @@
 
 package org.team2168.commands.balancer;
 
-import org.team2168.Robot; s
+import org.team2168.Robot;
 
 import edu.wpi.first.wpilibj.command.Command;
 
-public class EngageBalancerBreak extends Command {
-  public EngageBalancerBreak() {
+public class EngageBalancerBrake extends Command {
+  public EngageBalancerBrake() {
     require(Robot.Balancer);
   }
 
