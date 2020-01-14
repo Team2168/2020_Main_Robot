@@ -9,6 +9,7 @@ package org.team2168.subsystems;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.CANSparkMaxLowLevel.PeriodicFrame;
 
 import org.team2168.RobotMap;
 
@@ -31,6 +32,11 @@ public class ColorWheel extends Subsystem {
   {
     pistonMove = new DoubleSolenoid(RobotMap.COLORWHEEL_ENGAGE_PCM,RobotMap.COLORWHEEL_DISENGAGE_PCM);
     spinner = new CANSparkMax(RobotMap.COLORWHEEL_MOTOR_PDP,MotorType.kBrushless);
+    spinner.setSmartCurrentLimit(60);
+    spinner.setControlFramePeriodMs(20);
+    spinner.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 500);
+    spinner.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 500);
+    spinner.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 500);
   }
 
   public void spin(double speed)
