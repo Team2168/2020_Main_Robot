@@ -137,6 +137,38 @@ When using Falcon motors:
    - Create a new SupplyCurrentLimitConfiguration. Use that to configure the current.
    - An example can be found in the Drivetrain subsystem, on the `Drivetrain_WZ` branch.
 
+When creating member variables:
+  - Set the accessibility to `private`.
+  - Use a `_` before the name.
+
+When creating methods in the subsystem:
+  - Motors:
+    - Create a method to set the speed of the motor.
+    - The method name should be `drive`.
+    - Add a comment for the polarity of the motor (What direction does postive go to)
+      - Positive for a shooter wheel should be out.
+      - Positive for a lift should be up.
+  - Pneumatics
+    - The class commonly used is DoubleSolenoid.
+    - Create a method to extend the pneumatic.
+      - The method name should be `extend`.
+      - Unless there are multiple pneumatics, then extend the specific pneumatic.
+    - Create a method to retract the pneumatic.
+      - The method name should be `retract`.
+      - Unless there are multiple pneumatics, then extend the specific pneumatic.
+
+When adding an instance of the subsystem:
+  - Set that to private.
+  - Any instance of that subsystem should be retrieved from the getInstance method from the respective subsystem.
+
+When creating commands:
+  - Motors:
+     - Create a command to drive the motor with a constant.
+     - Create a command to drive the motor with a joystick.
+  - Pneumatics:
+     - Create a command to extend the pneumatic.
+     - Create a command to retract the pneumatic.
+
 ## Drivetrain
 ### Liam
   6x Motors (Falcons) (3 per side) will be TalonFX (look at last years drivetrain to get an idea)
