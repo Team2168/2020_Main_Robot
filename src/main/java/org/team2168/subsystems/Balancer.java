@@ -36,7 +36,7 @@ public class Balancer extends Subsystem {
   private Balancer();
   {
     _brakes = new DoubleSolenoid(RobotMap.BALANCER_ENGAGE_PCM, RobotMap.BALANCER_DISENGAGE_PCM);
-    _balancerMotor = new CANSparkMax(RobotMap.BALANCER_MOTOR_PDP, MotorType.kBrushless);)
+    _balancerMotor = new CANSparkMax(RobotMap.BALANCER_MOTOR_PDP, MotorType.kBrushless);
     
     //speed limit 60
     _balancerMotor.setSmartCurrentLimit(60);
@@ -47,7 +47,7 @@ public class Balancer extends Subsystem {
     //status frame every 500ms
     _balancerMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 500);
     _balancerMotor.setPeriodicFramePeriod(PeriodicFrame.kstatus1, 500);
-    _balancerMotor.setPeriodicFramePeriod(PeriodicFrame,Kstatus2, 500);
+    _balancerMotor.setPeriodicFramePeriod(PeriodicFrame.Kstatus2, 500);
   }
   
   /**
