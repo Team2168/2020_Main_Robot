@@ -66,17 +66,17 @@ public class Balancer extends Subsystem {
     return instance;
   }
   
-  public void engageBrakes();
+  public void engageBrakes()
   {
     _brakes.set(DoubleSolenoid.Value.kForward);
   }
 
-  public void disengageBreaks();
+  public void disengageBreaks()
   {
     _brakes.set(DoubleSolenoid.Value.kReverse);
   }
 
-  public boolean areBrakesEngaged();
+  public boolean areBrakesEngaged()
   {
     return _brakes.get() == DoubleSolenoid.Value.kforward;
   }
