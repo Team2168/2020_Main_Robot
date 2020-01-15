@@ -7,14 +7,33 @@
 
 package org.team2168.subsystems;
 
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.CANSparkMaxLowLevel.PeriodicFrame;
+
+import org.team2168.RobotMap;
+
 import edu.wpi.first.wpilibj.command.Subsystem;
 
 /**
- * Add your docs here.
+ * Subsystem class for the Hopper
  */
 public class Hopper extends Subsystem {
-  // Put methods for controlling this subsystem
-  // here. Call these from Commands.
+  private CANSparkMax hopperMotor;
+
+  private static Hopper _instance = null;
+
+  private Hopper() {
+    hopperMotor = new CANSparkMax(RobotMap.HOPPER_MOTOR_PDP, MotorType.kBrushless);
+
+    hopperMotor.setSmartCurrentLimit(60);
+
+    hopperMotor.setControlFramePeriodMs(20);
+    
+    hopperMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 500);
+    hopperMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 500);
+    hopperMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 500);
+  }
 
   @Override
   public void initDefaultCommand() {
