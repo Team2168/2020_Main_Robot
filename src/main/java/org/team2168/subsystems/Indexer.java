@@ -7,7 +7,8 @@
 
 package org.team2168.subsystems;
 
-import java.lang.reflect.Constructor;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import org.team2168.RobotMap;
 
@@ -18,31 +19,26 @@ import edu.wpi.first.wpilibj.command.Subsystem;
  * Add your docs here.
  */
 public class Indexer extends Subsystem {
-  // Put methods for controlling this subsystem
+  // Puts methods for controlling this subsystem
   // here. Call these from Commands.
-
-  private DoubleSolenoid Piston; 
-  private static Indexer instance = null;
+  private final boolean _isReversed = false;
+  private CANSparkMax _motor; 
+  private static Indexer _instance = null;
   private Indexer(){
-    Piston = new DoubleSolenoid(RobotMap.Indexer_Engage_PCM, RobotMap.Indexer_Disengage_PCM)
-  }
- public static Indexer GetInstance(){
-   if(instance == null){
-     instance = new Indexer();
+    _motor = new CANSparkMax(RobotMap.INDEXER_MOTOR_PDP, MotorType.kBrushless) 
+    }
+ public static Indexer getInstance(){
+   if(_instance == null){
+     _instance = new Indexer();
    }
-   return instance;
-   
+   return _instance;
  }  
-public void extendPiston(){
-  Piston.set(DoubleSolenoid.Value.kForward);
+public void drive(double speed) {
+  if(_isReversed){
+    speed = speed * -1;
   }
 
-public void retractPiston(){
-  Piston.set(DoubleSolenoid.Value.kReverse);
-  }
-
-public boolean isExtended(){
-  return Piston.get() == DoubleSolenoid.Value.kForward;
+  _motor.set(speed);
 }
 
   @Override
