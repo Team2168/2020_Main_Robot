@@ -26,6 +26,7 @@ public class Balancer extends Subsystem {
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
   
+  public static final boolean BALANCER_MOTOR_REVERSE = false;
   private CANSparkMax _balancerMotor;
   private DoubleSolenoid _brakes;
 
@@ -113,6 +114,8 @@ public class Balancer extends Subsystem {
 
       _balancerMotor.set(speed);
     }
+    
+
   
   @Override
   public void initDefaultCommand() {
