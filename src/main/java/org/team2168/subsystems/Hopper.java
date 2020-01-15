@@ -29,10 +29,28 @@ public class Hopper extends Subsystem {
     hopperMotor.setSmartCurrentLimit(60);
 
     hopperMotor.setControlFramePeriodMs(20);
-    
+
     hopperMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 500);
     hopperMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 500);
     hopperMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 500);
+  }
+
+  public static Hopper getInstance() {
+    if(_instance == null) {
+      _instance = new Hopper();
+    }
+    return _instance;
+  }
+
+  /**
+   * 
+   * @param speed is a double from -1 to 1
+   */
+  public void drive(double speed) {
+    if(RobotMap.HOPPER_MOTOR_REVERSE) {
+      speed = -speed;
+    }
+    hopperMotor.set(speed);
   }
 
   @Override

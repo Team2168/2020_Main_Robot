@@ -112,6 +112,11 @@ public class RobotMap {
 	public static final double WHEEL_BASE = 26; //units must match PositionReturnType (inch)
 
 	/*************************************************************************
+	 *                         CARGO INTAKE PARAMETERS                        *
+	 *************************************************************************/
+	public static final boolean HOPPER_MOTOR_REVERSE = false;
+
+	/*************************************************************************
 	 *                         PDP PARAMETERS                                *
 	 *************************************************************************/
 	public static final long PDPThreadPeriod = 100;
