@@ -56,7 +56,7 @@ public class Balancer extends Subsystem {
   /**
    * Calls instance object and makes it a singleton object of type Drivetrain
    * 
-   * @returns Balancer object "instance"
+   * @return Balancer object "instance"
    */
   public static Balancer getInstance()
   {
@@ -66,25 +66,42 @@ public class Balancer extends Subsystem {
     return instance;
   }
   
+  /**
+  * engages the brakes to stop the robot's movement along the generator switch
+  */
   public void engageBrakes()
   {
     _brakes.set(DoubleSolenoid.Value.kForward);
   }
 
+  /**
+  * disengages the brakes to allow movement again along the generator switch
+  */
   public void disengageBreaks()
   {
     _brakes.set(DoubleSolenoid.Value.kReverse);
   }
 
+  /**
+  * @return a boolean that returns true if the brakes are engaged, and false otherwise
+  */
   public boolean areBrakesEngaged()
   {
     return _brakes.get() == DoubleSolenoid.Value.kforward;
   }
 
   /**
-   * Calls left motor 1 and creates a local variable "speed" Refers to boolean in
+  * @return a boolean that returns true if the brakes are disengaged, and false otherwise
+  */
+  public boolean areBrakesDisengaged()
+  {
+    return _brakes.get() == DoubleSolenoid.Value.kReverse;
+  }
+
+  /**
+   * Calls _balancerMotor and creates a local variable "speed" Refers to boolean in
    * Robot map and if true, speed = - speed Uses set() command to assign the new
-   * speed to left motor 1
+   * speed to _balacnerMotor
    * 
    * @param double speed between -1 and 1 negative is reverse, positive if
    *        forward, 0 is stationary
@@ -96,16 +113,10 @@ public class Balancer extends Subsystem {
 
       _balancerMotor.set(speed);
     }
-
-    public void drive(double speed)
-    {
-      driveMotor(speed);
-    }
-
   
   @Override
   public void initDefaultCommand() {
     // Set the default command for a subsystem here.
-    // setDefaultCommand(new MySpecialCommand());
+    setDefaultCommand(new DriveBalancerWithJoystick());
   }
 }
