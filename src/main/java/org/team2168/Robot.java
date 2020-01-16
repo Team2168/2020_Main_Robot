@@ -25,7 +25,7 @@ public class Robot extends TimedRobot {
   private static final String kCustomAuto = "My Auto";
   private String m_autoSelected;
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
-  public static Hopper hopper;
+  private static Hopper hopper;
 
   /**
    * This function is run when the robot is first started up and should be
