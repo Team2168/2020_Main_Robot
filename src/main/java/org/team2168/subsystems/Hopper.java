@@ -36,6 +36,9 @@ public class Hopper extends Subsystem {
     hopperMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 500);
   }
 
+  /**
+   * Returns a singleton instance of the Hopper
+   */
   public static Hopper getInstance() {
     if(_instance == null) {
       _instance = new Hopper();
@@ -44,8 +47,8 @@ public class Hopper extends Subsystem {
   }
 
   /**
-   * 
-   * @param speed is a double from -1 to 1
+   * Drives the hopper motor at the specified speed
+   * @param speed is a double from -1 to 1; positive is heading towards the shooter
    */
   public void drive(double speed) {
     if(RobotMap.HOPPER_MOTOR_REVERSE) {
