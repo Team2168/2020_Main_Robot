@@ -197,7 +197,7 @@ When creating methods in the subsystem:
     public void retract() {
       Whatever this method does...
     }
-
+    ```
 When adding an instance of a subsystem to the `Robot` class:
   - The variable should be of `private` access type.
   - Any access to the subsystem elsewhere in the code should use the static getInstance method for the respective subsystem. (e.g. `<SubsystemName>.getInstance()`).
