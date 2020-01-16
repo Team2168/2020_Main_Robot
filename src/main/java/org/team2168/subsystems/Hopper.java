@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj.command.Subsystem;
  */
 public class Hopper extends Subsystem {
   private CANSparkMax hopperMotor;
+  // Cooper told me not to code the IR sensor so ¯\_(ツ)_/¯
 
   private static Hopper _instance = null;
 
