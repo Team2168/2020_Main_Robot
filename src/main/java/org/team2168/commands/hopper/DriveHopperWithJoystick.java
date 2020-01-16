@@ -7,17 +7,15 @@
 
 package org.team2168.commands.hopper;
 
+import org.team2168.Robot;
 import org.team2168.subsystems.Hopper;
 
 import edu.wpi.first.wpilibj.command.Command;
 
 public class DriveHopperWithJoystick extends Command {
-  private double speed;
 
-  public DriveHopperWithJoystick(double speed) {
+  public DriveHopperWithJoystick() {
     requires(Hopper.getInstance());
-
-    this.speed = speed;
   }
 
   // Called just before this Command runs the first time
@@ -28,7 +26,7 @@ public class DriveHopperWithJoystick extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    Hopper.getInstance().drive(speed);
+    Hopper.getInstance().drive(Robot.oi.operatorJoystick.getRightStickRaw_X());
   }
 
   // Make this return true when this Command no longer needs to run execute()
