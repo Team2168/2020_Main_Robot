@@ -54,7 +54,7 @@ public class Robot extends TimedRobot {
    */
   final double TICKS_PER_REV = 256.0 * 4.0; //one event per edge on each quadrature channel
   final double TICKS_PER_100MS = TICKS_PER_REV / 600.0;
-  final double NUM_REVOLUTIONS = 10.0;
+  final double NUM_REVOLUTIONS = 32.0;
 
   /**
    * This function is run when the robot is first started up and should be
@@ -106,7 +106,7 @@ public class Robot extends TimedRobot {
 
 		/* Set acceleration and vcruise velocity - see documentation */
 		_talon.configMotionCruiseVelocity((int) (1600.0*TICKS_PER_100MS), Constants.kTimeoutMs);
-		_talon.configMotionAcceleration((int) (1600.0*TICKS_PER_100MS), Constants.kTimeoutMs);
+		_talon.configMotionAcceleration((int) (800.0*TICKS_PER_100MS), Constants.kTimeoutMs);
 
 		/* Zero the sensor */
     _talon.setSelectedSensorPosition(0, Constants.kPIDLoopIdx, Constants.kTimeoutMs);
