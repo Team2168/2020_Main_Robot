@@ -168,16 +168,16 @@ When creating methods in the subsystem:
       - Positive for a shooter wheel should be out.
       - Positive for a lift should be up.
     - EX:
-     ```java
-    /**
-     * Sets the speed of the XYZ motor.
-     *
-     * @param speed : a value of 1.0 to -1.0 (positive is into the robot, negative is out of the robot)
-     */
-     public void drive(double speed) {
-       Whatever this method does...
-     }
-    ```
+      ```java
+      /**
+       * Sets the speed of the XYZ motor.
+       *
+       * @param speed : a value of 1.0 to -1.0 (positive is into the robot, negative is out of the robot)
+       */
+      public void drive(double speed) {
+        Whatever this method does...
+      }
+      ```
   - Pneumatics
     - The class commonly used is DoubleSolenoid.
     - Create a method to extend the pneumatic.
@@ -187,23 +187,23 @@ When creating methods in the subsystem:
       - The method name should be `retract`.
       - Unless there are multiple pneumatics, then extend the specific pneumatic.
     - EX:
-    ```java
-    /**
-     * Extends the XYZ pneumatic.
-     *
-     */
-    public void extend() {
-      Whatever this method does...
-    }
+      ```java
+      /**
+       * Extends the XYZ pneumatic.
+       *
+       */
+      public void extend() {
+        Whatever this method does...
+      }
 
-    /**
-     * Retract the XYZ pneumatic.
-     *
-     */
-    public void retract() {
-      Whatever this method does...
-    }
-    ```
+      /**
+       * Retract the XYZ pneumatic.
+       *
+       */
+      public void retract() {
+        Whatever this method does...
+      }
+      ```
 When adding an instance of a subsystem to the `Robot` class:
   - The variable should be of `private` access type.
   - Any access to the subsystem elsewhere in the code should use the static getInstance method for the respective subsystem. (e.g. `<SubsystemName>.getInstance()`).
