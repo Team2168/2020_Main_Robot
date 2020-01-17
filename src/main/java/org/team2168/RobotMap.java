@@ -155,6 +155,13 @@ public class RobotMap {
 	// public static final int  LIFT_PID_ARRAY_SIZE = 30;
 
 	/****************************************************************
+	 *						   Climber Parameters                   *
+	 ****************************************************************/
+	public static final boolean CLIMBER_ENABLE_HIGHT_HOLD = true;
+	//public static final double CLIMBER_ZERO_BELOW_HERE = ;
+	//public static final double CLIMBER_MAX_JOYSTICK_SPEED = ;
+
+	/****************************************************************
 	 *                         TCP Servers (ONLY FOR DEBUGGING)     *
 	 ****************************************************************/
 	// public static final int TCP_SERVER_DRIVE_TRAIN_POS = 1180;

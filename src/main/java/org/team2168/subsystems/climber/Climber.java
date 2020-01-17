@@ -7,11 +7,13 @@
 
 package org.team2168.subsystems.climber;
 
-import edu.wpi.first.wpilibj.command.Subsystem;
-import org.team2168.RobotMap;
-
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+
+import org.team2168.RobotMap;
+import org.team2168.commands.climber_comm.DriveClimberWithJoystick;
+
+import edu.wpi.first.wpilibj.command.Subsystem;
 
 //import edu.wpi.first.wpilibj.DigitalInput;
 /**
@@ -20,9 +22,12 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 public class Climber extends Subsystem {
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
-public static final double holdingSpeed;
+public static Climber instance = null;
+public static double holdingSpeed; 
 private TalonSRX climberMotor1;
 private TalonSRX climberMotor2;
+private final boolean CLIMBER_MOTOR_1_REVERSE = false;
+private final boolean CLIMBER_MOTOR_2_REVERSE = false;
 //private static DigitalInput isOneRaised;
 //private static DigitalInput isTwoRaised;
 private Climber() {
@@ -30,21 +35,43 @@ private Climber() {
   climberMotor2 = new TalonSRX(RobotMap.CLIMBER_MOTOR_2);
 }
 
-public void adjustClimber(double speed){
+public void driveClimberMotors(double speed){
+  driveClimberMotor1(speed);
+  driveClimberMotor2(speed);
+}
+
+public void driveClimberMotor1(double speed){
+  if(CLIMBER_MOTOR_1_REVERSE){
+    speed = -speed;
   climberMotor1.set(ControlMode.PercentOutput, speed);
+  }
+}
+
+public void driveClimberMotor2(double speed){
+  if(CLIMBER_MOTOR_2_REVERSE){
+    speed = -speed;
+  }
   climberMotor2.set(ControlMode.PercentOutput, speed);
 }
 
-//public void lowerClimber(double speed){
-  //climberMotor2.set(-speed);
-  //climberMotor2.set(-speed);
-//}
-//public boolean isOneFullyRaised(){
-  //return isOneRaised();
-//}
+
+public static Climber GetInstance()
+{
+  if (instance == null)
+    instance = new Climber();
+  return instance;
+  
+    
+}
+
+
   @Override
   public void initDefaultCommand() {
     // Set the default command for a subsystem here.
-    // setDefaultCommand(new MySpecialCommand());
+    setDefaultCommand(new DriveClimberWithJoystick());
   }
+
+public double getPotPos() {
+	return 0;
+}
 }

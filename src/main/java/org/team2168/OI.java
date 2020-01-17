@@ -3,6 +3,7 @@ package org.team2168;
 
 import org.team2168.utils.F310;
 import org.team2168.utils.LinearInterpolator;
+import org.team2168.subsystems.climber.Climber;
 
 /**
  * This class is the glue that binds the controls on the physical operator
@@ -149,6 +150,14 @@ public class OI
 	public double getDriveTrainRightJoystick()
 	{
 		return driverJoystick.getRightStickRaw_Y();
+	}
+
+	/***************************************************************************** 
+	 * 								Climber
+	******************************************************************************/
+	public double getClimberJoystickValue()
+	{
+		return operatorJoystick.getLeftStickRaw_Y();
 	}
 
 }
