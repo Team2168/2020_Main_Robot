@@ -43,8 +43,9 @@ public void driveClimberMotors(double speed){
 public void driveClimberMotor1(double speed){
   if(CLIMBER_MOTOR_1_REVERSE){
     speed = -speed;
-  climberMotor1.set(ControlMode.PercentOutput, speed);
   }
+  climberMotor1.set(ControlMode.PercentOutput, speed);
+ 
 }
 
 public void driveClimberMotor2(double speed){
