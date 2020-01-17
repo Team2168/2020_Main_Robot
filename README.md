@@ -140,16 +140,22 @@ When using Falcon motors:
 ### Style and Architecture Guidelines
 When creating member variables:
   - Set the accessibility to `private` and use a `_` before the name.
-    - `private <MotorController> _motor`
-    - `private DoubleSolenoid _piston`
-    - `private <Subsystem> _instance`.
+    ```java
+    private <MotorController> _motor
+    private DoubleSolenoid _piston
+    private <Subsystem> _instance
+    ```
   - Constants for subsystems should be added to their respective subsystems.
-    - `private final boolean IS_MOTOR_REVERSED`
-    - `private final double LIFT_HOLDING_VOLTAGE`
-    - `public final PIDPosition PID_POSITION_1`
+    ```java
+    private final boolean IS_MOTOR_REVERSED
+    private final double LIFT_HOLDING_VOLTAGE
+    public final PIDPosition PID_POSITION_1
+    ```
   - Constants for subsystems that can conflict with each other such as CAN IDs should be added to `RobotMap.java`.
-    - `public static final int <Subsystem1>_MOTOR_PDP = 0`
-    - `public static final int <Subsystem2>_MOTOR_PDP = 1`
+    ```java
+    public static final int <Subsystem1>_MOTOR_PDP = 0
+    public static final int <Subsystem2>_MOTOR_PDP = 1
+    ```
 
 When creating a subsystem:
   - Every `Subsystem` should use singleton design pattern (private constructor, public getInstance() method).
@@ -162,7 +168,7 @@ When creating methods in the subsystem:
       - Positive for a shooter wheel should be out.
       - Positive for a lift should be up.
     - EX:
-     ```
+     ```java
     /**
      * Sets the speed of the XYZ motor.
      *
@@ -181,7 +187,7 @@ When creating methods in the subsystem:
       - The method name should be `retract`.
       - Unless there are multiple pneumatics, then extend the specific pneumatic.
     - EX:
-    ```
+    ```java
     /**
      * Extends the XYZ pneumatic.
      *
