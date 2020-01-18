@@ -24,28 +24,29 @@ public class ColorWheel extends Subsystem {
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
 
-  private DoubleSolenoid pistonMove;
-  private CANSparkMax spinner;
+  private final boolean COLOR_WHEEL_MOTOR_REVERSE = false;
+  private DoubleSolenoid colorWheelExtender;
+  private CANSparkMax colorWheelMotor;
   private static ColorWheel instance = null;
 
   private ColorWheel()
   {
-    pistonMove = new DoubleSolenoid(RobotMap.COLORWHEEL_ENGAGE_PCM,RobotMap.COLORWHEEL_DISENGAGE_PCM);
-    spinner = new CANSparkMax(RobotMap.COLORWHEEL_MOTOR_PDP,MotorType.kBrushless);
-    spinner.setSmartCurrentLimit(60);
-    spinner.setControlFramePeriodMs(20);
-    spinner.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 500);
-    spinner.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 500);
-    spinner.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 500);
+    colorWheelExtender = new DoubleSolenoid(RobotMap.COLORWHEEL_ENGAGE_PCM,RobotMap.COLORWHEEL_DISENGAGE_PCM);
+    colorWheelMotor = new CANSparkMax(RobotMap.COLORWHEEL_MOTOR_PDP,MotorType.kBrushless);
+    colorWheelMotor.setSmartCurrentLimit(60);
+    colorWheelMotor.setControlFramePeriodMs(20);
+    colorWheelMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 500);
+    colorWheelMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 500);
+    colorWheelMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 500);
   }
 
-  public void spin(double speed)
+  public void drive(double speed)
   {
-    if (RobotMap.CW_REVERSE == true)
+    if (COLOR_WHEEL_MOTOR_REVERSE)
     {
-      speed = speed * -1;
+      speed = -speed;
     }
-    spinner.set(speed);
+    colorWheelMotor.set(speed);
   }
 
   public static ColorWheel getInstance()
@@ -59,18 +60,22 @@ public class ColorWheel extends Subsystem {
 
   public void extendPiston()
   {
-    pistonMove.set(DoubleSolenoid.Value.kForward);
+    colorWheelExtender.set(DoubleSolenoid.Value.kForward);
   }
   public void retractPiston()
   {
-    pistonMove.set(DoubleSolenoid.Value.kReverse);
+    colorWheelExtender.set(DoubleSolenoid.Value.kReverse);
   }
 
   public boolean isExtended()
   {
-    return pistonMove.get() == Value.kForward; 
+    return colorWheelExtender.get() == Value.kForward; 
   }
 
+  public boolean isRetracted()
+  {
+    return colorWheelExtender.get() == Value.kReverse; 
+  }
 
 
 

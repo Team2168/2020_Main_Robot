@@ -7,7 +7,6 @@
 
 package org.team2168.commands.color_wheel;
 
-import org.team2168.Robot;
 import org.team2168.subsystems.ColorWheel;
 
 import edu.wpi.first.wpilibj.command.Command;
@@ -17,7 +16,7 @@ public class DriveColorWheelWithConstant extends Command {
   private double _speed;
 
   public DriveColorWheelWithConstant(double speed) {
-    requires(Robot.colorWheel);
+    requires(ColorWheel.getInstance());
     _speed = speed;
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
@@ -31,7 +30,7 @@ public class DriveColorWheelWithConstant extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    ColorWheel.getInstance().spin(_speed);
+    ColorWheel.getInstance().drive(_speed);
   }
 
   // Make this return true when this Command no longer needs to run execute()
@@ -43,7 +42,7 @@ public class DriveColorWheelWithConstant extends Command {
   // Called once after isFinished returns true
   @Override
   protected void end() {
-    ColorWheel.getInstance().spin(0);
+    ColorWheel.getInstance().drive(0);
   }
 
   // Called when another command which requires one or more of the same

@@ -29,7 +29,7 @@ public class DriveColorWheelWithJoystick extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    ColorWheel.getInstance().spin(OI.getInstance().getColorWheelJoystick());
+    ColorWheel.getInstance().drive(OI.getInstance().getColorWheelJoystick());
   }
 
   // Make this return true when this Command no longer needs to run execute()
@@ -41,7 +41,7 @@ public class DriveColorWheelWithJoystick extends Command {
   // Called once after isFinished returns true
   @Override
   protected void end() {
-    ColorWheel.getInstance().spin(0);
+    ColorWheel.getInstance().drive(0);
   }
 
   // Called when another command which requires one or more of the same

@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.command.Command;
 
 public class DisengageColorWheel extends Command {
   public DisengageColorWheel() {
+    requires(ColorWheel.getInstance());
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
   }
@@ -31,7 +32,7 @@ public class DisengageColorWheel extends Command {
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    return !ColorWheel.getInstance().isExtended();
+    return ColorWheel.getInstance().isRetracted();
   }
 
   // Called once after isFinished returns true
