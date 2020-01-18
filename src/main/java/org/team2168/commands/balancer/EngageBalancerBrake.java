@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj.command.Command;
 
 public class EngageBalancerBrake extends Command {
   public EngageBalancerBrake() {
-    require(Robot.Balancer);
+    require(Balancer.getInstance());
   }
 
   // Called just before this Command runs the first time

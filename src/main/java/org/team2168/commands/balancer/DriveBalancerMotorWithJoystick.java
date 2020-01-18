@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj.command.Command;
 
 public class DriveBalancerMotorWithJoystick extends Command {
   public DriveBalancerMotorWithJoystick() {
-    requires(Robot.Balancer)
+    requires(Balancer.getInstance());
   }
 
   // Called just before this Command runs the first time

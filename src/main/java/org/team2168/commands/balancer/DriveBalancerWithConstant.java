@@ -17,7 +17,7 @@ public class DriveBalancerWithConstant extends Command {
 
   public DriveBalancerWithConstant(double speed) {
     // Use requires() here to declare subsystem dependencies
-    requires(Robot.Balancer);
+    requires(Balancer.getInstance());
     _speed = speed;
   }
 
