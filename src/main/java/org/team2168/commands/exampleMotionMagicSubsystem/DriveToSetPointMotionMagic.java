@@ -5,7 +5,9 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package org.team2168;
+package org.team2168.commands.exampleMotionMagicSubsystem;
+
+import org.team2168.ExampleMotionMagicSubsystem;
 
 import edu.wpi.first.wpilibj.command.Command;
 
@@ -15,8 +17,6 @@ public class DriveToSetPointMotionMagic extends Command {
   private double _targetPos;
   private boolean _absolutePosition;
   
-  int _loops = 0;  
-  boolean _printStatements = false;
   private double _errorTolerance;
   private double _loopsToSettle = 10;
   private int _withinThresholdLoops = 0;
@@ -26,20 +26,15 @@ public class DriveToSetPointMotionMagic extends Command {
   public DriveToSetPointMotionMagic(double setPoint, boolean absolutePosition, double errorTolerance) {
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
-    requires(Robot.exampleMotionMagicSubsystem);
+    requires(ExampleMotionMagicSubsystem.getInstance());
 
     _absolutePosition = absolutePosition;
     _errorTolerance = errorTolerance;
-    if (_absolutePosition)
+    if (!_absolutePosition)
     {
-      _targetPos=setPoint;
+      ExampleMotionMagicSubsystem.getInstance().zeroEncoder();
     }
-    else
-    {
-      _targetPos = setPoint + Robot.exampleMotionMagicSubsystem.getPosition();
-    }
-
-
+    _targetPos = setPoint;
   }
 
   // Called just before this Command runs the first time
@@ -50,9 +45,9 @@ public class DriveToSetPointMotionMagic extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    Robot.exampleMotionMagicSubsystem.setSetPoint(_targetPos);
+    ExampleMotionMagicSubsystem.getInstance().setSetPoint(_targetPos);
     /* Check if closed loop error is within the threshld */
-    if (Math.abs(Robot.exampleMotionMagicSubsystem.getErrorPosition()) < _errorTolerance) {
+    if (Math.abs(ExampleMotionMagicSubsystem.getInstance().getErrorPosition()) < _errorTolerance) {
       ++_withinThresholdLoops;
     } 
     else {
@@ -69,7 +64,7 @@ public class DriveToSetPointMotionMagic extends Command {
   // Called once after isFinished returns true
   @Override
   protected void end() {
-    Robot.exampleMotionMagicSubsystem.drive(0.0);
+    ExampleMotionMagicSubsystem.getInstance().drive(0.0);
   }
 
   // Called when another command which requires one or more of the same

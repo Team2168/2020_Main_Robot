@@ -16,7 +16,6 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import org.team2168.utils.consoleprinter.ConsolePrinter;
 
 import edu.wpi.first.wpilibj.command.Subsystem;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 
 /**
@@ -177,6 +176,11 @@ public class ExampleMotionMagicSubsystem extends Subsystem {
   {
     return (_talon.getActiveTrajectoryPosition()-_talon.getSelectedSensorPosition(kPIDLoopIdx))/TICKS_PER_REV;
     //return _talon.getClosedLoopError(kPIDLoopIdx)/TICKS_PER_REV;--only for nonMotionMagic or nonMotion Profile
+  }
+
+  public void zeroEncoder()
+  {
+    _talon.setSelectedSensorPosition(0);
   }
 
   @Override
