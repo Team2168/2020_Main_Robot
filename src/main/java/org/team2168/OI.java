@@ -147,11 +147,16 @@ public class OI
 	 * @author Krystina
 	 */
 	
-	 public double getDriveTrainRightJoystick()
-
+	public double getDriveTrainRightJoystick()
 	{
 		return driverJoystick.getRightStickRaw_Y();
 	}
+
+	/**
+	 * Return value of axis for the indexer
+	 * 
+	 * @return a double - value
+	 */
 	public double getIndexerJoystick()
 	{
 		return operatorJoystick.getLeftStickRaw_Y();
