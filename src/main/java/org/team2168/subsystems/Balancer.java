@@ -46,7 +46,7 @@ public class Balancer extends Subsystem {
     _balancerMotor.setSmartCurrentLimit(60);
 
     //control frame every 20ms
-    _balancerMotor.setControlFrameFeriodMs(20);
+    _balancerMotor.setControlFramePeriodMs(20);
 
     //status frame every 500ms
     _balancerMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 500);
@@ -55,7 +55,7 @@ public class Balancer extends Subsystem {
   }
   
   /**
-   * Calls instance object and makes it a singleton object of type Drivetrain
+   * Calls instance object and makes it a singleton object of type Balancer
    * 
    * @return Balancer object "instance"
    */
