@@ -67,6 +67,8 @@ public class RobotMap {
     *************************************************************************/
     
 	// Relay Channels///////////////////////////////////////////////////////////
+	public static final int SHOOTER_MOTOR_ONE_PDP = 0;
+	public static final int SHOOTER_MOTOR_TWO_PDP = 1;
 
 	/*************************************************************************
 	 *                         PBOT DIFFERENCES  PARAMETERS                  *

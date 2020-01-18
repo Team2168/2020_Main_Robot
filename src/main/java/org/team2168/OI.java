@@ -4,6 +4,8 @@ package org.team2168;
 import org.team2168.utils.F310;
 import org.team2168.utils.LinearInterpolator;
 
+import jdk.nashorn.api.tree.ReturnTree;
+
 /**
  * This class is the glue that binds the controls on the physical operator
  * interface to the commands and command groups that allow control of the robot.
@@ -151,4 +153,8 @@ public class OI
 		return driverJoystick.getRightStickRaw_Y();
 	}
 
+	public double getShooterJoystick()
+	{
+		 return operatorJoystick.getRightStickRaw_Y();
+	}
 }
