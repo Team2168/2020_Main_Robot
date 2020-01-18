@@ -16,7 +16,7 @@ import org.team2168.PID.sensors.IMU;
 import org.team2168.PID.sensors.Limelight;
 import org.team2168.utils.TCPSocketSender;
 import org.team2168.utils.consoleprinter.ConsolePrinter;
-import org.team2168.commands.DriveWithJoystick;
+import org.team2168.commands.drivetrain.DriveWithJoystick;
 
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.Timer;
