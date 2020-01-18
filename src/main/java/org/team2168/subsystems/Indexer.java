@@ -37,7 +37,7 @@ public class Indexer extends Subsystem {
  /**
   * Cycles the indexer 
   * - positive is toward the shooter
-  * - Nigitive is away from the shooter
+  * - negative is away from the shooter
   * @param speed is a double to set the speed
   */
 public void drive(double speed) {
