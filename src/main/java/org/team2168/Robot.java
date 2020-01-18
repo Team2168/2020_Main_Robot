@@ -34,7 +34,9 @@ public class Robot extends TimedRobot {
   private CANSparkMax m_motor;
   private CANPIDController m_pidController;
   private CANEncoder m_encoder;
-  public double kP, kI, kD, kIz, kFF, kMaxOutput, kMinOutput, maxRPM, maxVel, minVel, maxAcc, allowedErr;
+  private final double gearRatio = 1.0/30.0; //input/output
+  private final double ALLOWED_ERROR = (2.0 / 360.0);
+  private double kP, kI, kD, kIz, kFF, kMaxOutput, kMinOutput, maxRPM, maxVel, minVel, maxAcc, allowedErr;
 
   /**
    * This function is run when the robot is first started up and should be
@@ -68,11 +70,11 @@ public class Robot extends TimedRobot {
         kFF = 0.000156; 
         kMaxOutput = 1;
         kMinOutput = -1;
-        maxRPM = 5700;
+        maxRPM = 200;
     
         // Smart Motion Coefficients
-        maxVel = 1000; // rpm
-        maxAcc = 800;
+        maxVel = 500; // rpm
+        maxAcc = 200;
     
         // set PID coefficients
         m_pidController.setP(kP);
@@ -95,10 +97,10 @@ public class Robot extends TimedRobot {
          * error for the pid controller in Smart Motion mode
          */
         int smartMotionSlot = 0;
-        m_pidController.setSmartMotionMaxVelocity(maxVel, smartMotionSlot);
-        m_pidController.setSmartMotionMinOutputVelocity(minVel, smartMotionSlot);
-        m_pidController.setSmartMotionMaxAccel(maxAcc, smartMotionSlot);
-        m_pidController.setSmartMotionAllowedClosedLoopError(allowedErr, smartMotionSlot);
+        m_pidController.setSmartMotionMaxVelocity(maxVel / gearRatio, smartMotionSlot);
+        m_pidController.setSmartMotionMinOutputVelocity(minVel / gearRatio, smartMotionSlot);
+        m_pidController.setSmartMotionMaxAccel(maxAcc / gearRatio, smartMotionSlot);
+        m_pidController.setSmartMotionAllowedClosedLoopError(allowedErr / gearRatio, smartMotionSlot);
     
         // display PID coefficients on SmartDashboard
         SmartDashboard.putNumber("P Gain", kP);
@@ -118,7 +120,7 @@ public class Robot extends TimedRobot {
         SmartDashboard.putNumber("Set Velocity", 0);
     
         // button to toggle between velocity and smart motion modes
-        SmartDashboard.putBoolean("Mode", true);
+        SmartDashboard.putBoolean("Position Mode", false);
   }
 
   /**
@@ -180,10 +182,10 @@ public class Robot extends TimedRobot {
       double ff = SmartDashboard.getNumber("Feed Forward", 0);
       double max = SmartDashboard.getNumber("Max Output", 0);
       double min = SmartDashboard.getNumber("Min Output", 0);
-      double maxV = SmartDashboard.getNumber("Max Velocity", 0);
-      double minV = SmartDashboard.getNumber("Min Velocity", 0);
-      double maxA = SmartDashboard.getNumber("Max Acceleration", 0);
-      double allE = SmartDashboard.getNumber("Allowed Closed Loop Error", 0);
+      double maxV = SmartDashboard.getNumber("Max Velocity", 0) / gearRatio;
+      double minV = SmartDashboard.getNumber("Min Velocity", 0) / gearRatio;
+      double maxA = SmartDashboard.getNumber("Max Acceleration", 0) / gearRatio;
+      double allE = SmartDashboard.getNumber("Allowed Closed Loop Error", ALLOWED_ERROR);
   
       // if PID coefficients on SmartDashboard have changed, write new values to controller
       if((p != kP)) { m_pidController.setP(p); kP = p; }
@@ -201,13 +203,13 @@ public class Robot extends TimedRobot {
       if((allE != allowedErr)) { m_pidController.setSmartMotionAllowedClosedLoopError(allE,0); allowedErr = allE; }
   
       double setPoint, processVariable;
-      boolean mode = SmartDashboard.getBoolean("Mode", true);
+      boolean mode = SmartDashboard.getBoolean("Position Mode", false);
       if(mode) {
-        setPoint = SmartDashboard.getNumber("Set Velocity", 0);
+        setPoint = SmartDashboard.getNumber("Set Velocity", 0) / gearRatio;
         m_pidController.setReference(setPoint, ControlType.kVelocity);
-        processVariable = m_encoder.getVelocity();
+        processVariable = m_encoder.getVelocity() / gearRatio;
       } else {
-        setPoint = SmartDashboard.getNumber("Set Position", 0);
+        setPoint = SmartDashboard.getNumber("Set Position", 0) / gearRatio;
         /**
          * As with other PID modes, Smart Motion is set by calling the
          * setReference method on an existing pid object and setting
