@@ -13,7 +13,11 @@ import com.ctre.phoenix.motorcontrol.FollowerType;
 import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
+import org.team2168.utils.consoleprinter.ConsolePrinter;
+
 import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 
 /**
  * Add your docs here.
@@ -117,6 +121,26 @@ public class ExampleMotionMagicSubsystem extends Subsystem {
     _talonFollow.configPeakCurrentDuration(500);
     _talon.configPeakCurrentLimit(60);
     _talon.configPeakCurrentLimit(60);
+
+    //set second motor as a follow
+    _talonFollow.follow(Robot.exampleMotionMagicSubsystem._talon, FollowerType.PercentOutput);
+
+    ConsolePrinter.putNumber("Motion Magic Position", () -> {return getPosition();}, true, false);
+    ConsolePrinter.putNumber("Motion Magic Velocity", () -> {return getVelocity();}, true, false);
+    ConsolePrinter.putNumber("Motion Magic Error", () -> {return getErrorPosition();}, true, false);
+    ConsolePrinter.putNumber("Motor Output Percent", () -> {return _talon.getMotorOutputPercent();}, true, false);
+    ConsolePrinter.putNumber("Setpoint Position", () -> {return _talon.getActiveTrajectoryPosition()/TICKS_PER_REV;}, true, false);
+    // ConsolePrinter.putNumber("Setpoint Velocity", () -> {return _talon.getActiveTrajectoryVelocity()/TICKS_PER_100MS;}, true, false);
+    // ConsolePrinter.putNumber("Setpoint Heading", () -> {return _talon.getActiveTrajectoryPosition(1)/TICKS_PER_REV;}, true, false); //need to convert from gyro sensor units
+    /**
+     * we think that in MotionMagicMode:
+     * closedLoopError is the error to where we should be instantaneously
+     * closedLoopTarget is the instantaneous position setpoint (not the end position setpoint)
+     */
+
+
+
+
   }
   /**
    * singleton constructor of the ExampleMotionMagicSubsystem 
@@ -129,15 +153,9 @@ public class ExampleMotionMagicSubsystem extends Subsystem {
     return _instance;
   }
 
-  public void setTalonFollower()
+  public void drive(double speed)
   {
-    _talonFollow.follow(Robot.exampleMotionMagicSubsystem._talon, FollowerType.PercentOutput);
-
-  }
-
-  public double getMotorOutputPercent()
-  {
-    return _talon.getMotorOutputPercent();
+    _talon.set(ControlMode.PercentOutput, speed);
   }
 
   public double getPosition()
@@ -155,14 +173,10 @@ public class ExampleMotionMagicSubsystem extends Subsystem {
     _talon.set(ControlMode.MotionMagic, setPoint*TICKS_PER_REV);
   }
 
-  public double getError()
+  public double getErrorPosition()
   {
-    return _talon.getClosedLoopError(kPIDLoopIdx)/TICKS_PER_REV;
-  }
-
-  public boolean reachedSetpoint(double errorTolerance)
-  {
-    return Math.abs(getError()) < errorTolerance;
+    return (_talon.getActiveTrajectoryPosition()-_talon.getSelectedSensorPosition(kPIDLoopIdx))/TICKS_PER_REV;
+    //return _talon.getClosedLoopError(kPIDLoopIdx)/TICKS_PER_REV;--only for nonMotionMagic or nonMotion Profile
   }
 
   @Override

@@ -16,9 +16,10 @@ public class DriveToSetPointMotionMagic extends Command {
   private boolean _absolutePosition;
   
   int _loops = 0;  
-  StringBuilder _sb;
   boolean _printStatements = false;
   private double _errorTolerance;
+  private double _loopsToSettle = 10;
+  private int _withinThresholdLoops = 0;
 
 
   
@@ -26,7 +27,6 @@ public class DriveToSetPointMotionMagic extends Command {
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
     requires(Robot.exampleMotionMagicSubsystem);
-    _sb = new StringBuilder();    
 
     _absolutePosition = absolutePosition;
     _errorTolerance = errorTolerance;
@@ -36,7 +36,7 @@ public class DriveToSetPointMotionMagic extends Command {
     }
     else
     {
-      _targetPos = setPoint + Robot.exampleMotionMagicSubsystem._talon.getSelectedSensorPosition();
+      _targetPos = setPoint + Robot.exampleMotionMagicSubsystem.getPosition();
     }
 
 
@@ -45,62 +45,37 @@ public class DriveToSetPointMotionMagic extends Command {
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
-    Robot.exampleMotionMagicSubsystem.setTalonFollower();
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    
-    /* Get current Talon SRX motor output */
-    double motorOutput = Robot.exampleMotionMagicSubsystem.getMotorOutputPercent();
-    
-    if(_printStatements)
-    {
-      /* Prepare line to print */
-      _sb.append("\tout:");
-      /* Cast to int to remove decimal places */
-      _sb.append((int) (motorOutput * 100));
-      _sb.append("%");	// Percent
-      _sb.append("\tVel:");
-      _sb.append(Robot.exampleMotionMagicSubsystem.getVelocity());
-      _sb.append("\tpos:");
-      _sb.append(Robot.exampleMotionMagicSubsystem.getPosition());
-      _sb.append("u"); 	// Native units
-      _sb.append("\terr:");
-      _sb.append(Robot.exampleMotionMagicSubsystem.getError());
-      _sb.append("\ttrg:");
-      _sb.append(_targetPos);
-
-          /* Periodically print to console */
-    if (++_loops >= 10) {
-      _loops = 0;
-      System.out.println(_sb.toString());
+    Robot.exampleMotionMagicSubsystem.setSetPoint(_targetPos);
+    /* Check if closed loop error is within the threshld */
+    if (Math.abs(Robot.exampleMotionMagicSubsystem.getErrorPosition()) < _errorTolerance) {
+      ++_withinThresholdLoops;
+    } 
+    else {
+      _withinThresholdLoops = 0;
     }
-
-    /* Reset created string for next loop */
-    _sb.setLength(0);
-    
-    /* Instrumentation */
-    //  Instrum.Process(_talon, _sb); 
-    }
-
-}
+  }
 
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    return Robot.exampleMotionMagicSubsystem.reachedSetpoint(_errorTolerance);
+    return _withinThresholdLoops > _loopsToSettle;
   }
 
   // Called once after isFinished returns true
   @Override
   protected void end() {
+    Robot.exampleMotionMagicSubsystem.drive(0.0);
   }
 
   // Called when another command which requires one or more of the same
   // subsystems is scheduled to run
   @Override
   protected void interrupted() {
+    end();
   }
 }
