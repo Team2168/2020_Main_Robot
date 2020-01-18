@@ -24,7 +24,7 @@ public class DriveBalancerMotorWithJoystick extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    Robot.Balancer.drive(Robot.oi.getBalancerJoystickValue());
+    Balancer.getInstance().drive(Robot.oi.getBalancerJoystickValue());
   }
 
   // Make this return true when this Command no longer needs to run execute()
@@ -36,7 +36,7 @@ public class DriveBalancerMotorWithJoystick extends Command {
   // Called once after isFinished returns true
   @Override
   protected void end() {
-    Robot.Balancer.driveMotor(0.0);
+    Balancer.getInstance().driveMotor(0.0);
   }
 
   // Called when another command which requires one or more of the same

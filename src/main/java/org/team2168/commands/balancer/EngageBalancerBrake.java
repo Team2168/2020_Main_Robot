@@ -24,13 +24,13 @@ public class EngageBalancerBrake extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    Robot.Balancer.engageBrakes();
+    Balancer.getInstance().engageBrakes();
   }
 
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    return Robot.Balancer.areBrakesEngaged();
+    return Balancer.getInstance().areBrakesEngaged();
   }
 
   // Called once after isFinished returns true

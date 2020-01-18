@@ -24,13 +24,13 @@ public class DisengageBalancerBrake extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    Robot.Balancer.disengageBrakes();
+    Balancer.getInstance().disengageBrakes();
   }
 
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    return Robot.Balancer.areBrakesDisengaged();
+    return Balancer.getInstance().areBrakesDisengaged();
   }
 
   // Called once after isFinished returns true
