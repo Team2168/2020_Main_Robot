@@ -140,10 +140,13 @@ When using Falcon motors:
 ## Drivetrain
 ### Liam
   6x Motors (Falcons) (3 per side) will be TalonFX (look at last years drivetrain to get an idea)
+  2x Rev Encoder
+  1x Pigeon IMU
 
 ## Shooter
 ### Kaleb
   2x Motors (Falcons)
+  1x Rev Encoder
 
 ## Hood_Adjust
 ### Kaleb
@@ -159,29 +162,34 @@ When using Falcon motors:
 
 ## Hopper
 ### Cierra
-  1x Motor (Neo) to spin  
-  1x IR sensor (check if full)
+  1x Motor (Neo) to spin
 
 ## Indexer
 ### Nathan K.
   1x Motor (Neo)
-  1x ir sensor
+  2x Line Break (IR) Sensors
 
 ## Climber
 ### Conor
   2x Motors (775, use TalonSRX) to control pulley system
+  TBD sensors
 
 ## Color Wheel
 ### Derek
   1x Motor (Neo) to spin wheel
   1x Pneumatic to adjust position 
   1x color sensor to read the color for position control (Sensor comes from vendor)    
-  1x Encoder to read the number of rotations for rotation control  
+  1x Encoder to read the number of rotations for rotation control
+  1x Camera ?
+  1x Hall Effect 
 
 ## Balancer
 ### Caeden
   1x Motor (Neo) to move along the bar  
   1x Pneumatic to brake
+
+## Buddy_Climb
+### TBD
 
 ## LED
 ### Greyson
