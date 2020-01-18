@@ -9,7 +9,7 @@ package org.team2168.commands;
 
 import org.team2168.OI;
 import org.team2168.Robot;
-import org.team2168.RobotMap;
+import org.team2168.subsystems.Drivetrain;
 
 import edu.wpi.first.wpilibj.command.Command;
 
@@ -28,36 +28,16 @@ public class DriveWithJoystick extends Command
   private int intCounter = 0;
   private boolean finished;
   
-  public DriveWithJoystick(int inputStyle) 
+  public DriveWithJoystick() 
   {
-    requires(Robot.drivetrain);
-    ctrlStyle = inputStyle;
+    requires(Drivetrain.getInstance());
   }
 
   // Called just before this Command runs the first time
   @Override
   protected void initialize() 
   {
-    intCounter = 0;
-    ctrlStyle = Robot.getControlStyleInt();
-    
-		switch (ctrlStyle) {
-      case 1:
-        finished = false;
-        // reset controller
-          Robot.drivetrain.imu.reset();
-          //Robot.drivetrain.driveTrainPosController.reset();
-          //Robot.drivetrain.rotateDriveStraightController.reset();
-          
-        //Robot.drivetrain.driveTrainPosController.setMaxPosOutput(speed);
-        // Robot.drivetrain.driveTrainPosController.setMinPosOutput(-speed);
-        // Robot.drivetrain.driveTrainPosController.Enable();
-        //Robot.drivetrain.rotateDriveStraightController.Enable();
-
-        System.out.println("Initialize case ran");
-		  default:
-			break;
-		}
+ 
 	}
 
 	/**
@@ -76,8 +56,8 @@ public class DriveWithJoystick extends Command
      * Tank Drive
      */
     case 0:
-      Robot.drivetrain.driveLeft(OI.getInstance().driverJoystick.getLeftStickRaw_Y());
-      Robot.drivetrain.driveRight(OI.getInstance().driverJoystick.getRightStickRaw_Y());
+      Drivetrain.getInstance().driveLeft(OI.getInstance().driverJoystick.getLeftStickRaw_Y());
+      Drivetrain.getInstance().driveRight(OI.getInstance().driverJoystick.getRightStickRaw_Y());
       break;
 
     /**
@@ -89,11 +69,11 @@ public class DriveWithJoystick extends Command
     // full out: 0.622
     case 1: {
       // lastRotateOutput =
-      // Robot.drivetrain.rotateDriveStraightController.getControlOutput();
+      // Drivetrain.getInstance().rotateDriveStraightController.getControlOutput();
       // headingCorrection =
-      // (Robot.drivetrain.rotateDriveStraightController.getControlOutput());
+      // (Drivetrain.getInstance().rotateDriveStraightController.getControlOutput());
 
-      Robot.drivetrain.tankDrive(
+      Drivetrain.getInstance().tankDrive(
           (OI.getInstance().getGunStyleYValue()) + OI.getInstance().driverJoystick.getLeftStickRaw_X(),
           (OI.getInstance().getGunStyleYValue()) - OI.getInstance().driverJoystick.getLeftStickRaw_X());
     }
@@ -104,9 +84,9 @@ public class DriveWithJoystick extends Command
      * Arcade Drive
      */
     case 2:
-      Robot.drivetrain.driveLeft(
+      Drivetrain.getInstance().driveLeft(
           OI.getInstance().driverJoystick.getLeftStickRaw_Y() + OI.getInstance().driverJoystick.getRightStickRaw_X());
-      Robot.drivetrain.driveRight(
+      Drivetrain.getInstance().driveRight(
           OI.getInstance().driverJoystick.getLeftStickRaw_Y() - OI.getInstance().driverJoystick.getRightStickRaw_X());
       break;
     /**
@@ -120,18 +100,18 @@ public class DriveWithJoystick extends Command
 
       // Adjusts angle while moving
       if (speed != 0 && rotation != 0) {
-        Robot.drivetrain.driveLeft(rotation * speed);
-        Robot.drivetrain.driveRight(-rotation * speed);
+        Drivetrain.getInstance().driveLeft(rotation * speed);
+        Drivetrain.getInstance().driveRight(-rotation * speed);
       }
       // Allows Robot to spin in place without needing to press in triggers
       else if (speed == 0 && rotation != 0) {
-        Robot.drivetrain.driveLeft(rotation);
-        Robot.drivetrain.driveRight(-rotation);
+        Drivetrain.getInstance().driveLeft(rotation);
+        Drivetrain.getInstance().driveRight(-rotation);
       }
       // Allows Robot to drive straight
       else if (speed != 0 && rotation == 0) {
-        Robot.drivetrain.driveLeft(speed);
-        Robot.drivetrain.driveRight(speed);
+        Drivetrain.getInstance().driveLeft(speed);
+        Drivetrain.getInstance().driveRight(speed);
       }
       break;
 
@@ -140,9 +120,9 @@ public class DriveWithJoystick extends Command
      */
     case 4:
       // lastRotateOutput =
-      // Robot.drivetrain.rotateDriveStraightController.getControlOutput();
+      // Drivetrain.getInstance().rotateDriveStraightController.getControlOutput();
       // headingCorrection =
-      // (Robot.drivetrain.rotateDriveStraightController.getControlOutput());
+      // (Drivetrain.getInstance().rotateDriveStraightController.getControlOutput());
       //
       break;
 
@@ -153,8 +133,8 @@ public class DriveWithJoystick extends Command
      * Defaults to Tank Drive
      */
 
-    Robot.drivetrain.driveLeft(OI.getInstance().driverJoystick.getLeftStickRaw_Y());
-    Robot.drivetrain.driveRight(OI.getInstance().driverJoystick.getRightStickRaw_Y());
+    Drivetrain.getInstance().driveLeft(OI.getInstance().driverJoystick.getLeftStickRaw_Y());
+    Drivetrain.getInstance().driveRight(OI.getInstance().driverJoystick.getRightStickRaw_Y());
 
   }
 
@@ -170,7 +150,7 @@ public class DriveWithJoystick extends Command
   @Override
   protected void end() 
   {
-    Robot.drivetrain.tankDrive(0.0, 0.0);
+    Drivetrain.getInstance().tankDrive(0.0, 0.0);
 
   }
 

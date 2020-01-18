@@ -43,10 +43,7 @@ public class RobotMap {
 	//Channels 0-3 on Roborio
 
 	// Channels 4-7 on MXP
-	public static final int RIGHT_DRIVE_ENCODER_A = 0;
-	public static final int RIGHT_DRIVE_ENCODER_B = 1;
-	public static final int LEFT_DRIVE_ENCODER_B = 2;
-	public static final int LEFT_DRIVE_ENCODER_A = 3;
+	
 	
 
 	/*************************************************************************
@@ -76,9 +73,9 @@ public class RobotMap {
 	public static final int DRIVETRAIN_LEFT_MOTOR_1_PDP = 0;
 	public static final int DRIVETRAIN_LEFT_MOTOR_2_PDP = 1;
 	public static final int DRIVETRAIN_LEFT_MOTOR_3_PDP = 2;
-	public static final int DRIVETRAIN_RIGHT_MOTOR_1_PDP = 3;
-	public static final int DRIVETRAIN_RIGHT_MOTOR_2_PDP = 4;
-	public static final int DRIVETRAIN_RIGHT_MOTOR_3_PDP = 5;
+	public static final int DRIVETRAIN_RIGHT_MOTOR_1_PDP = 15;
+	public static final int DRIVETRAIN_RIGHT_MOTOR_2_PDP = 14;
+	public static final int DRIVETRAIN_RIGHT_MOTOR_3_PDP = 13;
 
 	// Relay Channels///////////////////////////////////////////////////////////
 
@@ -89,44 +86,8 @@ public class RobotMap {
 	/*************************************************************************
 	 *                         DRIVETRAIN PARAMETERS                         *
 	 *************************************************************************/
-	public static final boolean DT_REVERSE_LEFT1 = false;
-	public static final boolean DT_REVERSE_LEFT2 = false;
-	public static final boolean DT_REVERSE_LEFT3 = false;
-	public static final boolean DT_REVERSE_RIGHT1 = true;
-	public static final boolean DT_REVERSE_RIGHT2 = true;
-	public static final boolean DT_REVERSE_RIGHT3 = true; 
-
-	public static final boolean DT_3_MOTORS_PER_SIDE = true;
-
-	private static final int DRIVE_PULSE_PER_ROTATION = 256; // encoder ticks per rotation
-
-	private static final double DRIVE_GEAR_RATIO = 2.0 / 1.0; // ratio between wheel over encoder
-	private static final double DRIVE_WHEEL_DIAMETER = 5.0;   //inches;
-	public static final int DRIVE_ENCODER_PULSE_PER_ROT = (int) (DRIVE_PULSE_PER_ROTATION * DRIVE_GEAR_RATIO); // pulse per rotation * gear																					// ratio
 	
-	public static final double DRIVE_ENCODER_DIST_PER_TICK = (Math.PI * DRIVE_WHEEL_DIAMETER / DRIVE_ENCODER_PULSE_PER_ROT);
-	public static final CounterBase.EncodingType DRIVE_ENCODING_TYPE = CounterBase.EncodingType.k4X; // count rising and falling edges on
-	public static final AverageEncoder.PositionReturnType DRIVE_POS_RETURN_TYPE = AverageEncoder.PositionReturnType.INCH;
-	public static final AverageEncoder.SpeedReturnType DRIVE_SPEED_RETURN_TYPE = AverageEncoder.SpeedReturnType.IPS;
-	public static final int DRIVE_ENCODER_MIN_RATE = 0;
-	public static final int DRIVE_ENCODER_MIN_PERIOD = 1;
-	public static final boolean LEFT_DRIVE_TRAIN_ENCODER_REVERSE = true;
-	public static final boolean RIGHT_DRIVE_TRAIN_ENCODER_REVERSE = true;
 
-	public static final int DRIVE_AVG_ENCODER_VAL = 5;
-	public static final double MIN_DRIVE_SPEED = 0.2;
-	public static final double AUTO_NORMAL_SPEED = 0.5;
-	public static final double WHEEL_BASE = 26; //units must match PositionReturnType (inch)
-
-	public static final double DRIVETRAIN_FRONT_IR_THRESHOLD_MAX = 0.0;//TODO set all of these
-	public static final double DRIVETRAIN_FRONT_IR_THRESHOLD_MIN = 0.0;
-	public static final double DRIVETRAIN_BACK_IR_THRESHOLD_MAX = 0.0;
-	public static final double DRIVETRAIN_BACK_IR_THRESHOLD_MIN = 0.0;
-
-	public static final double DRIVETRAIN_FRONT_IR_THRESHOLD_MAX_PBOT = 0.0;
-	public static final double DRIVETRAIN_FRONT_IR_THRESHOLD_MIN_PBOT = 0.0;
-	public static final double DRIVETRAIN_BACK_IR_THRESHOLD_MAX_PBOT = 0.0;
-	public static final double DRIVETRAIN_BACK_IR_THRESHOLD_MIN_PBOT = 0.0;
 	
 
 	/*************************************************************************
@@ -186,19 +147,19 @@ public class RobotMap {
 	/****************************************************************
 	 *                         TCP Servers (ONLY FOR DEBUGGING)     *
 	 ****************************************************************/
-	public static final int TCP_SERVER_DRIVE_TRAIN_POS = 1180;
-	public static final int TCP_SERVER_ROTATE_CONTROLLER = 1181;
-	public static final int TCO_SERVER_RIGHT_DRIVE_TRAIN_SPEED = 1182;
-	public static final int TCP_SERVER_LEFT_DRIVE_TRAIN_SPEED = 1183;
-	public static final int TCP_SERVER_LIFT_POT_CONTROLLER = 1184;
-	public static final int TCP_SERVER_ROTATE_CONTROLLER_STRAIGHT = 1185;
-	public static final int TCP_SERVER_RIGHT_DRIVE_TRAIN_POSITION = 1186;
-	public static final int TCP_SERVER_LEFT_DRIVE_TRAIN_POSITION = 1187;
-	public static final int TCP_SERVER_ROTATE_CONTROLLER_WITH_CAMERA = 1188;
-	public static final int TCP_SERVER_MB_POT_CONTROLLER = 1189;
-	public static final int TCP_SERVER_HP_POT_CONTROLLER = 1190;
-	public static final int TCP_SERVER_RIGHT_STINGER_POSITION = 1191;
-	public static final int TCP_SERVER_LEFT_STINGER_POSITION = 1192;
+	// public static final int TCP_SERVER_DRIVE_TRAIN_POS = 1180;
+	// public static final int TCP_SERVER_ROTATE_CONTROLLER = 1181;
+	// public static final int TCO_SERVER_RIGHT_DRIVE_TRAIN_SPEED = 1182;
+	// public static final int TCP_SERVER_LEFT_DRIVE_TRAIN_SPEED = 1183;
+	// public static final int TCP_SERVER_LIFT_POT_CONTROLLER = 1184;
+	// public static final int TCP_SERVER_ROTATE_CONTROLLER_STRAIGHT = 1185;
+	// public static final int TCP_SERVER_RIGHT_DRIVE_TRAIN_POSITION = 1186;
+	// public static final int TCP_SERVER_LEFT_DRIVE_TRAIN_POSITION = 1187;
+	// public static final int TCP_SERVER_ROTATE_CONTROLLER_WITH_CAMERA = 1188;
+	// public static final int TCP_SERVER_MB_POT_CONTROLLER = 1189;
+	// public static final int TCP_SERVER_HP_POT_CONTROLLER = 1190;
+	// public static final int TCP_SERVER_RIGHT_STINGER_POSITION = 1191;
+	// public static final int TCP_SERVER_LEFT_STINGER_POSITION = 1192;
 
 	
 
@@ -220,7 +181,4 @@ public class RobotMap {
 	 *                         PDP PARAMETERS                         *
 	 ******************************************************************/
 	public static final long PDPThreadPeriod = 100;
-	public static final double WARNING_CURRENT_LIMIT = 20;
-	public static final double STALL_CURRENT_LIMIT = 350;
-	public static final double CURRENT_LIMIT_TIME_THRESHOLD_SECONDS = 1;
 }

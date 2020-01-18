@@ -26,20 +26,20 @@ public class Robot extends TimedRobot {
   private static final String kCustomAuto = "My Auto";
   private String m_autoSelected;
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
-  public static Drivetrain drivetrain;
-  public static PowerDistribution pdp;
+  private static Drivetrain drivetrain;
+  private static PowerDistribution pdp;
 
   static int controlStyle;
   static int throttleStyle;
-  public static SendableChooser<Number> controlStyleChooser;
-  public static SendableChooser<Number> throttleVibeChooser;
+  private static SendableChooser<Number> controlStyleChooser;
+  private static SendableChooser<Number> throttleVibeChooser;
 
   static boolean autoMode;
   // private static boolean matchStarted = false;
-  public static int gyroReinits;
+  private static int gyroReinits;
   // private double lastAngle;
   // private Debouncer gyroDriftDetector = new Debouncer(1.0);
-  public static boolean gyroCalibrating = false;
+  private static boolean gyroCalibrating = false;
 
   // private boolean lastGyroCalibrating = false;
   /**

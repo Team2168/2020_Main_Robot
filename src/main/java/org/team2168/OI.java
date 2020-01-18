@@ -124,11 +124,6 @@ public class OI
 		return gunStyleInterpolator.interpolate(driverJoystick.getLeftStickRaw_Y());
 	}
 
-	public double getDriveWinchJoystickValue()
-	{
-		return operatorJoystick.getRightStickRaw_X();
-	}
-
 	/**
 	 * Method that sets that Left side of the drive train so that it drives with
 	 * LeftStick Y
