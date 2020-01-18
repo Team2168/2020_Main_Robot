@@ -19,8 +19,8 @@ import edu.wpi.first.wpilibj.command.Subsystem;
  * Subsystem class for the Hopper
  */
 public class Hopper extends Subsystem {
+  public static final boolean HOPPER_MOTOR_REVERSE = false;
   private CANSparkMax hopperMotor;
-  // Cooper told me not to code the IR sensor so ¯\_(ツ)_/¯
 
   private static Hopper _instance = null;
 
@@ -51,7 +51,7 @@ public class Hopper extends Subsystem {
    * @param speed is a double from -1 to 1; positive is heading towards the shooter
    */
   public void drive(double speed) {
-    if(RobotMap.HOPPER_MOTOR_REVERSE) {
+    if(HOPPER_MOTOR_REVERSE) {
       speed = -speed;
     }
     hopperMotor.set(speed);
