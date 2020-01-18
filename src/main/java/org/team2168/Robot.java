@@ -61,18 +61,18 @@ public class Robot extends TimedRobot {
         m_encoder = m_motor.getEncoder();
     
         // PID coefficients
-        kP = 5e-5; 
+        kP = 5e-5;
         kI = 1e-6;
-        kD = 0; 
-        kIz = 0; 
+        kD = 0;
+        kIz = 0;
         kFF = 0.000156; 
-        kMaxOutput = 1; 
+        kMaxOutput = 1;
         kMinOutput = -1;
         maxRPM = 5700;
     
         // Smart Motion Coefficients
-        maxVel = 2000; // rpm
-        maxAcc = 1500;
+        maxVel = 1000; // rpm
+        maxAcc = 800;
     
         // set PID coefficients
         m_pidController.setP(kP);
@@ -201,7 +201,7 @@ public class Robot extends TimedRobot {
       if((allE != allowedErr)) { m_pidController.setSmartMotionAllowedClosedLoopError(allE,0); allowedErr = allE; }
   
       double setPoint, processVariable;
-      boolean mode = SmartDashboard.getBoolean("Mode", false);
+      boolean mode = SmartDashboard.getBoolean("Mode", true);
       if(mode) {
         setPoint = SmartDashboard.getNumber("Set Velocity", 0);
         m_pidController.setReference(setPoint, ControlType.kVelocity);
