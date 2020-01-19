@@ -36,7 +36,7 @@ public class Robot extends TimedRobot {
   private CANEncoder m_encoder;
   private final double gearRatio = 1.0/30.0; //input/output
   private final double ALLOWED_ERROR = (2.0 / 360.0);
-  private double kP, kI, kD, kIz, kFF, kMaxOutput, kMinOutput, maxRPM, maxVel, minVel, maxAcc, allowedErr;
+  private double kP, kI, kD, kIz, kFF, kMaxOutput, kMinOutput, maxRPM, maxVel, minVel, maxAcc, allowedErr = ALLOWED_ERROR;
 
   /**
    * This function is run when the robot is first started up and should be
