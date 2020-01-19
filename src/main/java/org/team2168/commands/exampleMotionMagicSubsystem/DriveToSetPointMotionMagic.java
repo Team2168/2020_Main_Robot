@@ -7,7 +7,7 @@
 
 package org.team2168.commands.exampleMotionMagicSubsystem;
 
-import org.team2168.ExampleMotionMagicSubsystem;
+import org.team2168.subsystems.ExampleMotionMagicSubsystem;
 
 import edu.wpi.first.wpilibj.command.Command;
 

@@ -5,7 +5,7 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package org.team2168;
+package org.team2168.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
@@ -13,6 +13,7 @@ import com.ctre.phoenix.motorcontrol.FollowerType;
 import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
+import org.team2168.Gains;
 import org.team2168.utils.consoleprinter.ConsolePrinter;
 
 import edu.wpi.first.wpilibj.command.Subsystem;
@@ -122,7 +123,7 @@ public class ExampleMotionMagicSubsystem extends Subsystem {
     _talon.configPeakCurrentLimit(60);
 
     //set second motor as a follow
-    _talonFollow.follow(Robot.exampleMotionMagicSubsystem._talon, FollowerType.PercentOutput);
+    _talonFollow.follow(_talon, FollowerType.PercentOutput);
 
     ConsolePrinter.putNumber("Motion Magic Position", () -> {return getPosition();}, true, false);
     ConsolePrinter.putNumber("Motion Magic Velocity", () -> {return getVelocity();}, true, false);
