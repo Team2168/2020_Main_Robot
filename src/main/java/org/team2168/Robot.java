@@ -7,12 +7,14 @@
 
 package org.team2168;
 
-import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.team2168.subsystems.Drivetrain;
 //import org.team2168.utils.Debouncer;
 import org.team2168.utils.PowerDistribution;
+
+import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.command.Scheduler;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -52,8 +54,11 @@ public class Robot extends TimedRobot {
     m_chooser.addOption("My Auto", kCustomAuto);
     SmartDashboard.putData("Auto choices", m_chooser);
     drivetrain = Drivetrain.getInstance();
-    pdp = new PowerDistribution(RobotMap.PDPThreadPeriod);
-    pdp.startThread();
+    // pdp = new PowerDistribution(RobotMap.PDPThreadPeriod);
+    // pdp.startThread();
+
+    controlStyleSelectInit();
+
 
   }
 
@@ -102,6 +107,8 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
+    Scheduler.getInstance().run();
+
   }
 
   /**
@@ -115,10 +122,58 @@ public class Robot extends TimedRobot {
   public void disabledPeriodic() {
     getControlStyleInt();
     controlStyle = (int) controlStyleChooser.getSelected();
-    throttleStyle = (int) throttleVibeChooser.getSelected();
+    Scheduler.getInstance().run();
+
   }
 
   public static int getControlStyleInt() {
     return (int) controlStyleChooser.getSelected();
+  }
+
+  
+  /**
+   * Get the name of a contron style.
+   * 
+   * @return the name of the control style.
+   */
+  public static String getControlStyleName()
+  {
+    String retVal = "";
+
+    switch (controlStyle)
+    {
+    case 0:
+      retVal = "Tank Drive";
+      break;
+    case 1:
+      retVal = "Gun Style";
+      break;
+    case 2:
+      retVal = "Arcade Drive";
+      break;
+    case 3:
+      retVal = "GTA Drive";
+      break;
+    case 4:
+      retVal = "New Gun Style";
+      break;
+    default:
+      retVal = "Invalid Control Style";
+    }
+
+    return retVal;
+  }
+
+  /**
+   * Adds control styles to the selector
+   */
+  public void controlStyleSelectInit()
+  {
+    controlStyleChooser = new SendableChooser<>();
+    controlStyleChooser.addOption("Tank Drive", 0);
+    controlStyleChooser.setDefaultOption("Gun Style Controller", 1);
+    controlStyleChooser.addOption("Arcade Drive", 2);
+    controlStyleChooser.addOption("GTA Drive", 3);
+    controlStyleChooser.setDefaultOption("New Gun Style", 4);
   }
 }

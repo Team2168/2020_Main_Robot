@@ -3,23 +3,10 @@ package org.team2168.subsystems;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
-import com.ctre.phoenix.sensors.PigeonIMU;
 
-//mport org.team2168.PID.sensors.NavX;
-
-import org.team2168.Robot;
 import org.team2168.RobotMap;
-import org.team2168.PID.controllers.PIDPosition;
-import org.team2168.PID.controllers.PIDSpeed;
-import org.team2168.PID.sensors.AverageEncoder;
-import org.team2168.PID.sensors.IMU;
-import org.team2168.PID.sensors.Limelight;
-import org.team2168.utils.TCPSocketSender;
-import org.team2168.utils.consoleprinter.ConsolePrinter;
 import org.team2168.commands.drivetrain.DriveWithJoystick;
 
-import edu.wpi.first.wpilibj.AnalogInput;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
 
@@ -53,7 +40,7 @@ public class Drivetrain extends Subsystem
   private Drivetrain()
   {
 
-      System.out.println("CAN Comp Bot Drivetrain enabled - 4 motors");
+      System.out.println("CAN Comp Bot Drivetrain enabled - 6 motors");
       _leftMotor1 = new TalonFX(RobotMap.DRIVETRAIN_LEFT_MOTOR_1_PDP);
       _leftMotor2 = new TalonFX(RobotMap.DRIVETRAIN_LEFT_MOTOR_2_PDP);
       _leftMotor3 = new TalonFX(RobotMap.DRIVETRAIN_LEFT_MOTOR_3_PDP);
@@ -143,14 +130,11 @@ public class Drivetrain extends Subsystem
    */
   public void driveLeft(double speed)
   {
-    if (DT_3_MOTORS_PER_SIDE)
-    {
+    if (DT_3_MOTORS_PER_SIDE) {
       driveleftMotor1(speed);
       driveleftMotor2(speed);
       driveleftMotor3(speed);
-    }
-    else
-    {
+    } else {
       driveleftMotor1(speed);
       driveleftMotor2(speed);
     }
@@ -205,16 +189,18 @@ public class Drivetrain extends Subsystem
       driverightMotor2(speed);
       driverightMotor3(speed);
     }
-    else
-    driverightMotor1(speed);
-    driverightMotor2(speed);
+    else {
+      driverightMotor1(speed);
+      driverightMotor2(speed);
+    }
+    System.out.println("driving robot");
+
   }
 
   public void tankDrive(double leftSpeed, double rightSpeed)
   {
     driveLeft(leftSpeed);
     driveRight(rightSpeed);
-
   }
 
 
