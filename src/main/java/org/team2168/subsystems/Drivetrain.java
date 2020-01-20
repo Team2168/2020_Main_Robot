@@ -10,8 +10,7 @@ import org.team2168.commands.drivetrain.DriveWithJoystick;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
 
-public class Drivetrain extends Subsystem
-{  
+public class Drivetrain extends Subsystem {  
   private static TalonFX _leftMotor1;
   private static TalonFX _leftMotor2;
   private static TalonFX _leftMotor3;
@@ -37,9 +36,7 @@ public class Drivetrain extends Subsystem
   /**
    * Default constructors for Drivetrain
    */
-  private Drivetrain()
-  {
-
+  private Drivetrain() {
       System.out.println("CAN Comp Bot Drivetrain enabled - 6 motors");
       _leftMotor1 = new TalonFX(RobotMap.DRIVETRAIN_LEFT_MOTOR_1_PDP);
       _leftMotor2 = new TalonFX(RobotMap.DRIVETRAIN_LEFT_MOTOR_2_PDP);
@@ -71,8 +68,7 @@ public class Drivetrain extends Subsystem
   /**
    * @returns An instance of the Drivetrain subsystem
    */
-  public static Drivetrain getInstance()
-  {
+  public static Drivetrain getInstance() {
     if (instance == null)
       instance = new Drivetrain();
 
@@ -85,8 +81,7 @@ public class Drivetrain extends Subsystem
    * @param speed between -1 and 1 negative is reverse, positive is
    *        forward, 0 is stationary
    */
-  private void driveleftMotor1(double speed)
-  {
+  private void driveleftMotor1(double speed) {
     if (DT_REVERSE_LEFT1)
       speed = -speed;
 
@@ -100,8 +95,7 @@ public class Drivetrain extends Subsystem
    * @param speed between -1 and 1 negative is reverse, positive is
    *        forward, 0 is stationary
    */
-  private void driveleftMotor2(double speed)
-  {
+  private void driveleftMotor2(double speed) {
     if (DT_REVERSE_LEFT2)
       speed = -speed;
 
@@ -114,8 +108,7 @@ public class Drivetrain extends Subsystem
    * @param speed between -1 and 1 negative is reverse, positive is
    *        forward, 0 is stationary
    */
-  private void driveleftMotor3(double speed)
-  {
+  private void driveleftMotor3(double speed) {
     if (DT_REVERSE_LEFT3)
       speed = -speed;
 
@@ -128,8 +121,7 @@ public class Drivetrain extends Subsystem
    * @param speed 1.0 to -1.0. negative is reverse, positive is
    *              forward, 0 is stationary
    */
-  public void driveLeft(double speed)
-  {
+  public void driveLeft(double speed) {
     if (DT_3_MOTORS_PER_SIDE) {
       driveleftMotor1(speed);
       driveleftMotor2(speed);
@@ -145,8 +137,7 @@ public class Drivetrain extends Subsystem
    * @param speed between -1 and 1 negative is reverse, positive is
    *        forward, 0 is stationary
    */
-  private void driverightMotor1(double speed)
-  {
+  private void driverightMotor1(double speed) {
     if (DT_REVERSE_RIGHT1)
       speed = -speed;
 
@@ -159,8 +150,7 @@ public class Drivetrain extends Subsystem
    * @param speed between -1 and 1 negative is reverse, positive is
    *        forward, 0 is stationary
    */
-  private void driverightMotor2(double speed)
-  {
+  private void driverightMotor2(double speed) {
     if (DT_REVERSE_RIGHT2)
       speed = -speed;
 
@@ -173,28 +163,23 @@ public class Drivetrain extends Subsystem
    * @param speed between -1 and 1 negative is reverse, positive is
    *        forward, 0 is stationary
    */
-  private void driverightMotor3(double speed)
-  {
+  private void driverightMotor3(double speed) {
     if (DT_REVERSE_RIGHT3)
       speed = -speed;
 
     _rightMotor3.set(ControlMode.PercentOutput, speed);
   }
   
-  public void driveRight(double speed)
-  {
+  public void driveRight(double speed) {
     if(DT_3_MOTORS_PER_SIDE)
     {
       driverightMotor1(speed);
       driverightMotor2(speed);
       driverightMotor3(speed);
-    }
-    else {
+    } else {
       driverightMotor1(speed);
       driverightMotor2(speed);
     }
-    System.out.println("driving robot");
-
   }
 
   public void tankDrive(double leftSpeed, double rightSpeed)
