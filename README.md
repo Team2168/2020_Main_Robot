@@ -137,6 +137,85 @@ When using Falcon motors:
    - Create a new SupplyCurrentLimitConfiguration. Use that to configure the current.
    - An example can be found in the Drivetrain subsystem, on the `Drivetrain_WZ` branch.
 
+### Style and Architecture Guidelines
+When creating member variables:
+  - Set the accessibility to `private` and use a `_` before the name.
+    ```java
+    private <MotorController> _motor
+    private DoubleSolenoid _piston
+    private <Subsystem> _instance
+    ```
+  - Constants for subsystems should be added to their respective subsystems.
+    ```java
+    private final boolean IS_MOTOR_REVERSED
+    private final double LIFT_HOLDING_VOLTAGE
+    public final PIDPosition PID_POSITION_1
+    ```
+  - Constants for subsystems that can conflict with each other such as CAN IDs should be added to `RobotMap.java`.
+    ```java
+    public static final int <Subsystem1>_MOTOR_PDP = 0
+    public static final int <Subsystem2>_MOTOR_PDP = 1
+    ```
+
+When creating a subsystem:
+  - Every `Subsystem` should use singleton design pattern (private constructor, public getInstance() method).
+
+When creating methods in the subsystem:
+  - Motors:
+    - Create a method to set the speed of the motor.
+    - The method name should be `drive`.
+    - Add a comment for the polarity of the motor (What direction does postive go to)
+      - Positive for a shooter wheel should be out.
+      - Positive for a lift should be up.
+    - EX:
+      ```java
+      /**
+       * Sets the speed of the XYZ motor.
+       *
+       * @param speed : a value of 1.0 to -1.0 (positive is into the robot, negative is out of the robot)
+       */
+      public void drive(double speed) {
+        Whatever this method does...
+      }
+      ```
+  - Pneumatics
+    - The class commonly used is DoubleSolenoid.
+    - Create a method to extend the pneumatic.
+      - The method name should be `extend`.
+      - Unless there are multiple pneumatics, then extend the specific pneumatic.
+    - Create a method to retract the pneumatic.
+      - The method name should be `retract`.
+      - Unless there are multiple pneumatics, then extend the specific pneumatic.
+    - EX:
+      ```java
+      /**
+       * Extends the XYZ pneumatic.
+       *
+       */
+      public void extend() {
+        Whatever this method does...
+      }
+
+      /**
+       * Retract the XYZ pneumatic.
+       *
+       */
+      public void retract() {
+        Whatever this method does...
+      }
+      ```
+When adding an instance of a subsystem to the `Robot` class:
+  - The variable should be of `private` access type.
+  - Any access to the subsystem elsewhere in the code should use the static getInstance method for the respective subsystem. (e.g. `<SubsystemName>.getInstance()`).
+
+When creating commands:
+  - Motors:
+     - Create a command to drive the motor with a constant.
+     - Create a command to drive the motor with a joystick.
+  - Pneumatics:
+     - Create a command to extend the pneumatic.
+     - Create a command to retract the pneumatic.
+
 ## Drivetrain
 ### Liam
   6x Motors (Falcons) (3 per side) will be TalonFX (look at last years drivetrain to get an idea)
