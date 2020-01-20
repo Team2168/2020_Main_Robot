@@ -31,11 +31,6 @@ public class Robot extends TimedRobot {
   private static Drivetrain drivetrain;
   private static PowerDistribution pdp;
 
-  static int controlStyle;
-  static int throttleStyle;
-  private static SendableChooser<Number> controlStyleChooser;
-  private static SendableChooser<Number> throttleVibeChooser;
-
   static boolean autoMode;
   // private static boolean matchStarted = false;
   private static int gyroReinits;
@@ -56,10 +51,6 @@ public class Robot extends TimedRobot {
     drivetrain = Drivetrain.getInstance();
     // pdp = new PowerDistribution(RobotMap.PDPThreadPeriod);
     // pdp.startThread();
-
-    controlStyleSelectInit();
-
-
   }
 
   @Override
@@ -119,61 +110,14 @@ public class Robot extends TimedRobot {
   }
 
   @Override
+  public void disabledInit() {
+
+  }
+
+  @Override
   public void disabledPeriodic() {
-    getControlStyleInt();
-    controlStyle = (int) controlStyleChooser.getSelected();
+    //getControlStyleInt();
+    //controlStyle = (int) controlStyleChooser.getSelected();
     Scheduler.getInstance().run();
-
-  }
-
-  public static int getControlStyleInt() {
-    return (int) controlStyleChooser.getSelected();
-  }
-
-  
-  /**
-   * Get the name of a contron style.
-   * 
-   * @return the name of the control style.
-   */
-  public static String getControlStyleName()
-  {
-    String retVal = "";
-
-    switch (controlStyle)
-    {
-    case 0:
-      retVal = "Tank Drive";
-      break;
-    case 1:
-      retVal = "Gun Style";
-      break;
-    case 2:
-      retVal = "Arcade Drive";
-      break;
-    case 3:
-      retVal = "GTA Drive";
-      break;
-    case 4:
-      retVal = "New Gun Style";
-      break;
-    default:
-      retVal = "Invalid Control Style";
-    }
-
-    return retVal;
-  }
-
-  /**
-   * Adds control styles to the selector
-   */
-  public void controlStyleSelectInit()
-  {
-    controlStyleChooser = new SendableChooser<>();
-    controlStyleChooser.addOption("Tank Drive", 0);
-    controlStyleChooser.setDefaultOption("Gun Style Controller", 1);
-    controlStyleChooser.addOption("Arcade Drive", 2);
-    controlStyleChooser.addOption("GTA Drive", 3);
-    controlStyleChooser.setDefaultOption("New Gun Style", 4);
   }
 }
