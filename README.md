@@ -51,6 +51,10 @@ https://www.youtube.com/playlist?list=PLUTJdMwEWueIyWRVWkQE8N3XxPGucEx0Q
 1. In VS code press `ctrl + shift + p`
 2. Type `WPILib deploy`
 
+or
+
+1. `Shift` + `F5`
+
 # 2020_Main_Robot
 Code for the [FIRST Infinite Recharge](https://www.youtube.com/watch?v=gmiYWTmFRVE) game. This readme provide all of the information required to get started and programming for the 2020 season. 
 
