@@ -223,13 +223,13 @@ When creating commands:
 
 ## Drivetrain
 ### Liam
-  6x Motors (Falcons) (3 per side) will be TalonFX (look at last years drivetrain to get an idea)
+  6x Motors (Falcon 500s - TalonFX) (3 per side)
   2x Rev Encoder
   1x Pigeon IMU
 
 ## Shooter
 ### Kaleb
-  2x Motors (Falcons)
+  2x Motors (Falcon 500s - TalonFX)
   1x Rev Encoder
 
 ## Hood_Adjust
@@ -237,20 +237,25 @@ When creating commands:
   2x Pneumatics
    - One pushes the hood
    - One activates a hard stop
-   - This creates 4 positions to shoot.
+   - This creates 4 positions to shoot from.
 
 ## Intake
+```
+This needs to be two seperate subsystems. e.g.
+  - Raise/lower
+  - motors in/out
+```
 ### Ian
-  1x Motor (Neo) to spin wheels  
+  1x Motor (TalonSRX) to spin wheels  
   1x Pneumatic to pivot intake
 
 ## Hopper
 ### Cierra
-  1x Motor (Neo) to spin
+  1x Motor (TalonSRX) to spin
 
 ## Indexer
 ### Nathan K.
-  1x Motor (Neo)
+  1x Motor (Spark MAX)
   2x Line Break (IR) Sensors
 
 ## Climber
@@ -258,15 +263,22 @@ When creating commands:
   2x Motors (775, use TalonSRX) to control pulley system
   TBD sensors
 
-## Color Wheel
+## Color Wheel raise/lower
+```
+This needs to be split up into multiple subsystems. E.g.
+  - Raise/lower
+  - rotate
+  - color sense
+  - camera
+```
 ### Derek
   1x Motor (Neo) to spin wheel
-  1x Pneumatic to adjust position 
+  1x Pneumatic to adjust vertical position (rasise/lower) 
   1x color sensor to read the color for position control (Sensor comes from vendor)    
   1x Encoder to read the number of rotations for rotation control
-  1x Camera ?
+  1x Camera
   1x Hall Effect 
-
+  
 ## Balancer
 ### Caeden
   1x Motor (Neo) to move along the bar  
@@ -275,7 +287,7 @@ When creating commands:
 ## Buddy_Climb
 ### TBD
 
-## LED
+## LEDs
 ### Greyson
   
 ## Vision
