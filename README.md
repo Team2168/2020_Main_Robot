@@ -134,6 +134,7 @@ When using NEO motors:
    - *instance*.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 500)
    - *instance*.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 500)
    - *instance*.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 500)
+
 When using Falcon motors:
  - Use the TalonFX class. http://www.ctr-electronics.com/downloads/api/java/html/classcom_1_1ctre_1_1phoenix_1_1motorcontrol_1_1can_1_1_talon_f_x.html
  - In the contructor of your subsystem,
