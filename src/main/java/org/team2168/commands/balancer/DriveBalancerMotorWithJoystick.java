@@ -17,18 +17,19 @@ public class DriveBalancerMotorWithJoystick extends Command {
   private OI oi;
   public DriveBalancerMotorWithJoystick() {
     balancer = Balancer.getInstance();
+    oi = OI.getInstance();
+    requires(balancer);
   }
 
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
-    oi = OI.getInstance();
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    Balancer.getInstance().driveMotor(oi.getBalancerJoystickValue());
+    balancer.driveMotor(oi.getBalancerJoystickValue());
   }
 
   // Make this return true when this Command no longer needs to run execute()
@@ -40,7 +41,7 @@ public class DriveBalancerMotorWithJoystick extends Command {
   // Called once after isFinished returns true
   @Override
   protected void end() {
-    Balancer.getInstance().driveMotor(0.0);
+    balancer.driveMotor(0.0);
   }
 
   // Called when another command which requires one or more of the same

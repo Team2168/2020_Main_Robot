@@ -15,11 +15,13 @@ import org.team2168.subsystems.Balancer;
 public class DriveBalancerWithConstant extends Command {
 
   private double _speed;
+  private Balancer balancer;
 
   public DriveBalancerWithConstant(double speed) {
     // Use requires() here to declare subsystem dependencies
-    requires(Balancer.getInstance());
+    balancer = Balancer.getInstance();
     _speed = speed;
+    requires(balancer);
   }
 
   // Called just before this Command runs the first time
@@ -30,7 +32,7 @@ public class DriveBalancerWithConstant extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    Balancer.getInstance().driveMotor(_speed);
+    balancer.driveMotor(_speed);
   }
 
   // Make this return true when this Command no longer needs to run execute()
@@ -42,7 +44,7 @@ public class DriveBalancerWithConstant extends Command {
   // Called once after isFinished returns true
   @Override
   protected void end() {
-    Balancer.getInstance().driveMotor(0);
+    balancer.driveMotor(0);
   }
 
   // Called when another command which requires one or more of the same
