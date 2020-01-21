@@ -13,19 +13,22 @@ import edu.wpi.first.wpilibj.command.Command;
 import org.team2168.OI;
 
 public class DriveBalancerMotorWithJoystick extends Command {
+  private Balancer balancer;
+  private OI oi;
   public DriveBalancerMotorWithJoystick() {
-    requires(Balancer.getInstance());
+    balancer = Balancer.getInstance();
   }
 
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
+    oi = OI.getInstance();
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    Balancer.getInstance().driveMotor(OI.getInstance().getBalancerJoystickValue());
+    Balancer.getInstance().driveMotor(oi.getBalancerJoystickValue());
   }
 
   // Make this return true when this Command no longer needs to run execute()
