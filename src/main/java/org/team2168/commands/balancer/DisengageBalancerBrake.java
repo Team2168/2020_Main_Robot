@@ -8,8 +8,9 @@
 package org.team2168.commands.balancer;
 
 import org.team2168.Robot;
-
+import org.team2168.subsystems.Balancer;
 import edu.wpi.first.wpilibj.command.Command;
+
 
 public class DisengageBalancerBrake extends Command {
   public DisengageBalancerBrake() {
@@ -24,7 +25,7 @@ public class DisengageBalancerBrake extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    Balancer.getInstance().disengageBrakes();
+    Balancer.getInstance().disengageBreaks();
   }
 
   // Make this return true when this Command no longer needs to run execute()

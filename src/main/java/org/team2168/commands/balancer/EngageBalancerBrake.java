@@ -8,12 +8,12 @@
 package org.team2168.commands.balancer;
 
 import org.team2168.Robot;
-
+import org.team2168.subsystems.Balancer;
 import edu.wpi.first.wpilibj.command.Command;
 
 public class EngageBalancerBrake extends Command {
   public EngageBalancerBrake() {
-    require(Balancer.getInstance());
+    requires(Balancer.getInstance());
   }
 
   // Called just before this Command runs the first time

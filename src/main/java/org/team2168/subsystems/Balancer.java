@@ -14,9 +14,10 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.CANSparkMaxLowLevel.PeriodicFrame;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import org.team2168.RobotMap;
+import org.team2168.commands.balancer.DriveBalancerMotorWithJoystick;
+
 import edu.wpi.first.wpilibj.DoubleSolenoid;
-import org.team2168.controllers.PIDPosition;
-import org.team2168.controller.PIDSpeed;
+
 
 
 /**
@@ -37,7 +38,7 @@ public class Balancer extends Subsystem {
    */
 
 
-  private Balancer();
+  private Balancer()
   {
     _brakes = new DoubleSolenoid(RobotMap.BALANCER_ENGAGE_PCM, RobotMap.BALANCER_DISENGAGE_PCM);
     _balancerMotor = new CANSparkMax(RobotMap.BALANCER_MOTOR_PDP, MotorType.kBrushless);
@@ -50,8 +51,6 @@ public class Balancer extends Subsystem {
 
     //status frame every 500ms
     _balancerMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 500);
-    _balancerMotor.setPeriodicFramePeriod(PeriodicFrame.kstatus1, 500);
-    _balancerMotor.setPeriodicFramePeriod(PeriodicFrame.Kstatus2, 500);
   }
   
   /**
@@ -88,7 +87,7 @@ public class Balancer extends Subsystem {
   */
   public boolean areBrakesEngaged()
   {
-    return _brakes.get() == DoubleSolenoid.Value.kforward;
+    return _brakes.get() == DoubleSolenoid.Value.kForward;
   }
 
   /**
@@ -107,9 +106,9 @@ public class Balancer extends Subsystem {
    * @param double speed between -1 and 1 negative is reverse, positive if
    *        forward, 0 is stationary
    */
-    private void driveMotor(double speed)
+    public void driveMotor(double speed)
     {
-      if (RobotMap.BALANCER_MOTOR_REVERSE)
+      if (BALANCER_MOTOR_REVERSE)
         speed = -speed;
 
       _balancerMotor.set(speed);
@@ -120,6 +119,6 @@ public class Balancer extends Subsystem {
   @Override
   public void initDefaultCommand() {
     // Set the default command for a subsystem here.
-    setDefaultCommand(new DriveBalancerWithJoystick());
+    setDefaultCommand(new DriveBalancerMotorWithJoystick());
   }
 }

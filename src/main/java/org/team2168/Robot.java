@@ -10,6 +10,8 @@ package org.team2168;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import org.team2168.subsystems.Balancer;
+import org.team2168.OI;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -27,6 +29,9 @@ public class Robot extends TimedRobot {
   // Subsystems
   private static Balancer balancer;
 
+  private static OI oi;
+
+
   /**
    * This function is run when the robot is first started up and should be
    * used for any initialization code.
@@ -36,6 +41,7 @@ public class Robot extends TimedRobot {
     m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
     m_chooser.addOption("My Auto", kCustomAuto);
     SmartDashboard.putData("Auto choices", m_chooser);
+    oi = OI.getInstance();
     //balancer = Balancer.getInstance();
   }
 

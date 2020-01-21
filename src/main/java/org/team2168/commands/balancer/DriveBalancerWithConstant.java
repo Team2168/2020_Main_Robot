@@ -8,8 +8,9 @@
 package org.team2168.commands.balancer;
 
 import org.team2168.Robot;
-
 import edu.wpi.first.wpilibj.command.Command;
+import org.team2168.subsystems.Balancer;
+
 
 public class DriveBalancerWithConstant extends Command {
 
