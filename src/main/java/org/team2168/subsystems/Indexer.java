@@ -21,7 +21,7 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 public class Indexer extends Subsystem {
   // Puts methods for controlling this subsystem
   // here. Call these from Commands.
-  private final boolean _isReversed = false;
+  private final boolean _INDEXER_MOTOR_REVERSED = false;
   private CANSparkMax _motor; 
   private static Indexer _instance = null;
   private Indexer(){
@@ -41,7 +41,7 @@ public class Indexer extends Subsystem {
   * @param speed is a double to set the speed
   */
 public void drive(double speed) {
-  if(_isReversed){
+  if(_INDEXER_MOTOR_REVERSED){
     speed = speed * -1;
   }
 
