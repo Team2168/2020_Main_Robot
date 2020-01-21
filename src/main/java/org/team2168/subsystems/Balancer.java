@@ -40,7 +40,6 @@ public class Balancer extends Subsystem {
 
   private Balancer()
   {
-    _brakes = new DoubleSolenoid(RobotMap.BALANCER_ENGAGE_PCM, RobotMap.BALANCER_DISENGAGE_PCM);
     _balancerMotor = new CANSparkMax(RobotMap.BALANCER_MOTOR_PDP, MotorType.kBrushless);
     
     //speed limit 60
@@ -64,38 +63,6 @@ public class Balancer extends Subsystem {
       instance = new Balancer();
     
     return instance;
-  }
-  
-  /**
-  * engages the brakes to stop the robot's movement along the generator switch
-  */
-  public void engageBrakes()
-  {
-    _brakes.set(DoubleSolenoid.Value.kForward);
-  }
-
-  /**
-  * disengages the brakes to allow movement again along the generator switch
-  */
-  public void disengageBreaks()
-  {
-    _brakes.set(DoubleSolenoid.Value.kReverse);
-  }
-
-  /**
-  * @return a boolean that returns true if the brakes are engaged, and false otherwise
-  */
-  public boolean areBrakesEngaged()
-  {
-    return _brakes.get() == DoubleSolenoid.Value.kForward;
-  }
-
-  /**
-  * @return a boolean that returns true if the brakes are disengaged, and false otherwise
-  */
-  public boolean areBrakesDisengaged()
-  {
-    return _brakes.get() == DoubleSolenoid.Value.kReverse;
   }
 
   /**

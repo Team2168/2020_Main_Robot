@@ -58,8 +58,6 @@ public class RobotMap {
 	*************************************************************************/
 
 	//Double Soldenoids PCM ID = 0 ///////////////////////////////////////////
-	public static final int BALANCER_ENGAGE_PCM = 0;
-	public static final int BALANCER_DISENGAGE_PCM = 1;
 	
 	//Double Soldenoids PCM ID = 1 ///////////////////////////////////////////
 
@@ -67,7 +65,7 @@ public class RobotMap {
 	/*************************************************************************
 	*                         PDP/CAN DEVICES                                 *
     *************************************************************************/
-    public static final int BALANCER_MOTOR_PDP = 0;
+    public static final int BALANCER_MOTOR_PDP = 7;
 	// Relay Channels///////////////////////////////////////////////////////////
 
 	/*************************************************************************
