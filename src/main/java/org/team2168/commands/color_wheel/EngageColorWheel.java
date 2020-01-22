@@ -7,7 +7,7 @@
 
 package org.team2168.commands.color_wheel;
 
-import org.team2168.subsystems.ColorWheel;
+import org.team2168.subsystems.ColorWheelPivot;
 
 import edu.wpi.first.wpilibj.command.Command;
 
@@ -25,13 +25,13 @@ public class EngageColorWheel extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    ColorWheel.getInstance().extendPiston();
+    ColorWheelPivot.getInstance().extendPiston();
   }
 
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    return ColorWheel.getInstance().isExtended();
+    return ColorWheelPivot.getInstance().isExtended();
   }
 
   // Called once after isFinished returns true

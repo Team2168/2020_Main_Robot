@@ -13,8 +13,6 @@ import com.revrobotics.CANSparkMaxLowLevel.PeriodicFrame;
 
 import org.team2168.RobotMap;
 
-import edu.wpi.first.wpilibj.DoubleSolenoid;
-import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
 /**
@@ -25,30 +23,36 @@ public class ColorWheel extends Subsystem {
   // here. Call these from Commands.
 
   private final boolean COLOR_WHEEL_MOTOR_REVERSE = false;
-  private DoubleSolenoid colorWheelExtender;
-  private CANSparkMax colorWheelMotor;
+  private CANSparkMax ColorWheel;
   private static ColorWheel instance = null;
 
   private ColorWheel()
   {
-    colorWheelExtender = new DoubleSolenoid(RobotMap.COLORWHEEL_ENGAGE_PCM,RobotMap.COLORWHEEL_DISENGAGE_PCM);
-    colorWheelMotor = new CANSparkMax(RobotMap.COLORWHEEL_MOTOR_PDP,MotorType.kBrushless);
-    colorWheelMotor.setSmartCurrentLimit(60);
-    colorWheelMotor.setControlFramePeriodMs(20);
-    colorWheelMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 500);
-    colorWheelMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 500);
-    colorWheelMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 500);
+    ColorWheel = new CANSparkMax(RobotMap.COLORWHEEL_MOTOR_PDP,MotorType.kBrushless);
+    ColorWheel.setSmartCurrentLimit(60);
+    ColorWheel.setControlFramePeriodMs(20);
+    ColorWheel.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 500);
+    ColorWheel.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 500);
+    ColorWheel.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 500);
   }
 
+  /**
+   * checks if the speed of the wheel is negative then fixes accordingly, then sets the speed of the motor.
+   * @param speed is the percent output for the motor.
+   */
   public void drive(double speed)
   {
     if (COLOR_WHEEL_MOTOR_REVERSE)
     {
       speed = -speed;
     }
-    colorWheelMotor.set(speed);
+    ColorWheel.set(speed);
   }
 
+  /**
+   * 
+   * @return an instance of the ColorWheel subsystem. 
+   */
   public static ColorWheel getInstance()
   {
     if (instance == null)
@@ -57,28 +61,6 @@ public class ColorWheel extends Subsystem {
     }
     return instance;
   }
-
-  public void extendPiston()
-  {
-    colorWheelExtender.set(DoubleSolenoid.Value.kForward);
-  }
-  public void retractPiston()
-  {
-    colorWheelExtender.set(DoubleSolenoid.Value.kReverse);
-  }
-
-  public boolean isExtended()
-  {
-    return colorWheelExtender.get() == Value.kForward; 
-  }
-
-  public boolean isRetracted()
-  {
-    return colorWheelExtender.get() == Value.kReverse; 
-  }
-
-
-
 
   @Override
   public void initDefaultCommand() {

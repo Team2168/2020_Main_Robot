@@ -5,44 +5,59 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package org.team2168.commands.color_wheel;
+package org.team2168.commands.drivetrain;
 
-import org.team2168.subsystems.ColorWheelPivot;
+import org.team2168.OI;
+import org.team2168.subsystems.Drivetrain;
 
 import edu.wpi.first.wpilibj.command.Command;
 
-public class DisengageColorWheel extends Command {
-  public DisengageColorWheel() {
-    requires(ColorWheelPivot.getInstance());
-    // Use requires() here to declare subsystem dependencies
-    // eg. requires(chassis);
+public class DriveWithJoystick extends Command 
+{
+  private Drivetrain dt;
+  private OI oi;
+  
+  public DriveWithJoystick() 
+  {
+    dt = Drivetrain.getInstance();
+    requires(dt);
   }
 
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
+    oi = OI.getInstance();
+	}
+
+	/**
+	 * Gets the joystick positions from OI and sends them to the drivetrain
+	 * subsystem.
+	 * 
+	 * @author Liam
+	 */
+  @Override
+  protected void execute() {
+    dt.tankDrive((oi.getGunStyleYValue()) + oi.driverJoystick.getLeftStickRaw_X(),
+      (oi.getGunStyleYValue()) - oi.driverJoystick.getLeftStickRaw_X());
   }
 
   // Called repeatedly when this Command is scheduled to run
-  @Override
-  protected void execute() {
-    ColorWheelPivot.getInstance().retractPiston();
-  }
-
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    return ColorWheelPivot.getInstance().isRetracted();
+    return false;
   }
 
   // Called once after isFinished returns true
   @Override
   protected void end() {
+    dt.tankDrive(0.0, 0.0);
   }
 
   // Called when another command which requires one or more of the same
   // subsystems is scheduled to run
   @Override
   protected void interrupted() {
+    
   }
 }
