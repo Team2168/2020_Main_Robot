@@ -27,7 +27,7 @@ public class DriveHopperWithJoystick extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    hopper.drive(Robot.oi.operatorJoystick.getRightStickRaw_X());
+    hopper.drive(Robot.oi.getDriveWinchJoystickValue()); // The joystick used will likely change
   }
 
   // Make this return true when this Command no longer needs to run execute()
