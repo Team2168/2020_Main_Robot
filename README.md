@@ -77,7 +77,15 @@ https://docs.wpilib.org/en/latest/docs/getting-started/getting-started-frc-contr
 ## Cool things to know
 
 ### Everything you need to know about the control system is here:
-1. More information on the control system can be found at our controls website at http://controls.team2168.org
+  - WPILib readthedocs: https://docs.wpilib.org/en/latest/
+  - CTRE Pheonix API
+    - Readthedocs: https://phoenix-documentation.readthedocs.io/
+    - Javadocs: https://www.ctr-electronics.com/downloads/api/java/html/index.html
+    - Software downloads and manuals: https://www.ctr-electronics.com/talon-srx.html#product_tabs_technical_resources
+  - Spark MAX
+    - Javadocs: http://www.revrobotics.com/content/sw/max/sw-docs/java/index.html
+    - Software downloads & manuals: http://www.revrobotics.com/sparkmax-software/
+  - More information on the control system can be found at our controls website at http://controls.team2168.org
 
 ### Radio
 1. You can access radio web page by logging into http://10.21.68.1 root/admin
