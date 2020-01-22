@@ -7,16 +7,17 @@
 /* this method allows the driver to operate the intake motor with a joystick*/
 package org.team2168.commands.intake;
 
-import org.team2168.Robot;
+import org.team2168.OI;
+import org.team2168.subsystems.Intake;
 
 import edu.wpi.first.wpilibj.command.Command;
 
 public class DriveWithJoystick extends Command {
-  
-  private static double maxSpeed = 60;
+  private Intake intake = Intake.getInstance();
+  private OI oi = OI.getInstance();
   
   public DriveWithJoystick() {
-    requires(Robot.Intake);
+    requires(intake);
   }
 
   // Called just before this Command runs the first time
@@ -24,16 +25,23 @@ public class DriveWithJoystick extends Command {
   protected void initialize() {
   }
 
-  // Called repeatedly when this Command is scheduled to run
+  /**
+   * Gets joystick positions from OI.
+   * checks if it's below the maximum speed allowed, which is static and in the intake subsystem
+   * if it is, sends joystick position to Intake
+   * if it's above, sets motor speed to max speed
+   * 
+   * @author Ian
+   */
   @Override
   protected void execute() {
-    if (Robot.oi.getIntakeMotorJoyStick() < maxSpeed)
+    if (oi.getIntakeMotorJoyStick() < Intake.maxSpeed)
     {
-      Robot.Intake.driveMotor(Robot.oi.getIntakeMotorJoyStick());
+      intake.driveMotor(oi.getIntakeMotorJoyStick());
     }
     else
     {
-      Robot.Intake.driveMotor(maxSpeed);
+      intake.driveMotor(Intake.maxSpeed);
     }
   }
 
@@ -46,7 +54,7 @@ public class DriveWithJoystick extends Command {
   // Called once after isFinished returns true
   @Override
   protected void end() {
-    Robot.Intake.driveMotor(0.0);
+    intake.driveMotor(0.0);
   }
 
   // Called when another command which requires one or more of the same

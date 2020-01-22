@@ -7,13 +7,14 @@
 /* this command allows the pneumatic to be extended*/
 package org.team2168.commands.intake;
 
-import org.team2168.Robot;
+import org.team2168.subsystems.Intake;
 
 import edu.wpi.first.wpilibj.command.Command;
 
 public class ExtendPneumatic extends Command {
+  private Intake intake = Intake.getInstance();
   public ExtendPneumatic() {
-    requires(Robot.Intake); //command for intake
+    requires(intake); //command for intake
   }
 
   // Called just before this Command runs the first time
@@ -21,16 +22,20 @@ public class ExtendPneumatic extends Command {
   protected void initialize() {
   }
 
-  // Called repeatedly when this Command is scheduled to run
+  /**
+   * extends intake pneumatic
+   * 
+   * @author Ian
+   */
   @Override
   protected void execute() {
-    Robot.Intake.extendIntake(); //extends intake pneumatic
+    intake.extendIntake();
   }
 
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    return Robot.Intake.isIntakeExtended(); //checks if intake pneumatic is extended
+    return intake.isIntakeExtended(); //checks if intake pneumatic is extended
   }
 
   // Called once after isFinished returns true

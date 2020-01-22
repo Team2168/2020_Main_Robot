@@ -7,13 +7,14 @@
 /*this command retracts the intake pneumatic*/
 package org.team2168.commands.intake;
 
-import org.team2168.Robot;
+import org.team2168.subsystems.Intake;
 
 import edu.wpi.first.wpilibj.command.Command;
 
 public class RetractPneumatic extends Command {
+  private Intake intake = Intake.getInstance();
   public RetractPneumatic() {
-    requires(Robot.intake);
+    requires(intake);
   }
 
   // Called just before this Command runs the first time
@@ -21,16 +22,19 @@ public class RetractPneumatic extends Command {
   protected void initialize() {
   }
 
-  // Called repeatedly when this Command is scheduled to run
+  /**
+   * retracts intake pneumatic
+   * @author Ian
+   */
   @Override
   protected void execute() {
-    Robot.Intake.retractIntake(); //retracts intake pneumatic
+    intake.retractIntake();
   }
 
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    return Robot.Intake.isIntakeRetracted(); //checks if intake is retracted
+    return intake.isIntakeRetracted(); //checks if intake is retracted
   }
 
   // Called once after isFinished returns true

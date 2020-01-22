@@ -25,14 +25,17 @@ public class Intake extends Subsystem {
   // here. Call these from Commands.
   private CANSparkMax intakeMotor;
   private DoubleSolenoid intakePivot;
-  public boolean INTAKE_MOTOR_REVERSE; //change manually in constructor
+  public boolean INTAKE_MOTOR_REVERSE = false; //change manually
+  public static final double maxSpeed = 60;
 
   private static Intake _instance = null;
 
+  /**
+   * Default constructors for Intake
+   */
   private Intake() {
     intakeMotor = new CANSparkMax(RobotMap.INTAKE_MOTOR_PDP, MotorType.kBrushless);
     intakePivot = new DoubleSolenoid(RobotMap.INTAKE_ENGAGE_PCM, RobotMap.INTAKE_DISENGAGE_PCM);
-    INTAKE_MOTOR_REVERSE = false;
 
     //speed limit 60
     intakeMotor.setSmartCurrentLimit(60);
@@ -46,7 +49,9 @@ public class Intake extends Subsystem {
     intakeMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 500);
   }
 
-  //gets intake instance and makes it not null if it is the first time
+  /**
+   * @return an instance of the Intake Subsystem
+   */
   public static Intake getInstance() {
     if (_instance == null)
     {
@@ -61,8 +66,11 @@ public class Intake extends Subsystem {
     setDefaultCommand(new DriveWithJoystick());
   }
 
-  //sets motor speed to input
-  private void driveMotor(double speed)
+  /**
+   * sets motor speed to input, postive is towards the robot
+   * @param speed -1.0 to 1.0. negative is away from the robot, 0 is stationary, positive is towards the robot
+   */
+  public void driveMotor(double speed)
   {
     //can set negative speed if a wire is reversed
     if (INTAKE_MOTOR_REVERSE) {
@@ -71,22 +79,32 @@ public class Intake extends Subsystem {
     intakeMotor.set(speed);
   }
 
-  //extends intake pneumatic
+  /**
+   * extends intake pneumatic
+   */
   public void extendIntake() {
     intakePivot.set(DoubleSolenoid.Value.kForward);
   }
 
-  //retracts intake pneumatic
+  /**
+   * retracts intake pneumatic
+  */
   public void retractIntake() {
     intakePivot.set(DoubleSolenoid.Value.kReverse);
   }
 
-  //checks if pneumatic is extended
+  /**
+   * checks if pneumatic is extended
+   * @return a boolean, whether or not the pneumatic is extended
+   */
   public boolean isIntakeExtended() {
     return intakePivot.get() == DoubleSolenoid.Value.kForward;
   }
   
-  //checks if pneumatic is retracted
+  /**
+   * checks if pneumatic is retracted
+   * @return a boolean, whether or not the pneumatic is retracted
+  */
   public boolean isIntakeRetracted() {
     return intakePivot.get() == DoubleSolenoid.Value.kReverse;
   }
