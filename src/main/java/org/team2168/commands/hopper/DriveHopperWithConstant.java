@@ -12,10 +12,11 @@ import org.team2168.subsystems.Hopper;
 import edu.wpi.first.wpilibj.command.Command;
 
 public class DriveHopperWithConstant extends Command {
+  private Hopper hopper = Hopper.getInstance();
   private double speed;
 
   public DriveHopperWithConstant(double speed) {
-    requires(Hopper.getInstance());
+    requires(hopper);
 
     this.speed = speed;
   }
@@ -28,7 +29,7 @@ public class DriveHopperWithConstant extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    Hopper.getInstance().drive(speed);
+    hopper.drive(speed);
   }
 
   // Make this return true when this Command no longer needs to run execute()
@@ -40,7 +41,7 @@ public class DriveHopperWithConstant extends Command {
   // Called once after isFinished returns true
   @Override
   protected void end() {
-    Hopper.getInstance().drive(0.0);
+    hopper.drive(0.0);
   }
 
   // Called when another command which requires one or more of the same

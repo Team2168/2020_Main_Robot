@@ -13,9 +13,10 @@ import org.team2168.subsystems.Hopper;
 import edu.wpi.first.wpilibj.command.Command;
 
 public class DriveHopperWithJoystick extends Command {
+  private Hopper hopper = Hopper.getInstance();
 
   public DriveHopperWithJoystick() {
-    requires(Hopper.getInstance());
+    requires(hopper);
   }
 
   // Called just before this Command runs the first time
@@ -26,7 +27,7 @@ public class DriveHopperWithJoystick extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    Hopper.getInstance().drive(Robot.oi.operatorJoystick.getRightStickRaw_X());
+    hopper.drive(Robot.oi.operatorJoystick.getRightStickRaw_X());
   }
 
   // Make this return true when this Command no longer needs to run execute()
@@ -38,7 +39,7 @@ public class DriveHopperWithJoystick extends Command {
   // Called once after isFinished returns true
   @Override
   protected void end() {
-    Hopper.getInstance().drive(0.0);
+    hopper.drive(0.0);
   }
 
   // Called when another command which requires one or more of the same
