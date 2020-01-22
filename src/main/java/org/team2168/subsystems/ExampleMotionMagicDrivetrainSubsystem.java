@@ -15,7 +15,9 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.RemoteSensorSource;
 import com.ctre.phoenix.motorcontrol.SensorTerm;
 import com.ctre.phoenix.motorcontrol.StatusFrame;
+import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.TalonSRXConfiguration;
 import com.ctre.phoenix.sensors.PigeonIMU;
 import com.ctre.phoenix.sensors.PigeonIMU_StatusFrame;
 
@@ -45,9 +47,9 @@ public class ExampleMotionMagicDrivetrainSubsystem extends Subsystem {
   public final static int SLOT_2 = 2;
   public final static int SLOT_3 = 3;
   /* ---- Named slots, used to clarify code ---- */
-  public final static int kSlot_Distanc = SLOT_0;
+  public final static int kSlot_Distance = SLOT_0;
   public final static int kSlot_Turning = SLOT_1;
-  public final static int kSlot_Velocit = SLOT_2;
+  public final static int kSlot_Velocity = SLOT_2;
   public final static int kSlot_MotProf = SLOT_3; 
 
   /**
@@ -67,9 +69,9 @@ public class ExampleMotionMagicDrivetrainSubsystem extends Subsystem {
      * Not all set of Gains are used in this project and may be removed as desired.
      * 
    * 	                                    			  kP   kI   kD   kF               Iz    PeakOut */
-  public final static Gains kGains_Distanc = new Gains( 0.1, 0.0,  0.0, 0.0,            100,  0.50 );
+  public final static Gains kGains_Distance = new Gains( 0.1, 0.0,  0.0, 0.0,            100,  0.50 );
   public final static Gains kGains_Turning = new Gains( 2.0, 0.0,  4.0, 0.0,            200,  1.00 );
-  public final static Gains kGains_Velocit = new Gains( 0.1, 0.0, 20.0, 1023.0/6800.0,  300,  0.50 );
+  public final static Gains kGains_Velocity = new Gains( 0.1, 0.0, 20.0, 1023.0/6800.0,  300,  0.50 );
   public final static Gains kGains_MotProf = new Gains( 1.0, 0.0,  0.0, 1023.0/6800.0,  400,  1.00 );
   /**
    * Convert target RPM to ticks / 100ms.
@@ -85,6 +87,12 @@ public class ExampleMotionMagicDrivetrainSubsystem extends Subsystem {
    */
   public final static int kPigeonUnitsPerRotation = 8192;
   public final static double PIGEON_UNITS_PER_DEGREE = kPigeonUnitsPerRotation; //TODO figure out with James
+
+  private SupplyCurrentLimitConfiguration talonCurrentLimit;
+  private final boolean ENABLE_CURRENT_LIMIT = true;
+  private final double CONTINUOUS_CURRENT_LIMIT = 30; //amps
+  private final double TRIGGER_THRESHOLD_LIMIT = 60; //amp
+  private final double TRIGGER_THRESHOLD_TIME = 500; //ms
 
   public TalonSRX _talon;
   public TalonSRX _talonFollow;
@@ -102,7 +110,7 @@ public class ExampleMotionMagicDrivetrainSubsystem extends Subsystem {
     
     /* Factory Default all hardware to prevent unexpected behaviour */
     _talon.configFactoryDefault();
-    _talon.configFactoryDefault();
+    _talonFollow.configFactoryDefault();
     _pidgey.configFactoryDefault();
 
         /* Set Neutral Mode */
@@ -159,62 +167,80 @@ public class ExampleMotionMagicDrivetrainSubsystem extends Subsystem {
     _talon.setInverted(true); //TO-DO
     _talonFollow.setInverted(true);
 
-		/* Set status frame periods to ensure we don't have stale data */
-		_talon.setStatusFramePeriod(StatusFrame.Status_12_Feedback1, 20, kTimeoutMs);
-		_talon.setStatusFramePeriod(StatusFrame.Status_13_Base_PIDF0, 20, kTimeoutMs);
-		_talon.setStatusFramePeriod(StatusFrame.Status_14_Turn_PIDF1, 20, kTimeoutMs);
-		_talon.setStatusFramePeriod(StatusFrame.Status_10_Targets, 20, kTimeoutMs);
-		_talonFollow.setStatusFramePeriod(StatusFrame.Status_2_Feedback0, 5, kTimeoutMs);
+    /* Set status frame periods to ensure we don't have stale data */
+    _talon.setStatusFramePeriod(StatusFrame.Status_12_Feedback1, 20, kTimeoutMs);
+    _talon.setStatusFramePeriod(StatusFrame.Status_13_Base_PIDF0, 20, kTimeoutMs);
+    _talon.setStatusFramePeriod(StatusFrame.Status_14_Turn_PIDF1, 20, kTimeoutMs);
+    _talon.setStatusFramePeriod(StatusFrame.Status_10_Targets, 20, kTimeoutMs);
+    _talonFollow.setStatusFramePeriod(StatusFrame.Status_2_Feedback0, 5, kTimeoutMs);
     _pidgey.setStatusFramePeriod(PigeonIMU_StatusFrame.CondStatus_9_SixDeg_YPR , 5, kTimeoutMs);
     
-    		/* Configure neutral deadband */
-		_talon.configNeutralDeadband(kNeutralDeadband, kTimeoutMs);
-		_talonFollow.configNeutralDeadband(kNeutralDeadband, kTimeoutMs);
+        /* Configure neutral deadband */
+    _talon.configNeutralDeadband(kNeutralDeadband, kTimeoutMs);
+    _talonFollow.configNeutralDeadband(kNeutralDeadband, kTimeoutMs);
 
-		/* Set the peak and nominal outputs */
-		_talon.configNominalOutputForward(0, kTimeoutMs);
-		_talon.configNominalOutputReverse(0, kTimeoutMs);
-		_talon.configPeakOutputForward(1, kTimeoutMs);
+    /* Set the peak and nominal outputs */
+    _talon.configNominalOutputForward(0, kTimeoutMs);
+    _talon.configNominalOutputReverse(0, kTimeoutMs);
+    _talon.configPeakOutputForward(1, kTimeoutMs);
     _talon.configPeakOutputReverse(-1, kTimeoutMs);
-		_talonFollow.configNominalOutputForward(0, kTimeoutMs);
-		_talonFollow.configNominalOutputReverse(0, kTimeoutMs);
-		_talonFollow.configPeakOutputForward(1, kTimeoutMs);
-		_talonFollow.configPeakOutputReverse(-1, kTimeoutMs);
+    _talonFollow.configNominalOutputForward(0, kTimeoutMs);
+    _talonFollow.configNominalOutputReverse(0, kTimeoutMs);
+    _talonFollow.configPeakOutputForward(1, kTimeoutMs);
+    _talonFollow.configPeakOutputReverse(-1, kTimeoutMs);
 
 
-		/* FPID Gains for distance servo */
-		_talon.config_kP(kSlot_Distanc, kGains_Distanc.kP, kTimeoutMs);
-		_talon.config_kI(kSlot_Distanc, kGains_Distanc.kI, kTimeoutMs);
-		_talon.config_kD(kSlot_Distanc, kGains_Distanc.kD, kTimeoutMs);
-		_talon.config_kF(kSlot_Distanc, kGains_Distanc.kF, kTimeoutMs);
-		_talon.config_IntegralZone(kSlot_Distanc, kGains_Distanc.kIzone, kTimeoutMs);
-		_talon.configClosedLoopPeakOutput(kSlot_Distanc, kGains_Distanc.kPeakOutput, kTimeoutMs);
+    /* FPID Gains for distance servo */
+    _talon.config_kP(kSlot_Distance, kGains_Distance.kP, kTimeoutMs);
+    _talon.config_kI(kSlot_Distance, kGains_Distance.kI, kTimeoutMs);
+    _talon.config_kD(kSlot_Distance, kGains_Distance.kD, kTimeoutMs);
+    _talon.config_kF(kSlot_Distance, kGains_Distance.kF, kTimeoutMs);
+    _talon.config_IntegralZone(kSlot_Distance, kGains_Distance.kIzone, kTimeoutMs);
+    _talon.configClosedLoopPeakOutput(kSlot_Distance, kGains_Distance.kPeakOutput, kTimeoutMs);
 
-		/* FPID Gains for turn servo */
-		_talon.config_kP(kSlot_Turning, kGains_Turning.kP, kTimeoutMs);
-		_talon.config_kI(kSlot_Turning, kGains_Turning.kI, kTimeoutMs);
-		_talon.config_kD(kSlot_Turning, kGains_Turning.kD, kTimeoutMs);
-		_talon.config_kF(kSlot_Turning, kGains_Turning.kF, kTimeoutMs);
-		_talon.config_IntegralZone(kSlot_Turning, kGains_Turning.kIzone, kTimeoutMs);
-		_talon.configClosedLoopPeakOutput(kSlot_Turning, kGains_Turning.kPeakOutput, kTimeoutMs);
+    /* FPID Gains for turn servo */
+    _talon.config_kP(kSlot_Turning, kGains_Turning.kP, kTimeoutMs);
+    _talon.config_kI(kSlot_Turning, kGains_Turning.kI, kTimeoutMs);
+    _talon.config_kD(kSlot_Turning, kGains_Turning.kD, kTimeoutMs);
+    _talon.config_kF(kSlot_Turning, kGains_Turning.kF, kTimeoutMs);
+    _talon.config_IntegralZone(kSlot_Turning, kGains_Turning.kIzone, kTimeoutMs);
+    _talon.configClosedLoopPeakOutput(kSlot_Turning, kGains_Turning.kPeakOutput, kTimeoutMs);
+    
+        /**
+     * 1ms per loop.  PID loop can be slowed down if need be.
+     * For example,
+     * - if sensor updates are too slow
+     * - sensor deltas are very small per update, so derivative error never gets large enough to be useful.
+     * - sensor movement is very slow causing the derivative error to be near zero.
+     */
+    int closedLoopTimeMs = 1;
+    _talon.configClosedLoopPeriod(0, closedLoopTimeMs, kTimeoutMs);
+    _talon.configClosedLoopPeriod(1, closedLoopTimeMs, kTimeoutMs);
 
-		/* Set acceleration and vcruise velocity - see documentation */
-		_talon.configMotionCruiseVelocity((int) (1600.0*TICKS_PER_100MS), kTimeoutMs);
-		_talon.configMotionAcceleration((int) (800.0*TICKS_PER_100MS), kTimeoutMs);
+    /**
+     * configAuxPIDPolarity(boolean invert, int timeoutMs)
+     * false means talon's local output is PID0 + PID1, and other side Talon is PID0 - PID1
+     * true means talon's local output is PID0 - PID1, and other side Talon is PID0 + PID1
+     */
+    _talon.configAuxPIDPolarity(false, kTimeoutMs);
+
+    /* Set acceleration and vcruise velocity - see documentation */
+    _talon.configMotionCruiseVelocity((int) (1600.0*TICKS_PER_100MS), kTimeoutMs);
+    _talon.configMotionAcceleration((int) (800.0*TICKS_PER_100MS), kTimeoutMs);
 
     zeroSensors();
 
-    _talon.enableCurrentLimit(true);
-    _talonFollow.enableCurrentLimit(true);
-    _talon.configContinuousCurrentLimit(30);
-    _talonFollow.configContinuousCurrentLimit(30);
-    _talon.configPeakCurrentDuration(500);
-    _talonFollow.configPeakCurrentDuration(500);
-    _talon.configPeakCurrentLimit(60);
-    _talon.configPeakCurrentLimit(60);
+    talonCurrentLimit = new SupplyCurrentLimitConfiguration(ENABLE_CURRENT_LIMIT,
+    CONTINUOUS_CURRENT_LIMIT, TRIGGER_THRESHOLD_LIMIT, TRIGGER_THRESHOLD_TIME);
+
+    _talon.configSupplyCurrentLimit(talonCurrentLimit);
+    _talonFollow.configSupplyCurrentLimit(talonCurrentLimit);
 
     //set second motor as a follow
     _talonFollow.follow(_talon, FollowerType.PercentOutput);
+
+    _talon.selectProfileSlot(kSlot_Distance, PID_PRIMARY);
+    _talon.selectProfileSlot(kSlot_Turning, PID_TURN);
 
     ConsolePrinter.putNumber("Motion Magic Position", () -> {return getPosition();}, true, false);
     ConsolePrinter.putNumber("Motion Magic Velocity", () -> {return getVelocity();}, true, false);
