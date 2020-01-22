@@ -13,9 +13,10 @@ import edu.wpi.first.wpilibj.command.Command;
 
 public class DriveIndexerWithConstant extends Command { 
   private double _speed;
+  private Indexer _indexer;
   public DriveIndexerWithConstant(double speed) {
     _speed = speed;
-    requires(Indexer.getInstance());
+    requires(_indexer);
   }
 
   // Called just before this Command runs the first time
@@ -26,7 +27,7 @@ public class DriveIndexerWithConstant extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    Indexer.getInstance().drive(_speed);
+    _indexer.drive(_speed);
   }
 
   // Make this return true when this Command no longer needs to run execute()
@@ -38,7 +39,7 @@ public class DriveIndexerWithConstant extends Command {
   // Called once after isFinished returns true
   @Override
   protected void end() {
-    Indexer.getInstance().drive(0);
+    _indexer.drive(0);
 
   }
 
