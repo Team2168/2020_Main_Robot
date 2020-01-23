@@ -62,13 +62,18 @@ public class RobotMap {
 	
 	//Double Soldenoids PCM ID = 1 ///////////////////////////////////////////
 
+	public static final int PANCAKE_SOLENOID_IN = 0;
+	public static final int PANCAKE_SOLENOID_OUT = 1;
+	public static final int HOOD_SOLENOID_IN = 2;
+	public static final int HOOD_SOLENOID_OUT = 3;
+	
 	/*************************************************************************
 	*                         PDP/CAN DEVICES                                 *
     *************************************************************************/
     
 	// Relay Channels///////////////////////////////////////////////////////////
-	public static final int SHOOTER_MOTOR_ONE_PDP = 0;
-	public static final int SHOOTER_MOTOR_TWO_PDP = 1;
+	public static final int SHOOTER_MOTOR_ONE_PDP = 4;
+	public static final int SHOOTER_MOTOR_TWO_PDP = 11;
 
 	/*************************************************************************
 	 *                         PBOT DIFFERENCES  PARAMETERS                  *

@@ -7,18 +7,75 @@
 
 package org.team2168.subsystems;
 
+import org.team2168.Robot;
+import org.team2168.RobotMap;
+
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
 /**
  * Add your docs here.
  */
 public class HoodAdjust extends Subsystem {
-  // Put methods for controlling this subsystem
-  // here. Call these from Commands.
+
+  private DoubleSolenoid _hoodSolenoid;
+  private DoubleSolenoid _pancakeSolenoid;
+
+  private static HoodAdjust _instance;
+
+  private HoodAdjust()
+  {
+    _hoodSolenoid = new DoubleSolenoid(RobotMap.HOOD_SOLENOID_IN, RobotMap.HOOD_SOLENOID_OUT);
+    _pancakeSolenoid = new DoubleSolenoid(RobotMap.PANCAKE_SOLENOID_IN, RobotMap.PANCAKE_SOLENOID_OUT);
+  }
+
+  public static HoodAdjust getInstance() {
+    if(_instance == null)
+      _instance = new HoodAdjust();
+    return _instance;
+  }
+
+  public void extendHood() 
+  {
+      _hoodSolenoid.set(DoubleSolenoid.Value.kForward);
+  }
+
+  public void retractHood()
+  {
+      _hoodSolenoid.set(DoubleSolenoid.Value.kReverse);
+  }
+
+  public void extendPancake()
+  {
+    _pancakeSolenoid.set(DoubleSolenoid.Value.kForward);
+  }
+
+  public void retractPancake()
+  {
+    _pancakeSolenoid.set(DoubleSolenoid.Value.kReverse);
+  }
+
+  public boolean isHoodExtended()
+  {
+      return _hoodSolenoid.get()==DoubleSolenoid.Value.kForward;
+  }
+  public boolean isHoodRetracted()
+  {
+      return _hoodSolenoid.get()==DoubleSolenoid.Value.kReverse;
+  }
+
+  public boolean isPancakeExtended()
+  {
+    return _pancakeSolenoid.get()==DoubleSolenoid.Value.kForward;
+  }
+
+  public boolean isPancakeRetracted()
+  {
+    return _pancakeSolenoid.get()==DoubleSolenoid.Value.kReverse;
+  }
 
   @Override
   public void initDefaultCommand() {
-    // Set the default command for a subsystem here.
-    // setDefaultCommand(new MySpecialCommand());
+    
   }
 }
