@@ -16,7 +16,7 @@ public class DriveWithJoystick extends Command
 {
   private Drivetrain dt;
   private OI oi;
-  private double speedLimiter = 0.5;
+  private double speedLimiter = 0.65;
   
   public DriveWithJoystick() 
   {
