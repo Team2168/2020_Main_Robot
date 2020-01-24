@@ -7,9 +7,8 @@
 
 package org.team2168.subsystems;
 
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-import com.revrobotics.CANSparkMaxLowLevel.PeriodicFrame;
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import org.team2168.RobotMap;
 
@@ -20,20 +19,12 @@ import edu.wpi.first.wpilibj.command.Subsystem;
  */
 public class Hopper extends Subsystem {
   public static final boolean HOPPER_MOTOR_REVERSE = false;
-  private CANSparkMax hopperMotor;
+  private TalonSRX hopperMotor;
 
   private static Hopper _instance = null;
 
   private Hopper() {
-    hopperMotor = new CANSparkMax(RobotMap.HOPPER_MOTOR_PDP, MotorType.kBrushless);
-
-    hopperMotor.setSmartCurrentLimit(60);
-
-    hopperMotor.setControlFramePeriodMs(20);
-
-    hopperMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 500);
-    hopperMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 500);
-    hopperMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 500);
+    hopperMotor = new TalonSRX(RobotMap.HOPPER_MOTOR_PDP);
   }
 
   /**
@@ -54,7 +45,7 @@ public class Hopper extends Subsystem {
     if(HOPPER_MOTOR_REVERSE) {
       speed = -speed;
     }
-    hopperMotor.set(speed);
+    hopperMotor.set(ControlMode.PercentOutput, speed);
   }
 
   @Override
