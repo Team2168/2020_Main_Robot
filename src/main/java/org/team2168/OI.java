@@ -3,7 +3,6 @@ package org.team2168;
 
 import org.team2168.utils.F310;
 import org.team2168.utils.LinearInterpolator;
-import org.team2168.subsystems.climber.Climber;
 
 /**
  * This class is the glue that binds the controls on the physical operator

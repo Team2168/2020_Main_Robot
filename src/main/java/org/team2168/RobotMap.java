@@ -57,7 +57,7 @@ public class RobotMap {
 	/*************************************************************************
 	*                         Solenoids                                      *
 	*************************************************************************/
-
+	public static final int CLIMBER_RATCHET = 2;
 	//Double Soldenoids PCM ID = 0 ///////////////////////////////////////////
 	
 	//Double Soldenoids PCM ID = 1 ///////////////////////////////////////////
@@ -65,8 +65,8 @@ public class RobotMap {
 	/*************************************************************************
 	*                         PDP/CAN DEVICES                                 *
     *************************************************************************/
-	public static final int CLIMBER_MOTOR_1 = 1;
-	public static final int CLIMBER_MOTOR_2 = 2;
+	public static final int CLIMBER_MOTOR_1 = 3;
+	public static final int CLIMBER_MOTOR_2 = 12;
 	
 	// Relay Channels///////////////////////////////////////////////////////////
 
@@ -157,9 +157,8 @@ public class RobotMap {
 	/****************************************************************
 	 *						   Climber Parameters                   *
 	 ****************************************************************/
-	public static final boolean CLIMBER_ENABLE_HIGHT_HOLD = true;
-	//public static final double CLIMBER_ZERO_BELOW_HERE = ;
-	//public static final double CLIMBER_MAX_JOYSTICK_SPEED = ;
+
+
 
 	/****************************************************************
 	 *                         TCP Servers (ONLY FOR DEBUGGING)     *

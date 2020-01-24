@@ -7,23 +7,18 @@
 
 package org.team2168.commands.climber_comm;
 
-
 import org.team2168.subsystems.climber.Climber;
 
 import edu.wpi.first.wpilibj.command.Command;
 
-
-
-public class DriveClimberWithConstant extends Command {
-  double _speed;
+public class RetractRatchet extends Command {
   private Climber climber;
-  public DriveClimberWithConstant(double speed) {
-    // Use requires() here to declare subsystem dependencies
-    // eg. requires(chassis);
+
+  public RetractRatchet() {
     climber = Climber.GetInstance();
     requires(climber);
-
-    _speed = speed;
+    // Use requires() here to declare subsystem dependencies
+    // eg. requires(chassis);
   }
 
   // Called just before this Command runs the first time
@@ -34,7 +29,7 @@ public class DriveClimberWithConstant extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    climber.driveClimberMotors(_speed);
+    climber.retractRatchet();
   }
 
   // Make this return true when this Command no longer needs to run execute()
@@ -46,13 +41,11 @@ public class DriveClimberWithConstant extends Command {
   // Called once after isFinished returns true
   @Override
   protected void end() {
-    climber.driveClimberMotors(0.0);
   }
 
   // Called when another command which requires one or more of the same
   // subsystems is scheduled to run
   @Override
   protected void interrupted() {
-   end();
   }
 }
