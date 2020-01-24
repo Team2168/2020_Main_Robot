@@ -29,7 +29,7 @@ public class ColorWheel extends Subsystem {
   private ColorWheel()
   {
     ColorWheel = new CANSparkMax(RobotMap.COLORWHEEL_MOTOR_PDP,MotorType.kBrushless);
-    ColorWheel.setSmartCurrentLimit(60);
+    ColorWheel.setSmartCurrentLimit(30);
     ColorWheel.setControlFramePeriodMs(20);
     ColorWheel.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 500);
     ColorWheel.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 500);
