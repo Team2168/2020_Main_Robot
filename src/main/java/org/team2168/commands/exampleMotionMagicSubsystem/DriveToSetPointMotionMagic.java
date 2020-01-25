@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.command.Command;
 
 public class DriveToSetPointMotionMagic extends Command {
 
+  private ExampleMotionMagicSubsystem _subsystem;
   /**target position */
   private double _targetPos;
   private boolean _absolutePosition;
@@ -26,13 +27,14 @@ public class DriveToSetPointMotionMagic extends Command {
   public DriveToSetPointMotionMagic(double setPoint, boolean absolutePosition, double errorTolerance) {
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
-    requires(ExampleMotionMagicSubsystem.getInstance());
+    _subsystem = ExampleMotionMagicSubsystem.getInstance();
+    requires(_subsystem);
 
     _absolutePosition = absolutePosition;
     _errorTolerance = errorTolerance;
     if (!_absolutePosition)
     {
-      ExampleMotionMagicSubsystem.getInstance().zeroEncoder();
+      _subsystem.zeroEncoder();
     }
     _targetPos = setPoint;
   }
@@ -45,9 +47,9 @@ public class DriveToSetPointMotionMagic extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    ExampleMotionMagicSubsystem.getInstance().setSetPoint(_targetPos);
+    _subsystem.setSetPoint(_targetPos);
     /* Check if closed loop error is within the threshld */
-    if (Math.abs(ExampleMotionMagicSubsystem.getInstance().getErrorPosition()) < _errorTolerance) {
+    if (Math.abs(_subsystem.getErrorPosition()) < _errorTolerance) {
       ++_withinThresholdLoops;
     } 
     else {
@@ -64,7 +66,7 @@ public class DriveToSetPointMotionMagic extends Command {
   // Called once after isFinished returns true
   @Override
   protected void end() {
-    ExampleMotionMagicSubsystem.getInstance().drive(0.0);
+    _subsystem.drive(0.0);
   }
 
   // Called when another command which requires one or more of the same

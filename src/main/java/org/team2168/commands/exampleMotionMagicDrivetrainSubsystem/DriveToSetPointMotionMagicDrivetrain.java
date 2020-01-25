@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.command.Command;
 
 public class DriveToSetPointMotionMagicDrivetrain extends Command {
 
+  private ExampleMotionMagicDrivetrainSubsystem drivetrain;
   /**target position */
   private double _targetPos;
   private double _targetAngle;
@@ -26,7 +27,8 @@ public class DriveToSetPointMotionMagicDrivetrain extends Command {
   public DriveToSetPointMotionMagicDrivetrain(double setPoint, boolean absolutePosition) {
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
-    requires(ExampleMotionMagicDrivetrainSubsystem.getInstance());
+    drivetrain = ExampleMotionMagicDrivetrainSubsystem.getInstance();
+    requires(drivetrain);
 
     _absolutePosition = absolutePosition;
     _errorTolerancePosition = 0.5; //0.5 inches TODO need to figure out conversion
@@ -34,7 +36,7 @@ public class DriveToSetPointMotionMagicDrivetrain extends Command {
 
     if (!_absolutePosition)
     {
-      ExampleMotionMagicDrivetrainSubsystem.getInstance().zeroSensors();
+      drivetrain.zeroSensors();
     }
     _targetPos = setPoint;
   }
@@ -42,7 +44,8 @@ public class DriveToSetPointMotionMagicDrivetrain extends Command {
   public DriveToSetPointMotionMagicDrivetrain(double setPoint, boolean absolutePosition, double errorTolerancePosition, double errorToleranceAngle) {
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
-    requires(ExampleMotionMagicDrivetrainSubsystem.getInstance());
+    drivetrain = ExampleMotionMagicDrivetrainSubsystem.getInstance();
+    requires(drivetrain);
 
     _absolutePosition = absolutePosition;
     _errorTolerancePosition = errorTolerancePosition;
@@ -50,7 +53,7 @@ public class DriveToSetPointMotionMagicDrivetrain extends Command {
 
     if (!_absolutePosition)
     {
-      ExampleMotionMagicDrivetrainSubsystem.getInstance().zeroSensors();
+      drivetrain.zeroSensors();
     }
     _targetPos = setPoint;
     }
@@ -63,9 +66,9 @@ public class DriveToSetPointMotionMagicDrivetrain extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    ExampleMotionMagicDrivetrainSubsystem.getInstance().setSetPoint(_targetPos, _targetAngle);
+    drivetrain.setSetPoint(_targetPos, _targetAngle);
     /* Check if closed loop error is within the threshld */
-    if (Math.abs((ExampleMotionMagicDrivetrainSubsystem.getInstance().getErrorPosition())) < _errorTolerancePosition && (Math.abs(ExampleMotionMagicDrivetrainSubsystem.getInstance().getErrorHeading()) < _errorToleranceAngle)) 
+    if (Math.abs((drivetrain.getErrorPosition())) < _errorTolerancePosition && (Math.abs(drivetrain.getErrorHeading()) < _errorToleranceAngle)) 
     {
       ++_withinThresholdLoops;
     } 
@@ -83,7 +86,7 @@ public class DriveToSetPointMotionMagicDrivetrain extends Command {
   // Called once after isFinished returns true
   @Override
   protected void end() {
-    ExampleMotionMagicDrivetrainSubsystem.getInstance().drive(0.0);
+    drivetrain.drive(0.0);
   }
 
   // Called when another command which requires one or more of the same
