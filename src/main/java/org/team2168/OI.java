@@ -142,4 +142,10 @@ public class OI
 		return driverJoystick.getRightStickRaw_Y();
 	}
 
+	/*************************************************************************
+	 *Balancer Joystick*
+	*************************************************************************/
+	public double getBalancerJoystickValue(){
+		return operatorJoystick.getRightStickRaw_X();
+	}
 }
