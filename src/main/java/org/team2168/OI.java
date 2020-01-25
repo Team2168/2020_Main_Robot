@@ -111,7 +111,7 @@ public class OI
 
 	public double getGunStyleXValue()
 	{
-		return driverJoystick.getLeftStickRaw_X();
+		return gunStyleInterpolator.interpolate(driverJoystick.getLeftStickRaw_X());
 	}
 
 	public double getGunStyleYValue()
