@@ -10,7 +10,7 @@ package org.team2168.commands.climber_comm;
 import edu.wpi.first.wpilibj.command.Command;
 import org.team2168.OI;
 
-import org.team2168.subsystems.climber.Climber;
+import org.team2168.subsystems.Climber;
 
 
 public class DriveClimberWithJoystick extends Command {
@@ -19,7 +19,7 @@ public class DriveClimberWithJoystick extends Command {
   public DriveClimberWithJoystick() {
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
-    climber = Climber.GetInstance();
+    climber = Climber.getInstance();
     requires(climber);
   }
 

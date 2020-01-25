@@ -7,7 +7,7 @@
 
 package org.team2168.commands.climber_comm;
 
-import org.team2168.subsystems.climber.Climber;
+import org.team2168.subsystems.Climber;
 
 import edu.wpi.first.wpilibj.command.Command;
 
@@ -15,7 +15,7 @@ public class ExtendRatchet extends Command {
   private Climber climber;
 
   public ExtendRatchet() {
-    climber = Climber.GetInstance();
+    climber = Climber.getInstance();
   }
 
   // Called just before this Command runs the first time
