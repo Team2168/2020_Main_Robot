@@ -12,7 +12,10 @@ import org.team2168.subsystems.ColorWheelPivot;
 import edu.wpi.first.wpilibj.command.Command;
 
 public class EngageColorWheel extends Command {
+  private ColorWheelPivot colorWheelPivot;
   public EngageColorWheel() {
+    colorWheelPivot = ColorWheelPivot.getInstance();
+    requires(colorWheelPivot);
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
   }
@@ -31,7 +34,7 @@ public class EngageColorWheel extends Command {
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    return ColorWheelPivot.getInstance().isExtended();
+    return colorWheelPivot.isExtended();
   }
 
   // Called once after isFinished returns true

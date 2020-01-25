@@ -30,7 +30,7 @@ public class DriveColorWheelWithConstant extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    ColorWheel.getInstance().drive(_speed);
+    colorWheel.drive(_speed);
   }
 
   // Make this return true when this Command no longer needs to run execute()
@@ -42,7 +42,7 @@ public class DriveColorWheelWithConstant extends Command {
   // Called once after isFinished returns true
   @Override
   protected void end() {
-    ColorWheel.getInstance().drive(0);
+    colorWheel.drive(0);
   }
 
   // Called when another command which requires one or more of the same

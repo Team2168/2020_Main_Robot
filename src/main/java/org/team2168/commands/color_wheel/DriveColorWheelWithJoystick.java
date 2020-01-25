@@ -45,7 +45,7 @@ public class DriveColorWheelWithJoystick extends Command {
   // Called once after isFinished returns true
   @Override
   protected void end() {
-    ColorWheel.getInstance().drive(0);
+    colorWheel.drive(0);
   }
 
   // Called when another command which requires one or more of the same
