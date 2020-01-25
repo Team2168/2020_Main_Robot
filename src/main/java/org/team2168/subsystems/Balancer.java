@@ -18,11 +18,6 @@ import org.team2168.commands.balancer.DriveBalancerMotorWithJoystick;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 
-
-
-/**
- * Add your docs here.
- */
 public class Balancer extends Subsystem {
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
@@ -34,9 +29,8 @@ public class Balancer extends Subsystem {
   private static Balancer instance = null;
 
   /**
-   * As of the initial writing of this code, the balancer will require at least one motor controller and one double Solenoid
+   * Basic constructors for Balancer
    */
-
 
   private Balancer()
   {
@@ -53,10 +47,9 @@ public class Balancer extends Subsystem {
   }
   
   /**
-   * Calls instance object and makes it a singleton object of type Balancer
-   * 
-   * @return Balancer object "instance"
+   * @return An isntance of the Balancer subsystem
    */
+  
   public static Balancer getInstance()
   {
     if (instance == null)
@@ -66,12 +59,9 @@ public class Balancer extends Subsystem {
   }
 
   /**
-   * Calls _balancerMotor and creates a local variable "speed" Refers to boolean in
-   * Robot map and if true, speed = - speed Uses set() command to assign the new
-   * speed to _balacnerMotor
    * 
-   * @param double speed between -1 and 1 negative is reverse, positive if
-   *        forward, 0 is stationary
+   * @param double Sets speed of Balancer Motor, positive is
+   * forward, negative is reverse, 0 is stationary
    */
     public void driveMotor(double speed)
     {
