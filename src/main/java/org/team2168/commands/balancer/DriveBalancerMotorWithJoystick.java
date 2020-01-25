@@ -5,36 +5,31 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package org.team2168.commands.climber_comm;
+package org.team2168.commands.balancer;
 
+import org.team2168.Robot;
+import org.team2168.subsystems.Balancer;
 import edu.wpi.first.wpilibj.command.Command;
 import org.team2168.OI;
 
-import org.team2168.subsystems.climber.Climber;
-
-
-public class DriveClimberWithJoystick extends Command {
-  double _speed;
-  private Climber climber;
-  public DriveClimberWithJoystick() {
-    // Use requires() here to declare subsystem dependencies
-    // eg. requires(chassis);
-    climber = Climber.GetInstance();
-    requires(climber);
+public class DriveBalancerMotorWithJoystick extends Command {
+  private Balancer balancer;
+  private OI oi;
+  public DriveBalancerMotorWithJoystick() {
+    balancer = Balancer.getInstance();
+    oi = OI.getInstance();
+    requires(balancer);
   }
 
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
-  
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
- 
-climber.driveClimberMotors(OI.getInstance().getClimberJoystickValue());
-
+    balancer.driveMotor(oi.getBalancerJoystickValue());
   }
 
   // Make this return true when this Command no longer needs to run execute()
@@ -46,7 +41,7 @@ climber.driveClimberMotors(OI.getInstance().getClimberJoystickValue());
   // Called once after isFinished returns true
   @Override
   protected void end() {
-    climber.driveClimberMotors(0.0);
+    balancer.driveMotor(0.0);
   }
 
   // Called when another command which requires one or more of the same

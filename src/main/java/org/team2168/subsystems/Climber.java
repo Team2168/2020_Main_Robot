@@ -5,15 +5,15 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package org.team2168.subsystems.climber;
+package org.team2168.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import org.team2168.RobotMap;
-import org.team2168.commands.climber_comm.DriveClimberWithJoystick;
+import org.team2168.commands.climber.DriveClimberWithJoystick;
 
-import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
 public class Climber extends Subsystem {
@@ -21,14 +21,14 @@ public static Climber instance = null;
 public static double holdingSpeed; 
 private TalonSRX climberMotor1;
 private TalonSRX climberMotor2;
-public Solenoid climberSolenoid;
+public DoubleSolenoid  climberSolenoid;
 private final boolean CLIMBER_MOTOR_1_REVERSE = false;
 private final boolean CLIMBER_MOTOR_2_REVERSE = false;
 public static final boolean CLIMBER_ENABLE_HIGHT_HOLD = true;
 private Climber() {
-  climberMotor1 = new TalonSRX(RobotMap.CLIMBER_MOTOR_1);
-  climberMotor2 = new TalonSRX(RobotMap.CLIMBER_MOTOR_2);
-  climberSolenoid = new Solenoid(2);
+  climberMotor1 = new TalonSRX(RobotMap.CLIMBER_MOTOR_1_PDP);
+  climberMotor2 = new TalonSRX(RobotMap.CLIMBER_MOTOR_2_PDP);
+  climberSolenoid = new DoubleSolenoid(2,3);
 }
 /** 
  *  This method will set the climbers motors to a new speed, allowing
@@ -69,7 +69,7 @@ public void driveClimberMotor2(double speed){
  * programs, i.e. the commands, to utilize it.
  * @return - Returns the new instance of the climber.
  */
-public static Climber GetInstance()
+public static Climber getInstance()
 {
   if (instance == null)
     instance = new Climber();
@@ -81,7 +81,7 @@ public static Climber GetInstance()
  * from moving from the lowered position.
  */
 public void extendRatchet(){
-  climberSolenoid.set(false);
+  climberSolenoid.set(DoubleSolenoid.Value.kForward);
 }
 
 /** 
@@ -89,7 +89,7 @@ public void extendRatchet(){
  *  to a raised position.
  */
 public void retractRatchet(){
-  climberSolenoid.set(true);
+  climberSolenoid.set(DoubleSolenoid.Value.kReverse);
 }
 
 /**
@@ -97,7 +97,11 @@ public void retractRatchet(){
  * @return
  */
 public boolean isRatchetRetracted(){
-  return climberSolenoid.get();
+  return climberSolenoid.get() == DoubleSolenoid.Value.kReverse;
+}
+
+public boolean isRatchetExtended(){
+  return climberSolenoid.get() == DoubleSolenoid.Value.kForward;
  
 }
 
