@@ -5,7 +5,7 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package org.team2168.commands.drivetrain;
+package org.team2168.commands.drivetrain.PIDCommands;
 
 import org.team2168.subsystems.Drivetrain;
 
@@ -18,8 +18,8 @@ public class TurnXAngle extends Command {
   private double _targetAngle;
   private boolean _absolutePosition;
 
-  private double _errorTolerancePosition = 0.5; //0.5 inches TODO need to figure out conversion
-  private double _errorToleranceAngle = 1.0; //1.0 degree of tolerance TODO need to figure out conversion
+  private double _errorTolerancePosition = 0.5; //0.5 inches 
+  private double _errorToleranceAngle = 1.0; //1.0 degree of tolerance 
   private double _loopsToSettle = 10;
   private int _withinThresholdLoops = 0;
 
@@ -62,7 +62,7 @@ public class TurnXAngle extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    dt.setSetPoint(_targetPos, _targetAngle);
+    dt.setSetPointPosition(_targetPos, _targetAngle);
     /* Check if closed loop error is within the threshld */
     if (Math.abs((dt.getErrorPosition())) < _errorTolerancePosition && (Math.abs(dt.getErrorHeading()) < _errorToleranceAngle)) 
     {

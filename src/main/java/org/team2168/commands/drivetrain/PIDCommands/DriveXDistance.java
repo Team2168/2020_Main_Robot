@@ -5,7 +5,7 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package org.team2168.commands.drivetrain;
+package org.team2168.commands.drivetrain.PIDCommands;
 
 import org.team2168.subsystems.Drivetrain;
 
@@ -62,7 +62,7 @@ public class DriveXDistance extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    dt.setSetPoint(_targetPos, _targetAngle);
+    dt.setSetPointPosition(_targetPos, _targetAngle);
     /* Check if closed loop error is within the threshld */
     if (Math.abs((dt.getErrorPosition())) < _errorTolerancePosition && (Math.abs(dt.getErrorHeading()) < _errorToleranceAngle)) 
     {
