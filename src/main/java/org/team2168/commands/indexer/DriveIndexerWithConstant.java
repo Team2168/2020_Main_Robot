@@ -15,6 +15,7 @@ public class DriveIndexerWithConstant extends Command {
   private double _speed;
   private Indexer _indexer;
   public DriveIndexerWithConstant(double speed) {
+    _indexer = Indexer.getInstance();
     _speed = speed;
     requires(_indexer);
   }

@@ -5,43 +5,36 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package org.team2168.commands.drivetrain;
+package org.team2168.commands.balancer;
 
-import org.team2168.OI;
-import org.team2168.subsystems.Drivetrain;
-
+import org.team2168.Robot;
 import edu.wpi.first.wpilibj.command.Command;
+import org.team2168.subsystems.Balancer;
 
-public class DriveWithJoystick extends Command 
-{
-  private Drivetrain dt;
-  private OI oi;
-  
-  public DriveWithJoystick() 
-  {
-    dt = Drivetrain.getInstance();
-    requires(dt);
+
+public class DriveBalancerWithConstant extends Command {
+
+  private double _speed;
+  private Balancer balancer;
+
+  public DriveBalancerWithConstant(double speed) {
+    // Use requires() here to declare subsystem dependencies
+    balancer = Balancer.getInstance();
+    _speed = speed;
+    requires(balancer);
   }
 
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
-    oi = OI.getInstance();
-	}
-
-	/**
-	 * Gets the joystick positions from OI and sends them to the drivetrain
-	 * subsystem.
-	 * 
-	 * @author Liam
-	 */
-  @Override
-  protected void execute() {
-    dt.tankDrive((oi.getGunStyleYValue()) + oi.getGunStyleXValue(),
-      (oi.getGunStyleYValue()) - oi.getGunStyleXValue());
   }
 
   // Called repeatedly when this Command is scheduled to run
+  @Override
+  protected void execute() {
+    balancer.driveMotor(_speed);
+  }
+
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
@@ -51,13 +44,13 @@ public class DriveWithJoystick extends Command
   // Called once after isFinished returns true
   @Override
   protected void end() {
-    dt.tankDrive(0.0, 0.0);
+    balancer.driveMotor(0);
   }
 
   // Called when another command which requires one or more of the same
   // subsystems is scheduled to run
   @Override
   protected void interrupted() {
-    
+    end();
   }
 }
