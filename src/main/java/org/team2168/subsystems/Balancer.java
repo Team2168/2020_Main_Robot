@@ -24,8 +24,6 @@ public class Balancer extends Subsystem {
   
   public static final boolean BALANCER_MOTOR_REVERSE = false;
   private CANSparkMax _balancerMotor;
-  private DoubleSolenoid _brakes;
-
   private static Balancer instance = null;
 
   /**
@@ -49,7 +47,7 @@ public class Balancer extends Subsystem {
   /**
    * @return An isntance of the Balancer subsystem
    */
-  
+
   public static Balancer getInstance()
   {
     if (instance == null)
