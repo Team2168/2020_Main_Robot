@@ -38,8 +38,8 @@ public class DriveWithJoystick extends Command
 	 */
   @Override
   protected void execute() {
-    dt.tankDrive(speedLimiter*(oi.getGunStyleYValue() + oi.driverJoystick.getLeftStickRaw_X()),
-      speedLimiter*(oi.getGunStyleYValue()) - oi.driverJoystick.getLeftStickRaw_X());
+    dt.tankDrive(speedLimiter*(oi.getGunStyleYValue()+ oi.getGunStyleXValue()),
+      speedLimiter*(oi.getGunStyleYValue() - oi.getGunStyleXValue()));
   }
 
   // Called repeatedly when this Command is scheduled to run
