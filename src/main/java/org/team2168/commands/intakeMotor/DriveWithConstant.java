@@ -4,17 +4,22 @@
 /* must be accompanied by the FIRST BSD license file in the root directory of */
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
-/* this command allows the pneumatic to be extended*/
-package org.team2168.commands.intake;
 
-import org.team2168.subsystems.Intake;
+/* the purpose of this class is to control the intake motor without the joystick*/
+
+package org.team2168.commands.intakeMotor;
+
+import org.team2168.subsystems.IntakeMotor;
 
 import edu.wpi.first.wpilibj.command.Command;
 
-public class ExtendPneumatic extends Command {
-  private Intake intake = Intake.getInstance();
-  public ExtendPneumatic() {
-    requires(intake); //command for intake
+public class DriveWithConstant extends Command {
+  double speed;
+  private IntakeMotor intakeMotor = IntakeMotor.getInstance();  
+
+  public DriveWithConstant(double inputSpeed) { //when the command is initialized the speed is put straight in
+    requires(intakeMotor);
+    this.speed = inputSpeed;
   }
 
   // Called just before this Command runs the first time
@@ -23,30 +28,30 @@ public class ExtendPneumatic extends Command {
   }
 
   /**
-   * extends intake pneumatic
-   * 
+   * sets motor speed to the input
    * @author Ian
    */
   @Override
   protected void execute() {
-    intake.extendIntake();
+    intakeMotor.driveMotor(speed);
   }
 
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    return intake.isIntakeExtended(); //checks if intake pneumatic is extended
+    return false;
   }
 
   // Called once after isFinished returns true
   @Override
   protected void end() {
+    intakeMotor.driveMotor(0.0);
   }
 
   // Called when another command which requires one or more of the same
   // subsystems is scheduled to run
   @Override
   protected void interrupted() {
-    end(); //for if there is ever anything added
+    end();
   }
 }

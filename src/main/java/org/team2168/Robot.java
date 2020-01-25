@@ -7,8 +7,9 @@
 
 package org.team2168;
 
-import org.team2168.subsystems.Intake;
 import org.team2168.subsystems.Drivetrain;
+import org.team2168.subsystems.IntakeMotor;
+import org.team2168.subsystems.IntakePivot;
 //import org.team2168.utils.Debouncer;
 import org.team2168.utils.PowerDistribution;
 
@@ -29,7 +30,8 @@ public class Robot extends TimedRobot {
   private static final String kCustomAuto = "My Auto";
   private String m_autoSelected;
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
-  public static Intake intake;
+  public static IntakeMotor intakeMotor;
+  public static IntakePivot intakePivot;
   private static Drivetrain drivetrain;
   private static PowerDistribution pdp;
 
@@ -50,7 +52,8 @@ public class Robot extends TimedRobot {
     m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
     m_chooser.addOption("My Auto", kCustomAuto);
     SmartDashboard.putData("Auto choices", m_chooser);
-    intake = Intake.getInstance();
+    intakeMotor = IntakeMotor.getInstance();
+    intakePivot = IntakePivot.getInstance();
     drivetrain = Drivetrain.getInstance();
     // pdp = new PowerDistribution(RobotMap.PDPThreadPeriod);
     // pdp.startThread();

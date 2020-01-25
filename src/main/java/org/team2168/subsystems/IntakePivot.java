@@ -7,12 +7,8 @@
 
 package org.team2168.subsystems;
 
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-import com.revrobotics.CANSparkMaxLowLevel.PeriodicFrame;
-
 import org.team2168.RobotMap;
-import org.team2168.commands.intake.DriveWithJoystick;
+import org.team2168.commands.intakePivot.ExtendPneumatic;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.command.Subsystem;
@@ -20,42 +16,27 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 /**
  * Add your docs here.
  */
-public class Intake extends Subsystem {
+public class IntakePivot extends Subsystem {
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
-  private CANSparkMax intakeMotor;
   private DoubleSolenoid intakePivot;
-  public boolean INTAKE_MOTOR_REVERSE = false; //change manually
-  public static final double maxSpeed = 60;
 
-  private static Intake _instance = null;
+  private static IntakePivot _instance = null;
 
   /**
    * Default constructors for Intake
    */
-  private Intake() {
-    intakeMotor = new CANSparkMax(RobotMap.INTAKE_MOTOR_PDP, MotorType.kBrushless);
+  private IntakePivot() {
     intakePivot = new DoubleSolenoid(RobotMap.INTAKE_ENGAGE_PCM, RobotMap.INTAKE_DISENGAGE_PCM);
-
-    //speed limit 60
-    intakeMotor.setSmartCurrentLimit(60);
-
-    //control frame every 20ms
-    intakeMotor.setControlFramePeriodMs(20);
-
-    //status frame every half sec
-    intakeMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 500);
-    intakeMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 500);
-    intakeMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 500);
   }
 
   /**
    * @return an instance of the Intake Subsystem
    */
-  public static Intake getInstance() {
+  public static IntakePivot getInstance() {
     if (_instance == null)
     {
-      _instance = new Intake();
+      _instance = new IntakePivot();
     }
     return _instance;
   }
@@ -63,20 +44,7 @@ public class Intake extends Subsystem {
   @Override
   public void initDefaultCommand() {
     // Set the default command for a subsystem here.
-    setDefaultCommand(new DriveWithJoystick());
-  }
-
-  /**
-   * sets motor speed to input, postive is towards the robot
-   * @param speed -1.0 to 1.0. negative is away from the robot, 0 is stationary, positive is towards the robot
-   */
-  public void driveMotor(double speed)
-  {
-    //can set negative speed if a wire is reversed
-    if (INTAKE_MOTOR_REVERSE) {
-      speed = -speed;
-    }
-    intakeMotor.set(speed);
+    setDefaultCommand(new ExtendPneumatic());
   }
 
   /**
