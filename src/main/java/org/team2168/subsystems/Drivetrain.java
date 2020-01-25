@@ -147,7 +147,7 @@ public class Drivetrain extends Subsystem {
             /** Feedback Sensor Configuration */
 
     /* Configure the left Talon's selected sensor as local QuadEncoder */
-    _rightMotor1.configSelectedFeedbackSensor(	FeedbackDevice.QuadEncoder,				// Local Feedback Source
+    _rightMotor1.configSelectedFeedbackSensor(	FeedbackDevice.IntegratedSensor,				// Local Feedback Source
                                                 PID_PRIMARY,					// PID Slot for Source [0, 1]
                                                 kTimeoutMs);					// Configuration Timeout
 
@@ -164,7 +164,7 @@ public class Drivetrain extends Subsystem {
                                         kTimeoutMs);
     /* Setup Sum signal to be used for Distance */
     _leftMotor1.configSensorTerm(SensorTerm.Sum0, FeedbackDevice.RemoteSensor0, kTimeoutMs);				// Feedback Device of Remote Talon
-    _leftMotor1.configSensorTerm(SensorTerm.Sum1, FeedbackDevice.CTRE_MagEncoder_Relative, kTimeoutMs);	// Quadrature Encoder of current Talon
+    _leftMotor1.configSensorTerm(SensorTerm.Sum1, FeedbackDevice.IntegratedSensor, kTimeoutMs);	// Quadrature Encoder of current Talon
 
     /* Configure Sum [Sum of both QuadEncoders] to be used for Primary PID Index */
     _leftMotor1.configSelectedFeedbackSensor(	FeedbackDevice.SensorSum, 
