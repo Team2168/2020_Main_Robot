@@ -1,11 +1,15 @@
-package org.team2168; 
+package org.team2168;
 
+import org.team2168.PID.sensors.AverageEncoder;
+
+import edu.wpi.first.wpilibj.CounterBase;
 
 /**
  * The RobotMap is a mapping from the ports sensors and actuators are wired into
  * to a variable name. This provides flexibility changing wiring, makes checking
  * the wiring easier and significantly reduces the number of magic numbers
- * floating around\][\ */
+ * floating around\][\
+ */
 public class RobotMap {
 
     public static final double MAIN_PERIOD_S = 1.0/50.0; // Main loop 200Hz
@@ -29,7 +33,6 @@ public class RobotMap {
 
 	// PWM (0 to 9) on RoboRio/////////////////////////////////////////////////
 
-
 	// Digital IO Channels//////////////////////////////////////////////////////
 	// Channels 0-9 on RoboRio
 
@@ -39,6 +42,7 @@ public class RobotMap {
 	//Channels 0-3 on Roborio
 
 	// Channels 4-7 on MXP
+	
 	
 
 	/*************************************************************************
@@ -62,10 +66,19 @@ public class RobotMap {
 	
 	//Double Soldenoids PCM ID = 1 ///////////////////////////////////////////
 
+
 	/*************************************************************************
 	*                         PDP/CAN DEVICES                                 *
     *************************************************************************/
     public static final int HOPPER_MOTOR_PDP = 9;
+    public static final int BALANCER_MOTOR_PDP = 7;
+	public static final int DRIVETRAIN_LEFT_MOTOR_1_PDP = 0;
+	public static final int DRIVETRAIN_LEFT_MOTOR_2_PDP = 1;
+	public static final int DRIVETRAIN_LEFT_MOTOR_3_PDP = 2;
+	public static final int DRIVETRAIN_RIGHT_MOTOR_1_PDP = 15;
+	public static final int DRIVETRAIN_RIGHT_MOTOR_2_PDP = 14;
+	public static final int DRIVETRAIN_RIGHT_MOTOR_3_PDP = 13;
+
 	// Relay Channels///////////////////////////////////////////////////////////
 
 	/*************************************************************************
@@ -75,29 +88,9 @@ public class RobotMap {
 	/*************************************************************************
 	 *                         DRIVETRAIN PARAMETERS                         *
 	 *************************************************************************/
-	// TODO check if the reverse values match the physical robot
-    
-	// public static final boolean DT_3_MOTORS_PER_SIDE = true;
-
-	// private static final int DRIVE_PULSE_PER_ROTATION = 256; // encoder ticks per rotation
-
-	// private static final double DRIVE_GEAR_RATIO = 2.0 / 1.0; // ratio between wheel over encoder
-	// private static final double DRIVE_WHEEL_DIAMETER = 5.0;   //inches;
-	// public static final int DRIVE_ENCODER_PULSE_PER_ROT = (int) (DRIVE_PULSE_PER_ROTATION * DRIVE_GEAR_RATIO); // pulse per rotation * gear																					// ratio
 	
-	// public static final double DRIVE_ENCODER_DIST_PER_TICK = (Math.PI * DRIVE_WHEEL_DIAMETER / DRIVE_ENCODER_PULSE_PER_ROT);
-	// public static final CounterBase.EncodingType DRIVE_ENCODING_TYPE = CounterBase.EncodingType.k4X; // count rising and falling edges on
-	// public static final AverageEncoder.PositionReturnType DRIVE_POS_RETURN_TYPE = AverageEncoder.PositionReturnType.INCH;
-	// public static final AverageEncoder.SpeedReturnType DRIVE_SPEED_RETURN_TYPE = AverageEncoder.SpeedReturnType.IPS;
-	// public static final int DRIVE_ENCODER_MIN_RATE = 0;
-	// public static final int DRIVE_ENCODER_MIN_PERIOD = 1;
-	// public static final boolean LEFT_DRIVE_TRAIN_ENCODER_REVERSE = true;
-	// public static final boolean RIGHT_DRIVE_TRAIN_ENCODER_REVERSE = true;
 
-	// public static final int DRIVE_AVG_ENCODER_VAL = 5;
-	// public static final double MIN_DRIVE_SPEED = 0.2;
-	// public static final double AUTO_NORMAL_SPEED = 0.5;
-	// public static final double WHEEL_BASE = 26; //units must match PositionReturnType (inch)
+	
 
 	/*************************************************************************
 	 *                         PDP PARAMETERS                                *
@@ -111,54 +104,55 @@ public class RobotMap {
 	 *                         PID PARAMETERS                                *
 	 *************************************************************************/
 	// period to run PID loops on drive train
-	// public static final long DRIVE_TRAIN_PID_PERIOD = 20;// 70ms loop
-	// public static final int DRIVE_TRAIN_PID_ARRAY_SIZE = 30;
+	public static final long DRIVE_TRAIN_PID_PERIOD = 20;// 70ms loop
+	public static final int DRIVE_TRAIN_PID_ARRAY_SIZE = 30;
 
-	// public static final double DRIVE_TRAIN_MIN_FWD_VOLTAGE = 1.8;//volts
-	// public static final double DRIVE_TRAIN_MIN_RVD_VOLTAGE = 1.2;//volts
+	public static final double DRIVE_TRAIN_MIN_FWD_VOLTAGE = 1.8;//volts
+	public static final double DRIVE_TRAIN_MIN_RVD_VOLTAGE = 1.2;//volts
 
-	// public static final double DRIVE_TRAIN_MIN_ROT_CLOCKWISE_VOLTAGE = 1.45;//volts
-	// public static final double DRIVE_TRAIN_MIN_ROT_COUNTCLOCKWISE_VOLTAGE = 1.45;//volts
+	public static final double DRIVE_TRAIN_MIN_ROT_CLOCKWISE_VOLTAGE = 1.45;//volts
+	public static final double DRIVE_TRAIN_MIN_ROT_COUNTCLOCKWISE_VOLTAGE = 1.45;//volts
 
 	// PID Gains for Left & Right Speed and Position
 	// Bandwidth =
-	// Phase Margin =
-	// public static final double DRIVE_TRAIN_LEFT_SPEED_P = 0.04779;
-	// public static final double DRIVE_TRAIN_LEFT_SPEED_I = 0.0010526;
-	// public static final double DRIVE_TRAIN_LEFT_SPEED_D = 0.0543;
 
-	// public static final double DRIVE_TRAIN_RIGHT_SPEED_P = 0.04779;
-	// public static final double DRIVE_TRAIN_RIGHT_SPEED_I = 0.0010526;
-	// public static final double DRIVE_TRAIN_RIGHT_SPEED_D = 0.0543;
+	public static final double DRIVE_TRAIN_LEFT_SPEED_P = 0.04779;
+	public static final double DRIVE_TRAIN_LEFT_SPEED_I = 0.0010526;
+	public static final double DRIVE_TRAIN_LEFT_SPEED_D = 0.0543;
 
-	// public static final double DRIVE_TRAIN_LEFT_POSITION_P = 0.2;
-	// public static final double DRIVE_TRAIN_LEFT_POSITION_I = 0.0001412646174233;
-	// public static final double DRIVE_TRAIN_LEFT_POSITION_D = 0.0074778888124088;
+	public static final double DRIVE_TRAIN_RIGHT_SPEED_P = 0.04779;
+	public static final double DRIVE_TRAIN_RIGHT_SPEED_I = 0.0010526;
+	public static final double DRIVE_TRAIN_RIGHT_SPEED_D = 0.0543;
 
-	// public static final double DRIVE_TRAIN_RIGHT_POSITION_P = 0.25;
-	// public static final double DRIVE_TRAIN_RIGHT_POSITION_I = 0.0001412646174233;
-	// public static final double DRIVE_TRAIN_RIGHT_POSITION_D = 0.0074778888124088;
+	public static final double DRIVE_TRAIN_LEFT_POSITION_P = 0.2;
+	public static final double DRIVE_TRAIN_LEFT_POSITION_I = 0.0001412646174233;
+	public static final double DRIVE_TRAIN_LEFT_POSITION_D = 0.0074778888124088;
 
+	public static final double DRIVE_TRAIN_RIGHT_POSITION_P = 0.25;
+	public static final double DRIVE_TRAIN_RIGHT_POSITION_I = 0.0001412646174233;
+	public static final double DRIVE_TRAIN_RIGHT_POSITION_D = 0.0074778888124088;
 
-	// public static final double ROTATE_POSITION_P = 0.055;
-	// public static final double ROTATE_POSITION_I = 0.001;
-	// public static final double ROTATE_POSITION_D = 0.0064778888124088;
-
-	// public static final double ROTATE_POSITION_P_Drive_Straight = 0.055; //0.055 comp
-	// public static final double ROTATE_POSITION_I_Drive_Straight = 0.001; //0.001
-	// public static final double ROTATE_POSITION_D_Drive_Straight = 0.0064778888124088;
+	public static final double ROTATE_POSITION_P = 0.055;
+	public static final double ROTATE_POSITION_I = 0.001;
+	public static final double ROTATE_POSITION_D = 0.0064778888124088;
 
 
-	// public static final double LIFT_P = 0.044;
-	// public static final double LIFT_I = 0.0020;
-	// public static final double LIFT_D = 0.0001;
+	public static final double ROTATE_POSITION_P_Drive_Straight = 0.055; //0.055 comp
+	public static final double ROTATE_POSITION_I_Drive_Straight = 0.001; //0.001
+	public static final double ROTATE_POSITION_D_Drive_Straight = 0.0064778888124088;
 
-	// public static final double LIMELIGHT_POSITION_P = 0.013;
-	// public static final double LIMELIGHT_POSITION_I = 0.0;
-	// public static final double LIMELIGHT_POSITION_D = 0.0;
+	
+
+	public static final double LIFT_P = 0.044;
+	public static final double LIFT_I = 0.0020;
+	public static final double LIFT_D = 0.0001;
+
+	public static final double LIMELIGHT_POSITION_P = 0.013;
+	public static final double LIMELIGHT_POSITION_I = 0.0;
+	public static final double LIMELIGHT_POSITION_D = 0.0;
 		
-	// public static final long LIFT_PID_PERIOD = 20;
-	// public static final int  LIFT_PID_ARRAY_SIZE = 30;
+	public static final long LIFT_PID_PERIOD = 20;
+	public static final int  LIFT_PID_ARRAY_SIZE = 30;
 
 	/****************************************************************
 	 *                         TCP Servers (ONLY FOR DEBUGGING)     *
@@ -193,5 +187,4 @@ public class RobotMap {
 	// public static final int I2C_ADDRESS = 8;
 	// public static final boolean LEDS_REVERSE = true; //true if 0 is at the top
 	// public static final boolean LEDS_VERTICAL = true;
-	
 }
