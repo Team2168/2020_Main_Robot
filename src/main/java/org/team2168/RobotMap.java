@@ -56,8 +56,6 @@ public class RobotMap {
 	/*************************************************************************
 	*                         SPI DEVICES                                    *
 	*************************************************************************/
-	public static final int GYRO = 0;
-
 
 	/*************************************************************************
 	*                         Solenoids                                      *
@@ -76,6 +74,7 @@ public class RobotMap {
 	public static final int DRIVETRAIN_RIGHT_MOTOR_1_PDP = 15;
 	public static final int DRIVETRAIN_RIGHT_MOTOR_2_PDP = 14;
 	public static final int DRIVETRAIN_RIGHT_MOTOR_3_PDP = 13;
+	public static final int DRIVETRAIN_PIGEON_CAN_ID = 17;
 
 	// Relay Channels///////////////////////////////////////////////////////////
 

@@ -10,11 +10,11 @@ package org.team2168.commands.drivetrain;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 import org.team2168.commands.drivetrain.PIDCommands.DriveXDistance;
 
-public class Drive10FeetTest extends CommandGroup {
+public class DriveXFeetTest extends CommandGroup {
   /**
    * Add your docs here.
    */
-  public Drive10FeetTest() {
+  public DriveXFeetTest() {
     // Add Commands here:
     // e.g. addSequential(new Command1());
     // addSequential(new Command2());
@@ -31,6 +31,6 @@ public class Drive10FeetTest extends CommandGroup {
     // e.g. if Command1 requires chassis, and Command2 requires arm,
     // a CommandGroup containing them would require both the chassis and the
     // arm.
-    addSequential(new DriveXDistance(10*12, false));
+    addSequential(new DriveXDistance(8*12, false));
   }
 }

@@ -113,6 +113,8 @@ public class Drivetrain extends Subsystem {
     _rightMotor2 = new TalonFX(RobotMap.DRIVETRAIN_RIGHT_MOTOR_2_PDP);
     _rightMotor3 = new TalonFX(RobotMap.DRIVETRAIN_RIGHT_MOTOR_3_PDP);
 
+    _pidgey = new PigeonIMU(RobotMap.DRIVETRAIN_PIGEON_CAN_ID);
+
                       /* Factory Default all hardware to prevent unexpected behaviour */
     _leftMotor1.configFactoryDefault();
     _leftMotor2.configFactoryDefault();
