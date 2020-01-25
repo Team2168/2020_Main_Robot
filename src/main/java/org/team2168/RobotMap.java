@@ -36,8 +36,7 @@ public class RobotMap {
 
 	// Digital IO Channels//////////////////////////////////////////////////////
 	// Channels 0-9 on RoboRio
-	public static final int INDEXER_LINEBRAKE_A = 5;
-	public static final int INDEXER_LINEBRAKE_B = 6;
+
 
 	//Channels 10-25 on MXP (PWM and DIO)
 

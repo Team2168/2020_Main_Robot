@@ -12,8 +12,6 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import org.team2168.RobotMap;
 
-import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
 /**
@@ -24,13 +22,9 @@ public class Indexer extends Subsystem {
   // here. Call these from Commands.
   private final boolean _INDEXER_MOTOR_REVERSED = false;
   private CANSparkMax _motor;
-  private DigitalInput _DigitalInput1;
-  private DigitalInput _DigitalInput2;
   private static Indexer _instance = null;
   private Indexer(){
     _motor = new CANSparkMax(RobotMap.INDEXER_MOTOR_PDP, MotorType.kBrushless);
-    _DigitalInput1 = new DigitalInput(RobotMap.INDEXER_LINEBRAKE_A);
-    _DigitalInput2 = new DigitalInput(RobotMap.INDEXER_LINEBRAKE_B);
     }
  public static Indexer getInstance(){
    if(_instance == null){
