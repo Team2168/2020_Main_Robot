@@ -1,63 +1,57 @@
- /*----------------------------------------------------------------------------*/
+/*----------------------------------------------------------------------------*/
 /* Copyright (c) 2018 FIRST. All Rights Reserved.                             */
 /* Open Source Software - may be modified and shared by FRC teams. The code   */
 /* must be accompanied by the FIRST BSD license file in the root directory of */
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package org.team2168.commands.exampleMotionMagicDrivetrainSubsystem;
+package org.team2168.commands.drivetrain;
 
-import org.team2168.subsystems.ExampleMotionMagicDrivetrainSubsystem;
+import org.team2168.subsystems.Drivetrain;
 
 import edu.wpi.first.wpilibj.command.Command;
 
-public class DriveToSetPointMotionMagicDrivetrain extends Command {
-
-  private ExampleMotionMagicDrivetrainSubsystem drivetrain;
+public class TurnXAngle extends Command {
+  private Drivetrain dt;
   /**target position */
   private double _targetPos;
   private double _targetAngle;
   private boolean _absolutePosition;
   
-  private double _errorTolerancePosition;
-  private double _errorToleranceAngle;
+  private double _errorTolerancePosition = 0.5; //0.5 inches TODO need to figure out conversion
+  private double _errorToleranceAngle = 1.0; //1.0 degree of tolerance TODO need to figure out conversion
   private double _loopsToSettle = 10;
   private int _withinThresholdLoops = 0;
 
-  public DriveToSetPointMotionMagicDrivetrain(double setPointPosition, double setPointAngle, boolean absolutePosition) {
+  public TurnXAngle(double setPoint, boolean absolutePosition) {
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
-    drivetrain = ExampleMotionMagicDrivetrainSubsystem.getInstance();
-    requires(drivetrain);
+    dt = Drivetrain.getInstance();
+    requires(dt);
 
     _absolutePosition = absolutePosition;
-    _errorTolerancePosition = 0.5; //0.5 inches TODO need to figure out conversion
-    _errorToleranceAngle = 1.0; //1.0 degree of tolerance TODO need to figure out conversion
-
     if (!_absolutePosition)
     {
-      drivetrain.zeroSensors();
+      dt.zeroSensors();
     }
-    _targetPos = setPointPosition;
-    _targetAngle = setPointAngle;
+    _targetPos = dt.getPosition();
+    _targetAngle = setPoint;
   }
-  
-  public DriveToSetPointMotionMagicDrivetrain(double setPointPosition, double setPointAngle, boolean absolutePosition, double errorTolerancePosition, double errorToleranceAngle) {
+
+  public TurnXAngle(double setPoint, boolean absolutePosition, double errorToleranceAngle) {
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
-    drivetrain = ExampleMotionMagicDrivetrainSubsystem.getInstance();
-    requires(drivetrain);
+    dt = Drivetrain.getInstance();
+    requires(dt);
 
     _absolutePosition = absolutePosition;
-    _errorTolerancePosition = errorTolerancePosition;
     _errorToleranceAngle = errorToleranceAngle;
-
     if (!_absolutePosition)
     {
-      drivetrain.zeroSensors();
+      dt.zeroSensors();
     }
-    _targetPos = setPointPosition;
-    _targetAngle = setPointAngle;
+    _targetPos = dt.getPosition();
+    _targetAngle = setPoint;
   }
 
   // Called just before this Command runs the first time
@@ -68,9 +62,9 @@ public class DriveToSetPointMotionMagicDrivetrain extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    drivetrain.setSetPoint(_targetPos, _targetAngle);
+    dt.setSetPoint(_targetPos, _targetAngle);
     /* Check if closed loop error is within the threshld */
-    if (Math.abs((drivetrain.getErrorPosition())) < _errorTolerancePosition && (Math.abs(drivetrain.getErrorHeading()) < _errorToleranceAngle)) 
+    if (Math.abs((dt.getErrorPosition())) < _errorTolerancePosition && (Math.abs(dt.getErrorHeading()) < _errorToleranceAngle)) 
     {
       ++_withinThresholdLoops;
     } 
@@ -88,7 +82,7 @@ public class DriveToSetPointMotionMagicDrivetrain extends Command {
   // Called once after isFinished returns true
   @Override
   protected void end() {
-    drivetrain.drive(0.0);
+    dt.tankDrive(0.0, 0.0);
   }
 
   // Called when another command which requires one or more of the same
