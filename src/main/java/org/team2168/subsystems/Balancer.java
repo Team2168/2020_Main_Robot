@@ -59,7 +59,7 @@ public class Balancer extends Subsystem {
   /**
    * 
    * @param double Sets speed of Balancer Motor, positive is
-   * forward, negative is reverse, 0 is stationary
+   * right, negative is left, 0 is stationary
    */
     public void driveMotor(double speed)
     {
