@@ -8,12 +8,13 @@
 package org.team2168.commands.color_wheel;
 
 import org.team2168.subsystems.ColorWheelPivot;
-
 import edu.wpi.first.wpilibj.command.Command;
 
 public class DisengageColorWheel extends Command {
+  private ColorWheelPivot colorWheelPivot;
   public DisengageColorWheel() {
-    requires(ColorWheelPivot.getInstance());
+    colorWheelPivot = ColorWheelPivot.getInstance();
+    requires(colorWheelPivot);
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
   }
@@ -38,11 +39,13 @@ public class DisengageColorWheel extends Command {
   // Called once after isFinished returns true
   @Override
   protected void end() {
+    end();
   }
 
   // Called when another command which requires one or more of the same
   // subsystems is scheduled to run
   @Override
   protected void interrupted() {
+    end();
   }
 }

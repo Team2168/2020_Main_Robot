@@ -60,7 +60,7 @@ public class ColorWheelPivot extends Subsystem {
 
   /**
    * 
-   * @return an activated value if not extended
+   * @return true if extended
    */
   public boolean isExtended()
   {
@@ -69,7 +69,7 @@ public class ColorWheelPivot extends Subsystem {
 
   /**
    * 
-   * @return an deactivated value if extended
+   * @return true if retracted
    */
   public boolean isRetracted()
   {

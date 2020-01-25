@@ -14,8 +14,12 @@ import org.team2168.subsystems.ColorWheel;
 import edu.wpi.first.wpilibj.command.Command;
 
 public class DriveColorWheelWithJoystick extends Command {
+  private ColorWheel colorWheel;
+  private OI oi;
   public DriveColorWheelWithJoystick() {
-    requires(Robot.colorWheel);
+    colorWheel = ColorWheel.getInstance();
+    oi = OI.getInstance();
+    requires(colorWheel);
       
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
@@ -29,7 +33,7 @@ public class DriveColorWheelWithJoystick extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    ColorWheel.getInstance().drive(OI.getInstance().getColorWheelJoystick());
+    ColorWheel.getInstance().drive(oi.getColorWheelJoystick());
   }
 
   // Make this return true when this Command no longer needs to run execute()

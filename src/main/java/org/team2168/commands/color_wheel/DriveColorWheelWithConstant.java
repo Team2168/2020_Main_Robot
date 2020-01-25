@@ -8,15 +8,15 @@
 package org.team2168.commands.color_wheel;
 
 import org.team2168.subsystems.ColorWheel;
-
 import edu.wpi.first.wpilibj.command.Command;
 
 public class DriveColorWheelWithConstant extends Command {
 
   private double _speed;
-
+  private ColorWheel colorWheel;
   public DriveColorWheelWithConstant(double speed) {
-    requires(ColorWheel.getInstance());
+    colorWheel = ColorWheel.getInstance();
+    requires(colorWheel);
     _speed = speed;
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);

@@ -15,9 +15,7 @@ import org.team2168.RobotMap;
 
 import edu.wpi.first.wpilibj.command.Subsystem;
 
-/**
- * Add your docs here.
- */
+
 public class ColorWheel extends Subsystem {
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
@@ -37,8 +35,9 @@ public class ColorWheel extends Subsystem {
   }
 
   /**
-   * checks if the speed of the wheel is negative then fixes accordingly, then sets the speed of the motor.
-   * @param speed is the percent output for the motor.
+   * Sets the speed of the motor
+   * 
+   * @param speed positive is right, negative is left, 0 is hold still
    */
   public void drive(double speed)
   {
