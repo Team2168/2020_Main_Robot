@@ -90,9 +90,10 @@ public class Drivetrain extends Subsystem {
    */
   private static final double TICKS_PER_REV = 2048; //one event per edge on each quadrature channel
   private static final double TICKS_PER_100MS = TICKS_PER_REV / 600.0;
-  private static final double GEAR_RATIO = 9.0909090909;  //TODO: let java do the math. This should be the raw gear ratio calc, not the result of the calc
+  private static final double GEAR_RATIO = (50.0/10.0) * (40.0/22.0);
   private static final double WHEEL_CIRCUMFERENCE = 6 * Math.PI;
-
+  private static final double TICKS_PER_INCH = TICKS_PER_REV * GEAR_RATIO / WHEEL_CIRCUMFERENCE;
+  private static final double TICKS_PER_INCH_PER_100MS = TICKS_PER_100MS * GEAR_RATIO / WHEEL_CIRCUMFERENCE;
   /**
    * This is a property of the Pigeon IMU, and should not be changed.
    */
@@ -136,11 +137,11 @@ public class Drivetrain extends Subsystem {
 
         /* Set Neutral Mode */
     _leftMotor1.setNeutralMode(NeutralMode.Brake);
-    _leftMotor1.setNeutralMode(NeutralMode.Coast);
-    _leftMotor1.setNeutralMode(NeutralMode.Coast);
+    _leftMotor2.setNeutralMode(NeutralMode.Coast);
+    _leftMotor3.setNeutralMode(NeutralMode.Coast);
     _rightMotor1.setNeutralMode(NeutralMode.Brake);
-    _rightMotor1.setNeutralMode(NeutralMode.Coast);
-    _rightMotor1.setNeutralMode(NeutralMode.Coast);
+    _rightMotor2.setNeutralMode(NeutralMode.Coast);
+    _rightMotor3.setNeutralMode(NeutralMode.Coast);
 
             /** Feedback Sensor Configuration */
 
@@ -183,7 +184,7 @@ public class Drivetrain extends Subsystem {
      * Positive Sensor Reading should match Green (blinking) Leds on Talon
      */
     _leftMotor1.setSensorPhase(false);
-    _rightMotor1.setSensorPhase(true); //TODO: check the polarity of the right side sensors
+    _rightMotor1.setSensorPhase(false); //TODO: check the polarity of the right side sensors
 
     /***
      * invert motors if necessary 
@@ -278,8 +279,8 @@ public class Drivetrain extends Subsystem {
     _leftMotor1.configAuxPIDPolarity(false, kTimeoutMs);
 
     /* Set acceleration and vcruise velocity - see documentation */
-    _leftMotor1.configMotionCruiseVelocity((int) (100.0*TICKS_PER_100MS*GEAR_RATIO*WHEEL_CIRCUMFERENCE), kTimeoutMs);
-    _leftMotor1.configMotionAcceleration((int) (50.0*TICKS_PER_100MS*GEAR_RATIO*WHEEL_CIRCUMFERENCE), kTimeoutMs);
+    _leftMotor1.configMotionCruiseVelocity((int) (100.0*TICKS_PER_INCH_PER_100MS), kTimeoutMs);
+    _leftMotor1.configMotionAcceleration((int) (50.0*TICKS_PER_INCH_PER_100MS), kTimeoutMs);
 
     zeroSensors();
 
@@ -418,23 +419,26 @@ public class Drivetrain extends Subsystem {
   
   public double getPosition()
   {
-    return _leftMotor1.getSelectedSensorPosition(PID_PRIMARY)/(TICKS_PER_REV*GEAR_RATIO*WHEEL_CIRCUMFERENCE);
+    return _leftMotor1.getSelectedSensorPosition(PID_PRIMARY)/(TICKS_PER_INCH);
   }
 
   public double getVelocity()
   {
-    return _leftMotor1.getSelectedSensorVelocity(PID_PRIMARY)/(TICKS_PER_100MS*GEAR_RATIO*WHEEL_CIRCUMFERENCE);
+    return _leftMotor1.getSelectedSensorVelocity(PID_PRIMARY)/(TICKS_PER_INCH_PER_100MS);
   }
 
   public double getHeading()
   {
-    return _pidgey.getCompassHeading();
+    return _pidgey.getFusedHeading();
     //return _leftMotor1.getSelectedSensorPosition(PID_TURN);
   }
 
   public void setSetPointPosition(double setPoint, double setAngle)
   {
-    _leftMotor1.set(ControlMode.MotionMagic, setPoint*TICKS_PER_REV*GEAR_RATIO*WHEEL_CIRCUMFERENCE, DemandType.AuxPID, setAngle*PIGEON_UNITS_PER_DEGREE);
+
+    System.out.println("setpoint:" + setPoint*TICKS_PER_INCH + ", heading: " + setAngle*PIGEON_UNITS_PER_DEGREE);
+
+    _leftMotor1.set(ControlMode.MotionMagic, (setPoint*TICKS_PER_INCH), DemandType.AuxPID, 0);//setAngle*PIGEON_UNITS_PER_DEGREE
     _leftMotor2.follow(_leftMotor1, FollowerType.PercentOutput);
     _leftMotor3.follow(_leftMotor1, FollowerType.PercentOutput);
     _rightMotor1.follow(_leftMotor1, FollowerType.AuxOutput1);
@@ -446,7 +450,7 @@ public class Drivetrain extends Subsystem {
   //still untested and sketchy
   public void setSetPointVelocity(double setPoint, double setAngle)
   {
-    _leftMotor1.set(ControlMode.Velocity, setPoint*TICKS_PER_REV*GEAR_RATIO*WHEEL_CIRCUMFERENCE, DemandType.AuxPID, setAngle*PIGEON_UNITS_PER_DEGREE);
+    _leftMotor1.set(ControlMode.Velocity, setPoint*TICKS_PER_INCH, DemandType.AuxPID, setAngle*PIGEON_UNITS_PER_DEGREE);
     _leftMotor2.follow(_leftMotor1, FollowerType.PercentOutput);
     _leftMotor3.follow(_leftMotor1, FollowerType.PercentOutput);
     _rightMotor1.follow(_leftMotor1, FollowerType.AuxOutput1);
@@ -456,7 +460,7 @@ public class Drivetrain extends Subsystem {
 
   public double getErrorPosition()
   {
-    return (_leftMotor1.getActiveTrajectoryPosition()-_leftMotor1.getSelectedSensorPosition(PID_PRIMARY))/(TICKS_PER_REV*GEAR_RATIO*WHEEL_CIRCUMFERENCE);
+    return (_leftMotor1.getActiveTrajectoryPosition()-_leftMotor1.getSelectedSensorPosition(PID_PRIMARY))/(TICKS_PER_INCH);
     //return _leftMotor1.getClosedLoopError(kPIDLoopIdx)/TICKS_PER_REV;--only for nonMotionMagic or nonMotion Profile
   }
 

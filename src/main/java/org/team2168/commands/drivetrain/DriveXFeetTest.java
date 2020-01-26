@@ -31,6 +31,6 @@ public class DriveXFeetTest extends CommandGroup {
     // e.g. if Command1 requires chassis, and Command2 requires arm,
     // a CommandGroup containing them would require both the chassis and the
     // arm.
-    addSequential(new DriveXDistance(1*12, false));
+    addSequential(new DriveXDistance(1*12));
   }
 }
