@@ -10,6 +10,7 @@ package org.team2168;
 import org.team2168.subsystems.Drivetrain;
 //import org.team2168.utils.Debouncer;
 import org.team2168.utils.PowerDistribution;
+import org.team2168.utils.consoleprinter.ConsolePrinter;
 
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
@@ -30,13 +31,14 @@ public class Robot extends TimedRobot {
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
   private static Drivetrain drivetrain;
   private static PowerDistribution pdp;
+  private static ConsolePrinter printer;
 
   static boolean autoMode;
   // private static boolean matchStarted = false;
-  private static int gyroReinits;
+  //private static int gyroReinits;
   // private double lastAngle;
   // private Debouncer gyroDriftDetector = new Debouncer(1.0);
-  private static boolean gyroCalibrating = false;
+  //private static boolean gyroCalibrating = false;
 
   // private boolean lastGyroCalibrating = false;
   /**
@@ -51,6 +53,11 @@ public class Robot extends TimedRobot {
     drivetrain = Drivetrain.getInstance();
     // pdp = new PowerDistribution(RobotMap.PDPThreadPeriod);
     // pdp.startThread();
+
+    ConsolePrinter.init();
+    ConsolePrinter.putNumber("LDT1 Position", ()->{return drivetrain.getPosition();}, true, false);
+    ConsolePrinter.putNumber("Heading", ()->{return drivetrain.getHeading();}, true, false);
+    ConsolePrinter.startThread();
   }
 
   @Override
