@@ -27,79 +27,77 @@ public class Drivetrain extends Subsystem {
   private static TalonFX _rightMotor1;
   private static TalonFX _rightMotor2;
   private static TalonFX _rightMotor3;
-
   private static PigeonIMU _pidgey;
-
 
   private static Drivetrain instance = null;
 
   private SupplyCurrentLimitConfiguration talonCurrentLimit;
-  private final boolean ENABLE_CURRENT_LIMIT = true;
-  private final double CONTINUOUS_CURRENT_LIMIT = 40; //amps
-  private final double TRIGGER_THRESHOLD_LIMIT = 60; //amp
-  private final double TRIGGER_THRESHOLD_TIME = 200; //ms
-  public static final boolean DT_REVERSE_LEFT1 = false;
-  public static final boolean DT_REVERSE_LEFT2 = false;
-  public static final boolean DT_REVERSE_LEFT3 = false;
-  public static final boolean DT_REVERSE_RIGHT1 = true;
-  public static final boolean DT_REVERSE_RIGHT2 = true;
-  public static final boolean DT_REVERSE_RIGHT3 = true; 
-  public static final boolean DT_3_MOTORS_PER_SIDE = true;
+  private static final boolean ENABLE_CURRENT_LIMIT = true;
+  private static final double CONTINUOUS_CURRENT_LIMIT = 40; //amps
+  private static final double TRIGGER_THRESHOLD_LIMIT = 60; //amp
+  private static final double TRIGGER_THRESHOLD_TIME = 200; //ms
+  private static final boolean DT_REVERSE_LEFT1 = false;
+  private static final boolean DT_REVERSE_LEFT2 = DT_REVERSE_LEFT1;
+  private static final boolean DT_REVERSE_LEFT3 = DT_REVERSE_LEFT1;
+  private static final boolean DT_REVERSE_RIGHT1 = true;
+  private static final boolean DT_REVERSE_RIGHT2 = DT_REVERSE_RIGHT1;
+  private static final boolean DT_REVERSE_RIGHT3 = DT_REVERSE_RIGHT1; 
+  private static final boolean DT_3_MOTORS_PER_SIDE = true;
 
-      /** ---- Flat constants, you should not need to change these ---- */
+  /** ---- Flat constants, you should not need to change these ---- */
   /* We allow either a 0 or 1 when selecting an ordinal for remote devices [You can have up to 2 devices assigned remotely to a talon/victor] */
-  public final static int REMOTE_0 = 0;
-  public final static int REMOTE_1 = 1;
+  private static final int REMOTE_0 = 0;
+  private static final int REMOTE_1 = 1;
   /* We allow either a 0 or 1 when selecting a PID Index, where 0 is primary and 1 is auxiliary */
-  public final static int PID_PRIMARY = 0;
-  public final static int PID_TURN = 1;
+  private static final int PID_PRIMARY = 0;
+  private static final int PID_TURN = 1;
   /* Firmware currently supports slots [0, 3] and can be used for either PID Set */
-  public final static int SLOT_0 = 0;
-  public final static int SLOT_1 = 1;
-  public final static int SLOT_2 = 2;
-  public final static int SLOT_3 = 3;
+  private static final int SLOT_0 = 0;
+  private static final int SLOT_1 = 1;
+  private static final int SLOT_2 = 2;
+  private static final int SLOT_3 = 3;
   /* ---- Named slots, used to clarify code ---- */
-  public final static int kSlot_Distance = SLOT_0;
-  public final static int kSlot_Turning = SLOT_1;
-  public final static int kSlot_Velocity = SLOT_2;
-  public final static int kSlot_MotProf = SLOT_3; 
+  private static final int kSlot_Distance = SLOT_0;
+  private static final int kSlot_Turning = SLOT_1;
+  private static final int kSlot_Velocity = SLOT_2;
+  private static final int kSlot_MotProf = SLOT_3; 
 
   /**
    * set to zero to skip waiting for confirmation, set to nonzero to wait and
    * report to DS if action fails.
    */
-  public static final int kTimeoutMs = 30;
+  private static final int kTimeoutMs = 30;
 
-    /**
+  /**
    * Motor neutral dead-band, set to the minimum 0.1%.
    */
-  public final static double kNeutralDeadband = 0.001;
+  private static final double kNeutralDeadband = 0.001;
+  private static final double MAX_VELOCITY = 11000;
 
   /**
    * PID Gains may have to be adjusted based on the responsiveness of control loop.
      * kF: 1023 represents output value to Talon at 100%, 6800 represents Velocity units at 100% output
      * Not all set of Gains are used in this project and may be removed as desired.
      * 
-   * 	                                                    kP   kI   kD   kF               Iz    PeakOut */
-  public final static Gains kGains_Distance = new Gains( 0.1, 0.0,  0.0, 0.0,            100,  0.50 );
-  public final static Gains kGains_Turning = new Gains( 2.0, 0.0,  4.0, 0.0,            200,  1.00 );
-  public final static Gains kGains_Velocity = new Gains( 0.1, 0.0, 20.0, 1023.0/6800.0,  300,  0.50 );
-  public final static Gains kGains_MotProf = new Gains( 1.0, 0.0,  0.0, 1023.0/6800.0,  400,  1.00 );
+   * 	                                                    kP   kI   kD   kF                    Iz    PeakOut */
+  private static final Gains kGains_Distance = new Gains( 0.1, 0.0,  0.0, 0.0,                 100,  0.50 );
+  private static final Gains kGains_Turning = new Gains( 2.0, 0.0,  4.0, 0.0,                  200,  1.00 );
+  private static final Gains kGains_Velocity = new Gains( 0.1, 0.0, 20.0, 1023.0/MAX_VELOCITY, 300,  0.50 );
+  private static final Gains kGains_MotProf = new Gains( 1.0, 0.0,  0.0, 1023.0/MAX_VELOCITY,  400,  1.00 );
   /**
    * Convert target RPM to ticks / 100ms.
-   * 256*4x (quadrature encoder) Ticks/Rev *  RPM / 600 100ms/min in either direction:
    * velocity setpoint is in units/100ms
    */
-  final double TICKS_PER_REV = 256.0 * 4.0; //one event per edge on each quadrature channel
-  final double TICKS_PER_100MS = TICKS_PER_REV / 600.0;
-  final double GEAR_RATIO = 9.0909090909;
-  final double WHEEL_CIRCUMFERENCE = 6 * Math.PI;
+  private static final double TICKS_PER_REV = 2048; //one event per edge on each quadrature channel
+  private static final double TICKS_PER_100MS = TICKS_PER_REV / 600.0;
+  private static final double GEAR_RATIO = 9.0909090909;  //TODO: let java do the math. This should be the raw gear ratio calc, not the result of the calc
+  private static final double WHEEL_CIRCUMFERENCE = 6 * Math.PI;
 
   /**
    * This is a property of the Pigeon IMU, and should not be changed.
    */
-  public final static int kPigeonUnitsPerRotation = 8192;
-  public final static double PIGEON_UNITS_PER_DEGREE = kPigeonUnitsPerRotation/360; //TODO figure out with James
+  private static final int PIGEON_UNITS_PER_ROTATION = 8192;
+  private static final double PIGEON_UNITS_PER_DEGREE = PIGEON_UNITS_PER_ROTATION/360;
 
   /**
    * Default constructors for Drivetrain
@@ -147,9 +145,9 @@ public class Drivetrain extends Subsystem {
             /** Feedback Sensor Configuration */
 
     /* Configure the left Talon's selected sensor as local QuadEncoder */
-    _rightMotor1.configSelectedFeedbackSensor(	FeedbackDevice.IntegratedSensor,				// Local Feedback Source
-                                                PID_PRIMARY,					// PID Slot for Source [0, 1]
-                                                kTimeoutMs);					// Configuration Timeout
+    _rightMotor1.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor,				// Local Feedback Source
+                                              PID_PRIMARY,					// PID Slot for Source [0, 1]
+                                              kTimeoutMs);					// Configuration Timeout
 
     /* Configure the Remote Talon's selected sensor as a remote sensor for the right Talon */
     _leftMotor1.configRemoteFeedbackFilter(_rightMotor1.getDeviceID(),					// Device ID of Source
@@ -184,15 +182,15 @@ public class Drivetrain extends Subsystem {
     * Phase sensor accordingly. 
      * Positive Sensor Reading should match Green (blinking) Leds on Talon
      */
-    _leftMotor1.setSensorPhase(true);
-    _rightMotor1.setSensorPhase(true);
+    _leftMotor1.setSensorPhase(false);
+    _rightMotor1.setSensorPhase(true); //TODO: check the polarity of the right side sensors
 
     /***
      * invert motors if necessary 
      */
-    _leftMotor1.setInverted(DT_REVERSE_LEFT1); //TO-DO
-    _leftMotor2.setInverted(DT_REVERSE_LEFT1); //TO-DO
-    _leftMotor3.setInverted(DT_REVERSE_LEFT1); //TO-DO
+    _leftMotor1.setInverted(DT_REVERSE_LEFT1);
+    _leftMotor2.setInverted(DT_REVERSE_LEFT2);
+    _leftMotor3.setInverted(DT_REVERSE_LEFT3);
     _rightMotor1.setInverted(DT_REVERSE_RIGHT1);
     _rightMotor2.setInverted(DT_REVERSE_RIGHT2);
     _rightMotor3.setInverted(DT_REVERSE_RIGHT3);
@@ -280,8 +278,8 @@ public class Drivetrain extends Subsystem {
     _leftMotor1.configAuxPIDPolarity(false, kTimeoutMs);
 
     /* Set acceleration and vcruise velocity - see documentation */
-    _leftMotor1.configMotionCruiseVelocity((int) (1600.0*TICKS_PER_100MS*GEAR_RATIO*WHEEL_CIRCUMFERENCE), kTimeoutMs);
-    _leftMotor1.configMotionAcceleration((int) (800.0*TICKS_PER_100MS*GEAR_RATIO*WHEEL_CIRCUMFERENCE), kTimeoutMs);
+    _leftMotor1.configMotionCruiseVelocity((int) (100.0*TICKS_PER_100MS*GEAR_RATIO*WHEEL_CIRCUMFERENCE), kTimeoutMs);
+    _leftMotor1.configMotionAcceleration((int) (50.0*TICKS_PER_100MS*GEAR_RATIO*WHEEL_CIRCUMFERENCE), kTimeoutMs);
 
     zeroSensors();
 
@@ -430,7 +428,8 @@ public class Drivetrain extends Subsystem {
 
   public double getHeading()
   {
-    return _leftMotor1.getSelectedSensorPosition(PID_TURN);
+    return _pidgey.getCompassHeading();
+    //return _leftMotor1.getSelectedSensorPosition(PID_TURN);
   }
 
   public void setSetPointPosition(double setPoint, double setAngle)
