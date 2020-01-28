@@ -25,8 +25,8 @@ public class HoodAdjust extends Subsystem {
 
   private HoodAdjust()
   {
-    _hoodSolenoid = new DoubleSolenoid(RobotMap.HOOD_SOLENOID_IN, RobotMap.HOOD_SOLENOID_OUT);
-    _pancakeSolenoid = new DoubleSolenoid(RobotMap.PANCAKE_SOLENOID_IN, RobotMap.PANCAKE_SOLENOID_OUT);
+    _hoodSolenoid = new DoubleSolenoid(RobotMap.PCM_CAN_ID_SHOOTER, RobotMap.HOOD_SOLENOID_IN, RobotMap.HOOD_SOLENOID_OUT);
+    _pancakeSolenoid = new DoubleSolenoid(RobotMap.PCM_CAN_ID_SHOOTER, RobotMap.PANCAKE_SOLENOID_IN, RobotMap.PANCAKE_SOLENOID_OUT);
   }
 
   public static HoodAdjust getInstance() {

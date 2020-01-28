@@ -14,11 +14,12 @@ import org.team2168.subsystems.Shooter;
 
 
 public class DriveShooterWithJoystick extends Command {
-  
+  private Shooter shooter;
+  private OI oi;
   public DriveShooterWithJoystick() {
-    // Use requires() here to declare subsystem dependencies
-    // eg. requires(chassis);
-    requires(Shooter.getInstance());
+    shooter = Shooter.getInstance();
+    oi = OI.getInstance();
+    requires(shooter);
   }
 
   // Called just before this Command runs the first time
@@ -29,7 +30,7 @@ public class DriveShooterWithJoystick extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    Shooter.getInstance().driveShooterMotors(OI.getInstance().getShooterJoystick());
+    shooter.driveShooterMotors(oi.getShooterJoystick());
   }
 
   // Make this return true when this Command no longer needs to run execute()
@@ -41,7 +42,7 @@ public class DriveShooterWithJoystick extends Command {
   // Called once after isFinished returns true
   @Override
   protected void end() {
-    Shooter.getInstance().driveShooterMotors(0);
+    shooter.driveShooterMotors(0);
   }
 
   // Called when another command which requires one or more of the same

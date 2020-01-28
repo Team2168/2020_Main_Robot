@@ -5,7 +5,6 @@ import org.team2168.utils.F310;
 import org.team2168.utils.LinearInterpolator;
 import org.team2168.commands.drivetrain.*;
 
-import jdk.nashorn.api.tree.ReturnTree;
 
 /**
  * This class is the glue that binds the controls on the physical operator
@@ -113,7 +112,7 @@ public class OI
 
 	public double getGunStyleXValue()
 	{
-		return driverJoystick.getLeftStickRaw_X();
+		return gunStyleInterpolator.interpolate(driverJoystick.getLeftStickRaw_X());
 	}
 
 	public double getGunStyleYValue()
@@ -147,5 +146,11 @@ public class OI
 	public double getShooterJoystick()
 	{
 		 return operatorJoystick.getRightStickRaw_Y();
+	}
+	/*************************************************************************
+	 *Balancer Joystick*
+	*************************************************************************/
+	public double getBalancerJoystickValue(){
+		return operatorJoystick.getRightStickRaw_X();
 	}
 }

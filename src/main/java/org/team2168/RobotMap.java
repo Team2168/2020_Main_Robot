@@ -33,7 +33,6 @@ public class RobotMap {
 
 	// PWM (0 to 9) on RoboRio/////////////////////////////////////////////////
 
-
 	// Digital IO Channels//////////////////////////////////////////////////////
 	// Channels 0-9 on RoboRio
 
@@ -51,7 +50,8 @@ public class RobotMap {
 	*************************************************************************/
 	
 	//CAN Device IDs///////////////////////////////////////////////////////////
-    public static final int PDP_CAN_ID = 0;
+	public static final int PCM_CAN_ID_BELLYPAN = 0;
+	public static final int PCM_CAN_ID_SHOOTER = 1;
 
 	/*************************************************************************
 	*                         SPI DEVICES                                    *
@@ -72,9 +72,11 @@ public class RobotMap {
 	public static final int HOOD_SOLENOID_IN = 2;
 	public static final int HOOD_SOLENOID_OUT = 3;
 	
+
 	/*************************************************************************
 	*                         PDP/CAN DEVICES                                 *
     *************************************************************************/
+    public static final int BALANCER_MOTOR_PDP = 7;
 	public static final int DRIVETRAIN_LEFT_MOTOR_1_PDP = 0;
 	public static final int DRIVETRAIN_LEFT_MOTOR_2_PDP = 1;
 	public static final int DRIVETRAIN_LEFT_MOTOR_3_PDP = 2;

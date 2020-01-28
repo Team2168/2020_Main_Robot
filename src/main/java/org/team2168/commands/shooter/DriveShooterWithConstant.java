@@ -13,11 +13,11 @@ import org.team2168.subsystems.Shooter;
 public class DriveShooterWithConstant extends Command {
 
   private double _speed;
+  private Shooter shooter;
 
   public DriveShooterWithConstant(double speed) {
-    // Use requires() here to declare subsystem dependencies
-    // eg. requires(chassis);
-    requires(Shooter.getInstance());
+    shooter = Shooter.getInstance();
+    requires(shooter);
     _speed = speed;
   }
 

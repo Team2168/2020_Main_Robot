@@ -5,17 +5,23 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package org.team2168.commands.hood_adjust;
+package org.team2168.commands.balancer;
 
-import org.team2168.subsystems.HoodAdjust;
-
+import org.team2168.Robot;
 import edu.wpi.first.wpilibj.command.Command;
+import org.team2168.subsystems.Balancer;
 
-public class ExtendShooterHood extends Command {
-  private HoodAdjust hoodAdjust;
-  public ExtendShooterHood() {
-    hoodAdjust = HoodAdjust.getInstance();
-    requires(hoodAdjust);
+
+public class DriveBalancerWithConstant extends Command {
+
+  private double _speed;
+  private Balancer balancer;
+
+  public DriveBalancerWithConstant(double speed) {
+    // Use requires() here to declare subsystem dependencies
+    balancer = Balancer.getInstance();
+    _speed = speed;
+    requires(balancer);
   }
 
   // Called just before this Command runs the first time
@@ -26,19 +32,19 @@ public class ExtendShooterHood extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    hoodAdjust.extendHood();
+    balancer.driveMotor(_speed);
   }
 
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    return hoodAdjust.isHoodExtended();
+    return false;
   }
 
   // Called once after isFinished returns true
   @Override
   protected void end() {
-    end();
+    balancer.driveMotor(0);
   }
 
   // Called when another command which requires one or more of the same

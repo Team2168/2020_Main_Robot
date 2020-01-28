@@ -12,10 +12,10 @@ import org.team2168.subsystems.HoodAdjust;
 import edu.wpi.first.wpilibj.command.Command;
 
 public class RetractShooterHood extends Command {
+  private HoodAdjust hoodAdjust;
   public RetractShooterHood() {
-    // Use requires() here to declare subsystem dependencies
-    // eg. requires(chassis);
-    requires(HoodAdjust.getInstance());
+    hoodAdjust = HoodAdjust.getInstance();
+    requires(hoodAdjust);
   }
 
   // Called just before this Command runs the first time
@@ -26,25 +26,27 @@ public class RetractShooterHood extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    HoodAdjust.getInstance().retractHood();
+    hoodAdjust.retractHood();
   }
 
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
 
-    return HoodAdjust.getInstance().isHoodRetracted();
+    return hoodAdjust.isHoodRetracted();
     
   }
 
   // Called once after isFinished returns true
   @Override
   protected void end() {
+    end();
   }
 
   // Called when another command which requires one or more of the same
   // subsystems is scheduled to run
   @Override
   protected void interrupted() {
+    end();
   }
 }
