@@ -13,6 +13,7 @@ import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.sensors.PigeonIMU;
 import com.ctre.phoenix.sensors.PigeonIMU_StatusFrame;
 
+import org.team2168.Constants;
 import org.team2168.Gains;
 import org.team2168.RobotMap;
 import org.team2168.commands.drivetrain.DriveWithJoystick;
@@ -36,12 +37,10 @@ public class Drivetrain extends Subsystem {
   private static final double CONTINUOUS_CURRENT_LIMIT = 40; //amps
   private static final double TRIGGER_THRESHOLD_LIMIT = 60; //amp
   private static final double TRIGGER_THRESHOLD_TIME = 200; //ms
-  private static final boolean DT_REVERSE_LEFT1 = false;
-  private static final boolean DT_REVERSE_LEFT2 = DT_REVERSE_LEFT1;
-  private static final boolean DT_REVERSE_LEFT3 = DT_REVERSE_LEFT1;
-  private static final boolean DT_REVERSE_RIGHT1 = true;
-  private static final boolean DT_REVERSE_RIGHT2 = DT_REVERSE_RIGHT1;
-  private static final boolean DT_REVERSE_RIGHT3 = DT_REVERSE_RIGHT1; 
+  private static final boolean DT_REVERSE_LEFT = false;
+  private static final boolean DT_REVERSE_RIGHT = true; 
+  private static final boolean DT_SENSOR_PHASE_LEFT = false;
+  private static final boolean DT_SENSOR_PHASE_RIGHT = true;
   private static final boolean DT_3_MOTORS_PER_SIDE = true;
 
   /** ---- Flat constants, you should not need to change these ---- */
@@ -114,7 +113,7 @@ public class Drivetrain extends Subsystem {
 
     _pidgey = new PigeonIMU(RobotMap.DRIVETRAIN_PIGEON_CAN_ID);
 
-                      /* Factory Default all hardware to prevent unexpected behaviour */
+    /* Factory Default all hardware to prevent unexpected behaviour */
     _leftMotor1.configFactoryDefault();
     _leftMotor2.configFactoryDefault();
     _leftMotor3.configFactoryDefault();
@@ -133,9 +132,7 @@ public class Drivetrain extends Subsystem {
     _rightMotor2.configSupplyCurrentLimit(talonCurrentLimit);
     _rightMotor3.configSupplyCurrentLimit(talonCurrentLimit);
 
-
-
-        /* Set Neutral Mode */
+    /* Set Neutral Mode */
     _leftMotor1.setNeutralMode(NeutralMode.Brake);
     _leftMotor2.setNeutralMode(NeutralMode.Coast);
     _leftMotor3.setNeutralMode(NeutralMode.Coast);
@@ -143,144 +140,133 @@ public class Drivetrain extends Subsystem {
     _rightMotor2.setNeutralMode(NeutralMode.Coast);
     _rightMotor3.setNeutralMode(NeutralMode.Coast);
 
-            /** Feedback Sensor Configuration */
+    /** Feedback Sensor Configuration */
 
-    /* Configure the left Talon's selected sensor as local QuadEncoder */
-    _rightMotor1.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor,				// Local Feedback Source
-                                              PID_PRIMARY,					// PID Slot for Source [0, 1]
-                                              kTimeoutMs);					// Configuration Timeout
+    /* Configure the left Talon's selected sensor as integrated sensor */
+		_leftMotor1.configSelectedFeedbackSensor(	FeedbackDevice.IntegratedSensor,  // Local Feedback Source
+													PID_PRIMARY,          // PID Slot for Source [0, 1]
+													kTimeoutMs);                    // Configuration Timeout
 
-    /* Configure the Remote Talon's selected sensor as a remote sensor for the right Talon */
-    _leftMotor1.configRemoteFeedbackFilter(_rightMotor1.getDeviceID(),					// Device ID of Source
-                                            RemoteSensorSource.TalonSRX_SelectedSensor,	// Remote Feedback Source TODO is this right for a FX
-                                            REMOTE_0,							// Source number [0, 1]
-                                            kTimeoutMs);						// Configuration Timeout
+		/* Configure the Remote Talon's selected sensor as a remote sensor for the right Talon */
+		_rightMotor1.configRemoteFeedbackFilter(_leftMotor1.getDeviceID(),  // Device ID of Source
+												RemoteSensorSource.TalonSRX_SelectedSensor,	    // Remote Feedback Source
+												REMOTE_0,                             // Source number [0, 1]
+												kTimeoutMs);                                    // Configuration Timeout
+		
+		/* Configure the Pigeon IMU to the other remote slot available on the right Talon */
+		_rightMotor1.configRemoteFeedbackFilter(_pidgey.getDeviceID(),
+												RemoteSensorSource.Pigeon_Yaw,
+												REMOTE_1,	
+												kTimeoutMs);
+		
+		/* Setup Sum signal to be used for Distance */
+		_rightMotor1.configSensorTerm(SensorTerm.Diff0, FeedbackDevice.RemoteSensor0, kTimeoutMs);    // Feedback Device of Remote Talon
+		_rightMotor1.configSensorTerm(SensorTerm.Diff1, FeedbackDevice.IntegratedSensor, kTimeoutMs);	// Quadrature Encoder of current Talon
+		
+		/* Configure Sum [Difference of both internal encoders] to be used for Primary PID Index */
+		_rightMotor1.configSelectedFeedbackSensor(	FeedbackDevice.SensorDifference, 
+													PID_PRIMARY,
+													kTimeoutMs);
+		
+		/* Scale Feedback by 0.5 to half the sum of Distance */ //not working--do this within the setpoint
+		_rightMotor1.configSelectedFeedbackCoefficient(	1,      // Coefficient
+														PID_PRIMARY,          // PID Slot of Source 
+														kTimeoutMs);                    // Configuration Timeout
+		
+		/* Configure Remote 1 [Pigeon IMU's Yaw] to be used for Auxiliary PID Index */
+		_rightMotor1.configSelectedFeedbackSensor(	FeedbackDevice.RemoteSensor1,
+													PID_TURN,
+													kTimeoutMs);
+		
+		/* Scale the Feedback Sensor using a coefficient */
+		_rightMotor1.configSelectedFeedbackCoefficient(	1,
+														PID_TURN,
+														kTimeoutMs);
+		
+		/* Configure output and sensor direction */
+    _leftMotor1.setInverted(DT_REVERSE_LEFT);
+    _leftMotor2.setInverted(DT_REVERSE_LEFT);
+    _leftMotor3.setInverted(DT_REVERSE_LEFT);
+    _leftMotor1.setSensorPhase(DT_SENSOR_PHASE_LEFT);
+    _leftMotor2.setSensorPhase(DT_SENSOR_PHASE_LEFT);
+    _leftMotor3.setSensorPhase(DT_SENSOR_PHASE_LEFT);
+    _rightMotor1.setInverted(DT_REVERSE_RIGHT);
+    _rightMotor2.setInverted(DT_REVERSE_RIGHT);
+    _rightMotor3.setInverted(DT_REVERSE_RIGHT);
+    _rightMotor1.setSensorPhase(DT_SENSOR_PHASE_RIGHT);
+    _rightMotor2.setSensorPhase(DT_SENSOR_PHASE_RIGHT);
+    _rightMotor3.setSensorPhase(DT_SENSOR_PHASE_RIGHT);
+		
+		/* Set status frame periods to ensure we don't have stale data */
+		_rightMotor1.setStatusFramePeriod(StatusFrame.Status_12_Feedback1, 20, kTimeoutMs);
+		_rightMotor1.setStatusFramePeriod(StatusFrame.Status_13_Base_PIDF0, 20, kTimeoutMs);
+		_rightMotor1.setStatusFramePeriod(StatusFrame.Status_14_Turn_PIDF1, 20, kTimeoutMs);
+		_rightMotor1.setStatusFramePeriod(StatusFrame.Status_10_Targets, 20, kTimeoutMs);
+		_leftMotor1.setStatusFramePeriod(StatusFrame.Status_2_Feedback0, 5, kTimeoutMs);
+		_pidgey.setStatusFramePeriod(PigeonIMU_StatusFrame.CondStatus_9_SixDeg_YPR , 5, kTimeoutMs);
 
-    /* Configure the Pigeon IMU to the other remote slot available on the right Talon */
-    _leftMotor1.configRemoteFeedbackFilter(_pidgey.getDeviceID(),
-                                        RemoteSensorSource.Pigeon_Yaw,
-                                        REMOTE_1,	
-                                        kTimeoutMs);
-    /* Setup Sum signal to be used for Distance */
-    _leftMotor1.configSensorTerm(SensorTerm.Sum0, FeedbackDevice.RemoteSensor0, kTimeoutMs);				// Feedback Device of Remote Talon
-    _leftMotor1.configSensorTerm(SensorTerm.Sum1, FeedbackDevice.IntegratedSensor, kTimeoutMs);	// Quadrature Encoder of current Talon
-
-    /* Configure Sum [Sum of both QuadEncoders] to be used for Primary PID Index */
-    _leftMotor1.configSelectedFeedbackSensor(	FeedbackDevice.SensorSum, 
-                          PID_PRIMARY,
-                          kTimeoutMs);
-
-    /* Scale Feedback by 0.5 to half the sum of Distance */
-    _leftMotor1.configSelectedFeedbackCoefficient(	0.5, 						// Coefficient
-                            PID_PRIMARY,		// PID Slot of Source 
-                            kTimeoutMs);		// Configuration Timeout
-
-    /* Configure Remote 1 [Pigeon IMU's Yaw] to be used for Auxiliary PID Index */
-    _leftMotor1.configSelectedFeedbackSensor(	FeedbackDevice.RemoteSensor1,
-                          PID_TURN,
-                          kTimeoutMs);
-    /**
-    * Phase sensor accordingly. 
-     * Positive Sensor Reading should match Green (blinking) Leds on Talon
-     */
-    _leftMotor1.setSensorPhase(false);
-    _rightMotor1.setSensorPhase(false); //TODO: check the polarity of the right side sensors
-
-    /***
-     * invert motors if necessary 
-     */
-    _leftMotor1.setInverted(DT_REVERSE_LEFT1);
-    _leftMotor2.setInverted(DT_REVERSE_LEFT2);
-    _leftMotor3.setInverted(DT_REVERSE_LEFT3);
-    _rightMotor1.setInverted(DT_REVERSE_RIGHT1);
-    _rightMotor2.setInverted(DT_REVERSE_RIGHT2);
-    _rightMotor3.setInverted(DT_REVERSE_RIGHT3);
-
-    /* Set status frame periods to ensure we don't have stale data */
-    _leftMotor1.setStatusFramePeriod(StatusFrame.Status_12_Feedback1, 20, kTimeoutMs);
-    _leftMotor1.setStatusFramePeriod(StatusFrame.Status_13_Base_PIDF0, 20, kTimeoutMs);
-    _leftMotor1.setStatusFramePeriod(StatusFrame.Status_14_Turn_PIDF1, 20, kTimeoutMs);
-    _leftMotor1.setStatusFramePeriod(StatusFrame.Status_10_Targets, 20, kTimeoutMs);
-    _rightMotor1.setStatusFramePeriod(StatusFrame.Status_2_Feedback0, 5, kTimeoutMs);
-    _pidgey.setStatusFramePeriod(PigeonIMU_StatusFrame.CondStatus_9_SixDeg_YPR , 5, kTimeoutMs);
-
-    /* Configure neutral deadband */
-    _leftMotor1.configNeutralDeadband(kNeutralDeadband, kTimeoutMs);
-    _leftMotor2.configNeutralDeadband(kNeutralDeadband, kTimeoutMs);
-    _leftMotor3.configNeutralDeadband(kNeutralDeadband, kTimeoutMs);
+		/* Configure neutral deadband */
     _rightMotor1.configNeutralDeadband(kNeutralDeadband, kTimeoutMs);
     _rightMotor2.configNeutralDeadband(kNeutralDeadband, kTimeoutMs);
     _rightMotor3.configNeutralDeadband(kNeutralDeadband, kTimeoutMs);
+    _leftMotor1.configNeutralDeadband(kNeutralDeadband, kTimeoutMs);
+    _leftMotor2.configNeutralDeadband(kNeutralDeadband, kTimeoutMs);
+    _leftMotor3.configNeutralDeadband(kNeutralDeadband, kTimeoutMs);
+		
+		/* Motion Magic Configurations */
+		_rightMotor1.configMotionAcceleration(2000, kTimeoutMs);
+		_rightMotor1.configMotionCruiseVelocity(2000, kTimeoutMs);
 
+		/**
+		 * Max out the peak output (for all modes).  
+		 * However you can limit the output of a given PID object with configClosedLoopPeakOutput().
+		 */
+		_leftMotor1.configPeakOutputForward(+1.0, kTimeoutMs);
+    _leftMotor1.configPeakOutputReverse(-1.0, kTimeoutMs);
+    _leftMotor2.configPeakOutputForward(+1.0, kTimeoutMs);
+    _leftMotor2.configPeakOutputReverse(-1.0, kTimeoutMs);
+    _leftMotor3.configPeakOutputForward(+1.0, kTimeoutMs);
+		_leftMotor3.configPeakOutputReverse(-1.0, kTimeoutMs);
+		_rightMotor1.configPeakOutputForward(+1.0, kTimeoutMs);
+    _rightMotor1.configPeakOutputReverse(-1.0, kTimeoutMs);
+    _rightMotor2.configPeakOutputForward(+1.0, kTimeoutMs);
+    _rightMotor2.configPeakOutputReverse(-1.0, kTimeoutMs);
+    _rightMotor3.configPeakOutputForward(+1.0, kTimeoutMs);
+		_rightMotor3.configPeakOutputReverse(-1.0, kTimeoutMs);
 
-    /* Set the peak and nominal outputs */
-    _leftMotor1.configNominalOutputForward(0, kTimeoutMs);
-    _leftMotor1.configNominalOutputReverse(0, kTimeoutMs);
-    _leftMotor1.configPeakOutputForward(1, kTimeoutMs);
-    _leftMotor1.configPeakOutputReverse(-1, kTimeoutMs);
+		/* FPID Gains for distance servo */
+		_rightMotor1.config_kP(kSlot_Distance, kGains_Distance.kP, kTimeoutMs);
+		_rightMotor1.config_kI(kSlot_Distance, kGains_Distance.kI, kTimeoutMs);
+		_rightMotor1.config_kD(kSlot_Distance, kGains_Distance.kD, kTimeoutMs);
+		_rightMotor1.config_kF(kSlot_Distance, kGains_Distance.kF, kTimeoutMs);
+		_rightMotor1.config_IntegralZone(kSlot_Distance, kGains_Distance.kIzone, kTimeoutMs);
+		_rightMotor1.configClosedLoopPeakOutput(kSlot_Distance, kGains_Distance.kPeakOutput, kTimeoutMs);
 
-    _leftMotor2.configNominalOutputForward(0, kTimeoutMs);
-    _leftMotor2.configNominalOutputReverse(0, kTimeoutMs);
-    _leftMotor2.configPeakOutputForward(1, kTimeoutMs);
-    _leftMotor2.configPeakOutputReverse(-1, kTimeoutMs);
+		/* FPID Gains for turn servo */
+		_rightMotor1.config_kP(kSlot_Turning, kGains_Turning.kP, kTimeoutMs);
+		_rightMotor1.config_kI(kSlot_Turning, kGains_Turning.kI, kTimeoutMs);
+		_rightMotor1.config_kD(kSlot_Turning, kGains_Turning.kD, kTimeoutMs);
+		_rightMotor1.config_kF(kSlot_Turning, kGains_Turning.kF, kTimeoutMs);
+		_rightMotor1.config_IntegralZone(kSlot_Turning, kGains_Turning.kIzone, kTimeoutMs);
+		_rightMotor1.configClosedLoopPeakOutput(kSlot_Turning, kGains_Turning.kPeakOutput, kTimeoutMs);
+		
+		/**
+		 * 1ms per loop.  PID loop can be slowed down if need be.
+		 * For example,
+		 * - if sensor updates are too slow
+		 * - sensor deltas are very small per update, so derivative error never gets large enough to be useful.
+		 * - sensor movement is very slow causing the derivative error to be near zero.
+		 */
+		int closedLoopTimeMs = 1;
+		_rightMotor1.configClosedLoopPeriod(0, closedLoopTimeMs, kTimeoutMs);
+		_rightMotor1.configClosedLoopPeriod(1, closedLoopTimeMs, kTimeoutMs);
 
-    _leftMotor3.configNominalOutputForward(0, kTimeoutMs);
-    _leftMotor3.configNominalOutputReverse(0, kTimeoutMs);
-    _leftMotor3.configPeakOutputForward(1, kTimeoutMs);
-    _leftMotor3.configPeakOutputReverse(-1, kTimeoutMs);
-
-    _rightMotor1.configNominalOutputForward(0, kTimeoutMs);
-    _rightMotor1.configNominalOutputReverse(0, kTimeoutMs);
-    _rightMotor1.configPeakOutputForward(1, kTimeoutMs);
-    _rightMotor1.configPeakOutputReverse(-1, kTimeoutMs);
-
-    _rightMotor2.configNominalOutputForward(0, kTimeoutMs);
-    _rightMotor2.configNominalOutputReverse(0, kTimeoutMs);
-    _rightMotor2.configPeakOutputForward(1, kTimeoutMs);
-    _rightMotor2.configPeakOutputReverse(-1, kTimeoutMs);
-
-    _rightMotor3.configNominalOutputForward(0, kTimeoutMs);
-    _rightMotor3.configNominalOutputReverse(0, kTimeoutMs);
-    _rightMotor3.configPeakOutputForward(1, kTimeoutMs);
-    _rightMotor3.configPeakOutputReverse(-1, kTimeoutMs);
-
-    /* FPID Gains for distance servo */
-    _leftMotor1.config_kP(kSlot_Distance, kGains_Distance.kP, kTimeoutMs);
-    _leftMotor1.config_kI(kSlot_Distance, kGains_Distance.kI, kTimeoutMs);
-    _leftMotor1.config_kD(kSlot_Distance, kGains_Distance.kD, kTimeoutMs);
-    _leftMotor1.config_kF(kSlot_Distance, kGains_Distance.kF, kTimeoutMs);
-    _leftMotor1.config_IntegralZone(kSlot_Distance, kGains_Distance.kIzone, kTimeoutMs);
-    _leftMotor1.configClosedLoopPeakOutput(kSlot_Distance, kGains_Distance.kPeakOutput, kTimeoutMs);
-
-    /* FPID Gains for turn servo */
-    _leftMotor1.config_kP(kSlot_Turning, kGains_Turning.kP, kTimeoutMs);
-    _leftMotor1.config_kI(kSlot_Turning, kGains_Turning.kI, kTimeoutMs);
-    _leftMotor1.config_kD(kSlot_Turning, kGains_Turning.kD, kTimeoutMs);
-    _leftMotor1.config_kF(kSlot_Turning, kGains_Turning.kF, kTimeoutMs);
-    _leftMotor1.config_IntegralZone(kSlot_Turning, kGains_Turning.kIzone, kTimeoutMs);
-    _leftMotor1.configClosedLoopPeakOutput(kSlot_Turning, kGains_Turning.kPeakOutput, kTimeoutMs);
-
-        /**
-     * 1ms per loop.  PID loop can be slowed down if need be.
-     * For example,
-     * - if sensor updates are too slow
-     * - sensor deltas are very small per update, so derivative error never gets large enough to be useful.
-     * - sensor movement is very slow causing the derivative error to be near zero.
-     */
-    int closedLoopTimeMs = 1;
-    _leftMotor1.configClosedLoopPeriod(0, closedLoopTimeMs, kTimeoutMs);
-    _leftMotor1.configClosedLoopPeriod(1, closedLoopTimeMs, kTimeoutMs);
-
-    /**
-     * configAuxPIDPolarity(boolean invert, int timeoutMs)
-     * false means talon's local output is PID0 + PID1, and other side Talon is PID0 - PID1
-     * true means talon's local output is PID0 - PID1, and other side Talon is PID0 + PID1
-     */
-    _leftMotor1.configAuxPIDPolarity(false, kTimeoutMs);
-
-    /* Set acceleration and vcruise velocity - see documentation */
-    _leftMotor1.configMotionCruiseVelocity((int) (100.0*TICKS_PER_INCH_PER_100MS), kTimeoutMs);
-    _leftMotor1.configMotionAcceleration((int) (50.0*TICKS_PER_INCH_PER_100MS), kTimeoutMs);
+		/**
+		 * configAuxPIDPolarity(boolean invert, int timeoutMs)
+		 * false means talon's local output is PID0 + PID1, and other side Talon is PID0 - PID1
+		 * true means talon's local output is PID0 - PID1, and other side Talon is PID0 + PID1
+		 */
+		_rightMotor1.configAuxPIDPolarity(false, kTimeoutMs);
 
     zeroSensors();
 
@@ -311,11 +297,7 @@ public class Drivetrain extends Subsystem {
    *        forward, 0 is stationary
    */
   private void driveleftMotor1(double speed) {
-    // if (DT_REVERSE_LEFT1)
-    //   speed = -speed;
-
     _leftMotor1.set(ControlMode.PercentOutput, speed);
-
   }
 
   /**
@@ -325,9 +307,6 @@ public class Drivetrain extends Subsystem {
    *        forward, 0 is stationary
    */
   private void driveleftMotor2(double speed) {
-    // if (DT_REVERSE_LEFT2)
-    //   speed = -speed;
-
     _leftMotor2.set(ControlMode.PercentOutput, speed);
   }
 
@@ -338,9 +317,6 @@ public class Drivetrain extends Subsystem {
    *        forward, 0 is stationary
    */
   private void driveleftMotor3(double speed) {
-    // if (DT_REVERSE_LEFT3)
-    //   speed = -speed;
-
     _leftMotor3.set(ControlMode.PercentOutput, speed);
   }
 
@@ -367,9 +343,6 @@ public class Drivetrain extends Subsystem {
    *        forward, 0 is stationary
    */
   private void driverightMotor1(double speed) {
-    // if (DT_REVERSE_RIGHT1)
-    //   speed = -speed;
-
     _rightMotor1.set(ControlMode.PercentOutput, speed);
   }
 
@@ -380,9 +353,6 @@ public class Drivetrain extends Subsystem {
    *        forward, 0 is stationary
    */
   private void driverightMotor2(double speed) {
-    // if (DT_REVERSE_RIGHT2)
-    //   speed = -speed;
-
     _rightMotor2.set(ControlMode.PercentOutput, speed);
   }
 
@@ -393,12 +363,15 @@ public class Drivetrain extends Subsystem {
    *        forward, 0 is stationary
    */
   private void driverightMotor3(double speed) {
-    // if (DT_REVERSE_RIGHT3)
-    //   speed = -speed;
-
     _rightMotor3.set(ControlMode.PercentOutput, speed);
   }
   
+  /**
+   * sets the speed of right motors 1, 2, and 3
+   * 
+   * @param speed 1.0 to -1.0. negative is reverse, positive is
+   *              forward, 0 is stationary
+   */
   public void driveRight(double speed) {
     if(DT_3_MOTORS_PER_SIDE)
     {
@@ -433,52 +406,60 @@ public class Drivetrain extends Subsystem {
     //return _leftMotor1.getSelectedSensorPosition(PID_TURN);
   }
 
-  public void setSetPointPosition(double setPoint, double setAngle)
-  {
+  public void setSetPointPosition(double setPoint, double setAngle) {
+    double target_sensorUnits = 2 * setPoint * Constants.kSensorUnitsPerRotation * Constants.kRotationsToTravel;
+    double target_turn = setAngle;
 
-    System.out.println("setpoint:" + setPoint*TICKS_PER_INCH + ", heading: " + setAngle*PIGEON_UNITS_PER_DEGREE);
-
-    _leftMotor1.set(ControlMode.MotionMagic, (setPoint*TICKS_PER_INCH), DemandType.AuxPID, 0);//setAngle*PIGEON_UNITS_PER_DEGREE
-    _leftMotor2.follow(_leftMotor1, FollowerType.PercentOutput);
-    _leftMotor3.follow(_leftMotor1, FollowerType.PercentOutput);
-    _rightMotor1.follow(_leftMotor1, FollowerType.AuxOutput1);
-    _rightMotor2.follow(_leftMotor1, FollowerType.AuxOutput1);
-    _rightMotor3.follow(_leftMotor1, FollowerType.AuxOutput1);
-
+    _rightMotor1.set(ControlMode.MotionMagic, target_sensorUnits, DemandType.AuxPID, target_turn);
+    _rightMotor2.follow(_rightMotor1, FollowerType.PercentOutput);
+    _rightMotor3.follow(_rightMotor1, FollowerType.PercentOutput);
+    _leftMotor1.follow(_rightMotor1, FollowerType.AuxOutput1);
+    _leftMotor2.follow(_rightMotor1, FollowerType.AuxOutput1);
+    _leftMotor3.follow(_rightMotor1, FollowerType.AuxOutput1);
   }
 
   //still untested and sketchy
-  public void setSetPointVelocity(double setPoint, double setAngle)
-  {
-    _leftMotor1.set(ControlMode.Velocity, setPoint*TICKS_PER_INCH, DemandType.AuxPID, setAngle*PIGEON_UNITS_PER_DEGREE);
-    _leftMotor2.follow(_leftMotor1, FollowerType.PercentOutput);
-    _leftMotor3.follow(_leftMotor1, FollowerType.PercentOutput);
-    _rightMotor1.follow(_leftMotor1, FollowerType.AuxOutput1);
-    _rightMotor2.follow(_leftMotor1, FollowerType.AuxOutput1);
-    _rightMotor3.follow(_leftMotor1, FollowerType.AuxOutput1); 
-  }
+  // public void setSetPointVelocity(double setPoint, double setAngle)
+  // {
+  //   _leftMotor1.set(ControlMode.Velocity, setPoint*TICKS_PER_INCH, DemandType.AuxPID, setAngle*PIGEON_UNITS_PER_DEGREE);
+  //   _leftMotor2.follow(_leftMotor1, FollowerType.PercentOutput);
+  //   _leftMotor3.follow(_leftMotor1, FollowerType.PercentOutput);
+  //   _rightMotor1.follow(_leftMotor1, FollowerType.AuxOutput1);
+  //   _rightMotor2.follow(_leftMotor1, FollowerType.AuxOutput1);
+  //   _rightMotor3.follow(_leftMotor1, FollowerType.AuxOutput1); 
+  // }
 
   public double getErrorPosition()
   {
-    return (_leftMotor1.getActiveTrajectoryPosition()-_leftMotor1.getSelectedSensorPosition(PID_PRIMARY))/(TICKS_PER_INCH);
+    return (_rightMotor1.getActiveTrajectoryPosition()-_rightMotor1.getSelectedSensorPosition(PID_PRIMARY))/(TICKS_PER_INCH);
     //return _leftMotor1.getClosedLoopError(kPIDLoopIdx)/TICKS_PER_REV;--only for nonMotionMagic or nonMotion Profile
   }
 
   public double getErrorHeading()
   {
-    return (_leftMotor1.getActiveTrajectoryPosition(PID_PRIMARY)-_leftMotor1.getSelectedSensorPosition(PID_PRIMARY))/PIGEON_UNITS_PER_DEGREE;
+    return (_rightMotor1.getActiveTrajectoryPosition(PID_PRIMARY)-_rightMotor1.getSelectedSensorPosition(PID_PRIMARY))/PIGEON_UNITS_PER_DEGREE;
   }
 
-  /** Zero all sensors, both Talons and Pigeon */
+  /**
+   * Zero all sensors, drivetrain encoders and Pigeon IMU
+   */
   public void zeroSensors() {
-    _rightMotor1.getSensorCollection().setIntegratedSensorPosition(0, kTimeoutMs);
-    _leftMotor1.getSensorCollection().setIntegratedSensorPosition(0, kTimeoutMs);
-    _pidgey.setYaw(0, kTimeoutMs);
-    _pidgey.setAccumZAngle(0, kTimeoutMs);
+    zeroDistance();
+    zeroIMU();
     // System.out.println("[Quadrature Encoders + Pigeon] All sensors are zeroed.\n");
   }
 
-
+	/** Zero QuadEncoders, used to reset position when initializing Motion Magic */
+	public void zeroDistance(){
+		_leftMotor1.getSensorCollection().setIntegratedSensorPosition(0, kTimeoutMs);
+		_rightMotor1.getSensorCollection().setIntegratedSensorPosition(0, kTimeoutMs);
+		//System.out.println("[Integrated Encoders] All encoders are zeroed.\n");
+  }
+  
+  public void zeroIMU() {
+    _pidgey.setYaw(0, kTimeoutMs);
+    _pidgey.setAccumZAngle(0, kTimeoutMs);
+  }
 
   @Override
   protected void initDefaultCommand() {
