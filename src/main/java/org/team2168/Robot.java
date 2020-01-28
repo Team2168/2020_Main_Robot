@@ -144,8 +144,8 @@ public class Robot extends TimedRobot {
 													Constants.PID_PRIMARY,
 													Constants.kTimeoutMs);
 		
-		/* Scale Feedback by 0.5 to half the sum of Distance */
-		_rightMaster.configSelectedFeedbackCoefficient(	0.5, 						// Coefficient
+		/* Scale Feedback by 0.5 to half the sum of Distance */ //not working--do this within the setpoint
+		_rightMaster.configSelectedFeedbackCoefficient(	1, 						// Coefficient
 														Constants.PID_PRIMARY,		// PID Slot of Source 
 														Constants.kTimeoutMs);		// Configuration Timeout
 		
@@ -238,8 +238,8 @@ public class Robot extends TimedRobot {
 		double turn = _gamepad.getTwist();
 		forward = Deadband(forward);
     turn = Deadband(turn);
-    _pidgey.setYaw(0, Constants.kTimeoutMs);
-		_pidgey.setAccumZAngle(0, Constants.kTimeoutMs);
+    // _pidgey.setYaw(0, Constants.kTimeoutMs);
+		// _pidgey.setAccumZAngle(0, Constants.kTimeoutMs);
 	
 		/* Button processing for state toggle and sensor zeroing */
 		getButtons(_currentBtns, _gamepad);
@@ -285,7 +285,7 @@ public class Robot extends TimedRobot {
 			}
 			
 			/* Calculate targets from gamepad inputs */
-			double target_sensorUnits = forward * Constants.kSensorUnitsPerRotation * Constants.kRotationsToTravel;
+			double target_sensorUnits = 2 * forward * Constants.kSensorUnitsPerRotation * Constants.kRotationsToTravel;
       double target_turn = _targetAngle;
       System.out.println("Target-sensor units" + target_sensorUnits);
       System.out.println("commanded heading" + target_turn);
