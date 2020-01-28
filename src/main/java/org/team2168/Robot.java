@@ -61,26 +61,26 @@
  */
 package org.team2168;
 
-import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.Joystick;
-
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.DemandType;
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.FollowerType;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.RemoteSensorSource;
 import com.ctre.phoenix.motorcontrol.SensorTerm;
-import com.ctre.phoenix.sensors.PigeonIMU_StatusFrame;
 import com.ctre.phoenix.motorcontrol.StatusFrame;
 import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
-import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.FollowerType;
-import com.ctre.phoenix.motorcontrol.DemandType;
-import com.ctre.phoenix.motorcontrol.FeedbackDevice;
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.sensors.PigeonIMU;
+import com.ctre.phoenix.sensors.PigeonIMU_StatusFrame;
+
+import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.TimedRobot;
 
 public class Robot extends TimedRobot {
 	/** Hardware */
-	TalonSRX _leftMaster = new TalonSRX(1);
-	TalonSRX _rightMaster = new TalonSRX(15);
+	TalonFX _leftMaster = new TalonFX(1);
+	TalonFX _rightMaster = new TalonFX(15);
 	PigeonIMU _pidgey = new PigeonIMU(17);
 	Joystick _gamepad = new Joystick(0);
 	
@@ -136,11 +136,11 @@ public class Robot extends TimedRobot {
 												Constants.kTimeoutMs);
 		
 		/* Setup Sum signal to be used for Distance */
-		_rightMaster.configSensorTerm(SensorTerm.Sum0, FeedbackDevice.RemoteSensor0, Constants.kTimeoutMs);				// Feedback Device of Remote Talon
-		_rightMaster.configSensorTerm(SensorTerm.Sum1, FeedbackDevice.IntegratedSensor, Constants.kTimeoutMs);	// Quadrature Encoder of current Talon
+		_rightMaster.configSensorTerm(SensorTerm.Diff0, FeedbackDevice.RemoteSensor0, Constants.kTimeoutMs);				// Feedback Device of Remote Talon
+		_rightMaster.configSensorTerm(SensorTerm.Diff1, FeedbackDevice.IntegratedSensor, Constants.kTimeoutMs);	// Quadrature Encoder of current Talon
 		
 		/* Configure Sum [Sum of both QuadEncoders] to be used for Primary PID Index */
-		_rightMaster.configSelectedFeedbackSensor(	FeedbackDevice.SensorSum, 
+		_rightMaster.configSelectedFeedbackSensor(	FeedbackDevice.SensorDifference, 
 													Constants.PID_PRIMARY,
 													Constants.kTimeoutMs);
 		
@@ -160,10 +160,10 @@ public class Robot extends TimedRobot {
 														Constants.kTimeoutMs);
 		
 		/* Configure output and sensor direction */
-		_leftMaster.setInverted(false);
-		_leftMaster.setSensorPhase(true);
-		_rightMaster.setInverted(true);
-		_rightMaster.setSensorPhase(true);
+    _leftMaster.setInverted(false);
+    _leftMaster.setSensorPhase(false);
+    _rightMaster.setInverted(true);
+    _rightMaster.setSensorPhase(true);
 		
 		/* Set status frame periods to ensure we don't have stale data */
 		_rightMaster.setStatusFramePeriod(StatusFrame.Status_12_Feedback1, 20, Constants.kTimeoutMs);
@@ -237,7 +237,9 @@ public class Robot extends TimedRobot {
 		double forward = -1 * _gamepad.getY();
 		double turn = _gamepad.getTwist();
 		forward = Deadband(forward);
-		turn = Deadband(turn);
+    turn = Deadband(turn);
+    _pidgey.setYaw(0, Constants.kTimeoutMs);
+		_pidgey.setAccumZAngle(0, Constants.kTimeoutMs);
 	
 		/* Button processing for state toggle and sensor zeroing */
 		getButtons(_currentBtns, _gamepad);
@@ -284,7 +286,9 @@ public class Robot extends TimedRobot {
 			
 			/* Calculate targets from gamepad inputs */
 			double target_sensorUnits = forward * Constants.kSensorUnitsPerRotation * Constants.kRotationsToTravel;
-			double target_turn = _targetAngle;
+      double target_turn = _targetAngle;
+      System.out.println("Target-sensor units" + target_sensorUnits);
+      System.out.println("commanded heading" + target_turn);
 			
 			/* Configured for MotionMagic on Quad Encoders' Sum and Auxiliary PID on Pigeon */
 			_rightMaster.set(ControlMode.MotionMagic, target_sensorUnits, DemandType.AuxPID, target_turn);
@@ -295,28 +299,28 @@ public class Robot extends TimedRobot {
 	
 	/** Zero all sensors, both Talons and Pigeon */
 	void zeroSensors() {
-		_leftMaster.getSensorCollection().setQuadraturePosition(0, Constants.kTimeoutMs);
-		_rightMaster.getSensorCollection().setQuadraturePosition(0, Constants.kTimeoutMs);
+		_leftMaster.getSensorCollection().setIntegratedSensorPosition(0, Constants.kTimeoutMs);
+		_rightMaster.getSensorCollection().setIntegratedSensorPosition(0, Constants.kTimeoutMs);
 		_pidgey.setYaw(0, Constants.kTimeoutMs);
 		_pidgey.setAccumZAngle(0, Constants.kTimeoutMs);
-		System.out.println("[Quadrature Encoders + Pigeon] All sensors are zeroed.\n");
+		System.out.println("[Integrated Encoders + Pigeon] All sensors are zeroed.\n");
 	}
 	
 	/** Zero QuadEncoders, used to reset position when initializing Motion Magic */
 	void zeroDistance(){
-		_leftMaster.getSensorCollection().setQuadraturePosition(0, Constants.kTimeoutMs);
-		_rightMaster.getSensorCollection().setQuadraturePosition(0, Constants.kTimeoutMs);
-		System.out.println("[Quadrature Encoders] All encoders are zeroed.\n");
+		_leftMaster.getSensorCollection().setIntegratedSensorPosition(0, Constants.kTimeoutMs);
+		_rightMaster.getSensorCollection().setIntegratedSensorPosition(0, Constants.kTimeoutMs);
+		System.out.println("[Integrated Encoders] All encoders are zeroed.\n");
 	}
 	
 	/** Deadband 5 percent, used on the gamepad */
 	double Deadband(double value) {
 		/* Upper deadband */
-		if (value >= +0.05) 
+		if (value >= +0.5) 
 			return value;
 		
 		/* Lower deadband */
-		if (value <= -0.05)
+		if (value <= -0.5)
 			return value;
 		
 		/* Outside deadband */

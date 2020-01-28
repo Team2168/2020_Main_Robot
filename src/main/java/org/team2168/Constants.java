@@ -20,7 +20,7 @@ public class Constants {
 	/**
 	 * Number of rotations to drive when performing Distance Closed Loop
 	 */
-	public final static double kRotationsToTravel = 6;
+	public final static double kRotationsToTravel = 9.09090909;
 	
 	/**
 	 * This is a property of the Pigeon IMU, and should not be changed.

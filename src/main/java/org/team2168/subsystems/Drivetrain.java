@@ -472,7 +472,7 @@ public class Drivetrain extends Subsystem {
   /** Zero all sensors, both Talons and Pigeon */
   public void zeroSensors() {
     _rightMotor1.getSensorCollection().setIntegratedSensorPosition(0, kTimeoutMs);
-    _leftMotor1.getSensorCollection().setIntegratedSensorPosition (0, kTimeoutMs);
+    _leftMotor1.getSensorCollection().setIntegratedSensorPosition(0, kTimeoutMs);
     _pidgey.setYaw(0, kTimeoutMs);
     _pidgey.setAccumZAngle(0, kTimeoutMs);
     // System.out.println("[Quadrature Encoders + Pigeon] All sensors are zeroed.\n");
