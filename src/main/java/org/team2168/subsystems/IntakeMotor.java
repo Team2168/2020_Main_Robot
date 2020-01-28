@@ -11,7 +11,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import org.team2168.RobotMap;
-import org.team2168.commands.intakeMotor.DriveWithJoystick;
+import org.team2168.commands.intakeMotor.DriveIntakeWithJoystick;
 
 import edu.wpi.first.wpilibj.command.Subsystem;
 
@@ -48,7 +48,7 @@ public class IntakeMotor extends Subsystem {
   @Override
   public void initDefaultCommand() {
     // Set the default command for a subsystem here.
-    setDefaultCommand(new DriveWithJoystick());
+    setDefaultCommand(new DriveIntakeWithJoystick());
   }
 
   /**

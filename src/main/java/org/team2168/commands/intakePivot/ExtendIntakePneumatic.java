@@ -11,9 +11,9 @@ import org.team2168.subsystems.IntakePivot;
 
 import edu.wpi.first.wpilibj.command.Command;
 
-public class ExtendPneumatic extends Command {
+public class ExtendIntakePneumatic extends Command {
   private IntakePivot intakePivot = IntakePivot.getInstance();
-  public ExtendPneumatic() {
+  public ExtendIntakePneumatic() {
     requires(intakePivot); //command for intake
   }
 

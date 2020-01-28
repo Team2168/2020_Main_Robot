@@ -8,7 +8,7 @@
 package org.team2168.subsystems;
 
 import org.team2168.RobotMap;
-import org.team2168.commands.intakePivot.ExtendPneumatic;
+import org.team2168.commands.intakePivot.ExtendIntakePneumatic;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.command.Subsystem;
@@ -44,7 +44,7 @@ public class IntakePivot extends Subsystem {
   @Override
   public void initDefaultCommand() {
     // Set the default command for a subsystem here.
-    setDefaultCommand(new ExtendPneumatic());
+    setDefaultCommand(new ExtendIntakePneumatic());
   }
 
   /**

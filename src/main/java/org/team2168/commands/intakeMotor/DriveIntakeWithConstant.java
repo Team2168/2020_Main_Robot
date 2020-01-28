@@ -13,11 +13,11 @@ import org.team2168.subsystems.IntakeMotor;
 
 import edu.wpi.first.wpilibj.command.Command;
 
-public class DriveWithConstant extends Command {
+public class DriveIntakeWithConstant extends Command {
   double speed;
   private IntakeMotor intakeMotor = IntakeMotor.getInstance();  
 
-  public DriveWithConstant(double inputSpeed) { //when the command is initialized the speed is put straight in
+  public DriveIntakeWithConstant(double inputSpeed) { //when the command is initialized the speed is put straight in
     requires(intakeMotor);
     this.speed = inputSpeed;
   }

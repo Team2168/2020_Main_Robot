@@ -4,20 +4,17 @@
 /* must be accompanied by the FIRST BSD license file in the root directory of */
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
-/* this method allows the driver to operate the intake motor with a joystick*/
-package org.team2168.commands.intakeMotor;
+/*this command retracts the intake pneumatic*/
+package org.team2168.commands.intakePivot;
 
-import org.team2168.OI;
-import org.team2168.subsystems.IntakeMotor;
+import org.team2168.subsystems.IntakePivot;
 
 import edu.wpi.first.wpilibj.command.Command;
 
-public class DriveWithJoystick extends Command {
-  private IntakeMotor intakeMotor = IntakeMotor.getInstance();
-  private OI oi = OI.getInstance();
-  
-  public DriveWithJoystick() {
-    requires(intakeMotor);
+public class RetractIntakePneumatic extends Command {
+  private IntakePivot intakePivot = IntakePivot.getInstance();
+  public RetractIntakePneumatic() {
+    requires(intakePivot);
   }
 
   // Called just before this Command runs the first time
@@ -26,41 +23,29 @@ public class DriveWithJoystick extends Command {
   }
 
   /**
-   * Gets joystick positions from OI.
-   * checks if it's below the maximum speed allowed, which is static and in the intake subsystem
-   * if it is, sends joystick position to Intake
-   * if it's above, sets motor speed to max speed
-   * 
+   * retracts intake pneumatic
    * @author Ian
    */
   @Override
   protected void execute() {
-    if (oi.getIntakeMotorJoyStick() < IntakeMotor.maxSpeed)
-    {
-      intakeMotor.driveMotor(oi.getIntakeMotorJoyStick());
-    }
-    else
-    {
-      intakeMotor.driveMotor(IntakeMotor.maxSpeed);
-    }
+    intakePivot.retractIntake();
   }
 
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    return false;
+    return intakePivot.isIntakeRetracted(); //checks if intake is retracted
   }
 
   // Called once after isFinished returns true
   @Override
   protected void end() {
-    intakeMotor.driveMotor(0.0);
   }
 
   // Called when another command which requires one or more of the same
   // subsystems is scheduled to run
   @Override
   protected void interrupted() {
-    end();
+    end(); //for if we add things to end()
   }
 }
