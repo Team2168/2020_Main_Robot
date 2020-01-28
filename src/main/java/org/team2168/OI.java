@@ -4,6 +4,7 @@ package org.team2168;
 import org.team2168.utils.F310;
 import org.team2168.utils.LinearInterpolator;
 import org.team2168.commands.drivetrain.*;
+import org.team2168.commands.drivetrain.PIDCommands.*;
 
 /**
  * This class is the glue that binds the controls on the physical operator
@@ -76,8 +77,11 @@ public class OI
 		 * Commands Test Joystick
 		 ***********************************************************************/
 		// //leds testing
-		pidTestJoystick.ButtonA().whenPressed(new DriveXFeetTest());
+		pidTestJoystick.ButtonA().whenPressed(new DriveXDistance(1));
+		pidTestJoystick.ButtonY().whenPressed(new DriveXDistance(-1));
+		pidTestJoystick.ButtonX().whenPressed(new ResetPosition());
 		pidTestJoystick.ButtonB().whenPressed(new Turn90Degrees());
+
 		// pidTestJoystick.ButtonX().whenPressed(new AutoWithoutGamePiecePattern());
 		// pidTestJoystick.ButtonY().whenPressed(new HABClimbPattern());
 		// pidTestJoystick.ButtonLeftBumper().whenPressed(new PivotingPattern());
