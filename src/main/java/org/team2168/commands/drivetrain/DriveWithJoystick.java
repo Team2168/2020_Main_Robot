@@ -16,7 +16,6 @@ public class DriveWithJoystick extends Command
 {
   private Drivetrain dt;
   private OI oi;
-  private double speedLimiter = 0.75;
   
   public DriveWithJoystick() 
   {
@@ -38,8 +37,8 @@ public class DriveWithJoystick extends Command
 	 */
   @Override
   protected void execute() {
-    dt.tankDrive(speedLimiter*oi.getGunStyleYValue()+ oi.getGunStyleXValue(),
-      speedLimiter*oi.getGunStyleYValue() - oi.getGunStyleXValue());
+    dt.tankDrive(oi.getGunStyleYValue()+ oi.getGunStyleXValue(),
+      oi.getGunStyleYValue() - oi.getGunStyleXValue());
   }
 
   // Called repeatedly when this Command is scheduled to run

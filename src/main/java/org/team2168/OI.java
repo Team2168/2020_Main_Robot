@@ -51,10 +51,10 @@ public class OI
 	private LinearInterpolator gunStyleYInterpolator;
 	private LinearInterpolator gunStyleXInterpolator;
 	private double[][] gunStyleYArray = {
-		{ -1.0, -1.0},
+		{ -1.0, -0.75}, //limiting speed to 75%
 		{ -.15, 0.0},
 		{ .15, 0.0},
-		{ 1.0, 1.0}
+		{ 1.0, 0.75}
 	};
 	private double[][] gunStyleXArray = {
 		{ -1.0, -0.65},  //scale down turning to max 65%
