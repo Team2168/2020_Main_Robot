@@ -35,7 +35,7 @@ public class DriveClimberWithJoystick extends Command {
   @Override
   protected void execute() {
  
-climber.driveClimberMotors(oi.getClimberJoystickValue());
+    climber.driveClimberMotors(oi.getClimberJoystickValue());
 
   }
 

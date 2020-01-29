@@ -149,10 +149,6 @@ public class RobotMap {
 	public static final long LIFT_PID_PERIOD = 20;
 	public static final int  LIFT_PID_ARRAY_SIZE = 30;
 
-	/****************************************************************
-	 *						   Climber Parameters                   *
-	 ****************************************************************/
-
 
 
 	/****************************************************************
