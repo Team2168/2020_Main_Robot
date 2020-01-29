@@ -407,7 +407,7 @@ public class Drivetrain extends Subsystem {
   }
 
   public void setSetPointPosition(double setPoint, double setAngle) {
-    double target_sensorUnits = 2 * setPoint * Constants.kSensorUnitsPerRotation * Constants.kRotationsToTravel;
+    double target_sensorUnits = 2 * setPoint * TICKS_PER_INCH;
     double target_turn = setAngle;
 
     _rightMotor1.set(ControlMode.MotionMagic, target_sensorUnits, DemandType.AuxPID, target_turn);

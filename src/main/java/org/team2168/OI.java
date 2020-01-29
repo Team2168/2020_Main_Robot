@@ -77,8 +77,8 @@ public class OI
 		 * Commands Test Joystick
 		 ***********************************************************************/
 		// //leds testing
-		pidTestJoystick.ButtonA().whenPressed(new DriveXDistance(1));
-		pidTestJoystick.ButtonY().whenPressed(new DriveXDistance(-1));
+		pidTestJoystick.ButtonA().whenPressed(new DriveXDistance(-10*12));
+		pidTestJoystick.ButtonY().whenPressed(new DriveXDistance(10*12));
 		pidTestJoystick.ButtonX().whenPressed(new ResetPosition());
 		pidTestJoystick.ButtonB().whenPressed(new Turn90Degrees());
 
