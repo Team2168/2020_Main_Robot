@@ -88,7 +88,7 @@ public class Drivetrain extends Subsystem {
    * velocity setpoint is in units/100ms
    */
   private static final double TICKS_PER_REV = 2048; //one event per edge on each quadrature channel
-  private static final double TICKS_PER_100MS = TICKS_PER_REV / 600.0;
+  private static final double TICKS_PER_100MS = TICKS_PER_REV / 10;
   private static final double GEAR_RATIO = (50.0/10.0) * (40.0/22.0);
   private static final double WHEEL_CIRCUMFERENCE = 6 * Math.PI;
   private static final double TICKS_PER_INCH = TICKS_PER_REV * GEAR_RATIO / WHEEL_CIRCUMFERENCE;
@@ -214,8 +214,8 @@ public class Drivetrain extends Subsystem {
     _leftMotor3.configNeutralDeadband(kNeutralDeadband, kTimeoutMs);
 		
 		/* Motion Magic Configurations */
-		_rightMotor1.configMotionAcceleration(2000, kTimeoutMs);
-		_rightMotor1.configMotionCruiseVelocity(2000, kTimeoutMs);
+		_rightMotor1.configMotionAcceleration((int) (100*TICKS_PER_INCH_PER_100MS*2), kTimeoutMs); //should be inches per sec
+		_rightMotor1.configMotionCruiseVelocity((int) (100*TICKS_PER_INCH_PER_100MS*2), kTimeoutMs);
 
 		/**
 		 * Max out the peak output (for all modes).  
