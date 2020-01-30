@@ -13,10 +13,11 @@ import org.team2168.subsystems.IntakeMotor;
 import edu.wpi.first.wpilibj.command.Command;
 
 public class DriveIntakeWithJoystick extends Command {
-  private IntakeMotor intakeMotor = IntakeMotor.getInstance();
+  private IntakeMotor intakeMotor;
   private OI oi = OI.getInstance();
   
   public DriveIntakeWithJoystick() {
+    intakeMotor = IntakeMotor.getInstance();
     requires(intakeMotor);
   }
 

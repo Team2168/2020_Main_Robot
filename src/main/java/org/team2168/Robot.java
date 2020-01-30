@@ -17,6 +17,8 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import org.team2168.subsystems.Balancer;
+import org.team2168.OI;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -42,6 +44,12 @@ public class Robot extends TimedRobot {
   // private Debouncer gyroDriftDetector = new Debouncer(1.0);
   private static boolean gyroCalibrating = false;
 
+  // Subsystems
+  private static Balancer balancer;
+
+  private static OI oi;
+
+
   // private boolean lastGyroCalibrating = false;
   /**
    * This function is run when the robot is first started up and should be used
@@ -52,8 +60,8 @@ public class Robot extends TimedRobot {
     m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
     m_chooser.addOption("My Auto", kCustomAuto);
     SmartDashboard.putData("Auto choices", m_chooser);
-    intakeMotor = IntakeMotor.getInstance();
-    intakePivot = IntakePivot.getInstance();
+   // intakeMotor = IntakeMotor.getInstance();
+   // intakePivot = IntakePivot.getInstance();
     drivetrain = Drivetrain.getInstance();
     // pdp = new PowerDistribution(RobotMap.PDPThreadPeriod);
     // pdp.startThread();

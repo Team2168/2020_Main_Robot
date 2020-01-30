@@ -5,22 +5,20 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-/* the purpose of this class is to control the intake motor without the joystick*/
+package org.team2168.commands.balancer;
 
-package org.team2168.commands.intakeMotor;
-
-import org.team2168.subsystems.IntakeMotor;
-
+import org.team2168.Robot;
+import org.team2168.subsystems.Balancer;
 import edu.wpi.first.wpilibj.command.Command;
+import org.team2168.OI;
 
-public class DriveIntakeWithConstant extends Command {
-  double speed;
-  private IntakeMotor intakeMotor;
-
-  public DriveIntakeWithConstant(double inputSpeed) { //when the command is initialized the speed is put straight in
-    intakeMotor = IntakeMotor.getInstance();  
-    requires(intakeMotor);
-    this.speed = inputSpeed;
+public class DriveBalancerMotorWithJoystick extends Command {
+  private Balancer balancer;
+  private OI oi;
+  public DriveBalancerMotorWithJoystick() {
+    balancer = Balancer.getInstance();
+    oi = OI.getInstance();
+    requires(balancer);
   }
 
   // Called just before this Command runs the first time
@@ -28,13 +26,10 @@ public class DriveIntakeWithConstant extends Command {
   protected void initialize() {
   }
 
-  /**
-   * sets motor speed to the input
-   * @author Ian
-   */
+  // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    intakeMotor.driveMotor(speed);
+    balancer.driveMotor(oi.getBalancerJoystickValue());
   }
 
   // Make this return true when this Command no longer needs to run execute()
@@ -46,7 +41,7 @@ public class DriveIntakeWithConstant extends Command {
   // Called once after isFinished returns true
   @Override
   protected void end() {
-    intakeMotor.driveMotor(0.0);
+    balancer.driveMotor(0.0);
   }
 
   // Called when another command which requires one or more of the same
