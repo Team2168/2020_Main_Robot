@@ -18,7 +18,7 @@ public class DriveColorWheelWithJoystick extends Command {
   private OI oi;
   public DriveColorWheelWithJoystick() {
     colorWheel = ColorWheel.getInstance();
-    oi = OI.getInstance();
+  
     requires(colorWheel);
       
     // Use requires() here to declare subsystem dependencies
@@ -28,6 +28,7 @@ public class DriveColorWheelWithJoystick extends Command {
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
+    oi = OI.getInstance();
   }
 
   // Called repeatedly when this Command is scheduled to run

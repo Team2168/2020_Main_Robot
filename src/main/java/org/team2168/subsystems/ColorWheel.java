@@ -21,17 +21,17 @@ public class ColorWheel extends Subsystem {
   // here. Call these from Commands.
 
   private final boolean COLOR_WHEEL_MOTOR_REVERSE = false;
-  private CANSparkMax ColorWheel;
+  private CANSparkMax colorWheelMotor;
   private static ColorWheel instance = null;
 
   private ColorWheel()
   {
-    ColorWheel = new CANSparkMax(RobotMap.COLORWHEEL_MOTOR_PDP,MotorType.kBrushless);
-    ColorWheel.setSmartCurrentLimit(30);
-    ColorWheel.setControlFramePeriodMs(20);
-    ColorWheel.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 500);
-    ColorWheel.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 500);
-    ColorWheel.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 500);
+    colorWheelMotor = new CANSparkMax(RobotMap.COLORWHEEL_MOTOR_PDP,MotorType.kBrushless);
+    colorWheelMotor.setSmartCurrentLimit(30);
+    colorWheelMotor.setControlFramePeriodMs(20);
+    colorWheelMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 500);
+    colorWheelMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 500);
+    colorWheelMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 500);
   }
 
   /**
@@ -45,7 +45,7 @@ public class ColorWheel extends Subsystem {
     {
       speed = -speed;
     }
-    ColorWheel.set(speed);
+    colorWheelMotor.set(speed);
   }
 
   /**
