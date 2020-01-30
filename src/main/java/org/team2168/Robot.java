@@ -55,7 +55,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
-    colorWheel = ColorWheel.getInstance();
+    // colorWheel = ColorWheel.getInstance();
     m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
     m_chooser.addOption("My Auto", kCustomAuto);
     SmartDashboard.putData("Auto choices", m_chooser);
