@@ -12,10 +12,11 @@ import org.team2168.subsystems.Hopper;
 import edu.wpi.first.wpilibj.command.Command;
 
 public class DriveHopperWithConstant extends Command {
-  private Hopper hopper = Hopper.getInstance();
+  private Hopper hopper;
   private double speed;
 
   public DriveHopperWithConstant(double speed) {
+    hopper = Hopper.getInstance();
     requires(hopper);
 
     this.speed = speed;

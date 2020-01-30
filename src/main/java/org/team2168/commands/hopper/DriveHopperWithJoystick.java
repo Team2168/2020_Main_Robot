@@ -13,9 +13,10 @@ import org.team2168.subsystems.Hopper;
 import edu.wpi.first.wpilibj.command.Command;
 
 public class DriveHopperWithJoystick extends Command {
-  private Hopper hopper = Hopper.getInstance();
+  private Hopper hopper;
 
   public DriveHopperWithJoystick() {
+    hopper = Hopper.getInstance()  
     requires(hopper);
   }
 
