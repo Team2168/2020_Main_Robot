@@ -5,21 +5,20 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package org.team2168.commands.hopper;
+package org.team2168.commands.balancer;
 
-import org.team2168.subsystems.Hopper;
+import org.team2168.Robot;
+import org.team2168.subsystems.Balancer;
+import edu.wpi.first.wpilibj.command.Command;
 import org.team2168.OI;
 
-import edu.wpi.first.wpilibj.command.Command;
-
-public class DriveHopperWithJoystick extends Command {
-  private Hopper hopper;
+public class DriveBalancerMotorWithJoystick extends Command {
+  private Balancer balancer;
   private OI oi;
-
-  public DriveHopperWithJoystick() {
-    hopper = Hopper.getInstance();
+  public DriveBalancerMotorWithJoystick() {
+    balancer = Balancer.getInstance();
     oi = OI.getInstance();
-    requires(hopper);
+    requires(balancer);
   }
 
   // Called just before this Command runs the first time
@@ -30,7 +29,7 @@ public class DriveHopperWithJoystick extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    hopper.drive(oi.getHopperJoystickValue()); // The joystick used will likely change
+    balancer.driveMotor(oi.getBalancerJoystickValue());
   }
 
   // Make this return true when this Command no longer needs to run execute()
@@ -42,7 +41,7 @@ public class DriveHopperWithJoystick extends Command {
   // Called once after isFinished returns true
   @Override
   protected void end() {
-    hopper.drive(0.0);
+    balancer.driveMotor(0.0);
   }
 
   // Called when another command which requires one or more of the same
