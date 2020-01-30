@@ -5,15 +5,14 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package org.team2168.commands.color_wheel;
+package org.team2168.commands.color_wheel_pivot;
 
 import org.team2168.subsystems.ColorWheelPivot;
-
 import edu.wpi.first.wpilibj.command.Command;
 
-public class EngageColorWheel extends Command {
+public class DisengageColorWheel extends Command {
   private ColorWheelPivot colorWheelPivot;
-  public EngageColorWheel() {
+  public DisengageColorWheel() {
     colorWheelPivot = ColorWheelPivot.getInstance();
     requires(colorWheelPivot);
     // Use requires() here to declare subsystem dependencies
@@ -28,13 +27,13 @@ public class EngageColorWheel extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    colorWheelPivot.extendPiston();
+    colorWheelPivot.retractPiston();
   }
 
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    return colorWheelPivot.isExtended();
+    return colorWheelPivot.isRetracted();
   }
 
   // Called once after isFinished returns true
