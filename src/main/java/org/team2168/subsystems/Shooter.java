@@ -23,13 +23,21 @@ public class Shooter extends Subsystem {
         _motorOne = new TalonFX(RobotMap.SHOOTER_MOTOR_ONE_PDP);
         _motorTwo = new TalonFX(RobotMap.SHOOTER_MOTOR_TWO_PDP);
     }
-
+    /**
+     * Creates a new Instance of the shooter
+     * @return - New shooter instance will 
+     * be utilized by the commands
+     */
     public static Shooter getInstance() {
         if (_instance == null)
           _instance = new Shooter();
         return _instance;
       }
-
+      /**
+       * Used primarily for testing
+       * @param speed - Will allow the speed
+       * of the motor to be set
+       */
     public void driveShooterMotorOne(double speed)
     {
         if(_motorOneReversed)
@@ -38,7 +46,11 @@ public class Shooter extends Subsystem {
         }
         _motorOne.set(ControlMode.PercentOutput, speed);
     }
-
+      /**
+       * Used primarily for testing
+       * @param speed - Will allow the speed
+       * of the motor to be set
+       */
     public void driveShooterMotorTwo(double speed)
     {
         if(_motorTwoReversed)
@@ -48,7 +60,12 @@ public class Shooter extends Subsystem {
         _motorTwo.set(ControlMode.PercentOutput, speed);
     
     }
-
+    /**
+     * Allows the motors to be set together,
+     * creating a more accurate launch
+     * @param speed - Allows us to set
+     * the speed of the motors together
+     */
     public void driveShooterMotors(double speed)
     {
         driveShooterMotorOne(speed);

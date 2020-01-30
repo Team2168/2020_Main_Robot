@@ -30,7 +30,7 @@ public class DriveShooterWithConstant extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    Shooter.getInstance().driveShooterMotors(_speed);
+    shooter.driveShooterMotors(_speed);
   }
 
   // Make this return true when this Command no longer needs to run execute()
@@ -42,7 +42,7 @@ public class DriveShooterWithConstant extends Command {
   // Called once after isFinished returns true
   @Override
   protected void end() {
-    Shooter.getInstance().driveShooterMotors(0);
+    shooter.driveShooterMotors(0);
   }
 
   // Called when another command which requires one or more of the same

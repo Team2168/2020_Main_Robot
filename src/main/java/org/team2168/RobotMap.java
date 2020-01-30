@@ -67,10 +67,10 @@ public class RobotMap {
 	
 	//Double Soldenoids PCM ID = 1 ///////////////////////////////////////////
 
-	public static final int PANCAKE_SOLENOID_IN = 0;
-	public static final int PANCAKE_SOLENOID_OUT = 1;
-	public static final int HOOD_SOLENOID_IN = 2;
-	public static final int HOOD_SOLENOID_OUT = 3;
+	public static final int PANCAKE_SOLENOID_IN = 1;
+	public static final int PANCAKE_SOLENOID_OUT = 0;
+	public static final int HOOD_SOLENOID_ENGAGE = 2;
+	public static final int HOOD_SOLENOID_DISENGAGE = 3;
 	
 
 	/*************************************************************************
