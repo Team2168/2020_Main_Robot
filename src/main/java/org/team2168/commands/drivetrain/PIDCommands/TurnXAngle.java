@@ -14,49 +14,39 @@ import edu.wpi.first.wpilibj.command.Command;
 public class TurnXAngle extends Command {
   private Drivetrain dt;
   /**target position */
-  private double _targetPos;
+  private double _targetPos = 0.0;
   private double _targetAngle;
-  private boolean _absolutePosition;
+
+  private static final double DEFAULT_ERROR_TOLERANCE = 1.0;
 
   private double _errorTolerancePosition = 0.5; //0.5 inches 
-  private double _errorToleranceAngle = 1.0; //1.0 degree of tolerance 
+  private double _errorToleranceAngle; //1.0 degree of tolerance 
   private double _loopsToSettle = 10;
   private int _withinThresholdLoops = 0;
 
-  public TurnXAngle(double setPoint, boolean absolutePosition) {
+  /**
+   * positive turns left
+   */
+  public TurnXAngle(double setPoint) {
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
-    dt = Drivetrain.getInstance();
-    requires(dt);
-
-    _absolutePosition = absolutePosition;
-    if (!_absolutePosition)
-    {
-      dt.zeroSensors();
-    }
-    _targetPos = dt.getPosition();
-    _targetAngle = setPoint;
+    this(setPoint, DEFAULT_ERROR_TOLERANCE);
   }
 
-  public TurnXAngle(double setPoint, boolean absolutePosition, double errorToleranceAngle) {
+  public TurnXAngle(double setPoint, double errorToleranceAngle) {
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
     dt = Drivetrain.getInstance();
     requires(dt);
 
-    _absolutePosition = absolutePosition;
     _errorToleranceAngle = errorToleranceAngle;
-    if (!_absolutePosition)
-    {
-      dt.zeroSensors();
-    }
-    _targetPos = dt.getPosition();
     _targetAngle = setPoint;
   }
 
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
+    dt.zeroSensors();
   }
 
   // Called repeatedly when this Command is scheduled to run

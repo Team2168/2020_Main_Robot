@@ -79,8 +79,8 @@ public class Drivetrain extends Subsystem {
      * Not all set of Gains are used in this project and may be removed as desired.
      * 
    * 	                                                    kP   kI   kD   kF                    Iz    PeakOut */
-  private static final Gains kGains_Distance = new Gains( 0.1, 0.0,  0.0, 0.0,                 100,  0.50 );
-  private static final Gains kGains_Turning = new Gains( 2.0, 0.0,  4.0, 0.0,                  200,  1.00 );
+  private static final Gains kGains_Distance = new Gains( 0.4, 0.0,  0.0, 0.0,                 100,  0.50 );
+  private static final Gains kGains_Turning = new Gains( 20.0, 0.0,  4.0, 0.0,                  200,  1.00 );
   private static final Gains kGains_Velocity = new Gains( 0.1, 0.0, 20.0, 1023.0/MAX_VELOCITY, 300,  0.50 );
   private static final Gains kGains_MotProf = new Gains( 1.0, 0.0,  0.0, 1023.0/MAX_VELOCITY,  400,  1.00 );
   /**
@@ -214,8 +214,8 @@ public class Drivetrain extends Subsystem {
     _leftMotor3.configNeutralDeadband(kNeutralDeadband, kTimeoutMs);
 		
 		/* Motion Magic Configurations */
-		_rightMotor1.configMotionAcceleration((int) (100*TICKS_PER_INCH_PER_100MS*2), kTimeoutMs); //should be inches per sec
-		_rightMotor1.configMotionCruiseVelocity((int) (100*TICKS_PER_INCH_PER_100MS*2), kTimeoutMs);
+		_rightMotor1.configMotionAcceleration((int) (10*12*TICKS_PER_INCH_PER_100MS*2), kTimeoutMs); //should be inches per sec
+		_rightMotor1.configMotionCruiseVelocity((int) (10*12*TICKS_PER_INCH_PER_100MS*2), kTimeoutMs);
 
 		/**
 		 * Max out the peak output (for all modes).  
@@ -402,13 +402,13 @@ public class Drivetrain extends Subsystem {
 
   public double getHeading()
   {
-    return _pidgey.getFusedHeading();
-    //return _leftMotor1.getSelectedSensorPosition(PID_TURN);
+    //return _pidgey.getFusedHeading();
+    return _rightMotor1.getSelectedSensorPosition(PID_TURN)/PIGEON_UNITS_PER_DEGREE;
   }
 
   public void setSetPointPosition(double setPoint, double setAngle) {
     double target_sensorUnits = 2 * setPoint * TICKS_PER_INCH;
-    double target_turn = setAngle;
+    double target_turn = setAngle*PIGEON_UNITS_PER_DEGREE;
 
     _rightMotor1.set(ControlMode.MotionMagic, target_sensorUnits, DemandType.AuxPID, target_turn);
     _rightMotor2.follow(_rightMotor1, FollowerType.PercentOutput);
@@ -431,14 +431,13 @@ public class Drivetrain extends Subsystem {
 
   public double getErrorPosition()
   {
-    return (_rightMotor1.getActiveTrajectoryPosition()-_rightMotor1.getSelectedSensorPosition(PID_PRIMARY))/(TICKS_PER_INCH);
+    return (_rightMotor1.getActiveTrajectoryPosition(PID_PRIMARY)-_rightMotor1.getSelectedSensorPosition(PID_PRIMARY))/(TICKS_PER_INCH);
     //return _leftMotor1.getClosedLoopError(kPIDLoopIdx)/TICKS_PER_REV;--only for nonMotionMagic or nonMotion Profile
   }
 
   public double getErrorHeading()
   {
-    return (_rightMotor1.getActiveTrajectoryPosition(PID_PRIMARY)-_rightMotor1.getSelectedSensorPosition(PID_PRIMARY))/PIGEON_UNITS_PER_DEGREE;
-  }
+    return (_rightMotor1.getActiveTrajectoryPosition(PID_TURN)-_rightMotor1.getSelectedSensorPosition(PID_TURN))/PIGEON_UNITS_PER_DEGREE;  }
 
   /**
    * Zero all sensors, drivetrain encoders and Pigeon IMU
@@ -459,6 +458,7 @@ public class Drivetrain extends Subsystem {
   public void zeroIMU() {
     _pidgey.setYaw(0, kTimeoutMs);
     _pidgey.setAccumZAngle(0, kTimeoutMs);
+    _pidgey.setFusedHeading(0, kTimeoutMs);
   }
 
   @Override

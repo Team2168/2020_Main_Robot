@@ -80,7 +80,10 @@ public class OI
 		pidTestJoystick.ButtonA().whenPressed(new DriveXDistance(-10*12));
 		pidTestJoystick.ButtonY().whenPressed(new DriveXDistance(10*12));
 		pidTestJoystick.ButtonX().whenPressed(new ResetPosition());
-		pidTestJoystick.ButtonB().whenPressed(new Turn90Degrees());
+
+		pidTestJoystick.ButtonLeftDPad().whenPressed(new TurnXAngle(180));
+		pidTestJoystick.ButtonRightDPad().whenPressed(new TurnXAngle(-180));
+
 
 		// pidTestJoystick.ButtonX().whenPressed(new AutoWithoutGamePiecePattern());
 		// pidTestJoystick.ButtonY().whenPressed(new HABClimbPattern());
@@ -113,8 +116,8 @@ public class OI
 	 * Drivetrain *
 	 *************************************************************************/
 
-	public double getGunStyleXValue()
-	{
+	public double getGunStyleXValue() {
+		System.out.println(gunStyleInterpolator.interpolate(driverJoystick.getLeftStickRaw_X()));
 		return gunStyleInterpolator.interpolate(driverJoystick.getLeftStickRaw_X());
 	}
 
