@@ -33,7 +33,6 @@ public class RobotMap {
 
 	// PWM (0 to 9) on RoboRio/////////////////////////////////////////////////
 
-
 	// Digital IO Channels//////////////////////////////////////////////////////
 	// Channels 0-9 on RoboRio
 
@@ -68,10 +67,12 @@ public class RobotMap {
 	public static final int INTAKE_DISENGAGE_PCM = 1;
 	//Double Soldenoids PCM ID = 1 ///////////////////////////////////////////
 
+
 	/*************************************************************************
 	*                         PDP/CAN DEVICES                                 *
     *************************************************************************/
     public static final int INTAKE_MOTOR_PDP = 5;
+    public static final int BALANCER_MOTOR_PDP = 7;
 	public static final int DRIVETRAIN_LEFT_MOTOR_1_PDP = 0;
 	public static final int DRIVETRAIN_LEFT_MOTOR_2_PDP = 1;
 	public static final int DRIVETRAIN_LEFT_MOTOR_3_PDP = 2;

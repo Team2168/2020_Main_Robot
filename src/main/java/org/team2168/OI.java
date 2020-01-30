@@ -145,5 +145,10 @@ public class OI
 	public double getIntakeMotorJoyStick()
 	{
 		return 0.0; //not done, waiting for control system from driver
+	/*************************************************************************
+	 *Balancer Joystick*
+	*************************************************************************/
+	public double getBalancerJoystickValue(){
+		return operatorJoystick.getRightStickRaw_X();
 	}
 }
