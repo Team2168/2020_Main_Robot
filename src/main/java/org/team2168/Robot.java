@@ -60,8 +60,8 @@ public class Robot extends TimedRobot {
     m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
     m_chooser.addOption("My Auto", kCustomAuto);
     SmartDashboard.putData("Auto choices", m_chooser);
-    intakeMotor = IntakeMotor.getInstance();
-    intakePivot = IntakePivot.getInstance();
+   // intakeMotor = IntakeMotor.getInstance();
+   // intakePivot = IntakePivot.getInstance();
     drivetrain = Drivetrain.getInstance();
     // pdp = new PowerDistribution(RobotMap.PDPThreadPeriod);
     // pdp.startThread();

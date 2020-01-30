@@ -12,8 +12,9 @@ import org.team2168.subsystems.IntakePivot;
 import edu.wpi.first.wpilibj.command.Command;
 
 public class RetractIntakePneumatic extends Command {
-  private IntakePivot intakePivot = IntakePivot.getInstance();
+  private IntakePivot intakePivot;
   public RetractIntakePneumatic() {
+    intakePivot = IntakePivot.getInstance();
     requires(intakePivot);
   }
 
