@@ -80,7 +80,7 @@ public static Climber getInstance()
  * This method allows the ratchet to extend, preventing the climber
  * from moving from the lowered position.
  */
-public void extendRatchet(){
+public void disengageRatchet(){
   climberSolenoid.set(DoubleSolenoid.Value.kForward);
 }
 
@@ -88,7 +88,7 @@ public void extendRatchet(){
  * This method allows the rathcet to retract, allowing the climber to move
  *  to a raised position.
  */
-public void retractRatchet(){
+public void engageRatchet(){
   climberSolenoid.set(DoubleSolenoid.Value.kReverse);
 }
 
