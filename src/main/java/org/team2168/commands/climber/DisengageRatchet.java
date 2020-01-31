@@ -11,14 +11,12 @@ import org.team2168.subsystems.Climber;
 
 import edu.wpi.first.wpilibj.command.Command;
 
-public class RetractRatchet extends Command {
+public class DisengageRatchet extends Command {
   private Climber climber;
 
-  public RetractRatchet() {
+  public DisengageRatchet() {
     climber = Climber.getInstance();
     requires(climber);
-    // Use requires() here to declare subsystem dependencies
-    // eg. requires(chassis);
   }
 
   // Called just before this Command runs the first time
@@ -29,13 +27,13 @@ public class RetractRatchet extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    climber.engageRatchet();
+    climber.disengageRatchet();
   }
 
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    return climber.isRatchetRetracted();
+    return climber.isRatchetDisengaged();
   }
 
   // Called once after isFinished returns true
@@ -48,6 +46,6 @@ public class RetractRatchet extends Command {
   // subsystems is scheduled to run
   @Override
   protected void interrupted() {
-    end();
+  end();
   }
 }

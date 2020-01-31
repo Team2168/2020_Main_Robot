@@ -96,11 +96,11 @@ public void engageRatchet(){
  * This will allow the program to return whether the ratchet is extended or not.
  * @return
  */
-public boolean isRatchetRetracted(){
+public boolean isRatchetEngaged(){
   return climberSolenoid.get() == DoubleSolenoid.Value.kReverse;
 }
 
-public boolean isRatchetExtended(){
+public boolean isRatchetDisengaged(){
   return climberSolenoid.get() == DoubleSolenoid.Value.kForward;
  
 }
