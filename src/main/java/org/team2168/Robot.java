@@ -9,6 +9,7 @@ package org.team2168;
 
 import org.team2168.subsystems.Indexer;
 import org.team2168.subsystems.Hopper;
+import org.team2168.subsystems.ColorWheel;
 import org.team2168.subsystems.Drivetrain;
 import org.team2168.subsystems.IntakeMotor;
 import org.team2168.subsystems.IntakePivot;
@@ -51,6 +52,7 @@ public class Robot extends TimedRobot {
   // Subsystems
   private static Balancer balancer;
   private static Hopper hopper;
+  public static ColorWheel colorWheel;
 
   private static OI oi;
 
@@ -62,6 +64,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
+    // colorWheel = ColorWheel.getInstance();
     m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
     m_chooser.addOption("My Auto", kCustomAuto);
     SmartDashboard.putData("Auto choices", m_chooser);
@@ -70,7 +73,9 @@ public class Robot extends TimedRobot {
     //  indexer = Indexer.GetInstance();
 
    // hopper = Hopper.getInstance();
+    
     drivetrain = Drivetrain.getInstance();
+    oi = OI.getInstance();
     // pdp = new PowerDistribution(RobotMap.PDPThreadPeriod);
     // pdp.startThread();
   }

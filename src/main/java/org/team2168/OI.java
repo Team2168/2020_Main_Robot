@@ -142,6 +142,10 @@ public class OI
 	{
 		return driverJoystick.getRightStickRaw_Y();
 	}
+	public double getColorWheelJoystick()
+	{
+		return operatorJoystick.getRightStickRaw_X();
+	}
 
 	public double getIntakeMotorJoyStick() {
 		return 0.0; //not done, waiting for control system from driver

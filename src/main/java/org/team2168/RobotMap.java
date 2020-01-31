@@ -66,6 +66,8 @@ public class RobotMap {
 	//Double Soldenoids PCM ID = 0 ///////////////////////////////////////////
 	public static final int INTAKE_ENGAGE_PCM = 0;
 	public static final int INTAKE_DISENGAGE_PCM = 1;
+	public static final int COLORWHEEL_ENGAGE_PCM = 4;
+	public static final int COLORWHEEL_DISENGAGE_PCM = 5;
 	//Double Soldenoids PCM ID = 1 ///////////////////////////////////////////
 
 
@@ -82,6 +84,7 @@ public class RobotMap {
 	public static final int INDEXER_MOTOR_PDP = 6;
 	public static final int BALANCER_MOTOR_PDP = 7;
 	public static final int HOPPER_MOTOR_PDP = 9;
+	public static final int COLORWHEEL_MOTOR_PDP = 10;
 
 
 	// Relay Channels///////////////////////////////////////////////////////////
