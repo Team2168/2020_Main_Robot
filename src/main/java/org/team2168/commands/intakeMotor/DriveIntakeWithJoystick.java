@@ -14,7 +14,7 @@ import edu.wpi.first.wpilibj.command.Command;
 
 public class DriveIntakeWithJoystick extends Command {
   private IntakeMotor intakeMotor;
-  private OI oi = OI.getInstance();
+  private OI oi;
   
   public DriveIntakeWithJoystick() {
     intakeMotor = IntakeMotor.getInstance();
@@ -24,6 +24,7 @@ public class DriveIntakeWithJoystick extends Command {
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
+    oi = OI.getInstance();
   }
 
   /**
