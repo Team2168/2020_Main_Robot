@@ -162,4 +162,10 @@ public class OI
 	public double getBalancerJoystickValue(){
 		return (0.0);
 	}
+	/*************************************************************************
+	 *Hopper Joystick*
+	*************************************************************************/
+	public double getHopperJoystickValue(){
+		return operatorJoystick.getRawAxis(4);
+	}
 }

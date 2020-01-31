@@ -81,6 +81,7 @@ public class RobotMap {
 	public static final int INTAKE_MOTOR_PDP = 5;
 	public static final int INDEXER_MOTOR_PDP = 6;
 	public static final int BALANCER_MOTOR_PDP = 7;
+	public static final int HOPPER_MOTOR_PDP = 9;
 
 
 	// Relay Channels///////////////////////////////////////////////////////////
@@ -95,6 +96,14 @@ public class RobotMap {
 	
 
 	
+
+	/*************************************************************************
+	 *                         PDP PARAMETERS                                *
+	 *************************************************************************/
+	public static final long PDPThreadPeriod = 100;
+	public static final double WARNING_CURRENT_LIMIT = 20;
+	public static final double STALL_CURRENT_LIMIT = 350;
+	public static final double CURRENT_LIMIT_TIME_THRESHOLD_SECONDS = 1;
 
 	/*************************************************************************
 	 *                         PID PARAMETERS                                *
@@ -183,8 +192,4 @@ public class RobotMap {
 	// public static final int I2C_ADDRESS = 8;
 	// public static final boolean LEDS_REVERSE = true; //true if 0 is at the top
 	// public static final boolean LEDS_VERTICAL = true;
-	/******************************************************************
-	 *                         PDP PARAMETERS                         *
-	 ******************************************************************/
-	public static final long PDPThreadPeriod = 100;
 }

@@ -8,6 +8,7 @@
 package org.team2168;
 
 import org.team2168.subsystems.Indexer;
+import org.team2168.subsystems.Hopper;
 import org.team2168.subsystems.Drivetrain;
 import org.team2168.subsystems.IntakeMotor;
 import org.team2168.subsystems.IntakePivot;
@@ -49,6 +50,7 @@ public class Robot extends TimedRobot {
 
   // Subsystems
   private static Balancer balancer;
+  private static Hopper hopper;
 
   private static OI oi;
 
@@ -67,6 +69,7 @@ public class Robot extends TimedRobot {
    // intakePivot = IntakePivot.getInstance();
     //  indexer = Indexer.GetInstance();
 
+   // hopper = Hopper.getInstance();
     drivetrain = Drivetrain.getInstance();
     // pdp = new PowerDistribution(RobotMap.PDPThreadPeriod);
     // pdp.startThread();
