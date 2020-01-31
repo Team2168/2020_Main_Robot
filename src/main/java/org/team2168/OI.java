@@ -137,6 +137,7 @@ public class OI
 	 * /
 	 * @author Krystina
 	 */
+	
 	public double getDriveTrainRightJoystick()
 	{
 		return driverJoystick.getRightStickRaw_Y();
@@ -145,10 +146,20 @@ public class OI
 	public double getIntakeMotorJoyStick() {
 		return 0.0; //not done, waiting for control system from driver
 	}
+	/**
+	 * Return value of axis for the indexer
+	 * 
+	 * @return a double - value
+	 */
+	public double getIndexerJoystick()
+	{
+		return operatorJoystick.getLeftStickRaw_Y();
+	}
+
 	/*************************************************************************
 	 *Balancer Joystick*
 	*************************************************************************/
 	public double getBalancerJoystickValue(){
-		return operatorJoystick.getRightStickRaw_X();
+		return (0.0);
 	}
 }

@@ -36,6 +36,7 @@ public class RobotMap {
 	// Digital IO Channels//////////////////////////////////////////////////////
 	// Channels 0-9 on RoboRio
 
+
 	//Channels 10-25 on MXP (PWM and DIO)
 
 	//Analog Input Channels////////////////////////////////////////////////////
@@ -71,14 +72,16 @@ public class RobotMap {
 	/*************************************************************************
 	*                         PDP/CAN DEVICES                                 *
     *************************************************************************/
-    public static final int INTAKE_MOTOR_PDP = 5;
-    public static final int BALANCER_MOTOR_PDP = 7;
 	public static final int DRIVETRAIN_LEFT_MOTOR_1_PDP = 0;
 	public static final int DRIVETRAIN_LEFT_MOTOR_2_PDP = 1;
 	public static final int DRIVETRAIN_LEFT_MOTOR_3_PDP = 2;
 	public static final int DRIVETRAIN_RIGHT_MOTOR_1_PDP = 15;
 	public static final int DRIVETRAIN_RIGHT_MOTOR_2_PDP = 14;
 	public static final int DRIVETRAIN_RIGHT_MOTOR_3_PDP = 13;
+	public static final int INTAKE_MOTOR_PDP = 5;
+	public static final int INDEXER_MOTOR_PDP = 6;
+	public static final int BALANCER_MOTOR_PDP = 7;
+
 
 	// Relay Channels///////////////////////////////////////////////////////////
 

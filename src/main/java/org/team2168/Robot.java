@@ -7,6 +7,7 @@
 
 package org.team2168;
 
+import org.team2168.subsystems.Indexer;
 import org.team2168.subsystems.Drivetrain;
 import org.team2168.subsystems.IntakeMotor;
 import org.team2168.subsystems.IntakePivot;
@@ -34,6 +35,8 @@ public class Robot extends TimedRobot {
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
   public static IntakeMotor intakeMotor;
   public static IntakePivot intakePivot;
+  public static Indexer indexer;
+
   private static Drivetrain drivetrain;
   private static PowerDistribution pdp;
 
@@ -62,6 +65,8 @@ public class Robot extends TimedRobot {
     SmartDashboard.putData("Auto choices", m_chooser);
    // intakeMotor = IntakeMotor.getInstance();
    // intakePivot = IntakePivot.getInstance();
+    //  indexer = Indexer.GetInstance();
+
     drivetrain = Drivetrain.getInstance();
     // pdp = new PowerDistribution(RobotMap.PDPThreadPeriod);
     // pdp.startThread();
