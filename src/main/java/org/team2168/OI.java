@@ -5,6 +5,7 @@ import org.team2168.utils.F310;
 import org.team2168.utils.LinearInterpolator;
 import org.team2168.commands.drivetrain.*;
 
+
 /**
  * This class is the glue that binds the controls on the physical operator
  * interface to the commands and command groups that allow control of the robot.
@@ -168,6 +169,10 @@ public class OI
 		return 0.0;
 	}
 
+	public double getShooterJoystick()
+	{
+		 return operatorJoystick.getRightStickRaw_Y();
+	}
 	/*************************************************************************
 	 *Balancer Joystick*
 	*************************************************************************/

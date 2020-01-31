@@ -51,7 +51,8 @@ public class RobotMap {
 	*************************************************************************/
 	
 	//CAN Device IDs///////////////////////////////////////////////////////////
-    public static final int PDP_CAN_ID = 0;
+	public static final int PCM_CAN_ID_BELLYPAN = 0;
+	public static final int PCM_CAN_ID_SHOOTER = 1;
 
 	/*************************************************************************
 	*                         SPI DEVICES                                    *
@@ -72,6 +73,11 @@ public class RobotMap {
 	public static final int COLORWHEEL_DISENGAGE_PCM = 5;
 	//Double Soldenoids PCM ID = 1 ///////////////////////////////////////////
 
+	public static final int PANCAKE_SOLENOID_IN = 1;
+	public static final int PANCAKE_SOLENOID_OUT = 0;
+	public static final int HOOD_SOLENOID_ENGAGE = 2;
+	public static final int HOOD_SOLENOID_DISENGAGE = 3;
+	
 
 	/*************************************************************************
 	*                         PDP/CAN DEVICES                                 *
@@ -92,6 +98,8 @@ public class RobotMap {
 
 
 	// Relay Channels///////////////////////////////////////////////////////////
+	public static final int SHOOTER_MOTOR_ONE_PDP = 4;
+	public static final int SHOOTER_MOTOR_TWO_PDP = 11;
 
 	/*************************************************************************
 	 *                         PBOT DIFFERENCES  PARAMETERS                  *
