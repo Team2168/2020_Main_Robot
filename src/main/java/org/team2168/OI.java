@@ -144,7 +144,7 @@ public class OI
 	}
 	public double getColorWheelJoystick()
 	{
-		return operatorJoystick.getRightStickRaw_X();
+		return 0.0;
 	}
 
 	public double getIntakeMotorJoyStick() {
@@ -157,7 +157,7 @@ public class OI
 	 */
 	public double getIndexerJoystick()
 	{
-		return operatorJoystick.getLeftStickRaw_Y();
+		return 0.0;
 	}
 
 	/***************************************************************************** 
@@ -165,7 +165,7 @@ public class OI
 	******************************************************************************/
 	public double getClimberJoystickValue()
 	{
-		return operatorJoystick.getLeftStickRaw_Y();
+		return 0.0;
 	}
 
 	/*************************************************************************
@@ -178,6 +178,6 @@ public class OI
 	 *Hopper Joystick*
 	*************************************************************************/
 	public double getHopperJoystickValue(){
-		return operatorJoystick.getRawAxis(4);
+		return 0.0;
 	}
 }

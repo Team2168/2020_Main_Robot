@@ -17,13 +17,13 @@ public class DriveBalancerMotorWithJoystick extends Command {
   private OI oi;
   public DriveBalancerMotorWithJoystick() {
     balancer = Balancer.getInstance();
-    oi = OI.getInstance();
     requires(balancer);
   }
 
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
+    oi = OI.getInstance();
   }
 
   // Called repeatedly when this Command is scheduled to run

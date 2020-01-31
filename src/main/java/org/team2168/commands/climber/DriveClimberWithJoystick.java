@@ -21,22 +21,19 @@ public class DriveClimberWithJoystick extends Command {
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
     climber = Climber.getInstance();
-    oi = OI.getInstance();
     requires(climber);
   }
 
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
-  
+    oi = OI.getInstance();
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
- 
     climber.driveClimberMotors(oi.getClimberJoystickValue());
-
   }
 
   // Make this return true when this Command no longer needs to run execute()
