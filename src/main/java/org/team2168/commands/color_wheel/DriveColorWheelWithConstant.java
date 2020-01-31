@@ -5,31 +5,32 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package org.team2168.commands.balancer;
+package org.team2168.commands.color_wheel;
 
-import org.team2168.Robot;
-import org.team2168.subsystems.Balancer;
+import org.team2168.subsystems.ColorWheel;
 import edu.wpi.first.wpilibj.command.Command;
-import org.team2168.OI;
 
-public class DriveBalancerMotorWithJoystick extends Command {
-  private Balancer balancer;
-  private OI oi;
-  public DriveBalancerMotorWithJoystick() {
-    balancer = Balancer.getInstance();
-    requires(balancer);
+public class DriveColorWheelWithConstant extends Command {
+
+  private double _speed;
+  private ColorWheel colorWheel;
+  public DriveColorWheelWithConstant(double speed) {
+    colorWheel = ColorWheel.getInstance();
+    requires(colorWheel);
+    _speed = speed;
+    // Use requires() here to declare subsystem dependencies
+    // eg. requires(chassis);
   }
 
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
-    oi = OI.getInstance();
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    balancer.driveMotor(oi.getBalancerJoystickValue());
+    colorWheel.drive(_speed);
   }
 
   // Make this return true when this Command no longer needs to run execute()
@@ -41,7 +42,7 @@ public class DriveBalancerMotorWithJoystick extends Command {
   // Called once after isFinished returns true
   @Override
   protected void end() {
-    balancer.driveMotor(0.0);
+    colorWheel.drive(0);
   }
 
   // Called when another command which requires one or more of the same

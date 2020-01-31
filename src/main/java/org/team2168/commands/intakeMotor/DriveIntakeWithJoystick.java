@@ -4,20 +4,21 @@
 /* must be accompanied by the FIRST BSD license file in the root directory of */
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
+/* this method allows the driver to operate the intake motor with a joystick*/
+package org.team2168.commands.intakeMotor;
 
-package org.team2168.commands.balancer;
-
-import org.team2168.Robot;
-import org.team2168.subsystems.Balancer;
-import edu.wpi.first.wpilibj.command.Command;
 import org.team2168.OI;
+import org.team2168.subsystems.IntakeMotor;
 
-public class DriveBalancerMotorWithJoystick extends Command {
-  private Balancer balancer;
+import edu.wpi.first.wpilibj.command.Command;
+
+public class DriveIntakeWithJoystick extends Command {
+  private IntakeMotor intakeMotor;
   private OI oi;
-  public DriveBalancerMotorWithJoystick() {
-    balancer = Balancer.getInstance();
-    requires(balancer);
+  
+  public DriveIntakeWithJoystick() {
+    intakeMotor = IntakeMotor.getInstance();
+    requires(intakeMotor);
   }
 
   // Called just before this Command runs the first time
@@ -26,10 +27,24 @@ public class DriveBalancerMotorWithJoystick extends Command {
     oi = OI.getInstance();
   }
 
-  // Called repeatedly when this Command is scheduled to run
+  /**
+   * Gets joystick positions from OI.
+   * checks if it's below the maximum speed allowed, which is static and in the intake subsystem
+   * if it is, sends joystick position to Intake
+   * if it's above, sets motor speed to max speed
+   * 
+   * @author Ian
+   */
   @Override
   protected void execute() {
-    balancer.driveMotor(oi.getBalancerJoystickValue());
+    if (oi.getIntakeMotorJoyStick() < IntakeMotor.maxSpeed)
+    {
+      intakeMotor.driveMotor(oi.getIntakeMotorJoyStick());
+    }
+    else
+    {
+      intakeMotor.driveMotor(IntakeMotor.maxSpeed);
+    }
   }
 
   // Make this return true when this Command no longer needs to run execute()
@@ -41,7 +56,7 @@ public class DriveBalancerMotorWithJoystick extends Command {
   // Called once after isFinished returns true
   @Override
   protected void end() {
-    balancer.driveMotor(0.0);
+    intakeMotor.driveMotor(0.0);
   }
 
   // Called when another command which requires one or more of the same

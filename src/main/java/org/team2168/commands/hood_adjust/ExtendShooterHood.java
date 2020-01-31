@@ -5,43 +5,40 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package org.team2168.commands.balancer;
+package org.team2168.commands.hood_adjust;
 
-import org.team2168.Robot;
-import org.team2168.subsystems.Balancer;
+import org.team2168.subsystems.HoodAdjust;
+
 import edu.wpi.first.wpilibj.command.Command;
-import org.team2168.OI;
 
-public class DriveBalancerMotorWithJoystick extends Command {
-  private Balancer balancer;
-  private OI oi;
-  public DriveBalancerMotorWithJoystick() {
-    balancer = Balancer.getInstance();
-    requires(balancer);
+public class ExtendShooterHood extends Command {
+  private HoodAdjust hoodAdjust;
+  public ExtendShooterHood() {
+    hoodAdjust = HoodAdjust.getInstance();
+    requires(hoodAdjust);
   }
 
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
-    oi = OI.getInstance();
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    balancer.driveMotor(oi.getBalancerJoystickValue());
+    hoodAdjust.extendHood();
   }
 
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    return false;
+    return hoodAdjust.isHoodExtended();
   }
 
   // Called once after isFinished returns true
   @Override
   protected void end() {
-    balancer.driveMotor(0.0);
+
   }
 
   // Called when another command which requires one or more of the same

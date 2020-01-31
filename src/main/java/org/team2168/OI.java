@@ -5,6 +5,7 @@ import org.team2168.utils.F310;
 import org.team2168.utils.LinearInterpolator;
 import org.team2168.commands.drivetrain.*;
 
+
 /**
  * This class is the glue that binds the controls on the physical operator
  * interface to the commands and command groups that allow control of the robot.
@@ -137,15 +138,51 @@ public class OI
 	 * /
 	 * @author Krystina
 	 */
+	
 	public double getDriveTrainRightJoystick()
 	{
 		return driverJoystick.getRightStickRaw_Y();
 	}
+	public double getColorWheelJoystick()
+	{
+		return 0.0;
+	}
 
+	public double getIntakeMotorJoyStick() {
+		return 0.0; //not done, waiting for control system from driver
+	}
+	/**
+	 * Return value of axis for the indexer
+	 * 
+	 * @return a double - value
+	 */
+	public double getIndexerJoystick()
+	{
+		return 0.0;
+	}
+
+	/***************************************************************************** 
+	 * 								Climber
+	******************************************************************************/
+	public double getClimberJoystickValue()
+	{
+		return 0.0;
+	}
+
+	public double getShooterJoystick()
+	{
+		 return operatorJoystick.getRightStickRaw_Y();
+	}
 	/*************************************************************************
 	 *Balancer Joystick*
 	*************************************************************************/
 	public double getBalancerJoystickValue(){
-		return operatorJoystick.getRightStickRaw_X();
+		return (0.0);
+	}
+	/*************************************************************************
+	 *Hopper Joystick*
+	*************************************************************************/
+	public double getHopperJoystickValue(){
+		return 0.0;
 	}
 }

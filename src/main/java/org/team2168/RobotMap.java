@@ -36,6 +36,7 @@ public class RobotMap {
 	// Digital IO Channels//////////////////////////////////////////////////////
 	// Channels 0-9 on RoboRio
 
+
 	//Channels 10-25 on MXP (PWM and DIO)
 
 	//Analog Input Channels////////////////////////////////////////////////////
@@ -50,7 +51,8 @@ public class RobotMap {
 	*************************************************************************/
 	
 	//CAN Device IDs///////////////////////////////////////////////////////////
-    public static final int PDP_CAN_ID = 0;
+	public static final int PCM_CAN_ID_BELLYPAN = 0;
+	public static final int PCM_CAN_ID_SHOOTER = 1;
 
 	/*************************************************************************
 	*                         SPI DEVICES                                    *
@@ -61,24 +63,43 @@ public class RobotMap {
 	/*************************************************************************
 	*                         Solenoids                                      *
 	*************************************************************************/
+	public static final int CLIMBER_RATCHET_ENGAGE_PCM = 2;
+	public static final int CLIMBER_RATCHET_DISENGAGE_PCM = 3;
 
 	//Double Soldenoids PCM ID = 0 ///////////////////////////////////////////
-	
+	public static final int INTAKE_ENGAGE_PCM = 0;
+	public static final int INTAKE_DISENGAGE_PCM = 1;
+	public static final int COLORWHEEL_ENGAGE_PCM = 4;
+	public static final int COLORWHEEL_DISENGAGE_PCM = 5;
 	//Double Soldenoids PCM ID = 1 ///////////////////////////////////////////
 
+	public static final int PANCAKE_SOLENOID_IN = 1;
+	public static final int PANCAKE_SOLENOID_OUT = 0;
+	public static final int HOOD_SOLENOID_ENGAGE = 2;
+	public static final int HOOD_SOLENOID_DISENGAGE = 3;
+	
 
 	/*************************************************************************
 	*                         PDP/CAN DEVICES                                 *
     *************************************************************************/
-    public static final int BALANCER_MOTOR_PDP = 7;
 	public static final int DRIVETRAIN_LEFT_MOTOR_1_PDP = 0;
 	public static final int DRIVETRAIN_LEFT_MOTOR_2_PDP = 1;
 	public static final int DRIVETRAIN_LEFT_MOTOR_3_PDP = 2;
 	public static final int DRIVETRAIN_RIGHT_MOTOR_1_PDP = 15;
 	public static final int DRIVETRAIN_RIGHT_MOTOR_2_PDP = 14;
 	public static final int DRIVETRAIN_RIGHT_MOTOR_3_PDP = 13;
+	public static final int CLIMBER_MOTOR_1_PDP = 3;
+	public static final int CLIMBER_MOTOR_2_PDP = 12;
+	public static final int INTAKE_MOTOR_PDP = 5;
+	public static final int INDEXER_MOTOR_PDP = 6;
+	public static final int BALANCER_MOTOR_PDP = 7;
+	public static final int HOPPER_MOTOR_PDP = 9;
+	public static final int COLORWHEEL_MOTOR_PDP = 10;
+
 
 	// Relay Channels///////////////////////////////////////////////////////////
+	public static final int SHOOTER_MOTOR_ONE_PDP = 4;
+	public static final int SHOOTER_MOTOR_TWO_PDP = 11;
 
 	/*************************************************************************
 	 *                         PBOT DIFFERENCES  PARAMETERS                  *
@@ -92,58 +113,12 @@ public class RobotMap {
 	
 
 	/*************************************************************************
+	 *                         PDP PARAMETERS                                *
+	 *************************************************************************/
+
+	/*************************************************************************
 	 *                         PID PARAMETERS                                *
 	 *************************************************************************/
-	// period to run PID loops on drive train
-	public static final long DRIVE_TRAIN_PID_PERIOD = 20;// 70ms loop
-	public static final int DRIVE_TRAIN_PID_ARRAY_SIZE = 30;
-
-	public static final double DRIVE_TRAIN_MIN_FWD_VOLTAGE = 1.8;//volts
-	public static final double DRIVE_TRAIN_MIN_RVD_VOLTAGE = 1.2;//volts
-
-	public static final double DRIVE_TRAIN_MIN_ROT_CLOCKWISE_VOLTAGE = 1.45;//volts
-	public static final double DRIVE_TRAIN_MIN_ROT_COUNTCLOCKWISE_VOLTAGE = 1.45;//volts
-
-	// PID Gains for Left & Right Speed and Position
-	// Bandwidth =
-
-	public static final double DRIVE_TRAIN_LEFT_SPEED_P = 0.04779;
-	public static final double DRIVE_TRAIN_LEFT_SPEED_I = 0.0010526;
-	public static final double DRIVE_TRAIN_LEFT_SPEED_D = 0.0543;
-
-	public static final double DRIVE_TRAIN_RIGHT_SPEED_P = 0.04779;
-	public static final double DRIVE_TRAIN_RIGHT_SPEED_I = 0.0010526;
-	public static final double DRIVE_TRAIN_RIGHT_SPEED_D = 0.0543;
-
-	public static final double DRIVE_TRAIN_LEFT_POSITION_P = 0.2;
-	public static final double DRIVE_TRAIN_LEFT_POSITION_I = 0.0001412646174233;
-	public static final double DRIVE_TRAIN_LEFT_POSITION_D = 0.0074778888124088;
-
-	public static final double DRIVE_TRAIN_RIGHT_POSITION_P = 0.25;
-	public static final double DRIVE_TRAIN_RIGHT_POSITION_I = 0.0001412646174233;
-	public static final double DRIVE_TRAIN_RIGHT_POSITION_D = 0.0074778888124088;
-
-	public static final double ROTATE_POSITION_P = 0.055;
-	public static final double ROTATE_POSITION_I = 0.001;
-	public static final double ROTATE_POSITION_D = 0.0064778888124088;
-
-
-	public static final double ROTATE_POSITION_P_Drive_Straight = 0.055; //0.055 comp
-	public static final double ROTATE_POSITION_I_Drive_Straight = 0.001; //0.001
-	public static final double ROTATE_POSITION_D_Drive_Straight = 0.0064778888124088;
-
-	
-
-	public static final double LIFT_P = 0.044;
-	public static final double LIFT_I = 0.0020;
-	public static final double LIFT_D = 0.0001;
-
-	public static final double LIMELIGHT_POSITION_P = 0.013;
-	public static final double LIMELIGHT_POSITION_I = 0.0;
-	public static final double LIMELIGHT_POSITION_D = 0.0;
-		
-	public static final long LIFT_PID_PERIOD = 20;
-	public static final int  LIFT_PID_ARRAY_SIZE = 30;
 
 	/****************************************************************
 	 *                         TCP Servers (ONLY FOR DEBUGGING)     *
@@ -178,8 +153,4 @@ public class RobotMap {
 	// public static final int I2C_ADDRESS = 8;
 	// public static final boolean LEDS_REVERSE = true; //true if 0 is at the top
 	// public static final boolean LEDS_VERTICAL = true;
-	/******************************************************************
-	 *                         PDP PARAMETERS                         *
-	 ******************************************************************/
-	public static final long PDPThreadPeriod = 100;
 }
