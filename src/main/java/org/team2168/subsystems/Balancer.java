@@ -14,7 +14,6 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.CANSparkMaxLowLevel.PeriodicFrame;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import org.team2168.RobotMap;
-import org.team2168.commands.balancer.DriveBalancerMotorWithJoystick;
 
 public class Balancer extends Subsystem {
   // Put methods for controlling this subsystem

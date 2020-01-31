@@ -62,6 +62,8 @@ public class RobotMap {
 	/*************************************************************************
 	*                         Solenoids                                      *
 	*************************************************************************/
+	public static final int CLIMBER_RATCHET_ENGAGE_PCM = 2;
+	public static final int CLIMBER_RATCHET_DISENGAGE_PCM = 3;
 
 	//Double Soldenoids PCM ID = 0 ///////////////////////////////////////////
 	public static final int INTAKE_ENGAGE_PCM = 0;
@@ -80,6 +82,8 @@ public class RobotMap {
 	public static final int DRIVETRAIN_RIGHT_MOTOR_1_PDP = 15;
 	public static final int DRIVETRAIN_RIGHT_MOTOR_2_PDP = 14;
 	public static final int DRIVETRAIN_RIGHT_MOTOR_3_PDP = 13;
+	public static final int CLIMBER_MOTOR_1_PDP = 3;
+	public static final int CLIMBER_MOTOR_2_PDP = 12;
 	public static final int INTAKE_MOTOR_PDP = 5;
 	public static final int INDEXER_MOTOR_PDP = 6;
 	public static final int BALANCER_MOTOR_PDP = 7;
@@ -161,6 +165,8 @@ public class RobotMap {
 		
 	public static final long LIFT_PID_PERIOD = 20;
 	public static final int  LIFT_PID_ARRAY_SIZE = 30;
+
+
 
 	/****************************************************************
 	 *                         TCP Servers (ONLY FOR DEBUGGING)     *
