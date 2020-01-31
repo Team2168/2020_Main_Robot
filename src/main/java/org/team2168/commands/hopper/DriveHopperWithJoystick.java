@@ -18,13 +18,14 @@ public class DriveHopperWithJoystick extends Command {
 
   public DriveHopperWithJoystick() {
     hopper = Hopper.getInstance();
-    oi = OI.getInstance();
+
     requires(hopper);
   }
 
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
+    oi = OI.getInstance();
   }
 
   // Called repeatedly when this Command is scheduled to run

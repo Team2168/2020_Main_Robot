@@ -152,6 +152,6 @@ public class OI
 	 *Hopper Joystick*
 	*************************************************************************/
 	public double getHopperJoystickValue(){
-		return operatorJoystick.getRawAxis(4);
+		return (0.0);
 	}
 }
