@@ -41,12 +41,7 @@ public class IntakePivot extends Subsystem {
     return _instance;
   }
 
-  @Override
-  public void initDefaultCommand() {
-    // Set the default command for a subsystem here.
-  }
-
-  /**
+    /**
    * extends intake pneumatic
    */
   public void extendIntake() {
@@ -74,5 +69,10 @@ public class IntakePivot extends Subsystem {
   */
   public boolean isIntakeRetracted() {
     return intakePivot.get() == DoubleSolenoid.Value.kReverse;
+  }
+
+  @Override
+  public void initDefaultCommand() {
+    // Set the default command for a subsystem here.
   }
 }

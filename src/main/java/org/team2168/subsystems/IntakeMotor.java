@@ -45,13 +45,7 @@ public class IntakeMotor extends Subsystem {
     return _instance;
   }
 
-  @Override
-  public void initDefaultCommand() {
-    // Set the default command for a subsystem here.
-    setDefaultCommand(new DriveIntakeWithJoystick());
-  }
-
-  /**
+    /**
    * sets motor speed to input, postive is towards the robot
    * @param speed -1.0 to 1.0. negative is away from the robot, 0 is stationary, positive is towards the robot
    */
@@ -62,5 +56,11 @@ public class IntakeMotor extends Subsystem {
       speed = -speed;
     }
     intakeMotor.set(ControlMode.PercentOutput, speed);
+  }
+
+  @Override
+  public void initDefaultCommand() {
+    // Set the default command for a subsystem here.
+    //setDefaultCommand(new DriveIntakeWithJoystick());
   }
 }

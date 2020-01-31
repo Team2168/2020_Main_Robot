@@ -16,8 +16,6 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 import org.team2168.RobotMap;
 import org.team2168.commands.balancer.DriveBalancerMotorWithJoystick;
 
-import edu.wpi.first.wpilibj.DoubleSolenoid;
-
 public class Balancer extends Subsystem {
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
@@ -74,6 +72,6 @@ public class Balancer extends Subsystem {
   @Override
   public void initDefaultCommand() {
     // Set the default command for a subsystem here.
-    setDefaultCommand(new DriveBalancerMotorWithJoystick());
+    //setDefaultCommand(new DriveBalancerMotorWithJoystick());
   }
 }
