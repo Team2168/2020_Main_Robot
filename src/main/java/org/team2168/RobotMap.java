@@ -115,66 +115,10 @@ public class RobotMap {
 	/*************************************************************************
 	 *                         PDP PARAMETERS                                *
 	 *************************************************************************/
-	public static final long PDPThreadPeriod = 100;
-	public static final double WARNING_CURRENT_LIMIT = 20;
-	public static final double STALL_CURRENT_LIMIT = 350;
-	public static final double CURRENT_LIMIT_TIME_THRESHOLD_SECONDS = 1;
 
 	/*************************************************************************
 	 *                         PID PARAMETERS                                *
 	 *************************************************************************/
-	// period to run PID loops on drive train
-	public static final long DRIVE_TRAIN_PID_PERIOD = 20;// 70ms loop
-	public static final int DRIVE_TRAIN_PID_ARRAY_SIZE = 30;
-
-	public static final double DRIVE_TRAIN_MIN_FWD_VOLTAGE = 1.8;//volts
-	public static final double DRIVE_TRAIN_MIN_RVD_VOLTAGE = 1.2;//volts
-
-	public static final double DRIVE_TRAIN_MIN_ROT_CLOCKWISE_VOLTAGE = 1.45;//volts
-	public static final double DRIVE_TRAIN_MIN_ROT_COUNTCLOCKWISE_VOLTAGE = 1.45;//volts
-
-	// PID Gains for Left & Right Speed and Position
-	// Bandwidth =
-
-	public static final double DRIVE_TRAIN_LEFT_SPEED_P = 0.04779;
-	public static final double DRIVE_TRAIN_LEFT_SPEED_I = 0.0010526;
-	public static final double DRIVE_TRAIN_LEFT_SPEED_D = 0.0543;
-
-	public static final double DRIVE_TRAIN_RIGHT_SPEED_P = 0.04779;
-	public static final double DRIVE_TRAIN_RIGHT_SPEED_I = 0.0010526;
-	public static final double DRIVE_TRAIN_RIGHT_SPEED_D = 0.0543;
-
-	public static final double DRIVE_TRAIN_LEFT_POSITION_P = 0.2;
-	public static final double DRIVE_TRAIN_LEFT_POSITION_I = 0.0001412646174233;
-	public static final double DRIVE_TRAIN_LEFT_POSITION_D = 0.0074778888124088;
-
-	public static final double DRIVE_TRAIN_RIGHT_POSITION_P = 0.25;
-	public static final double DRIVE_TRAIN_RIGHT_POSITION_I = 0.0001412646174233;
-	public static final double DRIVE_TRAIN_RIGHT_POSITION_D = 0.0074778888124088;
-
-	public static final double ROTATE_POSITION_P = 0.055;
-	public static final double ROTATE_POSITION_I = 0.001;
-	public static final double ROTATE_POSITION_D = 0.0064778888124088;
-
-
-	public static final double ROTATE_POSITION_P_Drive_Straight = 0.055; //0.055 comp
-	public static final double ROTATE_POSITION_I_Drive_Straight = 0.001; //0.001
-	public static final double ROTATE_POSITION_D_Drive_Straight = 0.0064778888124088;
-
-	
-
-	public static final double LIFT_P = 0.044;
-	public static final double LIFT_I = 0.0020;
-	public static final double LIFT_D = 0.0001;
-
-	public static final double LIMELIGHT_POSITION_P = 0.013;
-	public static final double LIMELIGHT_POSITION_I = 0.0;
-	public static final double LIMELIGHT_POSITION_D = 0.0;
-		
-	public static final long LIFT_PID_PERIOD = 20;
-	public static final int  LIFT_PID_ARRAY_SIZE = 30;
-
-
 
 	/****************************************************************
 	 *                         TCP Servers (ONLY FOR DEBUGGING)     *
