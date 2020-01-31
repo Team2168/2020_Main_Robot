@@ -157,6 +157,6 @@ public class OI
 	 *Balancer Joystick*
 	*************************************************************************/
 	public double getBalancerJoystickValue(){
-		return operatorJoystick.getRightStickRaw_X();
+		return (0.0);
 	}
 }
