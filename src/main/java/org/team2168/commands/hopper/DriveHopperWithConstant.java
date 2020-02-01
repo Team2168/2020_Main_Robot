@@ -5,20 +5,21 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package org.team2168.commands.climber_comm;
+package org.team2168.commands.hopper;
 
-import org.team2168.subsystems.Climber;
+import org.team2168.subsystems.Hopper;
 
 import edu.wpi.first.wpilibj.command.Command;
 
-public class RetractRatchet extends Command {
-  private Climber climber;
+public class DriveHopperWithConstant extends Command {
+  private Hopper hopper;
+  private double speed;
 
-  public RetractRatchet() {
-    climber = Climber.getInstance();
-    requires(climber);
-    // Use requires() here to declare subsystem dependencies
-    // eg. requires(chassis);
+  public DriveHopperWithConstant(double speed) {
+    hopper = Hopper.getInstance();
+    requires(hopper);
+
+    this.speed = speed;
   }
 
   // Called just before this Command runs the first time
@@ -29,7 +30,7 @@ public class RetractRatchet extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    climber.retractRatchet();
+    hopper.drive(speed);
   }
 
   // Make this return true when this Command no longer needs to run execute()
@@ -41,11 +42,13 @@ public class RetractRatchet extends Command {
   // Called once after isFinished returns true
   @Override
   protected void end() {
+    hopper.drive(0.0);
   }
 
   // Called when another command which requires one or more of the same
   // subsystems is scheduled to run
   @Override
   protected void interrupted() {
+    end();
   }
 }

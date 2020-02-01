@@ -16,9 +16,9 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import org.team2168.Gains;
 import org.team2168.RobotMap;
-import org.team2168.commands.climber_comm.DriveClimberWithJoystick;
+import org.team2168.commands.climber.DriveClimberWithJoystick;
 
-import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
 public class Climber extends Subsystem {
@@ -28,7 +28,7 @@ public class Climber extends Subsystem {
   public static double holdingSpeed; 
   private TalonSRX climberMotor1;
   private TalonSRX climberMotor2;
-  public Solenoid climberSolenoid;
+  public DoubleSolenoid climberSolenoid;
 
   private final boolean CLIMBER_MOTOR_1_REVERSE = false;
   private final boolean CLIMBER_MOTOR_2_REVERSE = false;
@@ -84,9 +84,9 @@ public class Climber extends Subsystem {
 
 
   private Climber() {
-    climberMotor1 = new TalonSRX(RobotMap.CLIMBER_MOTOR_1);
+    climberMotor1 = new TalonSRX(RobotMap.CLIMBER_MOTOR_1_PDP);
     // climberMotor2 = new TalonSRX(RobotMap.CLIMBER_MOTOR_2);
-    // climberSolenoid = new Solenoid(RobotMap.CLIMBER_RATCHET);
+    climberSolenoid = new DoubleSolenoid(RobotMap.CLIMBER_RATCHET_ENGAGE_PCM,RobotMap.CLIMBER_RATCHET_DISENGAGE_PCM);
     /* Factory Default all hardware to prevent unexpected behaviour */
     climberMotor1.configFactoryDefault();
     /* Configure the left Talon's selected sensor as local QuadEncoder */
@@ -191,36 +191,31 @@ public class Climber extends Subsystem {
    * This method allows the ratchet to extend, preventing the climber
    * from moving from the lowered position.
    */
-  public void extendRatchet(){
-    // climberSolenoid.set(false);
+  public void disengageRatchet(){
+    climberSolenoid.set(DoubleSolenoid.Value.kForward);
   }
 
   /** 
    * This method allows the rathcet to retract, allowing the climber to move
    *  to a raised position.
    */
-  public void retractRatchet(){
-    // climberSolenoid.set(true);
-  }
-
-    /**
-   * returns whether or not the ratchet is extended
-   * @return
-   */
-  public boolean isRatchetExtended(){
-    // return !climberSolenoid.get();
-    return false;
+  public void engageRatchet(){
+    climberSolenoid.set(DoubleSolenoid.Value.kReverse);
   }
 
   /**
    * This will allow the program to return whether the ratchet is extended or not.
    * @return
    */
-  public boolean isRatchetRetracted(){
-    // return climberSolenoid.get();
-    return false;
+  public boolean isRatchetEngaged(){
+    return climberSolenoid.get() == DoubleSolenoid.Value.kReverse;
+  }
+
+  public boolean isRatchetDisengaged(){
+    return climberSolenoid.get() == DoubleSolenoid.Value.kForward;
   
   }
+
 
   public double getPosition()
   {

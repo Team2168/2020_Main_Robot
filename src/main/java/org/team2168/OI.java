@@ -1,10 +1,12 @@
 
 package org.team2168;
 
-import org.team2168.commands.climber_comm.DriveClimberXPosition;
-import org.team2168.commands.climber_comm.ResetPosition;
+import org.team2168.commands.climber.DriveClimberXPosition;
+import org.team2168.commands.climber.ResetPosition;
 import org.team2168.utils.F310;
 import org.team2168.utils.LinearInterpolator;
+import org.team2168.commands.drivetrain.*;
+
 
 /**
  * This class is the glue that binds the controls on the physical operator
@@ -44,28 +46,23 @@ public class OI
 	public F310 operatorJoystick = new F310(RobotMap.OPERATOR_JOYSTICK);
 	public F310 pidTestJoystick = new F310(RobotMap.PID_TEST_JOYSTICK);
 
-
-
 	// public F310 driverOperatorEJoystick = new
 	// F310(RobotMap.DRIVER_OPERATOR_E_BACKUP);
 
 	// public F310 testJoystick = new F310(RobotMap.COMMANDS_TEST_JOYSTICK);
 	//public F310 pidTestJoystick = new F310(RobotMap.PID_TEST_JOYSTICK);
 	private LinearInterpolator gunStyleInterpolator;
-	private double[][] gunStyleArray = { { -1.0, -1.0
-			}, { -.15, 0.0
-			}, { .15, 0.0
-			}, { 1.0, 1.0
-			}
+	private double[][] gunStyleArray = {
+		{ -1.0, -1.0},
+		{ -.15, 0.0},
+		{ .15, 0.0},
+		{ 1.0, 1.0}
 	};
 
 	/**
 	 * Private constructor for singleton class which instantiates the OI object
 	 */
-	private OI()
-	{
-
-
+	private OI() {
 
 		/*************************************************************************
 		 * Driver Joystick *
@@ -110,18 +107,13 @@ public class OI
 
 	public double getGunStyleXValue()
 	{
-		return driverJoystick.getLeftStickRaw_X();
+		return gunStyleInterpolator.interpolate(driverJoystick.getLeftStickRaw_X());
 	}
 
 	public double getGunStyleYValue()
 	{
 
 		return gunStyleInterpolator.interpolate(driverJoystick.getLeftStickRaw_Y());
-	}
-
-	public double getDriveWinchJoystickValue()
-	{
-		return operatorJoystick.getRightStickRaw_X();
 	}
 
 	/**
@@ -141,9 +133,27 @@ public class OI
 	 * /
 	 * @author Krystina
 	 */
+	
 	public double getDriveTrainRightJoystick()
 	{
 		return driverJoystick.getRightStickRaw_Y();
+	}
+	public double getColorWheelJoystick()
+	{
+		return 0.0;
+	}
+
+	public double getIntakeMotorJoyStick() {
+		return 0.0; //not done, waiting for control system from driver
+	}
+	/**
+	 * Return value of axis for the indexer
+	 * 
+	 * @return a double - value
+	 */
+	public double getIndexerJoystick()
+	{
+		return 0.0;
 	}
 
 	/***************************************************************************** 
@@ -151,7 +161,23 @@ public class OI
 	******************************************************************************/
 	public double getClimberJoystickValue()
 	{
-		return operatorJoystick.getLeftStickRaw_Y();
+		return 0.0;
 	}
 
+	public double getShooterJoystick()
+	{
+		 return operatorJoystick.getRightStickRaw_Y();
+	}
+	/*************************************************************************
+	 *Balancer Joystick*
+	*************************************************************************/
+	public double getBalancerJoystickValue(){
+		return (0.0);
+	}
+	/*************************************************************************
+	 *Hopper Joystick*
+	*************************************************************************/
+	public double getHopperJoystickValue(){
+		return 0.0;
+	}
 }

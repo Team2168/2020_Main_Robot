@@ -5,25 +5,17 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package org.team2168.commands.climber_comm;
+package org.team2168.commands.hood_adjust;
 
-
-import org.team2168.subsystems.Climber;
+import org.team2168.subsystems.HoodAdjust;
 
 import edu.wpi.first.wpilibj.command.Command;
 
-
-
-public class DriveClimberWithConstant extends Command {
-  double _speed;
-  private Climber climber;
-  public DriveClimberWithConstant(double speed) {
-    // Use requires() here to declare subsystem dependencies
-    // eg. requires(chassis);
-    climber = Climber.getInstance();
-    requires(climber);
-
-    _speed = speed;
+public class ExtendShooterHood extends Command {
+  private HoodAdjust hoodAdjust;
+  public ExtendShooterHood() {
+    hoodAdjust = HoodAdjust.getInstance();
+    requires(hoodAdjust);
   }
 
   // Called just before this Command runs the first time
@@ -34,25 +26,25 @@ public class DriveClimberWithConstant extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    climber.driveClimberMotors(_speed);
+    hoodAdjust.extendHood();
   }
 
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    return false;
+    return hoodAdjust.isHoodExtended();
   }
 
   // Called once after isFinished returns true
   @Override
   protected void end() {
-    climber.driveClimberMotors(0.0);
+
   }
 
   // Called when another command which requires one or more of the same
   // subsystems is scheduled to run
   @Override
   protected void interrupted() {
-   end();
+    end();
   }
 }

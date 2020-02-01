@@ -5,17 +5,17 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package org.team2168.commands.climber_comm;
+package org.team2168.commands.hood_adjust;
 
-import org.team2168.subsystems.Climber;
+import org.team2168.subsystems.HoodAdjust;
 
 import edu.wpi.first.wpilibj.command.Command;
 
-public class ExtendRatchet extends Command {
-  private Climber climber;
-
-  public ExtendRatchet() {
-    climber = Climber.getInstance();
+public class RetractShooterHood extends Command {
+  private HoodAdjust hoodAdjust;
+  public RetractShooterHood() {
+    hoodAdjust = HoodAdjust.getInstance();
+    requires(hoodAdjust);
   }
 
   // Called just before this Command runs the first time
@@ -26,23 +26,27 @@ public class ExtendRatchet extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    climber.extendRatchet();
+    hoodAdjust.retractHood();
   }
 
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    return false;
+
+    return hoodAdjust.isHoodRetracted();
+    
   }
 
   // Called once after isFinished returns true
   @Override
   protected void end() {
+
   }
 
   // Called when another command which requires one or more of the same
   // subsystems is scheduled to run
   @Override
   protected void interrupted() {
+    end();
   }
 }
