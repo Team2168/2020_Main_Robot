@@ -5,7 +5,10 @@ import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 
 import org.team2168.RobotMap;
+import org.team2168.PID.controllers.PIDPosition;
+import org.team2168.PID.sensors.Limelight;
 import org.team2168.commands.drivetrain.DriveWithJoystick;
+import org.team2168.utils.TCPSocketSender;
 
 import edu.wpi.first.wpilibj.command.Subsystem;
 
@@ -17,6 +20,11 @@ public class Drivetrain extends Subsystem {
   private static TalonFX _rightMotor1;
   private static TalonFX _rightMotor2;
   private static TalonFX _rightMotor3;
+  
+  public Limelight limelight;
+  public PIDPosition limelightPosController;
+
+  TCPSocketSender TCPlimelightPosController;
 
   private static Drivetrain instance = null;
 
@@ -55,6 +63,10 @@ public class Drivetrain extends Subsystem {
       _rightMotor2.configSupplyCurrentLimit(talonCurrentLimit);
       _rightMotor3.configSupplyCurrentLimit(talonCurrentLimit);
 
+    limelight = new Limelight();
+    limelight.setCamMode(1);
+    limelight.setPipeline(7);
+
     // Log sensor data
     // ConsolePrinter.putNumber("DTRight1MotorCurrent", () -> {return Robot.pdp.getChannelCurrent(RobotMap.DRIVETRAIN_RIGHT_MOTOR_1_PDP);}, true, false);
     // ConsolePrinter.putNumber("DTRight2MotorCurrent", () -> {return Robot.pdp.getChannelCurrent(RobotMap.DRIVETRAIN_RIGHT_MOTOR_2_PDP);}, true, false);
@@ -62,6 +74,12 @@ public class Drivetrain extends Subsystem {
     // ConsolePrinter.putNumber("DTLeft1MotorCurrent", () -> {return Robot.pdp.getChannelCurrent(RobotMap.DRIVETRAIN_LEFT_MOTOR_1_PDP);}, true, false);
     // ConsolePrinter.putNumber("DTLeft2MotorCurrent", () -> {return Robot.pdp.getChannelCurrent(RobotMap.DRIVETRAIN_LEFT_MOTOR_2_PDP);}, true, false);
     // ConsolePrinter.putNumber("DTLeft3MotorCurrent", () -> {return Robot.pdp.getChannelCurrent(RobotMap.DRIVETRAIN_LEFT_MOTOR_3_PDP);}, true, false);
+    
+    limelightPosController.setSIZE(RobotMap.DRIVE_TRAIN_PID_ARRAY_SIZE);
+    limelightPosController.startThread();
+
+    TCPlimelightPosController = new TCPSocketSender(RobotMap.TCP_SERVER_ROTATE_CONTROLLER_WITH_CAMERA,limelightPosController);
+    TCPlimelightPosController.start();
     
   }
 
