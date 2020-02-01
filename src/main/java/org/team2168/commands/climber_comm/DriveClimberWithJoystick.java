@@ -25,15 +25,13 @@ public class DriveClimberWithJoystick extends Command {
 
   // Called just before this Command runs the first time
   @Override
-  protected void initialize() {
-  
+  protected void initialize() {  
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
-  protected void execute() {
- 
-climber.driveClimberMotors(OI.getInstance().getClimberJoystickValue());
+  protected void execute() { 
+    climber.driveClimberMotors(0.4*OI.getInstance().getClimberJoystickValue());
 
   }
 

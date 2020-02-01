@@ -8,8 +8,8 @@
 package org.team2168.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.DemandType;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
-import com.ctre.phoenix.motorcontrol.FollowerType;
 import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
@@ -36,8 +36,8 @@ public class Climber extends Subsystem {
 
   private SupplyCurrentLimitConfiguration talonCurrentLimit;
   private final boolean ENABLE_CURRENT_LIMIT = true;
-  private final double CONTINUOUS_CURRENT_LIMIT = 40; //amps
-  private final double TRIGGER_THRESHOLD_LIMIT = 60; //amp
+  private final double CONTINUOUS_CURRENT_LIMIT = 20; //amps
+  private final double TRIGGER_THRESHOLD_LIMIT = 30; //amp
   private final double TRIGGER_THRESHOLD_TIME = 200; //ms
 
   	/**
@@ -63,21 +63,30 @@ public class Climber extends Subsystem {
 	 * Gains used in Motion Magic, to be adjusted accordingly
      * Gains(kp, ki, kd, kf, izone, peak output);
      */
-    static final Gains kGains = new Gains(0.57, 0.0, 0.0, 0.2, 0, 1.0);
+  static final Gains kGainsUp = new Gains(0.2, 0.0, 0.0, 0.0, 0, 1.0);
+  static final Gains kGainsDown = new Gains(0.2, 0.0, 0.0, 0.0, 0, 1.0);
+  static final double ARB_FEEDFORWARD_UP = 0.2;
+  static final double ARB_FEEDFORWARD_DOWN = 0.0;
+
   /**
    * Convert target RPM to ticks / 100ms.
    * 256*4x (quadrature encoder) Ticks/Rev *  RPM / 600 100ms/min in either direction:
    * velocity setpoint is in units/100ms
    */
-  final double TICKS_PER_REV = 256.0 * 4.0; //one event per edge on each quadrature channel
-  final double TICKS_PER_100MS = TICKS_PER_REV / 600.0;
+  final double TICKS_PER_REV = 8192; //one event per edge on each quadrature channel
+  final double TICKS_PER_100MS = TICKS_PER_REV / 10.0;
   final double GEAR_RATIO = 1.0; //TODO SET
+  final double SPOOL_CIRCUMFERENCE = 4.375;
+  final double TICKS_PER_INCH = TICKS_PER_REV * GEAR_RATIO / SPOOL_CIRCUMFERENCE;
+  final double TICKS_PER_INCH_PER_100MS = TICKS_PER_100MS * GEAR_RATIO / SPOOL_CIRCUMFERENCE;
+
+  private double setPoint_sensorunits;
 
 
   private Climber() {
     climberMotor1 = new TalonSRX(RobotMap.CLIMBER_MOTOR_1);
-    climberMotor2 = new TalonSRX(RobotMap.CLIMBER_MOTOR_2);
-    climberSolenoid = new Solenoid(RobotMap.CLIMBER_RATCHET);
+    // climberMotor2 = new TalonSRX(RobotMap.CLIMBER_MOTOR_2);
+    // climberSolenoid = new Solenoid(RobotMap.CLIMBER_RATCHET);
     /* Factory Default all hardware to prevent unexpected behaviour */
     climberMotor1.configFactoryDefault();
     /* Configure the left Talon's selected sensor as local QuadEncoder */
@@ -95,7 +104,7 @@ public class Climber extends Subsystem {
      * invert motors if necessary
      */
     climberMotor1.setInverted(CLIMBER_MOTOR_1_REVERSE);
-    climberMotor2.setInverted(CLIMBER_MOTOR_2_REVERSE);
+    // climberMotor2.setInverted(CLIMBER_MOTOR_2_REVERSE);
 
         /* Set relevant frame periods to be at least as fast as periodic rate */
     climberMotor1.setStatusFramePeriod(StatusFrameEnhanced.Status_13_Base_PIDF0, 10, kTimeoutMs);
@@ -109,20 +118,23 @@ public class Climber extends Subsystem {
 
     /* Set Motion Magic gains in slot0 - see documentation */
     climberMotor1.selectProfileSlot(kSlotIdx, kPIDLoopIdx);
-    climberMotor1.config_kF(kSlotIdx, kGains.kF, kTimeoutMs);
-    climberMotor1.config_kP(kSlotIdx, kGains.kP, kTimeoutMs);
-    climberMotor1.config_kI(kSlotIdx, kGains.kI, kTimeoutMs);
-    climberMotor1.config_kD(kSlotIdx, kGains.kD, kTimeoutMs);
+    climberMotor1.config_kF(kSlotIdx, kGainsUp.kF, kTimeoutMs);
+    climberMotor1.config_kP(kSlotIdx, kGainsUp.kP, kTimeoutMs);
+    climberMotor1.config_kI(kSlotIdx, kGainsUp.kI, kTimeoutMs);
+    climberMotor1.config_kD(kSlotIdx, kGainsUp.kD, kTimeoutMs);
+    climberMotor1.config_kF(kSlotIdx, kGainsUp.kF, kTimeoutMs);
+    climberMotor1.config_IntegralZone(kSlotIdx, kGainsUp.kIzone, kTimeoutMs);
+    climberMotor1.configClosedLoopPeakOutput(kSlotIdx, kGainsUp.kPeakOutput, kTimeoutMs);
 
     /* Set acceleration and vcruise velocity - see documentation */
-    climberMotor1.configMotionCruiseVelocity((int) (1600.0*TICKS_PER_100MS), kTimeoutMs); //todo set
-    climberMotor1.configMotionAcceleration((int) (800.0*TICKS_PER_100MS), kTimeoutMs); //todo set
+    climberMotor1.configMotionCruiseVelocity((int) (24*TICKS_PER_INCH_PER_100MS), kTimeoutMs); //todo set
+    climberMotor1.configMotionAcceleration((int) (24*TICKS_PER_INCH_PER_100MS), kTimeoutMs); //todo set
 
     talonCurrentLimit = new SupplyCurrentLimitConfiguration(ENABLE_CURRENT_LIMIT,
     CONTINUOUS_CURRENT_LIMIT, TRIGGER_THRESHOLD_LIMIT, TRIGGER_THRESHOLD_TIME);
 
     climberMotor1.configSupplyCurrentLimit(talonCurrentLimit);
-    climberMotor2.configSupplyCurrentLimit(talonCurrentLimit);
+    // climberMotor2.configSupplyCurrentLimit(talonCurrentLimit);
 
     /* Zero the sensor */
     climberMotor1.setSelectedSensorPosition(0, kPIDLoopIdx, kTimeoutMs);
@@ -150,7 +162,7 @@ public class Climber extends Subsystem {
   
   public void driveClimberMotors(double speed){
     driveClimberMotor1(speed);
-    driveClimberMotor2(speed);
+    // driveClimberMotor2(speed);
   }
 
   /**
@@ -180,7 +192,7 @@ public class Climber extends Subsystem {
    * from moving from the lowered position.
    */
   public void extendRatchet(){
-    climberSolenoid.set(false);
+    // climberSolenoid.set(false);
   }
 
   /** 
@@ -188,7 +200,7 @@ public class Climber extends Subsystem {
    *  to a raised position.
    */
   public void retractRatchet(){
-    climberSolenoid.set(true);
+    // climberSolenoid.set(true);
   }
 
     /**
@@ -196,7 +208,8 @@ public class Climber extends Subsystem {
    * @return
    */
   public boolean isRatchetExtended(){
-    return !climberSolenoid.get();
+    // return !climberSolenoid.get();
+    return false;
   }
 
   /**
@@ -204,29 +217,61 @@ public class Climber extends Subsystem {
    * @return
    */
   public boolean isRatchetRetracted(){
-    return climberSolenoid.get();
+    // return climberSolenoid.get();
+    return false;
   
   }
 
   public double getPosition()
   {
-    return climberMotor1.getSelectedSensorPosition(kPIDLoopIdx)/(TICKS_PER_REV*GEAR_RATIO);
+    return climberMotor1.getSelectedSensorPosition(kPIDLoopIdx)/(TICKS_PER_INCH);
   }
 
   public double getVelocity()
   {
-    return climberMotor1.getSelectedSensorVelocity(kPIDLoopIdx)/(TICKS_PER_100MS*GEAR_RATIO);
+    return climberMotor1.getSelectedSensorVelocity(kPIDLoopIdx)/(TICKS_PER_INCH_PER_100MS);
+  }
+
+  public void setGains(double setPoint)
+  {
+    Gains gains;
+    if(setPoint>getPosition())
+    {
+      gains = kGainsUp;
+    }
+    else
+    {
+      gains = kGainsDown;
+    }
+    climberMotor1.config_kF(kSlotIdx, gains.kF, kTimeoutMs);
+    climberMotor1.config_kP(kSlotIdx, gains.kP, kTimeoutMs);
+    climberMotor1.config_kI(kSlotIdx, gains.kI, kTimeoutMs);
+    climberMotor1.config_kD(kSlotIdx, gains.kD, kTimeoutMs);
+    climberMotor1.config_kF(kSlotIdx, gains.kF, kTimeoutMs);
+    climberMotor1.config_IntegralZone(kSlotIdx, gains.kIzone, kTimeoutMs);
+    climberMotor1.configClosedLoopPeakOutput(kSlotIdx, gains.kPeakOutput, kTimeoutMs);
+
   }
 
   public void setSetPoint(double setPoint)
   {
-    climberMotor1.set(ControlMode.MotionMagic, setPoint*TICKS_PER_REV*GEAR_RATIO);
-    climberMotor2.follow(climberMotor1, FollowerType.PercentOutput);
+    double arbFeedForward;
+    if(setPoint>getPosition())
+    {
+      arbFeedForward = ARB_FEEDFORWARD_UP;
+    }
+    else
+    {
+      arbFeedForward = ARB_FEEDFORWARD_DOWN;
+    }
+    setPoint_sensorunits = setPoint*TICKS_PER_INCH;
+    climberMotor1.set(ControlMode.MotionMagic, setPoint_sensorunits, DemandType.ArbitraryFeedForward, arbFeedForward);
+    // climberMotor2.follow(climberMotor1, FollowerType.PercentOutput);
   }
 
   public double getErrorPosition()
   {
-    return (climberMotor1.getActiveTrajectoryPosition()-climberMotor1.getSelectedSensorPosition(kPIDLoopIdx))/(TICKS_PER_REV*GEAR_RATIO);
+    return (setPoint_sensorunits-climberMotor1.getSelectedSensorPosition(kPIDLoopIdx))/(TICKS_PER_INCH);
     //return climberMotor1.getClosedLoopError(kPIDLoopIdx)/TICKS_PER_REV;--only for nonMotionMagic or nonMotion Profile
   }
 

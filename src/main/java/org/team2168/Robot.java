@@ -7,9 +7,12 @@
 
 package org.team2168;
 
+import org.team2168.subsystems.Climber;
+
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import org.team2168.utils.consoleprinter.*;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -23,6 +26,7 @@ public class Robot extends TimedRobot {
   private static final String kCustomAuto = "My Auto";
   private String m_autoSelected;
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
+  private static Climber climber;
 
   /**
    * This function is run when the robot is first started up and should be
@@ -32,7 +36,13 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
     m_chooser.addOption("My Auto", kCustomAuto);
-    SmartDashboard.putData("Auto choices", m_chooser);
+    //SmartDashboard.putData("Auto choices", m_chooser);
+    climber = Climber.getInstance();
+    ConsolePrinter.init();
+    ConsolePrinter.putNumber("Climber Position", ()->{return climber.getPosition();}, true, false);
+    ConsolePrinter.putNumber("Climber Position Error", ()->{return climber.getErrorPosition();}, true, false);
+    ConsolePrinter.putNumber("Climber Velocity", ()->{return climber.getVelocity();}, true, false);
+    ConsolePrinter.startThread();
   }
 
   /**
@@ -86,6 +96,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
+    Scheduler.getInstance().run();
   }
 
   /**
