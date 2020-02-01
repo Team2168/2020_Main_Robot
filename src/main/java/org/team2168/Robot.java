@@ -59,7 +59,6 @@ public class Robot extends TimedRobot {
     ConsolePrinter.putNumber("Heading", ()->{return drivetrain.getHeading();}, true, false);
     ConsolePrinter.putNumber("Position error", ()->{return drivetrain.getErrorPosition();}, true, false);
     ConsolePrinter.putNumber("Heading error", ()->{return drivetrain.getErrorHeading();}, true, false);
-    ConsolePrinter.putNumber("Heading error plot", ()->{return drivetrain.getErrorHeading();}, true, false);
     ConsolePrinter.putNumber("Heading Number", ()->{return drivetrain.getHeading();}, true, false);
     ConsolePrinter.startThread();
   }

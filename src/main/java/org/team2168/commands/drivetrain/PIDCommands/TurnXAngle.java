@@ -46,7 +46,8 @@ public class TurnXAngle extends Command {
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
-    dt.setGainsMotionMagic(dt.kGains_Turning);
+    dt.setGainsMotionMagic(dt.kGains_Turning, false);
+    dt.setMotorInversion(true);
     dt.zeroSensors();
   }
 
@@ -55,7 +56,7 @@ public class TurnXAngle extends Command {
   protected void execute() {
     dt.setSetPointPosition(_targetPos, _targetAngle);
     /* Check if closed loop error is within the threshld */
-    if (Math.abs((dt.getErrorPosition())) < _errorTolerancePosition && (Math.abs(dt.getErrorHeading()) < _errorToleranceAngle)) 
+    if ((Math.abs(dt.getErrorHeading()) < _errorToleranceAngle)) 
     {
       ++_withinThresholdLoops;
     } 
@@ -74,11 +75,8 @@ public class TurnXAngle extends Command {
   @Override
   protected void end() {
     dt.tankDrive(0.0, 0.0);
-    System.out.println("ended");
-    System.out.println();
-    System.out.println();
-    System.out.println();
-
+    dt.setMotorInversion(false);
+    dt.setGainsMotionMagic(dt.kGains_Distance, true);
   }
 
   // Called when another command which requires one or more of the same

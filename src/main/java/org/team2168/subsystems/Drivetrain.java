@@ -41,6 +41,7 @@ public class Drivetrain extends Subsystem {
   private static final boolean DT_REVERSE_RIGHT = true; 
   private static final boolean DT_SENSOR_PHASE_LEFT = false;
   private static final boolean DT_SENSOR_PHASE_RIGHT = true;
+  private static final boolean PIGEON_SENSOR_PHASE = false;
   private static final boolean DT_3_MOTORS_PER_SIDE = true;
 
   /** ---- Flat constants, you should not need to change these ---- */
@@ -88,6 +89,7 @@ public class Drivetrain extends Subsystem {
    */
   private static final int PIGEON_UNITS_PER_ROTATION = 8192;
   private static final double PIGEON_UNITS_PER_DEGREE = PIGEON_UNITS_PER_ROTATION/360;
+  private static final double PIGEON_UNITS_PER_DEGREE_PER_100MS = PIGEON_UNITS_PER_DEGREE/10;
 
   /**
    * PID Gains may have to be adjusted based on the responsiveness of control loop.
@@ -102,10 +104,20 @@ public class Drivetrain extends Subsystem {
   private static final Gains kGains_MotProf = new Gains( 1.0, 0.0,  0.0, 1023.0/MAX_VELOCITY,  400,  1.00 );
 
   /**
+   * cruise velocity and acceleration for different modes
+   */
+  private static final double CRUISE_VEL_STRAIGHT = 10*12*TICKS_PER_INCH_PER_100MS*2;
+  private static final double MAX_ACC_STRAIGHT = 10*12*TICKS_PER_INCH_PER_100MS*2;
+  private static final double CRUISE_VEL_TURN = 15*PIGEON_UNITS_PER_DEGREE_PER_100MS;
+  private static final double MAX_ACC_TURN = 15*PIGEON_UNITS_PER_DEGREE_PER_100MS;
+
+
+  /**
    * 
    */
   private static double setPointPosition_sensorUnits;
   private static double setPointHeading_sensorUnits;
+  private static boolean straight_mode = true;
 
   /**
    * Default constructors for Drivetrain
@@ -222,8 +234,8 @@ public class Drivetrain extends Subsystem {
     _leftMotor3.configNeutralDeadband(kNeutralDeadband, kTimeoutMs);
 		
     /* Motion Magic Configurations */
-    _rightMotor1.configMotionCruiseVelocity((int) (0.001*TICKS_PER_INCH_PER_100MS*2), kTimeoutMs);
-		_rightMotor1.configMotionAcceleration((int) (0.001*TICKS_PER_INCH_PER_100MS*2), kTimeoutMs); //should be inches per sec
+    _rightMotor1.configMotionCruiseVelocity((int) (CRUISE_VEL_STRAIGHT), kTimeoutMs);
+		_rightMotor1.configMotionAcceleration((int) (MAX_ACC_STRAIGHT), kTimeoutMs); //should be inches per sec
 
 		/**
 		 * Max out the peak output (for all modes).  
@@ -411,7 +423,15 @@ public class Drivetrain extends Subsystem {
   public double getHeading()
   {
     //return _pidgey.getFusedHeading();
-    return _rightMotor1.getSelectedSensorPosition(PID_TURN)/PIGEON_UNITS_PER_DEGREE;
+    double heading;
+    if(straight_mode) {
+      heading = _rightMotor1.getSelectedSensorPosition(PID_TURN)/PIGEON_UNITS_PER_DEGREE;
+    }
+    else{
+      heading = _rightMotor1.getSelectedSensorPosition(PID_PRIMARY)/PIGEON_UNITS_PER_DEGREE;
+
+    }
+    return heading;  
   }
 
   public void setSetPointPosition(double setPoint, double setAngle) {
@@ -426,6 +446,81 @@ public class Drivetrain extends Subsystem {
     _leftMotor1.follow(_rightMotor1, FollowerType.AuxOutput1);
     _leftMotor2.follow(_rightMotor1, FollowerType.AuxOutput1);
     _leftMotor3.follow(_rightMotor1, FollowerType.AuxOutput1);
+  }
+
+  public void setSetPointHeading(double setAngle)
+  {
+    double target_turn = setAngle*PIGEON_UNITS_PER_DEGREE;
+    this.setPointHeading_sensorUnits = target_turn;
+    _rightMotor1.set(ControlMode.MotionMagic, target_turn);
+    _rightMotor2.follow(_rightMotor1, FollowerType.PercentOutput);
+    _rightMotor3.follow(_rightMotor1, FollowerType.PercentOutput);
+    _leftMotor1.follow(_rightMotor1, FollowerType.PercentOutput);
+    _leftMotor2.follow(_rightMotor1, FollowerType.PercentOutput);
+    _leftMotor3.follow(_rightMotor1, FollowerType.PercentOutput);
+  }
+
+  public void setMotorInversion(boolean invert)
+  {
+    if(invert){
+      _leftMotor1.setInverted(!DT_REVERSE_LEFT);
+      _leftMotor2.setInverted(!DT_REVERSE_LEFT);
+      _leftMotor3.setInverted(!DT_REVERSE_LEFT);
+    }
+    else {
+      _leftMotor1.setInverted(DT_REVERSE_LEFT);
+      _leftMotor2.setInverted(DT_REVERSE_LEFT);
+      _leftMotor3.setInverted(DT_REVERSE_LEFT);
+    }
+
+  }
+
+  public void setGainsMotionMagic(Gains gains, boolean position)
+  {
+    if(position){
+      /* Setup Sum signal to be used for Distance */
+      _rightMotor1.configSensorTerm(SensorTerm.Diff0, FeedbackDevice.RemoteSensor0, kTimeoutMs);    // Feedback Device of Remote Talon
+      _rightMotor1.configSensorTerm(SensorTerm.Diff1, FeedbackDevice.IntegratedSensor, kTimeoutMs);	// Quadrature Encoder of current Talon
+
+      /* Configure Sum [Difference of both internal encoders] to be used for Primary PID Index */
+      _rightMotor1.configSelectedFeedbackSensor(	FeedbackDevice.SensorDifference, 
+            PID_PRIMARY,
+            kTimeoutMs);
+
+      /* Configure Remote 1 [Pigeon IMU's Yaw] to be used for Auxiliary PID Index */
+      _rightMotor1.configSelectedFeedbackSensor(	FeedbackDevice.RemoteSensor1,
+            PID_TURN,
+            kTimeoutMs);
+      _rightMotor1.setSensorPhase(DT_SENSOR_PHASE_RIGHT);
+      _rightMotor2.setSensorPhase(DT_SENSOR_PHASE_RIGHT);
+      _rightMotor3.setSensorPhase(DT_SENSOR_PHASE_RIGHT);
+
+            /* Motion Magic Configurations */
+      _rightMotor1.configMotionCruiseVelocity((int) (CRUISE_VEL_STRAIGHT), kTimeoutMs);
+      _rightMotor1.configMotionAcceleration((int) (MAX_ACC_STRAIGHT), kTimeoutMs); //should be inches per sec
+      straight_mode = true;
+
+    }
+    else {
+            /* Configure Remote 1 [Pigeon IMU's Yaw] to be used for Auxiliary PID Index */
+      _rightMotor1.configSelectedFeedbackSensor(	FeedbackDevice.RemoteSensor1, //set feedback to pigeon
+        PID_PRIMARY,
+        kTimeoutMs);
+      _rightMotor1.setSensorPhase(PIGEON_SENSOR_PHASE);
+      _rightMotor2.setSensorPhase(PIGEON_SENSOR_PHASE);
+      _rightMotor3.setSensorPhase(PIGEON_SENSOR_PHASE);
+                    /* Motion Magic Configurations */
+      _rightMotor1.configMotionCruiseVelocity((int) (CRUISE_VEL_TURN), kTimeoutMs);
+      _rightMotor1.configMotionAcceleration((int) (MAX_ACC_TURN), kTimeoutMs); //should be inches per sec
+      straight_mode = false;
+    }
+        /* FPID Gains for distance servo */
+    _rightMotor1.config_kP(kSlot_Distance, gains.kP, kTimeoutMs);
+    _rightMotor1.config_kI(kSlot_Distance, gains.kI, kTimeoutMs);
+    _rightMotor1.config_kD(kSlot_Distance, gains.kD, kTimeoutMs);
+    _rightMotor1.config_kF(kSlot_Distance, gains.kF, kTimeoutMs);
+    _rightMotor1.config_IntegralZone(kSlot_Distance, gains.kIzone, kTimeoutMs);
+    _rightMotor1.configClosedLoopPeakOutput(kSlot_Distance, gains.kPeakOutput, kTimeoutMs);
   }
 
   //still untested and sketchy
@@ -447,7 +542,14 @@ public class Drivetrain extends Subsystem {
 
   public double getErrorHeading()
   {
-    return (this.setPointHeading_sensorUnits-_rightMotor1.getSelectedSensorPosition(PID_TURN))/PIGEON_UNITS_PER_DEGREE; 
+    double error;
+    if(straight_mode){
+      error = (this.setPointHeading_sensorUnits-_rightMotor1.getSelectedSensorPosition(PID_TURN))/PIGEON_UNITS_PER_DEGREE; 
+    }
+    else{
+      error = (this.setPointHeading_sensorUnits-_rightMotor1.getSelectedSensorPosition(PID_PRIMARY))/PIGEON_UNITS_PER_DEGREE; 
+    }
+    return error;
   }
 
   public double getSetPointPosition()
@@ -480,17 +582,6 @@ public class Drivetrain extends Subsystem {
     _pidgey.setYaw(0, kTimeoutMs);
     _pidgey.setAccumZAngle(0, kTimeoutMs);
     _pidgey.setFusedHeading(0, kTimeoutMs);
-  }
-
-  public void setGainsMotionMagic(Gains gains)
-  {
-        /* FPID Gains for distance servo */
-    _rightMotor1.config_kP(kSlot_Distance, gains.kP, kTimeoutMs);
-    _rightMotor1.config_kI(kSlot_Distance, gains.kI, kTimeoutMs);
-    _rightMotor1.config_kD(kSlot_Distance, gains.kD, kTimeoutMs);
-    _rightMotor1.config_kF(kSlot_Distance, gains.kF, kTimeoutMs);
-    _rightMotor1.config_IntegralZone(kSlot_Distance, gains.kIzone, kTimeoutMs);
-    _rightMotor1.configClosedLoopPeakOutput(kSlot_Distance, gains.kPeakOutput, kTimeoutMs);
   }
 
   @Override
