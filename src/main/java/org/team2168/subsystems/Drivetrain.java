@@ -73,17 +73,7 @@ public class Drivetrain extends Subsystem {
   private static final double kNeutralDeadband = 0.001;
   private static final double MAX_VELOCITY = 11000;
 
-  /**
-   * PID Gains may have to be adjusted based on the responsiveness of control loop.
-     * kF: 1023 represents output value to Talon at 100%, 6800 represents Velocity units at 100% output
-     * Not all set of Gains are used in this project and may be removed as desired.
-     * 
-   * 	                                                    kP   kI   kD   kF                    Iz    PeakOut */
-  private static final Gains kGains_Distance = new Gains( 0.4, 0.0,  0.0, 0.0,                 100,  0.50 );
-  private static final Gains kGains_Turning = new Gains( 20.0, 0.0,  4.0, 0.0,                  200,  1.00 );
-  private static final Gains kGains_Velocity = new Gains( 0.1, 0.0, 20.0, 1023.0/MAX_VELOCITY, 300,  0.50 );
-  private static final Gains kGains_MotProf = new Gains( 1.0, 0.0,  0.0, 1023.0/MAX_VELOCITY,  400,  1.00 );
-  /**
+    /**
    * Convert target RPM to ticks / 100ms.
    * velocity setpoint is in units/100ms
    */
@@ -98,6 +88,24 @@ public class Drivetrain extends Subsystem {
    */
   private static final int PIGEON_UNITS_PER_ROTATION = 8192;
   private static final double PIGEON_UNITS_PER_DEGREE = PIGEON_UNITS_PER_ROTATION/360;
+
+  /**
+   * PID Gains may have to be adjusted based on the responsiveness of control loop.
+     * kF: 1023 represents output value to Talon at 100%, 6800 represents Velocity units at 100% output
+     * Not all set of Gains are used in this project and may be removed as desired.
+     * 
+   * 	                                                    kP   kI   kD   kF                    Iz    PeakOut */
+  public static final Gains kGains_Distance = new Gains( 0.1, 0.0,  0.0, 0.0,                 100,  0.50 );
+  public static final Gains kGains_Turning = new Gains( 0.4725, 0.0,  0.45, 0.015,                  (int) (5*PIGEON_UNITS_PER_DEGREE),  1.00 );
+  public static final Gains kGains_Turning_Straight = new Gains(2.0, 0.0, 4.0, 0.00001,            200, 1.0);
+  private static final Gains kGains_Velocity = new Gains( 0.1, 0.0, 20.0, 1023.0/MAX_VELOCITY, 300,  0.50 );
+  private static final Gains kGains_MotProf = new Gains( 1.0, 0.0,  0.0, 1023.0/MAX_VELOCITY,  400,  1.00 );
+
+  /**
+   * 
+   */
+  private static double setPointPosition_sensorUnits;
+  private static double setPointHeading_sensorUnits;
 
   /**
    * Default constructors for Drivetrain
@@ -213,9 +221,9 @@ public class Drivetrain extends Subsystem {
     _leftMotor2.configNeutralDeadband(kNeutralDeadband, kTimeoutMs);
     _leftMotor3.configNeutralDeadband(kNeutralDeadband, kTimeoutMs);
 		
-		/* Motion Magic Configurations */
-		_rightMotor1.configMotionAcceleration((int) (10*12*TICKS_PER_INCH_PER_100MS*2), kTimeoutMs); //should be inches per sec
-		_rightMotor1.configMotionCruiseVelocity((int) (10*12*TICKS_PER_INCH_PER_100MS*2), kTimeoutMs);
+    /* Motion Magic Configurations */
+    _rightMotor1.configMotionCruiseVelocity((int) (0.001*TICKS_PER_INCH_PER_100MS*2), kTimeoutMs);
+		_rightMotor1.configMotionAcceleration((int) (0.001*TICKS_PER_INCH_PER_100MS*2), kTimeoutMs); //should be inches per sec
 
 		/**
 		 * Max out the peak output (for all modes).  
@@ -243,11 +251,11 @@ public class Drivetrain extends Subsystem {
 		_rightMotor1.configClosedLoopPeakOutput(kSlot_Distance, kGains_Distance.kPeakOutput, kTimeoutMs);
 
 		/* FPID Gains for turn servo */
-		_rightMotor1.config_kP(kSlot_Turning, kGains_Turning.kP, kTimeoutMs);
-		_rightMotor1.config_kI(kSlot_Turning, kGains_Turning.kI, kTimeoutMs);
-		_rightMotor1.config_kD(kSlot_Turning, kGains_Turning.kD, kTimeoutMs);
-		_rightMotor1.config_kF(kSlot_Turning, kGains_Turning.kF, kTimeoutMs);
-		_rightMotor1.config_IntegralZone(kSlot_Turning, kGains_Turning.kIzone, kTimeoutMs);
+		_rightMotor1.config_kP(kSlot_Turning, kGains_Turning_Straight.kP, kTimeoutMs);
+		_rightMotor1.config_kI(kSlot_Turning, kGains_Turning_Straight.kI, kTimeoutMs);
+		_rightMotor1.config_kD(kSlot_Turning, kGains_Turning_Straight.kD, kTimeoutMs);
+		_rightMotor1.config_kF(kSlot_Turning, kGains_Turning_Straight.kF, kTimeoutMs);
+		_rightMotor1.config_IntegralZone(kSlot_Turning, kGains_Turning_Straight.kIzone, kTimeoutMs);
 		_rightMotor1.configClosedLoopPeakOutput(kSlot_Turning, kGains_Turning.kPeakOutput, kTimeoutMs);
 		
 		/**
@@ -266,7 +274,7 @@ public class Drivetrain extends Subsystem {
 		 * false means talon's local output is PID0 + PID1, and other side Talon is PID0 - PID1
 		 * true means talon's local output is PID0 - PID1, and other side Talon is PID0 + PID1
 		 */
-		_rightMotor1.configAuxPIDPolarity(false, kTimeoutMs);
+    _rightMotor1.configAuxPIDPolarity(false, kTimeoutMs);
 
     zeroSensors();
 
@@ -409,6 +417,8 @@ public class Drivetrain extends Subsystem {
   public void setSetPointPosition(double setPoint, double setAngle) {
     double target_sensorUnits = 2 * setPoint * TICKS_PER_INCH;
     double target_turn = setAngle*PIGEON_UNITS_PER_DEGREE;
+    this.setPointPosition_sensorUnits = target_sensorUnits;
+    this.setPointHeading_sensorUnits = target_turn;
 
     _rightMotor1.set(ControlMode.MotionMagic, target_sensorUnits, DemandType.AuxPID, target_turn);
     _rightMotor2.follow(_rightMotor1, FollowerType.PercentOutput);
@@ -431,13 +441,24 @@ public class Drivetrain extends Subsystem {
 
   public double getErrorPosition()
   {
-    return (_rightMotor1.getActiveTrajectoryPosition(PID_PRIMARY)-_rightMotor1.getSelectedSensorPosition(PID_PRIMARY))/(TICKS_PER_INCH);
+    return (this.setPointPosition_sensorUnits-_rightMotor1.getSelectedSensorPosition(PID_PRIMARY))/(TICKS_PER_INCH);
     //return _leftMotor1.getClosedLoopError(kPIDLoopIdx)/TICKS_PER_REV;--only for nonMotionMagic or nonMotion Profile
   }
 
   public double getErrorHeading()
   {
-    return (_rightMotor1.getActiveTrajectoryPosition(PID_TURN)-_rightMotor1.getSelectedSensorPosition(PID_TURN))/PIGEON_UNITS_PER_DEGREE;  }
+    return (this.setPointHeading_sensorUnits-_rightMotor1.getSelectedSensorPosition(PID_TURN))/PIGEON_UNITS_PER_DEGREE; 
+  }
+
+  public double getSetPointPosition()
+  {
+    return this.setPointPosition_sensorUnits;
+  }
+
+  public double getSetPointHeading()
+  {
+    return this.setPointHeading_sensorUnits;
+  }
 
   /**
    * Zero all sensors, drivetrain encoders and Pigeon IMU
@@ -459,6 +480,17 @@ public class Drivetrain extends Subsystem {
     _pidgey.setYaw(0, kTimeoutMs);
     _pidgey.setAccumZAngle(0, kTimeoutMs);
     _pidgey.setFusedHeading(0, kTimeoutMs);
+  }
+
+  public void setGainsMotionMagic(Gains gains)
+  {
+        /* FPID Gains for distance servo */
+    _rightMotor1.config_kP(kSlot_Distance, gains.kP, kTimeoutMs);
+    _rightMotor1.config_kI(kSlot_Distance, gains.kI, kTimeoutMs);
+    _rightMotor1.config_kD(kSlot_Distance, gains.kD, kTimeoutMs);
+    _rightMotor1.config_kF(kSlot_Distance, gains.kF, kTimeoutMs);
+    _rightMotor1.config_IntegralZone(kSlot_Distance, gains.kIzone, kTimeoutMs);
+    _rightMotor1.configClosedLoopPeakOutput(kSlot_Distance, gains.kPeakOutput, kTimeoutMs);
   }
 
   @Override

@@ -46,6 +46,7 @@ public class TurnXAngle extends Command {
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
+    dt.setGainsMotionMagic(dt.kGains_Turning);
     dt.zeroSensors();
   }
 
@@ -73,6 +74,11 @@ public class TurnXAngle extends Command {
   @Override
   protected void end() {
     dt.tankDrive(0.0, 0.0);
+    System.out.println("ended");
+    System.out.println();
+    System.out.println();
+    System.out.println();
+
   }
 
   // Called when another command which requires one or more of the same

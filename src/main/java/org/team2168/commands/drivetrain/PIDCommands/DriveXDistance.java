@@ -42,6 +42,7 @@ public class DriveXDistance extends Command {
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
+    dt.setGainsMotionMagic(dt.kGains_Distance);
     dt.zeroSensors(); //heading and position
   }
 
