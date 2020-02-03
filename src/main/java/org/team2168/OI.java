@@ -49,12 +49,19 @@ public class OI
 
 	// public F310 testJoystick = new F310(RobotMap.COMMANDS_TEST_JOYSTICK);
 	//public F310 pidTestJoystick = new F310(RobotMap.PID_TEST_JOYSTICK);
-	private LinearInterpolator gunStyleInterpolator;
-	private double[][] gunStyleArray = {
-		{ -1.0, -1.0},
+	private LinearInterpolator gunStyleYInterpolator;
+	private LinearInterpolator gunStyleXInterpolator;
+	private double[][] gunStyleYArray = {
+		{ -1.0, -0.75}, //limiting speed to 75%
 		{ -.15, 0.0},
 		{ .15, 0.0},
-		{ 1.0, 1.0}
+		{ 1.0, 0.75}
+	};
+	private double[][] gunStyleXArray = {
+		{ -1.0, -0.65},  //scale down turning to max 65%
+		{ -.05, 0.0},  //set neutral deadband to 5%
+		{ .05, 0.0},
+		{ 1.0, 0.65}  
 	};
 
 	/**
@@ -66,7 +73,8 @@ public class OI
 		 * Driver Joystick *
 		 *************************************************************************/
 		
-		gunStyleInterpolator = new LinearInterpolator(gunStyleArray);
+		gunStyleYInterpolator = new LinearInterpolator(gunStyleYArray);
+		gunStyleXInterpolator = new LinearInterpolator(gunStyleXArray);
 
 		
 		/*************************************************************************
@@ -112,13 +120,13 @@ public class OI
 
 	public double getGunStyleXValue()
 	{
-		return gunStyleInterpolator.interpolate(driverJoystick.getLeftStickRaw_X());
+		return gunStyleXInterpolator.interpolate(driverJoystick.getLeftStickRaw_X());
 	}
 
 	public double getGunStyleYValue()
 	{
 
-		return gunStyleInterpolator.interpolate(driverJoystick.getLeftStickRaw_Y());
+		return gunStyleYInterpolator.interpolate(driverJoystick.getLeftStickRaw_Y());
 	}
 
 	/**
