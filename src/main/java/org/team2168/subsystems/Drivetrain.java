@@ -1,6 +1,7 @@
 package org.team2168.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 
@@ -54,6 +55,13 @@ public class Drivetrain extends Subsystem {
       _rightMotor1.configSupplyCurrentLimit(talonCurrentLimit);
       _rightMotor2.configSupplyCurrentLimit(talonCurrentLimit);
       _rightMotor3.configSupplyCurrentLimit(talonCurrentLimit);
+
+      _leftMotor1.setNeutralMode(NeutralMode.Brake);
+      _leftMotor2.setNeutralMode(NeutralMode.Coast);
+      _leftMotor3.setNeutralMode(NeutralMode.Coast);
+      _rightMotor1.setNeutralMode(NeutralMode.Brake);
+      _rightMotor2.setNeutralMode(NeutralMode.Coast);
+      _rightMotor3.setNeutralMode(NeutralMode.Coast);
 
     // Log sensor data
     // ConsolePrinter.putNumber("DTRight1MotorCurrent", () -> {return Robot.pdp.getChannelCurrent(RobotMap.DRIVETRAIN_RIGHT_MOTOR_1_PDP);}, true, false);
