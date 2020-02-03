@@ -8,6 +8,7 @@
 package org.team2168;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.DemandType;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.FollowerType;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
@@ -308,12 +309,12 @@ public class Robot extends TimedRobot {
 			/* Drive -90.0 degrees */
 
 			targetPositionRotations = degrees_to_ticks(-90.0);
-			_rightMotor1.set(ControlMode.Position, targetPositionRotations);
+			_rightMotor1.set(ControlMode.Position, targetPositionRotations, DemandType.ArbitraryFeedForward, 0.1);
 		} else if (!_last_right_bumper && right_bumper) {
 			/* Drive -90.0 degrees */
 
 			targetPositionRotations = degrees_to_ticks(90.0);
-			_rightMotor1.set(ControlMode.Position, targetPositionRotations);
+			_rightMotor1.set(ControlMode.Position, targetPositionRotations, DemandType.ArbitraryFeedForward, 0.1);
 		}
 
 
@@ -329,7 +330,7 @@ public class Robot extends TimedRobot {
 		if (_rightMotor1.getControlMode() == ControlMode.Position) {
 			/* ppend more signals to print when in speed mode. */
 			_sb.append("\terr:");
-			_sb.append(_rightMotor1.getClosedLoopError(0)/TICKS_PER_REV);
+			_sb.append(ticks_to_degrees(_rightMotor1.getClosedLoopError(0)));
 			_sb.append("u");	// Native Units
 
 			_sb.append("\ttrg:");
