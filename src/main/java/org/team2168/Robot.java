@@ -57,6 +57,9 @@ public class Robot extends TimedRobot {
     ConsolePrinter.init();
     ConsolePrinter.putNumber("DT Position", ()->{return drivetrain.getPosition();}, true, false);
     ConsolePrinter.putNumber("Heading", ()->{return drivetrain.getHeading();}, true, false);
+    ConsolePrinter.putNumber("Position Error", ()->{return drivetrain.getErrorPosition();}, true, false);
+    ConsolePrinter.putNumber("Heading Error", ()->{return drivetrain.getErrorHeading();}, true, false);
+
     ConsolePrinter.startThread();
   }
 
