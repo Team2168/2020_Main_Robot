@@ -197,12 +197,12 @@ public class Drivetrain extends Subsystem {
     _rightMotor3.setSensorPhase(DT_SENSOR_PHASE_RIGHT);
 		
 		/* Set status frame periods to ensure we don't have stale data */
-		_rightMotor1.setStatusFramePeriod(StatusFrame.Status_12_Feedback1, 20, kTimeoutMs);
-		_rightMotor1.setStatusFramePeriod(StatusFrame.Status_13_Base_PIDF0, 20, kTimeoutMs);
-		_rightMotor1.setStatusFramePeriod(StatusFrame.Status_14_Turn_PIDF1, 20, kTimeoutMs);
-		_rightMotor1.setStatusFramePeriod(StatusFrame.Status_10_Targets, 20, kTimeoutMs);
-		_leftMotor1.setStatusFramePeriod(StatusFrame.Status_2_Feedback0, 5, kTimeoutMs);
-		_pidgey.setStatusFramePeriod(PigeonIMU_StatusFrame.CondStatus_9_SixDeg_YPR , 5, kTimeoutMs);
+		// _rightMotor1.setStatusFramePeriod(StatusFrame.Status_12_Feedback1, 20, kTimeoutMs);
+		// _rightMotor1.setStatusFramePeriod(StatusFrame.Status_13_Base_PIDF0, 20, kTimeoutMs);
+		// _rightMotor1.setStatusFramePeriod(StatusFrame.Status_14_Turn_PIDF1, 20, kTimeoutMs);
+		// _rightMotor1.setStatusFramePeriod(StatusFrame.Status_10_Targets, 20, kTimeoutMs);
+		// _leftMotor1.setStatusFramePeriod(StatusFrame.Status_2_Feedback0, 5, kTimeoutMs);
+		// _pidgey.setStatusFramePeriod(PigeonIMU_StatusFrame.CondStatus_9_SixDeg_YPR , 5, kTimeoutMs);
 
 		/* Configure neutral deadband */
     _rightMotor1.configNeutralDeadband(kNeutralDeadband, kTimeoutMs);
