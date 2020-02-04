@@ -81,7 +81,7 @@ public class Robot extends TimedRobot {
     * Gains(kp, ki, kd, kf, izone, peak output);
 
                                   kP    kI    kD   kF IZone PeakOut*/
-  final Gains kGains = new Gains(0.25, 0.000, 0.06, 0.0, 0, 0.6 ); //kD=0.06, kI=0.00001
+  final Gains kGains = new Gains(2.65, 0.000, 0.06, 0.0, 0, 0.6 ); //kD=0.06, kI=0.00001
 
   /**
    * Converts a setpoint in degrees to IMU 'encoder ticks'
@@ -94,6 +94,14 @@ public class Robot extends TimedRobot {
 
   private double ticks_to_degrees(double setpoint) {
     return (setpoint / TICKS_PER_REV) * DEGREES_PER_REV;
+  }
+
+  private double degrees_per_sec_to_ticks_per_100ms(double setpoint) {
+    return (degrees_to_ticks(setpoint) / 10.0);
+  }
+
+  private double ticks_per_100ms_to_degrees_per_sec(double setpoint) {
+    return (ticks_to_degrees(setpoint) * 10.0);
   }
 
   /**
@@ -157,8 +165,8 @@ public class Robot extends TimedRobot {
     _leftMotor3.setInverted(Constants.kMotorInvert);
 
 		/* Config the peak and nominal outputs, 12V means full */
-		_rightMotor1.configNominalOutputForward(0, Constants.kTimeoutMs);
-		_rightMotor1.configNominalOutputReverse(0, Constants.kTimeoutMs);
+		_rightMotor1.configNominalOutputForward(0.05, Constants.kTimeoutMs);
+		_rightMotor1.configNominalOutputReverse(0.05, Constants.kTimeoutMs);
 		_rightMotor1.configPeakOutputForward(kGains.kPeakOutput, Constants.kTimeoutMs);
 		_rightMotor1.configPeakOutputReverse(-kGains.kPeakOutput, Constants.kTimeoutMs);
 
@@ -167,14 +175,16 @@ public class Robot extends TimedRobot {
 		 * neutral within this range. See Table in Section 17.2.1 for native
 		 * units per rotation.
 		 */
-		_rightMotor1.configAllowableClosedloopError((int)degrees_to_ticks(1.0), Constants.kPIDLoopIdx, Constants.kTimeoutMs);
+		_rightMotor1.configAllowableClosedloopError((int)(degrees_to_ticks(2.0)), Constants.kPIDLoopIdx, Constants.kTimeoutMs);
 
 		/* Config Position Closed Loop gains in slot0, tsypically kF stays zero. */
 		_rightMotor1.config_kF(Constants.kPIDLoopIdx, kGains.kF, Constants.kTimeoutMs);
 		_rightMotor1.config_kP(Constants.kPIDLoopIdx, kGains.kP, Constants.kTimeoutMs);
 		_rightMotor1.config_kI(Constants.kPIDLoopIdx, kGains.kI, Constants.kTimeoutMs);
-		_rightMotor1.config_kD(Constants.kPIDLoopIdx, kGains.kD, Constants.kTimeoutMs);
-
+    _rightMotor1.config_kD(Constants.kPIDLoopIdx, kGains.kD, Constants.kTimeoutMs);
+    
+    _rightMotor1.configMotionCruiseVelocity((int) (degrees_per_sec_to_ticks_per_100ms(200)), Constants.kTimeoutMs);
+    _rightMotor1.configMotionAcceleration((int) (degrees_per_sec_to_ticks_per_100ms(240)), Constants.kTimeoutMs);
 		// /**
 		//  * Grab the 360 degree position of the MagEncoder's absolute
 		//  * position, and intitally set the relative sensor to match.
@@ -292,7 +302,12 @@ public class Robot extends TimedRobot {
 		_sb.append("%");	// Percent
 
 		_sb.append("\tpos:");
-		_sb.append(_rightMotor1.getSelectedSensorPosition(0)/TICKS_PER_REV);
+		_sb.append(ticks_to_degrees(_rightMotor1.getSelectedSensorPosition(0)));
+    _sb.append("u"); 	// Native units
+    
+    _sb.append("\tvel:");
+    _sb.append(ticks_per_100ms_to_degrees_per_sec(_rightMotor1.getSelectedSensorVelocity(0)
+    ));
 		_sb.append("u"); 	// Native units
 
 		/**
@@ -304,17 +319,17 @@ public class Robot extends TimedRobot {
 
 			/* number of revs * ticks/rev in either direction */
 			targetPositionRotations = leftYstick * NUM_REVOLUTIONS * TICKS_PER_REV;
-			_rightMotor1.set(ControlMode.Position, targetPositionRotations);
+			_rightMotor1.set(ControlMode.MotionMagic, targetPositionRotations);
 		} else if (!_last_left_bumper && left_bumper) {
 			/* Drive -90.0 degrees */
 
 			targetPositionRotations = degrees_to_ticks(-90.0);
-			_rightMotor1.set(ControlMode.Position, targetPositionRotations, DemandType.ArbitraryFeedForward, 0.1);
+			_rightMotor1.set(ControlMode.MotionMagic, targetPositionRotations, DemandType.ArbitraryFeedForward, 0.0);
 		} else if (!_last_right_bumper && right_bumper) {
 			/* Drive -90.0 degrees */
 
 			targetPositionRotations = degrees_to_ticks(90.0);
-			_rightMotor1.set(ControlMode.Position, targetPositionRotations, DemandType.ArbitraryFeedForward, 0.1);
+			_rightMotor1.set(ControlMode.MotionMagic, targetPositionRotations, DemandType.ArbitraryFeedForward, 0.0);
 		}
 
 
@@ -327,14 +342,15 @@ public class Robot extends TimedRobot {
 		}
 
 		/* If Talon is in position closed-loop, print some more info */
-		if (_rightMotor1.getControlMode() == ControlMode.Position) {
+		if (_rightMotor1.getControlMode() == ControlMode.MotionMagic) {
 			/* ppend more signals to print when in speed mode. */
-			_sb.append("\terr:");
-			_sb.append(ticks_to_degrees(_rightMotor1.getClosedLoopError(0)));
+      _sb.append("\terr:");
+      _sb.append(ticks_to_degrees(targetPositionRotations-_rightMotor1.getSelectedSensorPosition(0)));
+			// _sb.append(ticks_to_degrees(_rightMotor1.getClosedLoopError(0)));
 			_sb.append("u");	// Native Units
 
 			_sb.append("\ttrg:");
-			_sb.append(targetPositionRotations/TICKS_PER_REV);
+			_sb.append(ticks_to_degrees(targetPositionRotations));
 			_sb.append("u");	/// Native Units
 		}
 
@@ -342,7 +358,7 @@ public class Robot extends TimedRobot {
 		 * Print every ten loops, printing too much too fast is generally bad
 		 * for performance.
 		 */
-		if (++_loops >= 20) {
+		if (++_loops >= 10) {
 			_loops = 0;
 			System.out.println(_sb.toString());
 		}
