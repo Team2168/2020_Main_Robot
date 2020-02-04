@@ -13,7 +13,6 @@ import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.sensors.PigeonIMU;
 import com.ctre.phoenix.sensors.PigeonIMU_StatusFrame;
 
-import org.team2168.Constants;
 import org.team2168.Gains;
 import org.team2168.RobotMap;
 import org.team2168.commands.drivetrain.DriveWithJoystick;
@@ -53,13 +52,13 @@ public class Drivetrain extends Subsystem {
   /* Firmware currently supports slots [0, 3] and can be used for either PID Set */
   private static final int SLOT_0 = 0;
   private static final int SLOT_1 = 1;
-  private static final int SLOT_2 = 2;
-  private static final int SLOT_3 = 3;
+  // private static final int SLOT_2 = 2;
+  // private static final int SLOT_3 = 3;
   /* ---- Named slots, used to clarify code ---- */
   private static final int kSlot_Distance = SLOT_0;
   private static final int kSlot_Turning = SLOT_1;
-  private static final int kSlot_Velocity = SLOT_2;
-  private static final int kSlot_MotProf = SLOT_3; 
+  // private static final int kSlot_Velocity = SLOT_2;
+  // private static final int kSlot_MotProf = SLOT_3; 
 
   /**
    * set to zero to skip waiting for confirmation, set to nonzero to wait and
@@ -71,26 +70,26 @@ public class Drivetrain extends Subsystem {
    * Motor neutral dead-band, set to the minimum 0.1%.
    */
   private static final double kNeutralDeadband = 0.001;
-  private static final double MAX_VELOCITY = 11000;
+  // private static final double MAX_VELOCITY = 11000;
 
   /**
    * PID Gains may have to be adjusted based on the responsiveness of control loop.
-     * kF: 1023 represents output value to Talon at 100%, 6800 represents Velocity units at 100% output
-     * Not all set of Gains are used in this project and may be removed as desired.
-     * 
+   * kF: 1023 represents output value to Talon at 100%, 6800 represents Velocity units at 100% output
+   * Not all set of Gains are used in this project and may be removed as desired.
+   * 
    * 	                                                    kP   kI   kD   kF                    Iz    PeakOut */
-  private static final Gains kGains_Distance = new Gains( 0.4, 0.0,  0.0, 0.0,                 100,  0.50 );
-  private static final Gains kGains_Turning = new Gains( 20.0, 0.0,  4.0, 0.0,                  200,  1.00 );
-  private static final Gains kGains_Velocity = new Gains( 0.1, 0.0, 20.0, 1023.0/MAX_VELOCITY, 300,  0.50 );
-  private static final Gains kGains_MotProf = new Gains( 1.0, 0.0,  0.0, 1023.0/MAX_VELOCITY,  400,  1.00 );
+  private static final Gains kGains_Distance = new Gains( 0.2, 0.0,  0.0, 0.0,                 100,  0.50 );
+  private static final Gains kGains_Turning = new Gains( 2.0, 0.0,  4.0, 0.0,                  200,  0.60 );
+  // private static final Gains kGains_Velocity = new Gains( 0.1, 0.0, 20.0, 1023.0/MAX_VELOCITY, 300,  0.50 );
+  // private static final Gains kGains_MotProf = new Gains( 1.0, 0.0,  0.0, 1023.0/MAX_VELOCITY,  400,  1.00 );
   /**
    * Convert target RPM to ticks / 100ms.
    * velocity setpoint is in units/100ms
    */
-  private static final double TICKS_PER_REV = 2048; //one event per edge on each quadrature channel
-  private static final double TICKS_PER_100MS = TICKS_PER_REV / 10;
+  private static final double TICKS_PER_REV = 2048.0; //one event per edge on each quadrature channel
+  private static final double TICKS_PER_100MS = TICKS_PER_REV / 10.0;
   private static final double GEAR_RATIO = (50.0/10.0) * (40.0/22.0);
-  private static final double WHEEL_CIRCUMFERENCE = 6 * Math.PI;
+  private static final double WHEEL_CIRCUMFERENCE = 6.0 * Math.PI;
   private static final double TICKS_PER_INCH = TICKS_PER_REV * GEAR_RATIO / WHEEL_CIRCUMFERENCE;
   private static final double TICKS_PER_INCH_PER_100MS = TICKS_PER_100MS * GEAR_RATIO / WHEEL_CIRCUMFERENCE;
   /**
@@ -103,7 +102,7 @@ public class Drivetrain extends Subsystem {
    * Default constructors for Drivetrain
    */
   private Drivetrain() {
-    System.out.println("CAN Comp Bot Drivetrain enabled - 6 motors");
+    //System.out.println("CAN Comp Bot Drivetrain enabled - 6 motors");
     _leftMotor1 = new TalonFX(RobotMap.DRIVETRAIN_LEFT_MOTOR_1_PDP);
     _leftMotor2 = new TalonFX(RobotMap.DRIVETRAIN_LEFT_MOTOR_2_PDP);
     _leftMotor3 = new TalonFX(RobotMap.DRIVETRAIN_LEFT_MOTOR_3_PDP);
@@ -407,8 +406,8 @@ public class Drivetrain extends Subsystem {
   }
 
   public void setSetPointPosition(double setPoint, double setAngle) {
-    double target_sensorUnits = 2 * setPoint * TICKS_PER_INCH;
-    double target_turn = setAngle*PIGEON_UNITS_PER_DEGREE;
+    double target_sensorUnits = 2.0 * setPoint * TICKS_PER_INCH;
+    double target_turn = setAngle * PIGEON_UNITS_PER_DEGREE;
 
     _rightMotor1.set(ControlMode.MotionMagic, target_sensorUnits, DemandType.AuxPID, target_turn);
     _rightMotor2.follow(_rightMotor1, FollowerType.PercentOutput);
@@ -418,26 +417,14 @@ public class Drivetrain extends Subsystem {
     _leftMotor3.follow(_rightMotor1, FollowerType.AuxOutput1);
   }
 
-  //still untested and sketchy
-  // public void setSetPointVelocity(double setPoint, double setAngle)
-  // {
-  //   _leftMotor1.set(ControlMode.Velocity, setPoint*TICKS_PER_INCH, DemandType.AuxPID, setAngle*PIGEON_UNITS_PER_DEGREE);
-  //   _leftMotor2.follow(_leftMotor1, FollowerType.PercentOutput);
-  //   _leftMotor3.follow(_leftMotor1, FollowerType.PercentOutput);
-  //   _rightMotor1.follow(_leftMotor1, FollowerType.AuxOutput1);
-  //   _rightMotor2.follow(_leftMotor1, FollowerType.AuxOutput1);
-  //   _rightMotor3.follow(_leftMotor1, FollowerType.AuxOutput1); 
-  // }
-
-  public double getErrorPosition()
-  {
+  public double getErrorPosition() {
     return (_rightMotor1.getActiveTrajectoryPosition(PID_PRIMARY)-_rightMotor1.getSelectedSensorPosition(PID_PRIMARY))/(TICKS_PER_INCH);
     //return _leftMotor1.getClosedLoopError(kPIDLoopIdx)/TICKS_PER_REV;--only for nonMotionMagic or nonMotion Profile
   }
 
-  public double getErrorHeading()
-  {
-    return (_rightMotor1.getActiveTrajectoryPosition(PID_TURN)-_rightMotor1.getSelectedSensorPosition(PID_TURN))/PIGEON_UNITS_PER_DEGREE;  }
+  public double getErrorHeading() {
+    return (_rightMotor1.getActiveTrajectoryPosition(PID_TURN)-_rightMotor1.getSelectedSensorPosition(PID_TURN))/PIGEON_UNITS_PER_DEGREE; 
+  }
 
   /**
    * Zero all sensors, drivetrain encoders and Pigeon IMU
@@ -448,11 +435,11 @@ public class Drivetrain extends Subsystem {
     // System.out.println("[Quadrature Encoders + Pigeon] All sensors are zeroed.\n");
   }
 
-	/** Zero QuadEncoders, used to reset position when initializing Motion Magic */
-	public void zeroDistance(){
-		_leftMotor1.getSensorCollection().setIntegratedSensorPosition(0, kTimeoutMs);
-		_rightMotor1.getSensorCollection().setIntegratedSensorPosition(0, kTimeoutMs);
-		//System.out.println("[Integrated Encoders] All encoders are zeroed.\n");
+  /** Zero QuadEncoders, used to reset position when initializing Motion Magic */
+  public void zeroDistance(){
+    _leftMotor1.getSensorCollection().setIntegratedSensorPosition(0, kTimeoutMs);
+    _rightMotor1.getSensorCollection().setIntegratedSensorPosition(0, kTimeoutMs);
+    //System.out.println("[Integrated Encoders] All encoders are zeroed.\n");
   }
   
   public void zeroIMU() {
