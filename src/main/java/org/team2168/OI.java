@@ -117,13 +117,10 @@ public class OI
 	 *************************************************************************/
 
 	public double getGunStyleXValue() {
-		System.out.println(gunStyleInterpolator.interpolate(driverJoystick.getLeftStickRaw_X()));
 		return gunStyleInterpolator.interpolate(driverJoystick.getLeftStickRaw_X());
 	}
 
-	public double getGunStyleYValue()
-	{
-
+	public double getGunStyleYValue() {
 		return gunStyleInterpolator.interpolate(driverJoystick.getLeftStickRaw_Y());
 	}
 
