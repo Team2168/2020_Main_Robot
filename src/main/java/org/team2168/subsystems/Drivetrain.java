@@ -42,6 +42,8 @@ public class Drivetrain extends Subsystem {
   private static final boolean DT_SENSOR_PHASE_RIGHT = true;
   private static final boolean DT_3_MOTORS_PER_SIDE = true;
 
+  private static final boolean PIGEON_SENSOR_PHASE = true;
+
   /** ---- Flat constants, you should not need to change these ---- */
   /* We allow either a 0 or 1 when selecting an ordinal for remote devices [You can have up to 2 devices assigned remotely to a talon/victor] */
   private static final int REMOTE_0 = 0;
@@ -79,7 +81,8 @@ public class Drivetrain extends Subsystem {
    * 
    * 	                                                    kP   kI   kD   kF                    Iz    PeakOut */
   private static final Gains kGains_Distance = new Gains( 0.2, 0.0,  0.0, 0.0,                 100,  0.50 );
-  private static final Gains kGains_Turning = new Gains( 2.0, 0.0,  4.0, 0.0,                  200,  0.60 );
+  private static final Gains kGains_Turning_Straight = new Gains( 2.0, 0.0,  4.0, 0.0,                  200,  0.60 );
+  private static  final Gains kGains_Turning = new Gains(2.65, 0.000, 0.06, 0.0, 0, 0.6 ); //kD=0.06, kI=0.00001
   // private static final Gains kGains_Velocity = new Gains( 0.1, 0.0, 20.0, 1023.0/MAX_VELOCITY, 300,  0.50 );
   // private static final Gains kGains_MotProf = new Gains( 1.0, 0.0,  0.0, 1023.0/MAX_VELOCITY,  400,  1.00 );
   /**
@@ -90,13 +93,20 @@ public class Drivetrain extends Subsystem {
   private static final double TICKS_PER_100MS = TICKS_PER_REV / 10.0;
   private static final double GEAR_RATIO = (50.0/10.0) * (40.0/22.0);
   private static final double WHEEL_CIRCUMFERENCE = 6.0 * Math.PI;
-  private static final double TICKS_PER_INCH = TICKS_PER_REV * GEAR_RATIO / WHEEL_CIRCUMFERENCE;
-  private static final double TICKS_PER_INCH_PER_100MS = TICKS_PER_100MS * GEAR_RATIO / WHEEL_CIRCUMFERENCE;
+  //  static final double TICKS_PER_INCH = TICKS_PER_REV * GEAR_RATIO / WHEEL_CIRCUMFERENCE;
+  // private static final double TICKS_PER_INCH_PER_100MS = TICKS_PER_100MS * GEAR_RATIO / WHEEL_CIRCUMFERENCE;
   /**
    * This is a property of the Pigeon IMU, and should not be changed.
    */
-  private static final int PIGEON_UNITS_PER_ROTATION = 8192;
+  private static final double PIGEON_UNITS_PER_ROTATION = 8192.0;;
+  private static final double DEGREES_PER_REV = 360.0;
   private static final double PIGEON_UNITS_PER_DEGREE = PIGEON_UNITS_PER_ROTATION/360;
+
+    /**
+   * global variables to store current setPoint
+   */
+  private static double setPointPosition_sensorUnits;
+  private static double setPointHeading_sensorUnits;
 
   /**
    * Default constructors for Drivetrain
@@ -213,8 +223,8 @@ public class Drivetrain extends Subsystem {
     _leftMotor3.configNeutralDeadband(kNeutralDeadband, kTimeoutMs);
 		
 		/* Motion Magic Configurations */
-		_rightMotor1.configMotionAcceleration((int) (10*12*TICKS_PER_INCH_PER_100MS*2), kTimeoutMs); //should be inches per sec
-		_rightMotor1.configMotionCruiseVelocity((int) (10*12*TICKS_PER_INCH_PER_100MS*2), kTimeoutMs);
+		_rightMotor1.configMotionAcceleration((int) (inches_per_sec_to_ticks_per_100ms(10.0*12.0)), kTimeoutMs); //should be inches per sec
+		_rightMotor1.configMotionCruiseVelocity((int) (inches_per_sec_to_ticks_per_100ms(10.0*12.0)), kTimeoutMs);
 
 		/**
 		 * Max out the peak output (for all modes).  
@@ -242,12 +252,12 @@ public class Drivetrain extends Subsystem {
 		_rightMotor1.configClosedLoopPeakOutput(kSlot_Distance, kGains_Distance.kPeakOutput, kTimeoutMs);
 
 		/* FPID Gains for turn servo */
-		_rightMotor1.config_kP(kSlot_Turning, kGains_Turning.kP, kTimeoutMs);
-		_rightMotor1.config_kI(kSlot_Turning, kGains_Turning.kI, kTimeoutMs);
-		_rightMotor1.config_kD(kSlot_Turning, kGains_Turning.kD, kTimeoutMs);
-		_rightMotor1.config_kF(kSlot_Turning, kGains_Turning.kF, kTimeoutMs);
-		_rightMotor1.config_IntegralZone(kSlot_Turning, kGains_Turning.kIzone, kTimeoutMs);
-		_rightMotor1.configClosedLoopPeakOutput(kSlot_Turning, kGains_Turning.kPeakOutput, kTimeoutMs);
+		_rightMotor1.config_kP(kSlot_Turning, kGains_Turning_Straight.kP, kTimeoutMs);
+		_rightMotor1.config_kI(kSlot_Turning, kGains_Turning_Straight.kI, kTimeoutMs);
+		_rightMotor1.config_kD(kSlot_Turning, kGains_Turning_Straight.kD, kTimeoutMs);
+		_rightMotor1.config_kF(kSlot_Turning, kGains_Turning_Straight.kF, kTimeoutMs);
+		_rightMotor1.config_IntegralZone(kSlot_Turning, kGains_Turning_Straight.kIzone, kTimeoutMs);
+		_rightMotor1.configClosedLoopPeakOutput(kSlot_Turning, kGains_Turning_Straight.kPeakOutput, kTimeoutMs);
 		
 		/**
 		 * 1ms per loop.  PID loop can be slowed down if need be.
@@ -391,12 +401,12 @@ public class Drivetrain extends Subsystem {
   
   public double getPosition()
   {
-    return _leftMotor1.getSelectedSensorPosition(PID_PRIMARY)/(TICKS_PER_INCH);
+    return ticks_to_inches(_leftMotor1.getSelectedSensorPosition(PID_PRIMARY));
   }
 
   public double getVelocity()
   {
-    return _leftMotor1.getSelectedSensorVelocity(PID_PRIMARY)/(TICKS_PER_INCH_PER_100MS);
+    return ticks_per_100ms_to_inches_per_sec(_leftMotor1.getSelectedSensorVelocity(PID_PRIMARY));
   }
 
   public double getHeading()
@@ -406,10 +416,10 @@ public class Drivetrain extends Subsystem {
   }
 
   public void setSetPointPosition(double setPoint, double setAngle) {
-    double target_sensorUnits = 2.0 * setPoint * TICKS_PER_INCH;
-    double target_turn = setAngle * PIGEON_UNITS_PER_DEGREE;
+    setPointPosition_sensorUnits = inches_to_ticks(setPoint);
+    setPointHeading_sensorUnits = degrees_to_ticks(setAngle);
 
-    _rightMotor1.set(ControlMode.MotionMagic, target_sensorUnits, DemandType.AuxPID, target_turn);
+    _rightMotor1.set(ControlMode.MotionMagic, setPointPosition_sensorUnits, DemandType.AuxPID, setPointHeading_sensorUnits);
     _rightMotor2.follow(_rightMotor1, FollowerType.PercentOutput);
     _rightMotor3.follow(_rightMotor1, FollowerType.PercentOutput);
     _leftMotor1.follow(_rightMotor1, FollowerType.AuxOutput1);
@@ -417,13 +427,186 @@ public class Drivetrain extends Subsystem {
     _leftMotor3.follow(_rightMotor1, FollowerType.AuxOutput1);
   }
 
+  public void setSetPointHeading(double setPoint)
+  {
+    setPointHeading_sensorUnits = degrees_to_ticks(setPoint);
+    _rightMotor1.set(ControlMode.MotionMagic, setPointHeading_sensorUnits);
+  }
+
   public double getErrorPosition() {
-    return (_rightMotor1.getActiveTrajectoryPosition(PID_PRIMARY)-_rightMotor1.getSelectedSensorPosition(PID_PRIMARY))/(TICKS_PER_INCH);
+    return ticks_to_inches(setPointPosition_sensorUnits-_rightMotor1.getSelectedSensorPosition(PID_PRIMARY));
     //return _leftMotor1.getClosedLoopError(kPIDLoopIdx)/TICKS_PER_REV;--only for nonMotionMagic or nonMotion Profile
   }
 
   public double getErrorHeading() {
-    return (_rightMotor1.getActiveTrajectoryPosition(PID_TURN)-_rightMotor1.getSelectedSensorPosition(PID_TURN))/PIGEON_UNITS_PER_DEGREE; 
+    return ticks_to_degrees(setPointHeading_sensorUnits-_rightMotor1.getSelectedSensorPosition(PID_TURN)); 
+  }
+
+  public double getSetPointPosition()
+  {
+    return this.setPointPosition_sensorUnits;
+  }
+
+  public double getSetPointHeading()
+  {
+    return this.setPointHeading_sensorUnits;
+  }
+
+  public void setUpDrivetrainAuxControl()
+  {
+    		/* Setup Sum signal to be used for Distance */
+		_rightMotor1.configSensorTerm(SensorTerm.Diff0, FeedbackDevice.RemoteSensor0, kTimeoutMs);    // Feedback Device of Remote Talon
+		_rightMotor1.configSensorTerm(SensorTerm.Diff1, FeedbackDevice.IntegratedSensor, kTimeoutMs);	// Quadrature Encoder of current Talon
+		
+		/* Configure Sum [Difference of both internal encoders] to be used for Primary PID Index */
+		_rightMotor1.configSelectedFeedbackSensor(	FeedbackDevice.SensorDifference, 
+													PID_PRIMARY,
+													kTimeoutMs);
+		
+		/* Scale Feedback by 0.5 to half the sum of Distance */ //not working--do this within the setpoint
+		_rightMotor1.configSelectedFeedbackCoefficient(	1,      // Coefficient
+														PID_PRIMARY,          // PID Slot of Source 
+														kTimeoutMs);                    // Configuration Timeout
+		
+		/* Configure Remote 1 [Pigeon IMU's Yaw] to be used for Auxiliary PID Index */
+		_rightMotor1.configSelectedFeedbackSensor(	FeedbackDevice.RemoteSensor1,
+													PID_TURN,
+													kTimeoutMs);
+		
+		/* Scale the Feedback Sensor using a coefficient */
+		_rightMotor1.configSelectedFeedbackCoefficient(	1,
+														PID_TURN,
+														kTimeoutMs);
+		
+		/* Configure output and sensor direction */
+    _leftMotor1.setInverted(DT_REVERSE_LEFT);
+    _leftMotor2.setInverted(DT_REVERSE_LEFT);
+    _leftMotor3.setInverted(DT_REVERSE_LEFT);
+    _leftMotor1.setSensorPhase(DT_SENSOR_PHASE_LEFT);
+    _leftMotor2.setSensorPhase(DT_SENSOR_PHASE_LEFT);
+    _leftMotor3.setSensorPhase(DT_SENSOR_PHASE_LEFT);
+    _rightMotor1.setInverted(DT_REVERSE_RIGHT);
+    _rightMotor2.setInverted(DT_REVERSE_RIGHT);
+    _rightMotor3.setInverted(DT_REVERSE_RIGHT);
+    _rightMotor1.setSensorPhase(DT_SENSOR_PHASE_RIGHT);
+    _rightMotor2.setSensorPhase(DT_SENSOR_PHASE_RIGHT);
+    _rightMotor3.setSensorPhase(DT_SENSOR_PHASE_RIGHT);
+		
+		/* Set status frame periods to ensure we don't have stale data */
+		// _rightMotor1.setStatusFramePeriod(StatusFrame.Status_12_Feedback1, 20, kTimeoutMs);
+		// _rightMotor1.setStatusFramePeriod(StatusFrame.Status_13_Base_PIDF0, 20, kTimeoutMs);
+		// _rightMotor1.setStatusFramePeriod(StatusFrame.Status_14_Turn_PIDF1, 20, kTimeoutMs);
+		// _rightMotor1.setStatusFramePeriod(StatusFrame.Status_10_Targets, 20, kTimeoutMs);
+		// _leftMotor1.setStatusFramePeriod(StatusFrame.Status_2_Feedback0, 5, kTimeoutMs);
+		// _pidgey.setStatusFramePeriod(PigeonIMU_StatusFrame.CondStatus_9_SixDeg_YPR , 5, kTimeoutMs);
+
+		/* Configure neutral deadband */
+    _rightMotor1.configNeutralDeadband(kNeutralDeadband, kTimeoutMs);
+    _rightMotor2.configNeutralDeadband(kNeutralDeadband, kTimeoutMs);
+    _rightMotor3.configNeutralDeadband(kNeutralDeadband, kTimeoutMs);
+    _leftMotor1.configNeutralDeadband(kNeutralDeadband, kTimeoutMs);
+    _leftMotor2.configNeutralDeadband(kNeutralDeadband, kTimeoutMs);
+    _leftMotor3.configNeutralDeadband(kNeutralDeadband, kTimeoutMs);
+		
+		/* Motion Magic Configurations */
+		_rightMotor1.configMotionAcceleration((int) (inches_per_sec_to_ticks_per_100ms(10.0*12.0)), kTimeoutMs); //should be inches per sec
+		_rightMotor1.configMotionCruiseVelocity((int) (inches_per_sec_to_ticks_per_100ms(10.0*12.0)), kTimeoutMs);
+
+		/**
+		 * Max out the peak output (for all modes).  
+		 * However you can limit the output of a given PID object with configClosedLoopPeakOutput().
+		 */
+		_leftMotor1.configPeakOutputForward(+1.0, kTimeoutMs);
+    _leftMotor1.configPeakOutputReverse(-1.0, kTimeoutMs);
+    _leftMotor2.configPeakOutputForward(+1.0, kTimeoutMs);
+    _leftMotor2.configPeakOutputReverse(-1.0, kTimeoutMs);
+    _leftMotor3.configPeakOutputForward(+1.0, kTimeoutMs);
+		_leftMotor3.configPeakOutputReverse(-1.0, kTimeoutMs);
+		_rightMotor1.configPeakOutputForward(+1.0, kTimeoutMs);
+    _rightMotor1.configPeakOutputReverse(-1.0, kTimeoutMs);
+    _rightMotor2.configPeakOutputForward(+1.0, kTimeoutMs);
+    _rightMotor2.configPeakOutputReverse(-1.0, kTimeoutMs);
+    _rightMotor3.configPeakOutputForward(+1.0, kTimeoutMs);
+		_rightMotor3.configPeakOutputReverse(-1.0, kTimeoutMs);
+
+		/* FPID Gains for distance servo */
+		_rightMotor1.config_kP(kSlot_Distance, kGains_Distance.kP, kTimeoutMs);
+		_rightMotor1.config_kI(kSlot_Distance, kGains_Distance.kI, kTimeoutMs);
+		_rightMotor1.config_kD(kSlot_Distance, kGains_Distance.kD, kTimeoutMs);
+		_rightMotor1.config_kF(kSlot_Distance, kGains_Distance.kF, kTimeoutMs);
+		_rightMotor1.config_IntegralZone(kSlot_Distance, kGains_Distance.kIzone, kTimeoutMs);
+		_rightMotor1.configClosedLoopPeakOutput(kSlot_Distance, kGains_Distance.kPeakOutput, kTimeoutMs);
+
+		/* FPID Gains for turn servo */
+		_rightMotor1.config_kP(kSlot_Turning, kGains_Turning_Straight.kP, kTimeoutMs);
+		_rightMotor1.config_kI(kSlot_Turning, kGains_Turning_Straight.kI, kTimeoutMs);
+		_rightMotor1.config_kD(kSlot_Turning, kGains_Turning_Straight.kD, kTimeoutMs);
+		_rightMotor1.config_kF(kSlot_Turning, kGains_Turning_Straight.kF, kTimeoutMs);
+		_rightMotor1.config_IntegralZone(kSlot_Turning, kGains_Turning_Straight.kIzone, kTimeoutMs);
+		_rightMotor1.configClosedLoopPeakOutput(kSlot_Turning, kGains_Turning_Straight.kPeakOutput, kTimeoutMs);
+		
+		/**
+		 * 1ms per loop.  PID loop can be slowed down if need be.
+		 * For example,
+		 * - if sensor updates are too slow
+		 * - sensor deltas are very small per update, so derivative error never gets large enough to be useful.
+		 * - sensor movement is very slow causing the derivative error to be near zero.
+		 */
+		int closedLoopTimeMs = 1;
+		_rightMotor1.configClosedLoopPeriod(0, closedLoopTimeMs, kTimeoutMs);
+		_rightMotor1.configClosedLoopPeriod(1, closedLoopTimeMs, kTimeoutMs);
+
+		/**
+		 * configAuxPIDPolarity(boolean invert, int timeoutMs)
+		 * false means talon's local output is PID0 + PID1, and other side Talon is PID0 - PID1
+		 * true means talon's local output is PID0 - PID1, and other side Talon is PID0 + PID1
+		 */
+		_rightMotor1.configAuxPIDPolarity(false, kTimeoutMs);
+  }
+
+  public void setupRotationControl()
+  {
+    /* Config the sensor used for Primary PID and sensor direction */
+    _rightMotor1.configSelectedFeedbackSensor(FeedbackDevice.RemoteSensor0, 
+                                        PID_PRIMARY,
+                                        kTimeoutMs);
+
+    /* Ensure sensor is positive when output is positive */
+    _rightMotor1.setSensorPhase(PIGEON_SENSOR_PHASE);
+
+    /**
+     * Set based on what direction you want forward/positive to be.
+     * This does not affect sensor phase. 
+     */ 
+    _rightMotor1.setInverted(DT_REVERSE_RIGHT);
+    _rightMotor2.setInverted(DT_REVERSE_RIGHT);
+    _rightMotor3.setInverted(DT_REVERSE_RIGHT);
+    _leftMotor1.setInverted(DT_REVERSE_RIGHT);
+    _leftMotor2.setInverted(DT_REVERSE_RIGHT);
+    _leftMotor3.setInverted(DT_REVERSE_RIGHT);
+
+    /* Config the peak and nominal outputs, 12V means full */
+    _rightMotor1.configNominalOutputForward(0.05, kTimeoutMs);
+    _rightMotor1.configNominalOutputReverse(0.05, kTimeoutMs);
+    _rightMotor1.configPeakOutputForward(kGains_Turning.kPeakOutput, kTimeoutMs);
+    _rightMotor1.configPeakOutputReverse(-kGains_Turning.kPeakOutput, kTimeoutMs);
+
+    /**
+     * Config the allowable closed-loop error, Closed-Loop output will be
+     * neutral within this range. See Table in Section 17.2.1 for native
+     * units per rotation.
+     */
+    _rightMotor1.configAllowableClosedloopError((int)(degrees_to_ticks(2.0)), PID_PRIMARY, kTimeoutMs);
+
+    /* Config Position Closed Loop gains in slot0, tsypically kF stays zero. */
+    _rightMotor1.config_kF(PID_PRIMARY, kGains_Turning.kF, kTimeoutMs);
+    _rightMotor1.config_kP(PID_PRIMARY, kGains_Turning.kP, kTimeoutMs);
+    _rightMotor1.config_kI(PID_PRIMARY, kGains_Turning.kI, kTimeoutMs);
+    _rightMotor1.config_kD(PID_PRIMARY, kGains_Turning.kD, kTimeoutMs);
+    
+    _rightMotor1.configMotionCruiseVelocity((int) (degrees_per_sec_to_ticks_per_100ms(200)), kTimeoutMs);
+    _rightMotor1.configMotionAcceleration((int) (degrees_per_sec_to_ticks_per_100ms(240)), kTimeoutMs);
+
   }
 
   /**
@@ -447,6 +630,45 @@ public class Drivetrain extends Subsystem {
     _pidgey.setAccumZAngle(0, kTimeoutMs);
     _pidgey.setFusedHeading(0, kTimeoutMs);
   }
+
+    /**
+   * Converts a setpoint in degrees to IMU 'encoder ticks'
+   * @param setpoint
+   * @return
+   */
+  private double degrees_to_ticks(double setpoint) {
+    return (setpoint / DEGREES_PER_REV) * PIGEON_UNITS_PER_ROTATION;
+  }
+
+  private double ticks_to_degrees(double setpoint) {
+    return (setpoint / PIGEON_UNITS_PER_ROTATION) * DEGREES_PER_REV;
+  }
+
+  private double degrees_per_sec_to_ticks_per_100ms(double setpoint) {
+    return (degrees_to_ticks(setpoint) / 10.0);
+  }
+
+  private double ticks_per_100ms_to_degrees_per_sec(double setpoint) {
+    return (ticks_to_degrees(setpoint) * 10.0);
+  }
+
+  private double inches_to_ticks(double setpoint) {
+    return (setpoint * TICKS_PER_REV * GEAR_RATIO * 2.0) / WHEEL_CIRCUMFERENCE;
+  }
+
+  private double ticks_to_inches(double setpoint) {
+    return (setpoint * WHEEL_CIRCUMFERENCE) / (TICKS_PER_REV * GEAR_RATIO * 2.0);
+  }
+
+  private double inches_per_sec_to_ticks_per_100ms(double setpoint) {
+    return inches_to_ticks(setpoint) / 10.0;
+  }
+
+  private double ticks_per_100ms_to_inches_per_sec(double setpoint) {
+    return ticks_to_inches(setpoint) * 10.0;
+  }
+
+
 
   @Override
   protected void initDefaultCommand() {

@@ -46,15 +46,16 @@ public class TurnXAngle extends Command {
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
+    dt.setupRotationControl();
     dt.zeroSensors();
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    dt.setSetPointPosition(_targetPos, _targetAngle);
+    dt.setSetPointHeading(_targetAngle);
     /* Check if closed loop error is within the threshld */
-    if (Math.abs((dt.getErrorPosition())) < _errorTolerancePosition && (Math.abs(dt.getErrorHeading()) < _errorToleranceAngle)) 
+    if ((Math.abs(dt.getErrorHeading()) < _errorToleranceAngle)) 
     {
       ++_withinThresholdLoops;
     } 
