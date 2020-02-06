@@ -28,7 +28,7 @@ public class HoodAdjust extends Subsystem {
   {
     _hoodSolenoid = new DoubleSolenoid(RobotMap.PCM_CAN_ID_SHOOTER, RobotMap.HOOD_SOLENOID_ENGAGE, RobotMap.HOOD_SOLENOID_DISENGAGE);
     _pancakeSolenoid = new DoubleSolenoid(RobotMap.PCM_CAN_ID_SHOOTER, RobotMap.PANCAKE_SOLENOID_IN, RobotMap.PANCAKE_SOLENOID_OUT);
-    shooterPosition = HoodPosition.POS1;
+    shooterPosition = HoodPosition.WALL;
   }
   /**
    * Creates a new Instance of the HoodAdjust
@@ -117,10 +117,10 @@ public class HoodAdjust extends Subsystem {
   }
 
   public enum HoodPosition{
-    POS1,
-    POS2,
-    POS3,
-    POS4
+    WALL,
+    WHITE_LINE,
+    FRONT_TRENCH,
+    BACK_TRENCH
   }
 
   public void setHoodPosition(HoodPosition newPosition){

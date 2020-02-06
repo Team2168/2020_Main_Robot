@@ -7,29 +7,28 @@
 
 package org.team2168.commands.hood_adjust;
 
-import org.team2168.commands.auto.Sleep;
 import org.team2168.subsystems.HoodAdjust;
-
+import org.team2168.commands.auto.Sleep;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
-public class MoveToPositionA extends CommandGroup {
- HoodAdjust pos = HoodAdjust.getInstance();
-  public MoveToPositionA() {
+public class MoveToBackTrench extends CommandGroup {
+  HoodAdjust pos = HoodAdjust.getInstance();
+  public MoveToBackTrench() {
     switch(pos.shooterPosition){
-      case POS3 :
+      case WHITE_LINE :
         addSequential(new ExtendShooterHood());
         addSequential(new Sleep(), 0.2);
         addSequential(new RetractShooterHardstop());
         addSequential(new Sleep(), 0.2);
-      case POS4 :
-      case POS2 : 
+      case WALL :
+      case FRONT_TRENCH :
         addSequential(new RetractShooterHood());
         addSequential(new Sleep(), 0.2);
         addSequential(new RetractShooterHardstop());
         addSequential(new Sleep(), 0.1);
-      case POS1 :
+      case BACK_TRENCH :
         break;
     }
-    pos.setHoodPosition(HoodAdjust.HoodPosition.POS1);
+    pos.setHoodPosition(HoodAdjust.HoodPosition.BACK_TRENCH);
   }
 }
