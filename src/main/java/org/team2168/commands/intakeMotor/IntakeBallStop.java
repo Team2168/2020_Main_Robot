@@ -16,6 +16,7 @@ public class IntakeBallStop extends CommandGroup {
 
   public IntakeBallStop() {
    addSequential(new RetractIntakePneumatic());
+   addSequential(new Sleep(), 0.0);// TO-DO: Figure out if we need a sleep command, and if so, for how long.
    addSequential(new DriveIntakeWithConstant(0.0));
    
   }
