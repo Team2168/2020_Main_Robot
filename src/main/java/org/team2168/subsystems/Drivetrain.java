@@ -65,8 +65,8 @@ public class Drivetrain extends Subsystem {
 
     //values TBD
     limelight = new Limelight();
-    limelight.setCamMode(1);
-    limelight.setPipeline(7);
+    limelight.setCamMode(0);
+    limelight.setPipeline(4);
 
     // Log sensor data
     // ConsolePrinter.putNumber("DTRight1MotorCurrent", () -> {return Robot.pdp.getChannelCurrent(RobotMap.DRIVETRAIN_RIGHT_MOTOR_1_PDP);}, true, false);
@@ -76,11 +76,11 @@ public class Drivetrain extends Subsystem {
     // ConsolePrinter.putNumber("DTLeft2MotorCurrent", () -> {return Robot.pdp.getChannelCurrent(RobotMap.DRIVETRAIN_LEFT_MOTOR_2_PDP);}, true, false);
     // ConsolePrinter.putNumber("DTLeft3MotorCurrent", () -> {return Robot.pdp.getChannelCurrent(RobotMap.DRIVETRAIN_LEFT_MOTOR_3_PDP);}, true, false);
     
-    limelightPosController.setSIZE(RobotMap.DRIVE_TRAIN_PID_ARRAY_SIZE);
-    limelightPosController.startThread();
+    // limelightPosController.setSIZE(RobotMap.DRIVE_TRAIN_PID_ARRAY_SIZE);
+    // limelightPosController.startThread();
 
-    TCPlimelightPosController = new TCPSocketSender(RobotMap.TCP_SERVER_ROTATE_CONTROLLER_WITH_CAMERA,limelightPosController);
-    TCPlimelightPosController.start();
+    // TCPlimelightPosController = new TCPSocketSender(RobotMap.TCP_SERVER_ROTATE_CONTROLLER_WITH_CAMERA,limelightPosController);
+    // TCPlimelightPosController.start();
     
   }
 
