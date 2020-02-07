@@ -13,17 +13,14 @@ import org.team2168.subsystems.Balancer;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-public class DriveBalancerUpdatingPosition extends Command {
+public class DriveBalancerVelocityJoystick extends Command {
 
   private static Balancer balancer;
   private static OI oi;
   private double _setPoint;
   private boolean _readPIDFromDashboard = true;
-  private double _loopsToSettle = 10;
-  private int _withinThresholdLoops = 0;
-  private double numRevolutions = 5.0;
 
-  public DriveBalancerUpdatingPosition() {
+  public DriveBalancerVelocityJoystick() {
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
     balancer = Balancer.getInstance();
@@ -35,47 +32,34 @@ public class DriveBalancerUpdatingPosition extends Command {
   protected void initialize() {
     oi = OI.getInstance();
     if(_readPIDFromDashboard) {
-      balancer.updatePIDValues();
     }
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    if(Math.abs(oi.getBalancerJoystickValue())>0.1){
-      _setPoint = balancer.getPosition() + (oi.getBalancerJoystickValue() * numRevolutions);
-    }
-    else {
-      _setPoint = balancer.getPosition();
-    }
+    balancer.updatePIDValues();
+    _setPoint = oi.getBalancerJoystickValue() * balancer.getMaxVelocity();
 
-    balancer.setPositionSetPoint(_setPoint);
+    balancer.setVelocitySetPoint(_setPoint);
 
     SmartDashboard.putNumber("SetPoint", _setPoint);
     SmartDashboard.putNumber("Position", balancer.getPosition());
     SmartDashboard.putNumber("Velocity", balancer.getVelocity());
-    SmartDashboard.putNumber("Position Error", balancer.getPositionError());
+    SmartDashboard.putNumber("Velocity Error", balancer.getVelocityError());
     SmartDashboard.putNumber("Output", balancer.getMotorOutput());
 
-    /* Check if closed loop error is within the threshld */
-    if (Math.abs(_setPoint-balancer.getPosition()) < balancer.getAllowedClosedLoopError()) {
-      ++_withinThresholdLoops;
-    } 
-    else {
-      _withinThresholdLoops = 0;
-    }
   }
 
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    return _withinThresholdLoops > _loopsToSettle;
+    return false;
   }
 
   // Called once after isFinished returns true
   @Override
   protected void end() {
-    balancer.driveMotor(0.0);
 
   }
 

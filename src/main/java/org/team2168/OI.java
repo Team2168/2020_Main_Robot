@@ -1,9 +1,9 @@
 
 package org.team2168;
 
+import org.team2168.commands.balancer.ZeroBalancerSensors;
 import org.team2168.utils.F310;
 import org.team2168.utils.LinearInterpolator;
-import org.team2168.commands.drivetrain.*;
 
 
 /**
@@ -96,6 +96,7 @@ public class OI
 		// pidTestJoystick.ButtonLeftDPad().whenPressed(new WheelsOutPattern());
 		// pidTestJoystick.ButtonRightDPad().whenPressed(new MonkeyBarPattern());
 		// pidTestJoystick.ButtonUpDPad().whenPressed(new WithGamePiecePattern());
+		pidTestJoystick.ButtonX().whenPressed(new ZeroBalancerSensors());
 
 		
 	}
@@ -185,7 +186,7 @@ public class OI
 	 *Balancer Joystick*
 	*************************************************************************/
 	public double getBalancerJoystickValue(){
-		return (0.0);
+		return (pidTestJoystick.getLeftStickRaw_Y());
 	}
 	/*************************************************************************
 	 *Hopper Joystick*

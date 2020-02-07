@@ -17,6 +17,8 @@ import com.revrobotics.CANSparkMaxLowLevel.PeriodicFrame;
 import com.revrobotics.ControlType;
 
 import org.team2168.RobotMap;
+import org.team2168.commands.balancer.DriveBalancerUpdatingPosition;
+import org.team2168.commands.balancer.DriveBalancerVelocityJoystick;
 
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -29,9 +31,10 @@ public class Balancer extends Subsystem {
   private CANSparkMax _balancerMotor;
   private CANPIDController m_pidController;
   private CANEncoder m_encoder;
-  private final double gearRatio = 50.0; // 50 internal means 1 external
+  private final double gearRatio = 30.0; // 50 internal means 1 external TODO changed for testing
   private final double ALLOWED_ERROR = (2.0 / 360.0);
   private double kP, kI, kD, kIz, kFF, kMaxOutput, kMinOutput, maxRPM, maxVel, minVel, maxAcc, allowedErr = ALLOWED_ERROR;
+  private double velocitySetPoint_sensorUnits, positionSetPoint_sensorUnits;
   private static Balancer instance = null;
 
   /**
@@ -40,7 +43,7 @@ public class Balancer extends Subsystem {
 
   private Balancer()
   {
-    _balancerMotor = new CANSparkMax(RobotMap.BALANCER_MOTOR_PDP, MotorType.kBrushless);
+    _balancerMotor = new CANSparkMax(5, MotorType.kBrushless); //RobotMap.BALANCER_MOTOR_PDP
     
     //speed limit 60
     _balancerMotor.setSmartCurrentLimit(60);
@@ -63,18 +66,18 @@ public class Balancer extends Subsystem {
     m_encoder = _balancerMotor.getEncoder();
 
     // PID coefficients
-    kP = 5e-5;
-    kI = 1e-6;
-    kD = 0;
+    kP = 0.00005; //5e-5
+    kI = 1e-6; 
+    kD = 0.000016; //0
     kIz = 0;
     kFF = 0.000156; 
-    kMaxOutput = 0.2;
-    kMinOutput = -0.2;
-    maxRPM = 8;
+    kMaxOutput = 1.0;
+    kMinOutput = -1.0;
+    maxRPM = 8.0;
 
     // Smart Motion Coefficients
-    maxVel = 8; // rpm
-    maxAcc = 16;
+    maxVel = 8.0; // rpm
+    maxAcc = 16.0;
 
     // set PID coefficients
     m_pidController.setP(kP);
@@ -115,9 +118,8 @@ public class Balancer extends Subsystem {
     SmartDashboard.putNumber("Max Velocity", maxVel);
     SmartDashboard.putNumber("Min Velocity", minVel);
     SmartDashboard.putNumber("Max Acceleration", maxAcc);
-    SmartDashboard.putNumber("Allowed Closed Loop Error", allowedErr);
-    SmartDashboard.putNumber("Set Position", 0);
-    SmartDashboard.putNumber("Set Velocity", 0);
+    SmartDashboard.putNumber("Allowed Closed Loop Error", allowedErr);    
+
   }
   
   /**
@@ -183,8 +185,8 @@ public class Balancer extends Subsystem {
      */
     public void setVelocitySetPoint(double setPoint)
     {
-      setPoint = revs_to_motor_rotations(setPoint);
-      m_pidController.setReference(setPoint, ControlType.kVelocity);
+      velocitySetPoint_sensorUnits = revs_to_motor_rotations(setPoint);
+      m_pidController.setReference(velocitySetPoint_sensorUnits, ControlType.kVelocity);
     }
   
     public double getPosition()
@@ -214,9 +216,9 @@ public class Balancer extends Subsystem {
      */
     public void setPositionSetPoint(double setPoint)
     {
-      setPoint = revs_to_motor_rotations(setPoint);
+      positionSetPoint_sensorUnits = revs_to_motor_rotations(setPoint);
   
-      m_pidController.setReference(setPoint, ControlType.kSmartMotion);
+      m_pidController.setReference(positionSetPoint_sensorUnits, ControlType.kSmartMotion);
     }
   
     public void setSetpoint(double setPoint, boolean velocityMode)
@@ -228,6 +230,21 @@ public class Balancer extends Subsystem {
       }
     }
 
+    public double getPositionError()
+    {
+      return motor_rotations_to_revs(positionSetPoint_sensorUnits - m_encoder.getPosition());
+    }
+
+    public double getVelocityError()
+    {
+      return motor_rotations_to_revs(velocitySetPoint_sensorUnits - m_encoder.getVelocity());
+    }
+
+    public double getMaxVelocity()
+    {
+      return maxVel;
+    }
+
     public double revs_to_motor_rotations(double setpoint)
     {
       return setpoint * gearRatio;
@@ -237,6 +254,11 @@ public class Balancer extends Subsystem {
     {
       return setpoint / gearRatio;
     }
+
+    public void zeroEncoders()
+    {
+      m_encoder.setPosition(0.0);
+    }
     
 
   
@@ -244,5 +266,8 @@ public class Balancer extends Subsystem {
   public void initDefaultCommand() {
     // Set the default command for a subsystem here.
     //setDefaultCommand(new DriveBalancerMotorWithJoystick());
+    setDefaultCommand(new DriveBalancerVelocityJoystick());
+    // setDefaultCommand(new DriveBalancerUpdatingPosition());
+
   }
 }
