@@ -12,12 +12,11 @@ package org.team2168.subsystems;
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.CANSparkMaxLowLevel.PeriodicFrame;
 import com.revrobotics.ControlType;
 
-import org.team2168.RobotMap;
-import org.team2168.commands.balancer.DriveBalancerUpdatingPosition;
 import org.team2168.commands.balancer.DriveBalancerVelocityJoystick;
 
 import edu.wpi.first.wpilibj.command.Subsystem;
@@ -44,7 +43,8 @@ public class Balancer extends Subsystem {
   private Balancer()
   {
     _balancerMotor = new CANSparkMax(5, MotorType.kBrushless); //RobotMap.BALANCER_MOTOR_PDP
-    
+    _balancerMotor.setIdleMode(IdleMode.kBrake);
+
     //speed limit 60
     _balancerMotor.setSmartCurrentLimit(60);
 
@@ -66,10 +66,10 @@ public class Balancer extends Subsystem {
     m_encoder = _balancerMotor.getEncoder();
 
     // PID coefficients
-    kP = 0.00005; //5e-5
-    kI = 1e-6; 
-    kD = 0.000016; //0
-    kIz = 0;
+    kP = 0.0003; //5e-5
+    kI = 0.0; //1e-6 
+    kD = 0.0000; //0
+    kIz = 20.0;
     kFF = 0.000156; 
     kMaxOutput = 1.0;
     kMinOutput = -1.0;
@@ -83,7 +83,7 @@ public class Balancer extends Subsystem {
     m_pidController.setP(kP);
     m_pidController.setI(kI);
     m_pidController.setD(kD);
-    m_pidController.setIZone(kIz);
+    m_pidController.setIZone(revs_to_motor_rotations(kIz));
     m_pidController.setFF(kFF);
     m_pidController.setOutputRange(kMinOutput, kMaxOutput);
 
@@ -187,6 +187,9 @@ public class Balancer extends Subsystem {
     {
       velocitySetPoint_sensorUnits = revs_to_motor_rotations(setPoint);
       m_pidController.setReference(velocitySetPoint_sensorUnits, ControlType.kVelocity);
+      SmartDashboard.putNumber("velocity target sensor units", velocitySetPoint_sensorUnits);
+      SmartDashboard.putNumber("velocity sensor unites", m_encoder.getVelocity());
+
     }
   
     public double getPosition()
