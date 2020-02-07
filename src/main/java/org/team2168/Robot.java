@@ -451,7 +451,7 @@ public class Robot extends TimedRobot {
 	 * @return
 	 */
 	private double degrees_to_ticks(double setpoint) {
-		return (setpoint / DEGREES_PER_REV) * PIGEON_UNITS_PER_ROTATION;
+		return (setpoint / DEGREES_PER_REV) * PIGEON_UNITS_PER_ROTATION / 2.0;
 	}
 
 	private double ticks_to_degrees(double setpoint) {
