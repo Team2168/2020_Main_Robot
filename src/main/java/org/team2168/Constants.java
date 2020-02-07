@@ -15,12 +15,12 @@ public class Constants {
 	 * Using Talon FX Integrated Encoder.
 	 * @link https://github.com/CrossTheRoadElec/Phoenix-Documentation#what-are-the-units-of-my-sensor
 	 */
-	public final static int kSensorUnitsPerRotation = 2048;
+//	public final static int kSensorUnitsPerRotation = 2048;
 	
 	/**
 	 * Number of rotations to drive when performing Distance Closed Loop
 	 */
-	public final static double kRotationsToTravel = 6;
+	public final static double kRotationsToTravel = 5;
 	
 	/**
 	 * This is a property of the Pigeon IMU, and should not be changed.
@@ -43,11 +43,11 @@ public class Constants {
      * kF: 1023 represents output value to Talon at 100%, 6800 represents Velocity units at 100% output
      * Not all set of Gains are used in this project and may be removed as desired.
      * 
-	 * 	                                    			  kP   kI   kD   kF               Iz    PeakOut */
-	public final static Gains kGains_Distanc = new Gains( 0.1, 0.0,  0.0, 0.0,            100,  0.50 );
-	public final static Gains kGains_Turning = new Gains( 2.0, 0.0,  4.0, 0.0,            200,  1.00 );
-	public final static Gains kGains_Velocit = new Gains( 0.1, 0.0, 20.0, 1023.0/6800.0,  300,  0.50 );
-	public final static Gains kGains_MotProf = new Gains( 1.0, 0.0,  0.0, 1023.0/6800.0,  400,  1.00 );
+	 * 	                                    			   kP     kI     kD   kF             Iz    PeakOut */
+	public final static Gains kGains_Distance = new Gains( 0.15,  0.01,   0.7, 0.0,            120,  0.75 );
+	public final static Gains kGains_Turning  = new Gains( 16.0, 0.00,  8.0, 0.0,            200,  1.00 );
+	// public final static Gains kGains_Velocit  = new Gains( 0.1, 0.0, 20.0, 1023.0/6800.0,  300,  0.50 );
+	// public final static Gains kGains_MotProf  = new Gains( 1.0, 0.0,  0.0, 1023.0/6800.0,  400,  1.00 );
 	
 	/** ---- Flat constants, you should not need to change these ---- */
 	/* We allow either a 0 or 1 when selecting an ordinal for remote devices [You can have up to 2 devices assigned remotely to a talon/victor] */

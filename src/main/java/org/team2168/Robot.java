@@ -67,6 +67,7 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.RemoteSensorSource;
 import com.ctre.phoenix.sensors.PigeonIMU_StatusFrame;
 import com.ctre.phoenix.motorcontrol.StatusFrame;
+import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.TalonFXInvertType;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FollowerType;
@@ -77,10 +78,14 @@ import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
 import com.ctre.phoenix.sensors.PigeonIMU;
 
 public class Robot extends TimedRobot {
-  TalonFX _leftMaster = new TalonFX(2);
-	TalonFX _rightMaster = new TalonFX(1);
-	PigeonIMU _pidgey = new PigeonIMU(3);
-	Joystick _gamepad = new Joystick(0);
+	TalonFX _leftMaster = new TalonFX(0);
+	TalonFX _left2 = new TalonFX(1);
+	TalonFX _left3 = new TalonFX(2);
+	TalonFX _rightMaster = new TalonFX(15);
+	TalonFX _right2 = new TalonFX(14);
+	TalonFX _right3 = new TalonFX(13);
+	PigeonIMU _pidgey = new PigeonIMU(17);
+	Joystick _gamepad = new Joystick(5);
 
 	/** Invert Directions for Left and Right */
 	TalonFXInvertType _leftInvert = TalonFXInvertType.CounterClockwise; //Same as invert = "false"
@@ -102,16 +107,55 @@ public class Robot extends TimedRobot {
 	/** How much smoothing [0,8] to use during MotionMagic */
 	int _smoothing;
 
+	private static final double TICKS_PER_REV = 2048.0; //one event per edge on each quadrature channel
+	private static final double TICKS_PER_100MS = TICKS_PER_REV / 10.0;
+	private static final double GEAR_RATIO = (50.0/10.0) * (40.0/22.0);
+	private static final double WHEEL_CIRCUMFERENCE = 6.0 * Math.PI;
+	private static final double PIGEON_UNITS_PER_ROTATION = 8192.0;;
+	private static final double DEGREES_PER_REV = 360.0;
+	private static final double PIGEON_UNITS_PER_DEGREE = PIGEON_UNITS_PER_ROTATION/360;
+
+	private SupplyCurrentLimitConfiguration talonCurrentLimit;
+	private final boolean ENABLE_CURRENT_LIMIT = true;
+	private final double CONTINUOUS_CURRENT_LIMIT = 40; //amps
+	private final double TRIGGER_THRESHOLD_LIMIT = 60; //amp
+	private final double TRIGGER_THRESHOLD_TIME = 200; //ms
+
 	@Override
 	public void robotInit() {
+
+		_rightMaster.configFactoryDefault();
+		_right2.configFactoryDefault();
+		_right3.configFactoryDefault();
+		_leftMaster.configFactoryDefault();
+		_left2.configFactoryDefault();
+		_left3.configFactoryDefault();
+
+		talonCurrentLimit = new SupplyCurrentLimitConfiguration(ENABLE_CURRENT_LIMIT,
+		CONTINUOUS_CURRENT_LIMIT, TRIGGER_THRESHOLD_LIMIT, TRIGGER_THRESHOLD_TIME);
+	
+		_rightMaster.configSupplyCurrentLimit(talonCurrentLimit);
+		_right2.configSupplyCurrentLimit(talonCurrentLimit);
+		_right3.configSupplyCurrentLimit(talonCurrentLimit);
+		_leftMaster.configSupplyCurrentLimit(talonCurrentLimit);
+		_left2.configSupplyCurrentLimit(talonCurrentLimit);
+		_left3.configSupplyCurrentLimit(talonCurrentLimit);
+
 		/* Set Neutral Mode */
 		_leftMaster.setNeutralMode(NeutralMode.Brake);
+		_left2.setNeutralMode(NeutralMode.Coast);
+		_left3.setNeutralMode(NeutralMode.Coast);
 		_rightMaster.setNeutralMode(NeutralMode.Brake);
+		_right2.setNeutralMode(NeutralMode.Coast);
+		_right3.setNeutralMode(NeutralMode.Coast);
 
 		/* Configure output and sensor direction */
 		_leftMaster.setInverted(_leftInvert);
+		_left2.setInverted(_leftInvert);
+		_left3.setInverted(_leftInvert);
 		_rightMaster.setInverted(_rightInvert);
-
+		_right2.setInverted(_rightInvert);
+		_right3.setInverted(_rightInvert);
 
 		/* Reset Pigeon Configs */
 		_pidgey.configFactoryDefault();
@@ -134,12 +178,12 @@ public class Robot extends TimedRobot {
 		setRobotDistanceConfigs(_rightInvert, _rightConfig);
 
 		/* FPID for Distance */
-		_rightConfig.slot0.kF = Constants.kGains_Distanc.kF;
-		_rightConfig.slot0.kP = Constants.kGains_Distanc.kP;
-		_rightConfig.slot0.kI = Constants.kGains_Distanc.kI;
-		_rightConfig.slot0.kD = Constants.kGains_Distanc.kD;
-		_rightConfig.slot0.integralZone = Constants.kGains_Distanc.kIzone;
-		_rightConfig.slot0.closedLoopPeakOutput = Constants.kGains_Distanc.kPeakOutput;
+		_rightConfig.slot0.kF = Constants.kGains_Distance.kF;
+		_rightConfig.slot0.kP = Constants.kGains_Distance.kP;
+		_rightConfig.slot0.kI = Constants.kGains_Distance.kI;
+		_rightConfig.slot0.kD = Constants.kGains_Distance.kD;
+		_rightConfig.slot0.integralZone = Constants.kGains_Distance.kIzone;
+		_rightConfig.slot0.closedLoopPeakOutput = Constants.kGains_Distance.kPeakOutput;
 
 
 
@@ -183,8 +227,8 @@ public class Robot extends TimedRobot {
 		_rightMaster.configClosedLoopPeriod(1, closedLoopTimeMs, Constants.kTimeoutMs);
 
 		/* Motion Magic Configs */
-		_rightConfig.motionAcceleration = 2000; //(distance units per 100 ms) per second
-		_rightConfig.motionCruiseVelocity = 2000; //distance units per 100 ms
+		_rightConfig.motionAcceleration = 7500; //(distance units per 100 ms) per second
+		_rightConfig.motionCruiseVelocity = 10000; //distance units per 100 ms
 
 
 
@@ -222,6 +266,7 @@ public class Robot extends TimedRobot {
 		double turn = _gamepad.getTwist();
 		forward = Deadband(forward);
 		turn = Deadband(turn);
+
 	
 		/* Button processing for state toggle and sensor zeroing */
 		getButtons(_currentBtns, _gamepad);
@@ -246,8 +291,24 @@ public class Robot extends TimedRobot {
 			
 			System.out.println("Smoothing value is: " + _smoothing);
 		}
+
+		if(_currentBtns[7] && !_previous_currentBtns[7]) {	//Back (select) button
+			_targetAngle = -90.0;
+
+			System.out.println("setting heading to -90.0");
+		}
+		if(_currentBtns[8] && !_previous_currentBtns[8]) {	//Start button
+			_targetAngle = +90.0;
+
+			System.out.println("setting heading to +90.0");
+		}
+		if(_currentBtns[4] && !_previous_currentBtns[4]) {	//Y button
+			_targetAngle = 0.0;
+			System.out.println("setting heading to 0.0");
+		}
+
 		System.arraycopy(_currentBtns, 0, _previous_currentBtns, 0, Constants.kNumButtonsPlusOne);
-				
+		
 		if(!_state){
 			if (_firstCall)
 				System.out.println("This is Arcade Drive.\n");
@@ -266,7 +327,7 @@ public class Robot extends TimedRobot {
 			}
 			
 			/* Calculate targets from gamepad inputs */
-			double target_sensorUnits = forward * Constants.kSensorUnitsPerRotation * Constants.kRotationsToTravel;
+			double target_sensorUnits = forward * inches_to_ticks(12.0 * 10.0);
 			double target_turn = _targetAngle;
 			
 			/* Configured for MotionMagic on Quad Encoders' Sum and Auxiliary PID on Pigeon */
@@ -376,4 +437,46 @@ public class Robot extends TimedRobot {
 		   the real-world value */
 		masterConfig.primaryPID.selectedFeedbackCoefficient = 0.5;
 	 }
+
+
+ 	/**
+	 * Converts a setpoint in degrees to IMU 'encoder ticks'
+	 * @param setpoint
+	 * @return
+	 */
+	private double degrees_to_ticks(double setpoint) {
+		return (setpoint / DEGREES_PER_REV) * PIGEON_UNITS_PER_ROTATION;
+	}
+
+	private double ticks_to_degrees(double setpoint) {
+		return (setpoint / PIGEON_UNITS_PER_ROTATION) * DEGREES_PER_REV;
+	}
+
+	private double degrees_per_sec_to_ticks_per_100ms(double setpoint) {
+		return (degrees_to_ticks(setpoint) / 10.0);
+	}
+
+	private double ticks_per_100ms_to_degrees_per_sec(double setpoint) {
+		return (ticks_to_degrees(setpoint) * 10.0);
+	}
+
+	private double inches_to_ticks(double setpoint) {
+		return (setpoint * TICKS_PER_REV * GEAR_RATIO) / WHEEL_CIRCUMFERENCE;
+	}
+
+	private double ticks_to_inches(double setpoint) {
+		return (setpoint * WHEEL_CIRCUMFERENCE) / (TICKS_PER_REV * GEAR_RATIO);
+	}
+
+	private double inches_per_sec_to_ticks_per_100ms(double setpoint) {
+		return inches_to_ticks(setpoint) / 10.0;
+	}
+
+	private double ticks_per_100ms_to_inches_per_sec(double setpoint) {
+		return ticks_to_inches(setpoint) * 10.0;
+	}
+
+	private double revs_to_ticks(double revs) {
+		return revs * (TICKS_PER_REV * GEAR_RATIO);
+	}
 }
