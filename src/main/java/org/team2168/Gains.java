@@ -2,7 +2,6 @@
  *  Class that organizes gains used when assigning values to slots
  */
 package org.team2168;
-
 public class Gains {
 	public final double kP;
 	public final double kI;
