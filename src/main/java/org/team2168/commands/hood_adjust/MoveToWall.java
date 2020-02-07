@@ -15,18 +15,26 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
 public class MoveToWall extends CommandGroup {
  HoodAdjust pos = HoodAdjust.getInstance();
   public MoveToWall() {
+   //By not using a break in the switch statement, the cases will
+   //follow through, allowing for less lines of code.
     switch(pos.shooterPosition){
+    // This code will carry the hood from the front trench to the
+    // back trench position.
       case FRONT_TRENCH :
         addSequential(new RetractShooterHood());
         addSequential(new Sleep(), 0.2);
         addSequential(new RetractShooterHardstop());
         addSequential(new Sleep(), 0.2);
+      // Because the motions are the same, the back trench and 
+      // white line do not need seperate sets of code
       case BACK_TRENCH :
       case WHITE_LINE : 
         addSequential(new ExtendShooterHood());
         addSequential(new Sleep(), 0.2);
         addSequential(new RetractShooterHardstop());
         addSequential(new Sleep(), 0.1);
+      // Because the hood is already in the wall position,
+      // no extra code is needed.
       case WALL :
         break;
     }
