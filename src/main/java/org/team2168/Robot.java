@@ -42,8 +42,11 @@
  * Button 2: When pressed, toggle between Arcade Drive and Motion Magic
  * 	When toggling into Motion Magic, the current heading is saved and used as the 
  * 	auxiliary closed loop target. Can be changed by toggling out and in again.
+ * Y Button (button 4): when in motion magic mode, sets the heading to 0.0 degrees
  * Button 5(Left shoulder): When pushed, will decrement the smoothing of the motion magic down to 0
  * Button 6(Right shoulder): When pushed, will increment the smoothing of the motion magic up to 8
+ * Select button (button 7): when in motion magic mode, sets the heading to -90 degrees
+ * Start button (button 8): when in motion magic mode, sets the heading to +90.0 degrees
  * Left Joystick Y-Axis: 
  * 	+ Arcade Drive: Drive robot forward and reverse
  * 	+ Motion Magic: Servo robot forward and reverse [-6, 6] rotations
@@ -110,10 +113,13 @@ public class Robot extends TimedRobot {
 	private static final double TICKS_PER_REV = 2048.0; //one event per edge on each quadrature channel
 	private static final double TICKS_PER_100MS = TICKS_PER_REV / 10.0;
 	private static final double GEAR_RATIO = (50.0/10.0) * (40.0/22.0);
-	private static final double WHEEL_CIRCUMFERENCE = 6.0 * Math.PI;
+	private static final double WHEEL_DIAMETER = 6.0; //inches
+	private static final double WHEEL_CIRCUMFERENCE = WHEEL_DIAMETER * Math.PI; //inches
 	private static final double PIGEON_UNITS_PER_ROTATION = 8192.0;;
 	private static final double DEGREES_PER_REV = 360.0;
 	private static final double PIGEON_UNITS_PER_DEGREE = PIGEON_UNITS_PER_ROTATION/360;
+	private static final double WHEEL_BASE = 24.0; //distance between wheels (width) in inches
+
 
 	private SupplyCurrentLimitConfiguration talonCurrentLimit;
 	private final boolean ENABLE_CURRENT_LIMIT = true;
@@ -293,12 +299,12 @@ public class Robot extends TimedRobot {
 		}
 
 		if(_currentBtns[7] && !_previous_currentBtns[7]) {	//Back (select) button
-			_targetAngle = -90.0;
+			_targetAngle = degrees_to_ticks(-90.0);
 
 			System.out.println("setting heading to -90.0");
 		}
 		if(_currentBtns[8] && !_previous_currentBtns[8]) {	//Start button
-			_targetAngle = +90.0;
+			_targetAngle = degrees_to_ticks(90.0);
 
 			System.out.println("setting heading to +90.0");
 		}
@@ -478,5 +484,9 @@ public class Robot extends TimedRobot {
 
 	private double revs_to_ticks(double revs) {
 		return revs * (TICKS_PER_REV * GEAR_RATIO);
+	}
+
+	private double degrees_to_wheel_revs (double degrees) {
+		return (degrees / 360.0) * (WHEEL_BASE / WHEEL_DIAMETER);
 	}
 }
