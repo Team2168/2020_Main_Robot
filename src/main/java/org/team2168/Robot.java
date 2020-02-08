@@ -280,7 +280,7 @@ public class Robot extends TimedRobot {
 			_state = !_state; 		// Toggle state
 			_firstCall = true;		// State change, do first call operation
 			_targetAngle = _rightMaster.getSelectedSensorPosition(1);
-		}else if (_currentBtns[1] && !_previous_currentBtns[1]) {
+		}else if (_currentBtns[1] && !_previous_currentBtns[1]) { //button A
 			zeroSensors();			// Zero Sensors
 		}
 		if(_currentBtns[5] && !_previous_currentBtns[5]) {
@@ -299,12 +299,12 @@ public class Robot extends TimedRobot {
 		}
 
 		if(_currentBtns[7] && !_previous_currentBtns[7]) {	//Back (select) button
-			_targetAngle = degrees_to_ticks(-90.0);
+			_targetAngle = degrees_to_ticks(39.54);
 
 			System.out.println("setting heading to -90.0");
 		}
 		if(_currentBtns[8] && !_previous_currentBtns[8]) {	//Start button
-			_targetAngle = degrees_to_ticks(90.0);
+			_targetAngle = degrees_to_ticks(-39.54);
 
 			System.out.println("setting heading to +90.0");
 		}
