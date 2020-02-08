@@ -107,7 +107,7 @@ public class Shooter extends Subsystem {
         _motorOne.configNominalOutputForward(0, kTimeoutMs);
         _motorOne.configNominalOutputReverse(0, kTimeoutMs);
         _motorOne.configPeakOutputForward(1, kTimeoutMs);
-        _motorOne.configPeakOutputReverse(-1, kTimeoutMs);
+        _motorOne.configPeakOutputReverse(0, kTimeoutMs); //set so that the shooter CANNOT run backwards
 
         /* Config the Velocity closed loop gains in slot0 */
         _motorOne.config_kF(kPIDLoopIdx, kGains_Velocity.kF, kTimeoutMs);

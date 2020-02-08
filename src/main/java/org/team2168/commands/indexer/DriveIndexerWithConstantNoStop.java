@@ -5,29 +5,21 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package org.team2168.commands.shooter;
+package org.team2168.commands.indexer;
 
-import org.team2168.subsystems.Shooter;
+import org.team2168.subsystems.Indexer;
 
 import edu.wpi.first.wpilibj.command.Command;
 
-public class WaitForShooterAtSpeed extends Command {
-  
-  private Shooter shooter;
-  private double _errorTolerance;
-  private double _loopsToSettle = 10;
-  private int _withinThresholdLoops = 0;
-  private static final double DEFAULT_ERROR_TOLERANCE = 10;
-
-  public WaitForShooterAtSpeed(double errorTolerance) {
-    // this can't require the shooter because we want shooter to keep running independently
-    shooter = Shooter.getInstance();
-    this._errorTolerance = errorTolerance;
+public class DriveIndexerWithConstantNoStop extends Command { 
+  private double _speed;
+  private Indexer _indexer;
+  public DriveIndexerWithConstantNoStop(double speed) {
+    _indexer = Indexer.getInstance();
+    _speed = speed;
+    requires(_indexer);
   }
 
-  public WaitForShooterAtSpeed() {
-    this(DEFAULT_ERROR_TOLERANCE);
-  }
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
@@ -36,19 +28,13 @@ public class WaitForShooterAtSpeed extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    /* Check if closed loop error is within the threshld */
-    if (Math.abs(shooter.getError()) < _errorTolerance) {
-      ++_withinThresholdLoops;
-    } 
-    else {
-      _withinThresholdLoops = 0;
-    }
+    _indexer.drive(_speed);
   }
 
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    return _withinThresholdLoops > _loopsToSettle;
+    return false;
   }
 
   // Called once after isFinished returns true
@@ -60,5 +46,6 @@ public class WaitForShooterAtSpeed extends Command {
   // subsystems is scheduled to run
   @Override
   protected void interrupted() {
+    end();
   }
 }
