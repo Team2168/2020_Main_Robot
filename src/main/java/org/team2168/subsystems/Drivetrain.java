@@ -358,6 +358,24 @@ public class Drivetrain extends Subsystem {
     _leftMotor3.follow(_rightMotor1, FollowerType.AuxOutput1);
   }
 
+  public void changeMaxVelAcc(boolean straightmode)
+  {
+    if(straightmode) {
+      /* Motion Magic Configs */
+      _rightMotor1.configMotionAcceleration((int) (inches_per_sec_to_ticks_per_100ms(10.0*12.0))); //(distance units per 100 ms) per second 
+      _rightMotor1.configMotionCruiseVelocity((int) (inches_per_sec_to_ticks_per_100ms(10.0*12.0))); //distance units per 100 ms
+
+    }
+    else {
+      /* Motion Magic Configs */
+      _rightMotor1.configMotionAcceleration((int) (inches_per_sec_to_ticks_per_100ms(5.0*12.0))); //(distance units per 100 ms) per second 
+      _rightMotor1.configMotionCruiseVelocity((int) (inches_per_sec_to_ticks_per_100ms(10.0*12.0))); //distance units per 100 ms
+
+    }
+
+
+  }
+
   public double getErrorPosition() {
     return ticks_to_inches(setPointPosition_sensorUnits-_rightMotor1.getSelectedSensorPosition(Constants.PID_PRIMARY));
     //return _leftMotor1.getClosedLoopError(kPIDLoopIdx)/TICKS_PER_REV;--only for nonMotionMagic or nonMotion Profile

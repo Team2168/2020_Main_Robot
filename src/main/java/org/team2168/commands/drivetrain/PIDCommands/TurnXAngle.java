@@ -47,6 +47,8 @@ public class TurnXAngle extends Command {
   @Override
   protected void initialize() {
     dt.zeroSensors();
+    dt.changeMaxVelAcc(false);
+
   }
 
   // Called repeatedly when this Command is scheduled to run
