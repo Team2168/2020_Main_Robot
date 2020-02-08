@@ -23,11 +23,11 @@ public class MoveToFrontTrench extends CommandGroup {
       case WHITE_LINE :
         addSequential(new ExtendShooterHood());
         addSequential(new Sleep(), 0.2);
+        addSequential(new RetractShooterHardstop());
+        addSequential(new Sleep(), 0.2);
       // This code will carry the hood from the wall to the
       // back trench position.
       case WALL : 
-        addSequential(new RetractShooterHardstop());
-        addSequential(new Sleep(), 0.2);
         addSequential(new RetractShooterHood());
         addSequential(new Sleep(), 0.2);
       // This code will complete the process and carry the hood from the
