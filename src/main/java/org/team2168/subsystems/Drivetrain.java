@@ -16,7 +16,10 @@ import com.ctre.phoenix.sensors.PigeonIMU_StatusFrame;
 
 import org.team2168.Constants;
 import org.team2168.RobotMap;
+import org.team2168.PID.controllers.PIDPosition;
+import org.team2168.PID.sensors.Limelight;
 import org.team2168.commands.drivetrain.DriveWithJoystick;
+import org.team2168.utils.TCPSocketSender;
 
 import edu.wpi.first.wpilibj.command.Subsystem;
 
@@ -29,6 +32,11 @@ public class Drivetrain extends Subsystem {
   private static TalonFX _rightMotor2;
   private static TalonFX _rightMotor3;
   private static PigeonIMU _pidgey;
+  
+  public Limelight limelight;
+  public PIDPosition limelightPosController;
+
+  TCPSocketSender TCPlimelightPosController;
 
   private static Drivetrain instance = null;
 
@@ -99,111 +107,10 @@ public class Drivetrain extends Subsystem {
       _rightMotor2.configSupplyCurrentLimit(talonCurrentLimit);
       _rightMotor3.configSupplyCurrentLimit(talonCurrentLimit);
 
-      _leftMotor1.setNeutralMode(NeutralMode.Brake);
-      _leftMotor2.setNeutralMode(NeutralMode.Coast);
-      _leftMotor3.setNeutralMode(NeutralMode.Coast);
-      _rightMotor1.setNeutralMode(NeutralMode.Brake);
-      _rightMotor2.setNeutralMode(NeutralMode.Coast);
-      _rightMotor3.setNeutralMode(NeutralMode.Coast);
-
-          /* Configure output and sensor direction */
-    _leftMotor1.setInverted(_leftInvert);
-    _leftMotor2.setInverted(_leftInvert);
-    _leftMotor3.setInverted(_leftInvert);
-    _rightMotor1.setInverted(_rightInvert);
-    _rightMotor2.setInverted(_rightInvert);
-    _rightMotor3.setInverted(_rightInvert);
-
-    /* Reset Pigeon Configs */
-    _pidgey.configFactoryDefault();
-    
-        /** Feedback Sensor Configuration */
-
-    /** Distance Configs */
-
-    /* Configure the left Talon's selected sensor as integrated sensor */
-    _leftConfig.primaryPID.selectedFeedbackSensor = FeedbackDevice.IntegratedSensor; //Local Feedback Source
-
-    /* Configure the Remote (Left) Talon's selected sensor as a remote sensor for the right Talon */
-    _rightConfig.remoteFilter0.remoteSensorDeviceID = _leftMotor1.getDeviceID(); //Device ID of Remote Source
-    _rightConfig.remoteFilter0.remoteSensorSource = RemoteSensorSource.TalonFX_SelectedSensor; //Remote Source Type
-    
-    /* Now that the Left sensor can be used by the master Talon,
-      * set up the Left (Aux) and Right (Master) distance into a single
-      * Robot distance as the Master's Selected Sensor 0. */
-    setRobotDistanceConfigs(_rightInvert, _rightConfig);
-
-    /* FPID for Distance */
-    _rightConfig.slot0.kF = Constants.kGains_Distance.kF;
-    _rightConfig.slot0.kP = Constants.kGains_Distance.kP;
-    _rightConfig.slot0.kI = Constants.kGains_Distance.kI;
-    _rightConfig.slot0.kD = Constants.kGains_Distance.kD;
-    _rightConfig.slot0.integralZone = Constants.kGains_Distance.kIzone;
-    _rightConfig.slot0.closedLoopPeakOutput = Constants.kGains_Distance.kPeakOutput;
-
-
-
-    /** Heading Configs */
-    _rightConfig.remoteFilter1.remoteSensorDeviceID = _pidgey.getDeviceID();    //Pigeon Device ID
-    _rightConfig.remoteFilter1.remoteSensorSource = RemoteSensorSource.Pigeon_Yaw; //This is for a Pigeon over CAN
-    _rightConfig.auxiliaryPID.selectedFeedbackSensor = FeedbackDevice.RemoteSensor1; //Set as the Aux Sensor
-    _rightConfig.auxiliaryPID.selectedFeedbackCoefficient = 3600.0 / Constants.kPigeonUnitsPerRotation; //Convert Yaw to tenths of a degree
-
-    /* false means talon's local output is PID0 + PID1, and other side Talon is PID0 - PID1
-      *   This is typical when the master is the right Talon FX and using Pigeon
-      * 
-      * true means talon's local output is PID0 - PID1, and other side Talon is PID0 + PID1
-      *   This is typical when the master is the left Talon FX and using Pigeon
-      */
-    _rightConfig.auxPIDPolarity = false;
-
-    /* FPID for Heading */
-    _rightConfig.slot1.kF = Constants.kGains_Turning.kF;
-    _rightConfig.slot1.kP = Constants.kGains_Turning.kP;
-    _rightConfig.slot1.kI = Constants.kGains_Turning.kI;
-    _rightConfig.slot1.kD = Constants.kGains_Turning.kD;
-    _rightConfig.slot1.integralZone = Constants.kGains_Turning.kIzone;
-    _rightConfig.slot1.closedLoopPeakOutput = Constants.kGains_Turning.kPeakOutput;
-
-
-    /* Config the neutral deadband. */
-    _leftConfig.neutralDeadband = Constants.kNeutralDeadband;
-    _rightConfig.neutralDeadband = Constants.kNeutralDeadband;
-
-
-    /**
-     * 1ms per loop.  PID loop can be slowed down if need be.
-     * For example,
-     * - if sensor updates are too slow
-     * - sensor deltas are very small per update, so derivative error never gets large enough to be useful.
-     * - sensor movement is very slow causing the derivative error to be near zero.
-     */
-    int closedLoopTimeMs = 1;
-    _rightMotor1.configClosedLoopPeriod(0, closedLoopTimeMs, Constants.kTimeoutMs);
-    _rightMotor1.configClosedLoopPeriod(1, closedLoopTimeMs, Constants.kTimeoutMs);
-
-    /* Motion Magic Configs */
-    _rightConfig.motionAcceleration = (int) (inches_per_sec_to_ticks_per_100ms(5.0*12.0)); //(distance units per 100 ms) per second //7500
-    _rightConfig.motionCruiseVelocity = (int) (inches_per_sec_to_ticks_per_100ms(10.0*12.0)); //distance units per 100 ms //10000
-
-
-
-    /* APPLY the config settings */
-    _leftMotor1.configAllSettings(_leftConfig);
-    _rightMotor1.configAllSettings(_rightConfig);
-
-    _rightMotor1.selectProfileSlot(Constants.kSlot_Distanc, Constants.PID_PRIMARY);
-    _rightMotor1.selectProfileSlot(Constants.kSlot_Turning, Constants.PID_TURN);
-
-
-    /* Set status frame periods to ensure we don't have stale data */
-    /* These aren't configs (they're not persistant) so we can set these after the configs.  */
-    _rightMotor1.setStatusFramePeriod(StatusFrame.Status_12_Feedback1, 20, Constants.kTimeoutMs);
-    _rightMotor1.setStatusFramePeriod(StatusFrame.Status_13_Base_PIDF0, 20, Constants.kTimeoutMs);
-    _rightMotor1.setStatusFramePeriod(StatusFrame.Status_14_Turn_PIDF1, 20, Constants.kTimeoutMs);
-    _rightMotor1.setStatusFramePeriod(StatusFrame.Status_10_Targets, 10, Constants.kTimeoutMs);
-    _leftMotor1.setStatusFramePeriod(StatusFrame.Status_2_Feedback0, 5, Constants.kTimeoutMs);
-    _pidgey.setStatusFramePeriod(PigeonIMU_StatusFrame.CondStatus_9_SixDeg_YPR , 5, Constants.kTimeoutMs);
+    //values TBD
+    limelight = new Limelight();
+    limelight.setCamMode(0);
+    limelight.setPipeline(4);
 
     // Log sensor data
     // ConsolePrinter.putNumber("DTRight1MotorCurrent", () -> {return Robot.pdp.getChannelCurrent(RobotMap.DRIVETRAIN_RIGHT_MOTOR_1_PDP);}, true, false);
@@ -212,6 +119,12 @@ public class Drivetrain extends Subsystem {
     // ConsolePrinter.putNumber("DTLeft1MotorCurrent", () -> {return Robot.pdp.getChannelCurrent(RobotMap.DRIVETRAIN_LEFT_MOTOR_1_PDP);}, true, false);
     // ConsolePrinter.putNumber("DTLeft2MotorCurrent", () -> {return Robot.pdp.getChannelCurrent(RobotMap.DRIVETRAIN_LEFT_MOTOR_2_PDP);}, true, false);
     // ConsolePrinter.putNumber("DTLeft3MotorCurrent", () -> {return Robot.pdp.getChannelCurrent(RobotMap.DRIVETRAIN_LEFT_MOTOR_3_PDP);}, true, false);
+    
+    // limelightPosController.setSIZE(RobotMap.DRIVE_TRAIN_PID_ARRAY_SIZE);
+    // limelightPosController.startThread();
+
+    // TCPlimelightPosController = new TCPSocketSender(RobotMap.TCP_SERVER_ROTATE_CONTROLLER_WITH_CAMERA,limelightPosController);
+    // TCPlimelightPosController.start();
     
   }
 
