@@ -9,14 +9,16 @@ package org.team2168.commands.drivetrain;
 
 import org.team2168.OI;
 import org.team2168.subsystems.Drivetrain;
+
 import edu.wpi.first.wpilibj.command.Command;
 
-public class DriveWithJoystick extends Command 
+public class DriveWithJoystickLimelight extends Command 
 {
   private Drivetrain dt;
   private OI oi;
+  private double limelight_offset;
   
-  public DriveWithJoystick() 
+  public DriveWithJoystickLimelight() 
   {
     dt = Drivetrain.getInstance();
     requires(dt);
@@ -36,8 +38,9 @@ public class DriveWithJoystick extends Command
 	 */
   @Override
   protected void execute() {
-    dt.tankDrive(oi.getGunStyleYValue()+ oi.getGunStyleXValue(),
-      oi.getGunStyleYValue() - oi.getGunStyleXValue());
+    dt.zeroPigeon();
+    dt.setSetPointVelocity((oi.getGunStyleYValue()*dt.getMaxVel()), limelight_offset);
+
   }
 
   // Called repeatedly when this Command is scheduled to run
@@ -57,6 +60,7 @@ public class DriveWithJoystick extends Command
   // subsystems is scheduled to run
   @Override
   protected void interrupted() {
+    end();
     
   }
 }

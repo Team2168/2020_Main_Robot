@@ -65,6 +65,14 @@ public class Drivetrain extends Subsystem {
   
   private double setPointPosition_sensorUnits;
   private double setPointHeading_sensorUnits;
+  private double setPointVelocity_sensorUnits;
+
+  private static final double CRUISE_VEL_STRAIGHT = 10.0*12.0;
+  private static final double MAX_ACC_STRAIGHT = 10.0*12.0;
+
+  private static final double CRUISE_VEL_TURN = 10.0*12.0;
+  private static final double MAX_ACC_TURN = 5.0*12.0;
+
 
 
   /**
@@ -358,22 +366,38 @@ public class Drivetrain extends Subsystem {
     _leftMotor3.follow(_rightMotor1, FollowerType.AuxOutput1);
   }
 
+  public void setSetPointVelocity(double setPoint, double setAngle)
+  {
+    setPointVelocity_sensorUnits = inches_per_sec_to_ticks_per_100ms(setPoint);
+    setPointHeading_sensorUnits = degrees_to_ticks(setAngle);
+
+    _rightMotor1.set(ControlMode.Velocity, setPointVelocity_sensorUnits, DemandType.AuxPID, setPointHeading_sensorUnits);
+    _rightMotor2.follow(_rightMotor1, FollowerType.PercentOutput);
+    _rightMotor3.follow(_rightMotor1, FollowerType.PercentOutput);
+    _leftMotor1.follow(_rightMotor1, FollowerType.AuxOutput1);
+    _leftMotor2.follow(_rightMotor1, FollowerType.AuxOutput1);
+    _leftMotor3.follow(_rightMotor1, FollowerType.AuxOutput1);
+  }
+
   public void changeMaxVelAcc(boolean straightmode)
   {
     if(straightmode) {
       /* Motion Magic Configs */
-      _rightMotor1.configMotionAcceleration((int) (inches_per_sec_to_ticks_per_100ms(10.0*12.0))); //(distance units per 100 ms) per second 
-      _rightMotor1.configMotionCruiseVelocity((int) (inches_per_sec_to_ticks_per_100ms(10.0*12.0))); //distance units per 100 ms
+      _rightMotor1.configMotionAcceleration((int) (inches_per_sec_to_ticks_per_100ms(MAX_ACC_STRAIGHT))); //(distance units per 100 ms) per second 
+      _rightMotor1.configMotionCruiseVelocity((int) (inches_per_sec_to_ticks_per_100ms(CRUISE_VEL_STRAIGHT))); //distance units per 100 ms
 
     }
     else {
       /* Motion Magic Configs */
-      _rightMotor1.configMotionAcceleration((int) (inches_per_sec_to_ticks_per_100ms(5.0*12.0))); //(distance units per 100 ms) per second 
-      _rightMotor1.configMotionCruiseVelocity((int) (inches_per_sec_to_ticks_per_100ms(10.0*12.0))); //distance units per 100 ms
+      _rightMotor1.configMotionAcceleration((int) (inches_per_sec_to_ticks_per_100ms(MAX_ACC_TURN))); //(distance units per 100 ms) per second 
+      _rightMotor1.configMotionCruiseVelocity((int) (inches_per_sec_to_ticks_per_100ms(CRUISE_VEL_TURN))); //distance units per 100 ms
 
     }
+  }
 
-
+  public double getMaxVel() {
+    return inches_per_sec_to_ticks_per_100ms(10.0);
+    // return CRUISE_VEL_STRAIGHT; 
   }
 
   public double getErrorPosition() {
@@ -385,6 +409,10 @@ public class Drivetrain extends Subsystem {
     return ticks_to_degrees(setPointHeading_sensorUnits-_rightMotor1.getSelectedSensorPosition(Constants.PID_TURN)); 
   }
 
+  public double getErrorVelocity() {
+    return ticks_per_100ms_to_inches_per_sec(setPointVelocity_sensorUnits-_rightMotor1.getSelectedSensorVelocity(Constants.PID_PRIMARY));
+  }
+
   public double getSetPointPosition()
   {
     return this.setPointPosition_sensorUnits;
@@ -393,6 +421,11 @@ public class Drivetrain extends Subsystem {
   public double getSetPointHeading()
   {
     return this.setPointHeading_sensorUnits;
+  }
+
+  public double getSetPointVelocity()
+  {
+    return this.setPointVelocity_sensorUnits;
   }
 
     /** Zero all sensors, both Talons and Pigeon */
@@ -409,6 +442,11 @@ public class Drivetrain extends Subsystem {
     _leftMotor1.getSensorCollection().setIntegratedSensorPosition(0, Constants.kTimeoutMs);
     _rightMotor1.getSensorCollection().setIntegratedSensorPosition(0, Constants.kTimeoutMs);
     System.out.println("[Quadrature Encoders] All encoders are zeroed.\n");
+  }
+
+  public void zeroPigeon() {
+    _pidgey.setYaw(0, Constants.kTimeoutMs);
+    _pidgey.setAccumZAngle(0, Constants.kTimeoutMs);
   }
 
   /** 

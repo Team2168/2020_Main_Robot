@@ -131,7 +131,10 @@ public class Robot extends TimedRobot {
     ConsolePrinter.putNumber("DT Position", ()->{return drivetrain.getPosition();}, true, false);
     ConsolePrinter.putNumber("Heading", ()->{return drivetrain.getHeading();}, true, false);
     ConsolePrinter.putNumber("Position Error", ()->{return drivetrain.getErrorPosition();}, true, false);
-    ConsolePrinter.putNumber("Heading Error", ()->{return drivetrain.getErrorHeading();}, true, false);
+	ConsolePrinter.putNumber("Heading Error", ()->{return drivetrain.getErrorHeading();}, true, false);
+	ConsolePrinter.putNumber("Velocity", ()->{return drivetrain.getVelocity();}, true, false);
+	ConsolePrinter.putNumber("Velocity Error", ()->{return drivetrain.getErrorVelocity();}, true, false);
+
 
     ConsolePrinter.startThread();
   }
