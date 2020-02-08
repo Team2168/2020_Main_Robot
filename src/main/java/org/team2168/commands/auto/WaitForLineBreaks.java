@@ -55,7 +55,7 @@ public class WaitForLineBreaks extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    if (!exitLineBreakLast && indexer.isBallExiting())
+    if (exitLineBreakLast && !indexer.isBallExiting())
     {
       ballCounter++;
     }
