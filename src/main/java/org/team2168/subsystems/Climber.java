@@ -17,6 +17,10 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import org.team2168.Gains;
 import org.team2168.RobotMap;
 import org.team2168.commands.climber.DriveClimberWithJoystick;
+import org.team2168.PID.sensors.CanDigitalInput;
+import org.team2168.utils.consoleprinter.ConsolePrinter;
+
+
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.command.Subsystem;
@@ -29,6 +33,7 @@ public class Climber extends Subsystem {
   private TalonSRX climberMotor1;
   private TalonSRX climberMotor2;
   public DoubleSolenoid climberSolenoid;
+  private CanDigitalInput hallEffectSensor;
 
   private final boolean CLIMBER_MOTOR_1_REVERSE = false;
   private final boolean CLIMBER_MOTOR_2_REVERSE = false;
@@ -39,6 +44,8 @@ public class Climber extends Subsystem {
   private final double CONTINUOUS_CURRENT_LIMIT = 20; //amps
   private final double TRIGGER_THRESHOLD_LIMIT = 30; //amp
   private final double TRIGGER_THRESHOLD_TIME = 200; //ms
+
+  private boolean lastCall;
 
   	/**
 	 * Which PID slot to pull gains from. Starting 2018, you can choose from
@@ -93,6 +100,7 @@ public class Climber extends Subsystem {
     climberMotor1.configSelectedFeedbackSensor(	FeedbackDevice.QuadEncoder,				// Local Feedback Source
                           kPIDLoopIdx,					// PID Slot for Source [0, 1]
                           kTimeoutMs);					// Configuration Timeout
+    hallEffectSensor = new CanDigitalInput(climberMotor1);
 
     /**
     * Phase sensor accordingly. 
@@ -139,7 +147,9 @@ public class Climber extends Subsystem {
     /* Zero the sensor */
     climberMotor1.setSelectedSensorPosition(0, kPIDLoopIdx, kTimeoutMs);
                     
+    ConsolePrinter.putBoolean("Lift is down", () -> {return isLiftDown();}, true, false);
 
+    lastCall = isLiftDown();
   }
   
   /**
@@ -273,6 +283,32 @@ public class Climber extends Subsystem {
   public void zeroEncoder()
   {
     climberMotor1.setSelectedSensorPosition(0);
+  }
+
+   /**
+   * @return true if magnet is sensed, otherwise returns false
+   * magnet sensed if lift is down
+   */
+
+  public boolean isLiftDown()
+  {
+    return hallEffectSensor.getForwardLimit();
+  }
+
+  /**
+   * Checks the current hall effect sensor value against the last cycle's value
+   * if the previous value false(the lift was up), but the current value is true(the lift is down), 
+   * sets the encoder value 0
+   * updates "lastCall" variable to the current value of the sensor
+   */
+
+  public void zeroEncoderWhenLiftIsDown()
+  {
+    if (lastCall == false && isLiftDown())
+    {
+      zeroEncoder();
+    }
+    lastCall = isLiftDown();
   }
 
   @Override
