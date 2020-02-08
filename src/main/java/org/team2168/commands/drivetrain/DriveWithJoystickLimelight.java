@@ -28,6 +28,7 @@ public class DriveWithJoystickLimelight extends Command
   @Override
   protected void initialize() {
     oi = OI.getInstance();
+    dt.setUpVelocityPID();
 	}
 
 	/**
@@ -38,8 +39,14 @@ public class DriveWithJoystickLimelight extends Command
 	 */
   @Override
   protected void execute() {
+    // limelight_offset = dt.limelight.getPos();
     dt.zeroPigeon();
-    dt.setSetPointVelocity((oi.getGunStyleYValue()*dt.getMaxVel()), limelight_offset);
+    if(oi.operatorJoystick.getLeftStickRaw_Y()> 0.1){
+      dt.setSetPointVelocity((oi.operatorJoystick.getLeftStickRaw_Y()*dt.getMaxVel()), 0.0);
+    }
+    else {
+      dt.setSetPointVelocity(0.0, 5.0);
+    }
 
   }
 
