@@ -1,9 +1,12 @@
 
 package org.team2168;
 
+import org.team2168.commands.drivetrain.FirstPath;
+import org.team2168.commands.drivetrain.FirstPathReverse;
+import org.team2168.commands.drivetrain.PIDCommands.DriveXDistance;
+import org.team2168.commands.drivetrain.PIDCommands.TurnXAngle;
 import org.team2168.utils.F310;
 import org.team2168.utils.LinearInterpolator;
-import org.team2168.commands.drivetrain.*;
 
 
 /**
@@ -52,10 +55,10 @@ public class OI
 	private LinearInterpolator gunStyleYInterpolator;
 	private LinearInterpolator gunStyleXInterpolator;
 	private double[][] gunStyleYArray = {
-		{ -1.0, -0.75}, //limiting speed to 75%
+		{ -1.0, -0.25}, //limiting speed to 75%
 		{ -.15, 0.0},
 		{ .15, 0.0},
-		{ 1.0, 0.75}
+		{ 1.0, 0.25}
 	};
 	private double[][] gunStyleXArray = {
 		{ -1.0, -0.65},  //scale down turning to max 65%
@@ -86,16 +89,15 @@ public class OI
 		 ***********************************************************************/
 		// //leds testing
 		// pidTestJoystick.ButtonA().whenPressed(new DisabledPattern());
-		// pidTestJoystick.ButtonB().whenPressed(new TeleopWithoutGamePiecePattern());
-		// pidTestJoystick.ButtonX().whenPressed(new AutoWithoutGamePiecePattern());
-		// pidTestJoystick.ButtonY().whenPressed(new HABClimbPattern());
-		// pidTestJoystick.ButtonLeftBumper().whenPressed(new PivotingPattern());
-		// pidTestJoystick.ButtonRightBumper().whenPressed(new LiftRaisingPattern());
-		// pidTestJoystick.ButtonRightTrigger().whenPressed(new LiftLoweringPattern());
-		// pidTestJoystick.ButtonDownDPad().whenPressed(new WheelsInPattern());
-		// pidTestJoystick.ButtonLeftDPad().whenPressed(new WheelsOutPattern());
-		// pidTestJoystick.ButtonRightDPad().whenPressed(new MonkeyBarPattern());
-		// pidTestJoystick.ButtonUpDPad().whenPressed(new WithGamePiecePattern());
+		pidTestJoystick.ButtonY().whenPressed(new DriveXDistance(10.0*12.0));
+		pidTestJoystick.ButtonA().whenPressed(new DriveXDistance(-10.0*12.0));
+		pidTestJoystick.ButtonRightDPad().whenPressed(new TurnXAngle(90.0));
+		pidTestJoystick.ButtonLeftDPad().whenPressed(new TurnXAngle(-90.0));
+		pidTestJoystick.ButtonStart().whenPressed(new FirstPath());
+		// pidTestJoystick.ButtonBack().whenPressed(new FirstPathReverse());
+
+
+
 
 		
 	}
