@@ -17,6 +17,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.CANSparkMaxLowLevel.PeriodicFrame;
 import com.revrobotics.ControlType;
 
+import org.team2168.RobotMap;
 import org.team2168.commands.balancer.DriveBalancerVelocityJoystick;
 
 import edu.wpi.first.wpilibj.command.Subsystem;
@@ -42,7 +43,7 @@ public class Balancer extends Subsystem {
 
   private Balancer()
   {
-    _balancerMotor = new CANSparkMax(5, MotorType.kBrushless); //RobotMap.BALANCER_MOTOR_PDP
+    _balancerMotor = new CANSparkMax(RobotMap.BALANCER_MOTOR_PDP, MotorType.kBrushless); //
     _balancerMotor.setIdleMode(IdleMode.kBrake);
 
     //speed limit 60
@@ -76,7 +77,7 @@ public class Balancer extends Subsystem {
     maxRPM = 8.0;
 
     // Smart Motion Coefficients
-    maxVel = 8.0; // rpm
+    maxVel = 16.0; // rpm
     maxAcc = 16.0;
 
     // set PID coefficients
