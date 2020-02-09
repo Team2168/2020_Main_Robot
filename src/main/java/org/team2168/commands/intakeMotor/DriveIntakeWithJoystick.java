@@ -37,7 +37,7 @@ public class DriveIntakeWithJoystick extends Command {
    */
   @Override
   protected void execute() {
-    if (oi.getIntakeMotorJoyStick() < IntakeMotor.maxSpeed)
+    if (Math.abs(oi.getIntakeMotorJoyStick()) < IntakeMotor.maxSpeed)
     {
       intakeMotor.driveMotor(oi.getIntakeMotorJoyStick());
     }

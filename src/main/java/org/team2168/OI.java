@@ -1,8 +1,18 @@
 
 package org.team2168;
 
+import org.team2168.commands.auto.FireBalls;
 import org.team2168.commands.climber.DriveClimberXPosition;
 import org.team2168.commands.climber.ResetClimberPosition;
+import org.team2168.commands.color_wheel_pivot.DisengageColorWheel;
+import org.team2168.commands.color_wheel_pivot.EngageColorWheel;
+import org.team2168.commands.hood_adjust.MoveToBackTrench;
+import org.team2168.commands.hood_adjust.MoveToFrontTrench;
+import org.team2168.commands.hood_adjust.MoveToWall;
+import org.team2168.commands.hood_adjust.MoveToWhiteLine;
+import org.team2168.commands.intakeMotor.IntakeBallStart;
+import org.team2168.commands.intakeMotor.IntakeBallStop;
+import org.team2168.commands.shooter.DriveShooterSpeedHoodPosition;
 import org.team2168.utils.F310;
 import org.team2168.utils.LinearInterpolator;
 
@@ -81,6 +91,20 @@ public class OI
 		/*************************************************************************
 		 * Operator Joystick *
 		 *************************************************************************/
+		operatorJoystick.ButtonUpDPad().whenPressed(new MoveToBackTrench());
+		operatorJoystick.ButtonLeftDPad().whenPressed(new MoveToFrontTrench());
+		operatorJoystick.ButtonRightDPad().whenPressed(new MoveToWhiteLine());
+		operatorJoystick.ButtonDownDPad().whenPressed(new MoveToWall());
+
+		operatorJoystick.ButtonY().whenPressed(new EngageColorWheel());
+		operatorJoystick.ButtonA().whenPressed(new DisengageColorWheel());
+
+		operatorJoystick.ButtonX().whenPressed(new DriveShooterSpeedHoodPosition());
+		operatorJoystick.ButtonB().whenPressed(new FireBalls());
+
+		operatorJoystick.ButtonLeftBumper().whenPressed(new IntakeBallStop());
+		operatorJoystick.ButtonRightBumper().whenPressed(new IntakeBallStart());
+
 
 		/***********************************************************************
 		 * Commands Test Joystick
@@ -151,7 +175,7 @@ public class OI
 	}
 
 	public double getIntakeMotorJoyStick() {
-		return 0.0; //not done, waiting for control system from driver
+		return operatorJoystick.getRightTriggerAxisRaw() - operatorJoystick.getLeftTriggerAxisRaw();
 	}
 	/**
 	 * Return value of axis for the indexer
@@ -168,12 +192,12 @@ public class OI
 	******************************************************************************/
 	public double getClimberJoystickValue()
 	{
-		return 0.0;
+		return pidTestJoystick.getRightStickRaw_Y();
 	}
 
 	public double getShooterJoystick()
 	{
-		 return operatorJoystick.getRightStickRaw_Y();
+		 return 0.0;
 	}
 	/*************************************************************************
 	 *Balancer Joystick*
