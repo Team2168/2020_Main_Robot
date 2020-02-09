@@ -2,10 +2,9 @@
 package org.team2168;
 
 import org.team2168.commands.climber.DriveClimberXPosition;
-import org.team2168.commands.climber.ResetPosition;
+import org.team2168.commands.climber.ResetClimberPosition;
 import org.team2168.utils.F310;
 import org.team2168.utils.LinearInterpolator;
-import org.team2168.commands.drivetrain.*;
 
 
 /**
@@ -87,7 +86,7 @@ public class OI
 		 * Commands Test Joystick
 		 ***********************************************************************/
 
-		pidTestJoystick.ButtonX().whenPressed(new ResetPosition());
+		pidTestJoystick.ButtonX().whenPressed(new ResetClimberPosition());
 		pidTestJoystick.ButtonY().whenPressed(new DriveClimberXPosition(33, 0.1));
 		pidTestJoystick.ButtonA().whenPressed(new DriveClimberXPosition(-28, 0.1));
 
@@ -180,7 +179,7 @@ public class OI
 	 *Balancer Joystick*
 	*************************************************************************/
 	public double getBalancerJoystickValue(){
-		return (0.0);
+		return (pidTestJoystick.getLeftStickRaw_Y());
 	}
 	/*************************************************************************
 	 *Hopper Joystick*
