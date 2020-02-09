@@ -1,9 +1,9 @@
 
 package org.team2168;
 
+import org.team2168.commands.color_wheel.DriveColorWheelXRevolutions;
 import org.team2168.utils.F310;
 import org.team2168.utils.LinearInterpolator;
-import org.team2168.commands.drivetrain.*;
 
 
 /**
@@ -96,6 +96,11 @@ public class OI
 		// pidTestJoystick.ButtonLeftDPad().whenPressed(new WheelsOutPattern());
 		// pidTestJoystick.ButtonRightDPad().whenPressed(new MonkeyBarPattern());
 		// pidTestJoystick.ButtonUpDPad().whenPressed(new WithGamePiecePattern());
+		pidTestJoystick.ButtonY().whenPressed(new DriveColorWheelXRevolutions(1.0));
+		pidTestJoystick.ButtonA().whenPressed(new DriveColorWheelXRevolutions(-1.0));
+		pidTestJoystick.ButtonX().whenPressed(new DriveColorWheelXRevolutions(4.0));
+		pidTestJoystick.ButtonB().whenPressed(new DriveColorWheelXRevolutions(4.0));
+
 
 		
 	}

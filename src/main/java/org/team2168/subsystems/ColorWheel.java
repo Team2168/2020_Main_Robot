@@ -30,13 +30,14 @@ public class ColorWheel extends Subsystem {
   private CANPIDController m_pidController;
   private CANEncoder m_encoder;
   private final double gearRatio = 30.0; // real: 25.0 
-  private final double ALLOWED_ERROR = (2.0 / 360.0);
-  private double kP, kI, kD, kIz, kFF, kMaxOutput, kMinOutput, maxRPM, maxVel, minVel, maxAcc, allowedErr = ALLOWED_ERROR, _processVariable;
+  private final double ALLOWED_ERROR = 0.2;
+  private double kP, kI, kD, kIz, kFF, kMaxOutput, kMinOutput, maxRPM, maxVel, minVel, maxAcc, allowedErr = ALLOWED_ERROR;
+  private double velocitySetPoint_sensorUnits, positionSetPoint_sensorUnits;
   private static ColorWheel instance = null;
 
   private ColorWheel()
   {
-    colorWheelMotor = new CANSparkMax(RobotMap.COLORWHEEL_MOTOR_PDP,MotorType.kBrushless);
+    colorWheelMotor = new CANSparkMax(2,MotorType.kBrushless); //RobotMap.COLORWHEEL_MOTOR_PDP
     colorWheelMotor.setSmartCurrentLimit(30);
     colorWheelMotor.setControlFramePeriodMs(20);
     colorWheelMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 500);
@@ -56,8 +57,8 @@ public class ColorWheel extends Subsystem {
     m_encoder = colorWheelMotor.getEncoder();
 
     // PID coefficients
-    kP = 5e-5;
-    kI = 1e-6;
+    kP = 5e-3;//5e-5
+    kI = 0.0; //1e-6
     kD = 0;
     kIz = 0;
     kFF = 0.000156; 
@@ -66,8 +67,8 @@ public class ColorWheel extends Subsystem {
     maxRPM = 200;
 
     // Smart Motion Coefficients
-    maxVel = 500; // rpm
-    maxAcc = 200;
+    maxVel = 60; // rpm
+    maxAcc = 60;
 
     // set PID coefficients
     m_pidController.setP(kP);
@@ -153,10 +154,10 @@ public class ColorWheel extends Subsystem {
     double ff = SmartDashboard.getNumber("Feed Forward", 0);
     double max = SmartDashboard.getNumber("Max Output", 0);
     double min = SmartDashboard.getNumber("Min Output", 0);
-    double maxV = revs_to_motor_rotations(SmartDashboard.getNumber("Max Velocity", 0));
-    double minV = revs_to_motor_rotations(SmartDashboard.getNumber("Min Velocity", 0));
-    double maxA = revs_to_motor_rotations(SmartDashboard.getNumber("Max Acceleration", 0));
-    double allE = revs_to_motor_rotations(SmartDashboard.getNumber("Allowed Closed Loop Error", ALLOWED_ERROR));
+    double maxV = SmartDashboard.getNumber("Max Velocity", 0);
+    double minV = SmartDashboard.getNumber("Min Velocity", 0);
+    double maxA = SmartDashboard.getNumber("Max Acceleration", 0);
+    double allE = SmartDashboard.getNumber("Allowed Closed Loop Error", ALLOWED_ERROR);
 
     // if PID coefficients on SmartDashboard have changed, write new values to controller
     if((p != kP)) { m_pidController.setP(p); kP = p; }
@@ -168,10 +169,10 @@ public class ColorWheel extends Subsystem {
       m_pidController.setOutputRange(min, max); 
       kMinOutput = min; kMaxOutput = max; 
     }
-    if((maxV != maxVel)) { m_pidController.setSmartMotionMaxVelocity(maxV,0); maxVel = maxV; }
-    if((minV != minVel)) { m_pidController.setSmartMotionMinOutputVelocity(minV,0); minVel = minV; }
-    if((maxA != maxAcc)) { m_pidController.setSmartMotionMaxAccel(maxA,0); maxAcc = maxA; }
-    if((allE != allowedErr)) { m_pidController.setSmartMotionAllowedClosedLoopError(allE,0); allowedErr = allE; }
+    if((maxV != maxVel)) { m_pidController.setSmartMotionMaxVelocity(revs_to_motor_rotations(maxV),0); maxVel = maxV; }
+    if((minV != minVel)) { m_pidController.setSmartMotionMinOutputVelocity(revs_to_motor_rotations(minV),0); minVel = minV; }
+    if((maxA != maxAcc)) { m_pidController.setSmartMotionMaxAccel(revs_to_motor_rotations(maxA),0); maxAcc = maxA; }
+    if((allE != allowedErr)) { m_pidController.setSmartMotionAllowedClosedLoopError(revs_to_motor_rotations(allE),0); allowedErr = allE; }
   }
 
     /**
@@ -183,12 +184,6 @@ public class ColorWheel extends Subsystem {
   {
     setPoint = revs_to_motor_rotations(setPoint);
     m_pidController.setReference(setPoint, ControlType.kVelocity);
-    _processVariable = motor_rotations_to_revs(m_encoder.getVelocity());
-  }
-
-  public double getProcessVariable()
-  {
-    return _processVariable;
   }
 
   public double getPosition() {
@@ -209,18 +204,19 @@ public class ColorWheel extends Subsystem {
     return m_pidController.getSmartMotionAllowedClosedLoopError(0);
   }
 
-    /**
-   * As with other PID modes, Smart Motion is set by calling the
-   * setReference method on an existing pid object and setting
-   * the control type to kSmartMotion
-   */
-  public void setPositionSetPoint(double setPoint)
-  {
-    setPoint = revs_to_motor_rotations(setPoint);
-
-    m_pidController.setReference(setPoint, ControlType.kSmartMotion);
-    _processVariable = motor_rotations_to_revs(m_encoder.getPosition());
-  }
+      /**
+     * As with other PID modes, Smart Motion is set by calling the
+     * setReference method on an existing pid object and setting
+     * the control type to kSmartMotion
+     */
+    public void setPositionSetPoint(double setPoint)
+    {
+      positionSetPoint_sensorUnits = revs_to_motor_rotations(setPoint);
+  
+      m_pidController.setReference(positionSetPoint_sensorUnits, ControlType.kSmartMotion);
+      System.out.println("running method");
+      SmartDashboard.putNumber("SetPoint Position", positionSetPoint_sensorUnits);
+    }
 
   public void setSetpoint(double setPoint, boolean velocityMode)
   {
@@ -229,6 +225,11 @@ public class ColorWheel extends Subsystem {
     } else {
       setPositionSetPoint(setPoint);
     }
+  }
+
+  public void zeroEncoders()
+  {
+    m_encoder.setPosition(0.0);
   }
 
   public double revs_to_motor_rotations(double setpoint)

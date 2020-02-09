@@ -22,57 +22,47 @@ public class DriveColorWheelXRevolutions extends Command {
   private double _loopsToSettle = 10;
   private int _withinThresholdLoops = 0;
 
-  public DriveColorWheelXRevolutions(boolean velocityMode) {
+  public DriveColorWheelXRevolutions() {
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
     colorWheel = ColorWheel.getInstance();
     requires(colorWheel);
-    _velocityMode = velocityMode;
-    if(_velocityMode){
-      _setPoint = SmartDashboard.getNumber("Set Velocity", 0);
-    }
-    else {
-      _setPoint = SmartDashboard.getNumber("Set Position", 0);
-    }
+
+    _setPoint = SmartDashboard.getNumber("Set Position", 0);
 
   }
 
-  public DriveColorWheelXRevolutions(double setPoint, boolean velocityMode) {
+  public DriveColorWheelXRevolutions(double setPoint) {
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
     colorWheel = ColorWheel.getInstance();
     requires(colorWheel);
-    _velocityMode = velocityMode;
     _setPoint = setPoint;
   }
 
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
+    System.out.println("got into command");
+    colorWheel.zeroEncoders();
     if(_readPIDFromDashboard)
     {
       colorWheel.updatePIDValues();
-      if(_velocityMode){
-        _setPoint = SmartDashboard.getNumber("Set Velocity", 0);
-      }
-      else {
-        _setPoint = SmartDashboard.getNumber("Set Position", 0);
-      }
+      // _setPoint = SmartDashboard.getNumber("Set Position", 0);
     }
+
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
+    colorWheel.setPositionSetPoint(_setPoint);
 
-    colorWheel.setSetpoint(_setPoint, _velocityMode);
-
-    SmartDashboard.putNumber("SetPoint", _setPoint);
-    SmartDashboard.putNumber("Process Variable", colorWheel.getProcessVariable());
+    SmartDashboard.putNumber("Position", colorWheel.getPosition());
     SmartDashboard.putNumber("Output", colorWheel.getMotorOutput());
 
     /* Check if closed loop error is within the threshld */
-    if (Math.abs(_setPoint-colorWheel.getProcessVariable()) < colorWheel.getAllowedClosedLoopError()) {
+    if (Math.abs(_setPoint-colorWheel.getPosition()) < colorWheel.getAllowedClosedLoopError()) {
       ++_withinThresholdLoops;
     } 
     else {
