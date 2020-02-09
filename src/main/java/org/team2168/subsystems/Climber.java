@@ -10,17 +10,17 @@ package org.team2168.subsystems;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.DemandType;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
+import com.ctre.phoenix.motorcontrol.LimitSwitchSource;
 import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import org.team2168.Gains;
 import org.team2168.RobotMap;
-import org.team2168.commands.climber.DriveClimberWithJoystick;
 import org.team2168.PID.sensors.CanDigitalInput;
+import org.team2168.commands.climber.DriveClimberWithJoystick;
 import org.team2168.utils.consoleprinter.ConsolePrinter;
-
-
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.command.Subsystem;
@@ -94,13 +94,16 @@ public class Climber extends Subsystem {
     climberMotor1 = new TalonSRX(RobotMap.CLIMBER_MOTOR_1_PDP);
     // climberMotor2 = new TalonSRX(RobotMap.CLIMBER_MOTOR_2);
     climberSolenoid = new DoubleSolenoid(RobotMap.CLIMBER_RATCHET_ENGAGE_PCM,RobotMap.CLIMBER_RATCHET_DISENGAGE_PCM);
+    climberMotor1.configForwardLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen);
+    hallEffectSensor = new CanDigitalInput(climberMotor1);
     /* Factory Default all hardware to prevent unexpected behaviour */
     climberMotor1.configFactoryDefault();
     /* Configure the left Talon's selected sensor as local QuadEncoder */
     climberMotor1.configSelectedFeedbackSensor(	FeedbackDevice.QuadEncoder,				// Local Feedback Source
                           kPIDLoopIdx,					// PID Slot for Source [0, 1]
                           kTimeoutMs);					// Configuration Timeout
-    hallEffectSensor = new CanDigitalInput(climberMotor1);
+    
+
 
     /**
     * Phase sensor accordingly. 
@@ -150,6 +153,9 @@ public class Climber extends Subsystem {
     ConsolePrinter.putBoolean("Lift is down", () -> {return isLiftDown();}, true, false);
 
     lastCall = isLiftDown();
+    ConsolePrinter.putNumber("Climber Position", ()->{return getPosition();}, true, false);
+    ConsolePrinter.putNumber("Climber Position Error", ()->{return getErrorPosition();}, true, false);
+    ConsolePrinter.putNumber("Climber Velocity", ()->{return getVelocity();}, true, false);
   }
   
   /**

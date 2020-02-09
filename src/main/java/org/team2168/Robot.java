@@ -73,9 +73,6 @@ public class Robot extends TimedRobot {
     SmartDashboard.putData("Auto choices", m_chooser);
     climber = Climber.getInstance();
     ConsolePrinter.init();
-    ConsolePrinter.putNumber("Climber Position", ()->{return climber.getPosition();}, true, false);
-    ConsolePrinter.putNumber("Climber Position Error", ()->{return climber.getErrorPosition();}, true, false);
-    ConsolePrinter.putNumber("Climber Velocity", ()->{return climber.getVelocity();}, true, false);
     ConsolePrinter.startThread();
    // intakeMotor = IntakeMotor.getInstance();
    // intakePivot = IntakePivot.getInstance();

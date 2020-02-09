@@ -39,7 +39,7 @@ public class DriveClimberXPosition extends Command {
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
-    climber.zeroEncoder(); //don't do this except for testing
+    // climber.zeroEncoder(); //don't do this except for testing
     climber.setGains(_targetPos);
   }
 
