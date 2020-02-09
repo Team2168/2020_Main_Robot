@@ -15,12 +15,11 @@ import com.ctre.phoenix.sensors.PigeonIMU;
 import com.ctre.phoenix.sensors.PigeonIMU_StatusFrame;
 
 import org.team2168.Constants;
+import org.team2168.Robot;
 import org.team2168.RobotMap;
-import org.team2168.PID.controllers.PIDPosition;
 import org.team2168.PID.sensors.Limelight;
-import org.team2168.commands.drivetrain.DriveWithJoystick;
 import org.team2168.commands.drivetrain.DriveWithJoystickLimelight;
-import org.team2168.utils.TCPSocketSender;
+import org.team2168.utils.consoleprinter.ConsolePrinter;
 
 import edu.wpi.first.wpilibj.command.Subsystem;
 
@@ -35,6 +34,8 @@ public class Drivetrain extends Subsystem {
   private static PigeonIMU _pidgey;
   
   public Limelight limelight;
+
+  private boolean isLimelightEnabled;
 
   private static Drivetrain instance = null;
 
@@ -215,6 +216,8 @@ public class Drivetrain extends Subsystem {
   _leftMotor1.setStatusFramePeriod(StatusFrame.Status_2_Feedback0, 5, Constants.kTimeoutMs);
   _pidgey.setStatusFramePeriod(PigeonIMU_StatusFrame.CondStatus_9_SixDeg_YPR , 5, Constants.kTimeoutMs);
 
+  isLimelightEnabled = false;
+
     // Log sensor data
     // ConsolePrinter.putNumber("DTRight1MotorCurrent", () -> {return Robot.pdp.getChannelCurrent(RobotMap.DRIVETRAIN_RIGHT_MOTOR_1_PDP);}, true, false);
     // ConsolePrinter.putNumber("DTRight2MotorCurrent", () -> {return Robot.pdp.getChannelCurrent(RobotMap.DRIVETRAIN_RIGHT_MOTOR_2_PDP);}, true, false);
@@ -223,11 +226,11 @@ public class Drivetrain extends Subsystem {
     // ConsolePrinter.putNumber("DTLeft2MotorCurrent", () -> {return Robot.pdp.getChannelCurrent(RobotMap.DRIVETRAIN_LEFT_MOTOR_2_PDP);}, true, false);
     // ConsolePrinter.putNumber("DTLeft3MotorCurrent", () -> {return Robot.pdp.getChannelCurrent(RobotMap.DRIVETRAIN_LEFT_MOTOR_3_PDP);}, true, false);
     
-    // limelightPosController.setSIZE(RobotMap.DRIVE_TRAIN_PID_ARRAY_SIZE);
-    // limelightPosController.startThread();
-
-    // TCPlimelightPosController = new TCPSocketSender(RobotMap.TCP_SERVER_ROTATE_CONTROLLER_WITH_CAMERA,limelightPosController);
-    // TCPlimelightPosController.start();
+    ConsolePrinter.putNumber("DT Position", ()->{return getPosition();}, true, false);
+    ConsolePrinter.putNumber("Heading", ()->{return getHeading();}, true, false);
+    ConsolePrinter.putNumber("Dt Position Error", ()->{return getErrorPosition();}, true, false);
+    ConsolePrinter.putNumber("Heading Error", ()->{return getErrorHeading();}, true, false);
+    ConsolePrinter.putNumber("Dt Velocity", ()->{return getVelocity();}, true, false);
     
   }
 
@@ -354,6 +357,16 @@ public class Drivetrain extends Subsystem {
     driveRight(rightSpeed);
   }
 
+  public void drive(double speed, double turn)
+  {
+    _leftMotor1.set(ControlMode.PercentOutput, speed, DemandType.ArbitraryFeedForward, turn);
+    _leftMotor2.follow(_leftMotor1, FollowerType.PercentOutput);
+    _leftMotor3.follow(_leftMotor1, FollowerType.PercentOutput);
+    _rightMotor1.set(ControlMode.PercentOutput, speed, DemandType.ArbitraryFeedForward, -turn);
+    _rightMotor2.follow(_rightMotor1, FollowerType.PercentOutput);
+    _rightMotor3.follow(_rightMotor1, FollowerType.PercentOutput);
+  }
+
   public double getPosition()
   {
     return ticks_to_inches(_leftMotor1.getSelectedSensorPosition(Constants.PID_PRIMARY));
@@ -411,11 +424,6 @@ public class Drivetrain extends Subsystem {
     }
   }
 
-  public double getMaxVel() {
-    return inches_per_sec_to_ticks_per_100ms(5.0);
-    // return CRUISE_VEL_STRAIGHT; 
-  }
-
   public double getErrorPosition() {
     return ticks_to_inches(setPointPosition_sensorUnits-_rightMotor1.getSelectedSensorPosition(Constants.PID_PRIMARY));
     //return _leftMotor1.getClosedLoopError(kPIDLoopIdx)/TICKS_PER_REV;--only for nonMotionMagic or nonMotion Profile
@@ -453,18 +461,6 @@ public class Drivetrain extends Subsystem {
     System.out.println("[Quadrature Encoders + Pigeon] All sensors are zeroed.\n");
   }
 
-  public void setUpVelocityPID() {
-    /* FPID Gains for distance servo */
-    _rightMotor1.config_kP(Constants.kSlot_Velocit, Constants.kGains_Velocit.kP, Constants.kTimeoutMs);
-    _rightMotor1.config_kI(Constants.kSlot_Velocit, Constants.kGains_Velocit.kI, Constants.kTimeoutMs);
-    _rightMotor1.config_kD(Constants.kSlot_Velocit, Constants.kGains_Velocit.kD, Constants.kTimeoutMs);
-    _rightMotor1.config_kF(Constants.kSlot_Velocit, Constants.kGains_Velocit.kF, Constants.kTimeoutMs);
-    _rightMotor1.config_IntegralZone(Constants.kSlot_Velocit, Constants.kGains_Velocit.kIzone, Constants.kTimeoutMs);
-    _rightMotor1.configClosedLoopPeakOutput(Constants.kSlot_Velocit, Constants.kGains_Velocit.kPeakOutput, Constants.kTimeoutMs);
-    _rightMotor1.selectProfileSlot(Constants.kSlot_Velocit, Constants.PID_PRIMARY);
-    _rightMotor1.selectProfileSlot(Constants.kSlot_Turning, Constants.PID_TURN);
-  }
-
   /** Zero QuadEncoders, used to reset position when initializing Motion Magic */
   public void zeroDistance(){
     _leftMotor1.getSensorCollection().setIntegratedSensorPosition(0, Constants.kTimeoutMs);
@@ -475,6 +471,41 @@ public class Drivetrain extends Subsystem {
   public void zeroPigeon() {
     _pidgey.setYaw(0, Constants.kTimeoutMs);
     _pidgey.setAccumZAngle(0, Constants.kTimeoutMs);
+  }
+
+  public void enableLimelight()
+  {
+    limelight.setCamMode(0);
+    limelight.setLedMode(0);
+    // if(Robot.driverstation.isFMSAttached())
+    // {
+      if(Robot.onBlueAlliance())
+      {
+        limelight.setPipeline(3);
+      }
+      else
+      {
+        limelight.setPipeline(2);
+      }
+    //   }
+    //   else
+    //   {
+    //     dt.limelight.setPipeline(0);
+    //   }
+    isLimelightEnabled = true;
+  }
+
+  public void pauseLimelight()
+  {
+    limelight.setCamMode(1);
+    limelight.setLedMode(1);
+    limelight.setPipeline(7);
+    isLimelightEnabled = false;
+
+  }
+
+  public boolean isLimelightEnabled() {
+    return isLimelightEnabled;
   }
 
   /** 

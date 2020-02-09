@@ -9,6 +9,7 @@ package org.team2168.commands.drivetrain;
 
 import org.team2168.OI;
 import org.team2168.subsystems.Drivetrain;
+import org.team2168.utils.LinearInterpolator;
 
 import edu.wpi.first.wpilibj.command.Command;
 
@@ -16,19 +17,29 @@ public class DriveWithJoystickLimelight extends Command
 {
   private Drivetrain dt;
   private OI oi;
+  private LinearInterpolator limeLightInterpolator;
+  private static final double LIMELIGHT_ERROR_TOLERANCE = 1.0;
+  private double[][] limelightArray = { 
+    { -27.0, 0.2}, //limelight offset, turning gain
+    { -LIMELIGHT_ERROR_TOLERANCE, 0.07}, 
+    { LIMELIGHT_ERROR_TOLERANCE, -0.07}, 
+    { 27.0, -0.2}
+  };
   private double limelight_offset;
+  private double turnGain;
   
   public DriveWithJoystickLimelight() 
   {
     dt = Drivetrain.getInstance();
     requires(dt);
+    limeLightInterpolator = new LinearInterpolator(limelightArray);
+
   }
 
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
     oi = OI.getInstance();
-    dt.setUpVelocityPID();
 	}
 
 	/**
@@ -39,15 +50,19 @@ public class DriveWithJoystickLimelight extends Command
 	 */
   @Override
   protected void execute() {
-    // limelight_offset = dt.limelight.getPos();
-    dt.zeroPigeon();
-    if(oi.operatorJoystick.getLeftStickRaw_Y()> 0.1){
-      dt.setSetPointVelocity((oi.operatorJoystick.getLeftStickRaw_Y()*dt.getMaxVel()), 0.0);
+    limelight_offset = dt.limelight.getPos();
+    if(dt.isLimelightEnabled()) {
+      if(limelight_offset > LIMELIGHT_ERROR_TOLERANCE) {
+        turnGain = limeLightInterpolator.interpolate(limelight_offset) + oi.getGunStyleXValue();
+      }
+      else {
+        turnGain = oi.getGunStyleXValue();
+      }
     }
     else {
-      dt.setSetPointVelocity(0.0, 5.0);
+      turnGain = oi.getGunStyleXValue();
     }
-
+    dt.drive(oi.getGunStyleYValue(), turnGain);
   }
 
   // Called repeatedly when this Command is scheduled to run

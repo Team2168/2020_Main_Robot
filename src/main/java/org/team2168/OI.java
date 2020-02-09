@@ -1,8 +1,9 @@
 
 package org.team2168;
 
+import org.team2168.commands.drivetrain.EnableLimelight;
 import org.team2168.commands.drivetrain.FirstPath;
-import org.team2168.commands.drivetrain.FirstPathReverse;
+import org.team2168.commands.drivetrain.PauseLimelight;
 import org.team2168.commands.drivetrain.PIDCommands.DriveXDistance;
 import org.team2168.commands.drivetrain.PIDCommands.TurnXAngle;
 import org.team2168.utils.F310;
@@ -79,6 +80,9 @@ public class OI
 		gunStyleYInterpolator = new LinearInterpolator(gunStyleYArray);
 		gunStyleXInterpolator = new LinearInterpolator(gunStyleXArray);
 
+		driverJoystick.ButtonLeftStick().whenPressed(new EnableLimelight()); //taken care of in DriveWithJoystickCommand
+		driverJoystick.ButtonLeftStick().whenReleased(new PauseLimelight());
+
 		
 		/*************************************************************************
 		 * Operator Joystick *
@@ -153,6 +157,7 @@ public class OI
 	{
 		return driverJoystick.getRightStickRaw_Y();
 	}
+
 	public double getColorWheelJoystick()
 	{
 		return 0.0;
