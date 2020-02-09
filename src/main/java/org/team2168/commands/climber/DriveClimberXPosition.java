@@ -7,39 +7,59 @@
 
 package org.team2168.commands.climber;
 
-import edu.wpi.first.wpilibj.command.Command;
-import org.team2168.OI;
-
 import org.team2168.subsystems.Climber;
 
+import edu.wpi.first.wpilibj.command.Command;
 
-public class DriveClimberWithJoystick extends Command {
-  double _speed;
+public class DriveClimberXPosition extends Command {
+
   private Climber climber;
-  private OI oi;
-  public DriveClimberWithJoystick() {
+  /**target position */
+  private double _targetPos;
+  
+  private final double DEFAULT_ERROR_TOLERANCE = 0.5;
+  private double _errorTolerance; //inches
+  private double _loopsToSettle = 10;
+  private int _withinThresholdLoops = 0;
+
+  public DriveClimberXPosition(double setPoint, double errorTolerance) {
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
     climber = Climber.getInstance();
     requires(climber);
+    _errorTolerance = errorTolerance;
+    _targetPos = setPoint;
   }
 
+  // public DriveClimberXPosition(double setPoint)
+  // {
+  //   this.DriveClimberXPosition(setPoint, DEFAULT_ERROR_TOLERANCE);
+  // }
+  
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
-    oi = OI.getInstance();
+    climber.zeroEncoder(); //don't do this except for testing
+    climber.setGains(_targetPos);
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    climber.driveClimberMotors(oi.getClimberJoystickValue());
+    climber.setSetPoint(_targetPos);
+    /* Check if closed loop error is within the threshld */
+    if (Math.abs(climber.getErrorPosition()) < _errorTolerance) {
+      ++_withinThresholdLoops;
+    } 
+    else {
+      _withinThresholdLoops = 0;
+    }
   }
 
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    return false;
+    return _withinThresholdLoops > _loopsToSettle;
   }
 
   // Called once after isFinished returns true
@@ -55,5 +75,3 @@ public class DriveClimberWithJoystick extends Command {
     end();
   }
 }
-
-

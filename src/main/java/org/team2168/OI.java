@@ -1,6 +1,8 @@
 
 package org.team2168;
 
+import org.team2168.commands.climber.DriveClimberXPosition;
+import org.team2168.commands.climber.ResetPosition;
 import org.team2168.utils.F310;
 import org.team2168.utils.LinearInterpolator;
 import org.team2168.commands.drivetrain.*;
@@ -84,18 +86,11 @@ public class OI
 		/***********************************************************************
 		 * Commands Test Joystick
 		 ***********************************************************************/
-		// //leds testing
-		// pidTestJoystick.ButtonA().whenPressed(new DisabledPattern());
-		// pidTestJoystick.ButtonB().whenPressed(new TeleopWithoutGamePiecePattern());
-		// pidTestJoystick.ButtonX().whenPressed(new AutoWithoutGamePiecePattern());
-		// pidTestJoystick.ButtonY().whenPressed(new HABClimbPattern());
-		// pidTestJoystick.ButtonLeftBumper().whenPressed(new PivotingPattern());
-		// pidTestJoystick.ButtonRightBumper().whenPressed(new LiftRaisingPattern());
-		// pidTestJoystick.ButtonRightTrigger().whenPressed(new LiftLoweringPattern());
-		// pidTestJoystick.ButtonDownDPad().whenPressed(new WheelsInPattern());
-		// pidTestJoystick.ButtonLeftDPad().whenPressed(new WheelsOutPattern());
-		// pidTestJoystick.ButtonRightDPad().whenPressed(new MonkeyBarPattern());
-		// pidTestJoystick.ButtonUpDPad().whenPressed(new WithGamePiecePattern());
+
+		pidTestJoystick.ButtonX().whenPressed(new ResetPosition());
+		pidTestJoystick.ButtonY().whenPressed(new DriveClimberXPosition(33, 0.1));
+		pidTestJoystick.ButtonA().whenPressed(new DriveClimberXPosition(-28, 0.1));
+
 
 		
 	}

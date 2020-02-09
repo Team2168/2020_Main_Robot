@@ -7,6 +7,7 @@
 
 package org.team2168;
 
+import org.team2168.subsystems.Climber;
 import org.team2168.subsystems.Indexer;
 import org.team2168.subsystems.Hopper;
 import org.team2168.subsystems.ColorWheel;
@@ -19,6 +20,7 @@ import org.team2168.utils.PowerDistribution;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import org.team2168.utils.consoleprinter.*;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.team2168.subsystems.Balancer;
 import org.team2168.OI;
@@ -35,6 +37,7 @@ public class Robot extends TimedRobot {
   private static final String kCustomAuto = "My Auto";
   private String m_autoSelected;
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
+  private static Climber climber;
   public static IntakeMotor intakeMotor;
   public static IntakePivot intakePivot;
   public static Indexer indexer;
@@ -68,6 +71,12 @@ public class Robot extends TimedRobot {
     m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
     m_chooser.addOption("My Auto", kCustomAuto);
     SmartDashboard.putData("Auto choices", m_chooser);
+    climber = Climber.getInstance();
+    ConsolePrinter.init();
+    ConsolePrinter.putNumber("Climber Position", ()->{return climber.getPosition();}, true, false);
+    ConsolePrinter.putNumber("Climber Position Error", ()->{return climber.getErrorPosition();}, true, false);
+    ConsolePrinter.putNumber("Climber Velocity", ()->{return climber.getVelocity();}, true, false);
+    ConsolePrinter.startThread();
    // intakeMotor = IntakeMotor.getInstance();
    // intakePivot = IntakePivot.getInstance();
     //  indexer = Indexer.GetInstance();
