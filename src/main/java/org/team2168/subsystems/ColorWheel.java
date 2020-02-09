@@ -30,7 +30,7 @@ public class ColorWheel extends Subsystem {
   private CANPIDController m_pidController;
   private CANEncoder m_encoder;
   private final double gearRatio = 30.0; // real: 25.0 
-  private final double ALLOWED_ERROR = 0.2;
+  private final double ALLOWED_ERROR = (2.0/360.0);
   private double kP, kI, kD, kIz, kFF, kMaxOutput, kMinOutput, maxRPM, maxVel, minVel, maxAcc, allowedErr = ALLOWED_ERROR;
   private double velocitySetPoint_sensorUnits, positionSetPoint_sensorUnits;
   private static ColorWheel instance = null;
@@ -182,12 +182,17 @@ public class ColorWheel extends Subsystem {
    */
   public void setVelocitySetPoint(double setPoint)
   {
-    setPoint = revs_to_motor_rotations(setPoint);
-    m_pidController.setReference(setPoint, ControlType.kVelocity);
+    velocitySetPoint_sensorUnits = revs_to_motor_rotations(setPoint);
+    m_pidController.setReference(velocitySetPoint_sensorUnits, ControlType.kVelocity);
   }
 
   public double getPosition() {
     return motor_rotations_to_revs(m_encoder.getPosition());
+  }
+
+  public double getPositionError()
+  {
+    return motor_rotations_to_revs(positionSetPoint_sensorUnits - m_encoder.getPosition());
   }
 
   public double getVelocity() {
@@ -201,22 +206,22 @@ public class ColorWheel extends Subsystem {
 
   public double getAllowedClosedLoopError()
   {
-    return m_pidController.getSmartMotionAllowedClosedLoopError(0);
+    return motor_rotations_to_revs(m_pidController.getSmartMotionAllowedClosedLoopError(0)) ;
   }
 
-      /**
-     * As with other PID modes, Smart Motion is set by calling the
-     * setReference method on an existing pid object and setting
-     * the control type to kSmartMotion
-     */
-    public void setPositionSetPoint(double setPoint)
-    {
-      positionSetPoint_sensorUnits = revs_to_motor_rotations(setPoint);
-  
-      m_pidController.setReference(positionSetPoint_sensorUnits, ControlType.kSmartMotion);
-      System.out.println("running method");
-      SmartDashboard.putNumber("SetPoint Position", positionSetPoint_sensorUnits);
-    }
+    /**
+   * As with other PID modes, Smart Motion is set by calling the
+   * setReference method on an existing pid object and setting
+   * the control type to kSmartMotion
+   */
+  public void setPositionSetPoint(double setPoint)
+  {
+    positionSetPoint_sensorUnits = revs_to_motor_rotations(setPoint);
+
+    m_pidController.setReference(positionSetPoint_sensorUnits, ControlType.kSmartMotion);
+    System.out.println("running method");
+    SmartDashboard.putNumber("SetPoint Position", positionSetPoint_sensorUnits);
+  }
 
   public void setSetpoint(double setPoint, boolean velocityMode)
   {

@@ -17,7 +17,6 @@ public class DriveColorWheelXRevolutions extends Command {
 
   private static ColorWheel colorWheel;
   private double _setPoint;
-  private boolean _velocityMode;
   private boolean _readPIDFromDashboard = true;
   private double _loopsToSettle = 10;
   private int _withinThresholdLoops = 0;
