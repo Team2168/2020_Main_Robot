@@ -18,7 +18,7 @@ public class DriveBalancerXRevs extends Command {
   private static Balancer balancer;
   private static OI oi;
   private double _setPoint;
-  private boolean _readPIDFromDashboard = true;
+  private boolean _readPIDFromDashboard = false;
   private double _loopsToSettle = 10;
   private int _withinThresholdLoops = 0;
   private double numRevolutions = 5.0;

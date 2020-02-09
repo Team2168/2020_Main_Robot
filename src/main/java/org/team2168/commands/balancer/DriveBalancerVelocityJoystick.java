@@ -18,7 +18,7 @@ public class DriveBalancerVelocityJoystick extends Command {
   private static Balancer balancer;
   private static OI oi;
   private double _setPoint;
-  private boolean _readPIDFromDashboard = true;
+  private boolean _readPIDFromDashboard = false;
 
   public DriveBalancerVelocityJoystick() {
     // Use requires() here to declare subsystem dependencies

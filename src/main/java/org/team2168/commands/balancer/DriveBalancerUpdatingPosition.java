@@ -11,14 +11,13 @@ import org.team2168.OI;
 import org.team2168.subsystems.Balancer;
 
 import edu.wpi.first.wpilibj.command.Command;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class DriveBalancerUpdatingPosition extends Command {
 
   private static Balancer balancer;
   private static OI oi;
   private double _setPoint;
-  private boolean _readPIDFromDashboard = true;
+  private boolean _readPIDFromDashboard = false;
   private double _loopsToSettle = 10;
   private int _withinThresholdLoops = 0;
   private double numRevolutions = 5.0;
@@ -50,12 +49,6 @@ public class DriveBalancerUpdatingPosition extends Command {
     }
 
     balancer.setPositionSetPoint(_setPoint);
-
-    SmartDashboard.putNumber("SetPoint", _setPoint);
-    SmartDashboard.putNumber("Position", balancer.getPosition());
-    SmartDashboard.putNumber("Velocity", balancer.getVelocity());
-    SmartDashboard.putNumber("Position Error", balancer.getPositionError());
-    SmartDashboard.putNumber("Output", balancer.getMotorOutput());
 
     /* Check if closed loop error is within the threshld */
     if (Math.abs(_setPoint-balancer.getPosition()) < balancer.getAllowedClosedLoopError()) {

@@ -17,8 +17,8 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.CANSparkMaxLowLevel.PeriodicFrame;
 import com.revrobotics.ControlType;
 
-import org.team2168.RobotMap;
 import org.team2168.commands.balancer.DriveBalancerVelocityJoystick;
+import org.team2168.utils.consoleprinter.ConsolePrinter;
 
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -119,7 +119,15 @@ public class Balancer extends Subsystem {
     SmartDashboard.putNumber("Max Velocity", maxVel);
     SmartDashboard.putNumber("Min Velocity", minVel);
     SmartDashboard.putNumber("Max Acceleration", maxAcc);
-    SmartDashboard.putNumber("Allowed Closed Loop Error", allowedErr);    
+    SmartDashboard.putNumber("Allowed Closed Loop Error", allowedErr);   
+    
+    
+
+    ConsolePrinter.putNumber("Balancer Velocity", () -> {return getVelocity();}, true, false);
+    ConsolePrinter.putNumber("Balancer Position", () -> {return getPosition();}, true, false);
+    ConsolePrinter.putNumber("Balancer Position Error", () -> {return getPositionError();}, true, false);
+    ConsolePrinter.putNumber("Balancer Velocity Error", () -> {return getVelocityError();}, true, false);
+    ConsolePrinter.putNumber("Balancer Motor Output Percent", () -> {return getMotorOutput();}, true, false);
 
   }
   
