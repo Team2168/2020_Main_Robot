@@ -43,7 +43,7 @@ public class Balancer extends Subsystem {
 
   private Balancer()
   {
-    _balancerMotor = new CANSparkMax(RobotMap.BALANCER_MOTOR_PDP, MotorType.kBrushless); //
+    _balancerMotor = new CANSparkMax(2, MotorType.kBrushless); //RobotMap.BALANCER_MOTOR_PDP
     _balancerMotor.setIdleMode(IdleMode.kBrake);
 
     //speed limit 60

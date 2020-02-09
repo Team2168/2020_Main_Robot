@@ -1,6 +1,7 @@
 
 package org.team2168;
 
+import org.team2168.commands.balancer.DriveBalancerXRevs;
 import org.team2168.commands.balancer.ZeroBalancerSensors;
 import org.team2168.utils.F310;
 import org.team2168.utils.LinearInterpolator;
@@ -97,6 +98,9 @@ public class OI
 		// pidTestJoystick.ButtonRightDPad().whenPressed(new MonkeyBarPattern());
 		// pidTestJoystick.ButtonUpDPad().whenPressed(new WithGamePiecePattern());
 		pidTestJoystick.ButtonX().whenPressed(new ZeroBalancerSensors());
+		pidTestJoystick.ButtonY().whenPressed(new DriveBalancerXRevs(1.0));
+		pidTestJoystick.ButtonA().whenPressed(new DriveBalancerXRevs(-1.0));
+
 
 		
 	}
