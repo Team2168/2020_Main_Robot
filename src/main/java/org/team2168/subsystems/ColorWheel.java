@@ -29,7 +29,7 @@ public class ColorWheel extends Subsystem {
   private CANSparkMax colorWheelMotor;
   private CANPIDController m_pidController;
   private CANEncoder m_encoder;
-  private final double gearRatio = 1.0/30.0; //input/output
+  private final double gearRatio = 30.0; // real: 25.0 
   private final double ALLOWED_ERROR = (2.0 / 360.0);
   private double kP, kI, kD, kIz, kFF, kMaxOutput, kMinOutput, maxRPM, maxVel, minVel, maxAcc, allowedErr = ALLOWED_ERROR, _processVariable;
   private static ColorWheel instance = null;
@@ -90,10 +90,10 @@ public class ColorWheel extends Subsystem {
      * error for the pid controller in Smart Motion mode
      */
     int smartMotionSlot = 0;
-    m_pidController.setSmartMotionMaxVelocity(maxVel / gearRatio, smartMotionSlot);
-    m_pidController.setSmartMotionMinOutputVelocity(minVel / gearRatio, smartMotionSlot);
-    m_pidController.setSmartMotionMaxAccel(maxAcc / gearRatio, smartMotionSlot);
-    m_pidController.setSmartMotionAllowedClosedLoopError(allowedErr / gearRatio, smartMotionSlot);
+    m_pidController.setSmartMotionMaxVelocity( revs_to_motor_rotations(maxVel), smartMotionSlot);
+    m_pidController.setSmartMotionMinOutputVelocity( revs_to_motor_rotations(maxVel), smartMotionSlot);
+    m_pidController.setSmartMotionMaxAccel( revs_to_motor_rotations(maxAcc), smartMotionSlot);
+    m_pidController.setSmartMotionAllowedClosedLoopError( revs_to_motor_rotations(allowedErr), smartMotionSlot);
 
     // display PID coefficients on SmartDashboard
     SmartDashboard.putNumber("P Gain", kP);
@@ -153,10 +153,10 @@ public class ColorWheel extends Subsystem {
     double ff = SmartDashboard.getNumber("Feed Forward", 0);
     double max = SmartDashboard.getNumber("Max Output", 0);
     double min = SmartDashboard.getNumber("Min Output", 0);
-    double maxV = SmartDashboard.getNumber("Max Velocity", 0) / gearRatio;
-    double minV = SmartDashboard.getNumber("Min Velocity", 0) / gearRatio;
-    double maxA = SmartDashboard.getNumber("Max Acceleration", 0) / gearRatio;
-    double allE = SmartDashboard.getNumber("Allowed Closed Loop Error", ALLOWED_ERROR);
+    double maxV = revs_to_motor_rotations(SmartDashboard.getNumber("Max Velocity", 0));
+    double minV = revs_to_motor_rotations(SmartDashboard.getNumber("Min Velocity", 0));
+    double maxA = revs_to_motor_rotations(SmartDashboard.getNumber("Max Acceleration", 0));
+    double allE = revs_to_motor_rotations(SmartDashboard.getNumber("Allowed Closed Loop Error", ALLOWED_ERROR));
 
     // if PID coefficients on SmartDashboard have changed, write new values to controller
     if((p != kP)) { m_pidController.setP(p); kP = p; }
@@ -181,14 +181,22 @@ public class ColorWheel extends Subsystem {
    */
   public void setVelocitySetPoint(double setPoint)
   {
-    setPoint = setPoint / gearRatio;
+    setPoint = revs_to_motor_rotations(setPoint);
     m_pidController.setReference(setPoint, ControlType.kVelocity);
-    _processVariable = m_encoder.getVelocity() / gearRatio;
+    _processVariable = motor_rotations_to_revs(m_encoder.getVelocity());
   }
 
   public double getProcessVariable()
   {
     return _processVariable;
+  }
+
+  public double getPosition() {
+    return motor_rotations_to_revs(m_encoder.getPosition());
+  }
+
+  public double getVelocity() {
+    return motor_rotations_to_revs(m_encoder.getVelocity());
   }
 
   public double getMotorOutput()
@@ -208,10 +216,10 @@ public class ColorWheel extends Subsystem {
    */
   public void setPositionSetPoint(double setPoint)
   {
-    setPoint = setPoint / gearRatio;
+    setPoint = revs_to_motor_rotations(setPoint);
 
     m_pidController.setReference(setPoint, ControlType.kSmartMotion);
-    _processVariable = m_encoder.getPosition();
+    _processVariable = motor_rotations_to_revs(m_encoder.getPosition());
   }
 
   public void setSetpoint(double setPoint, boolean velocityMode)
@@ -221,6 +229,16 @@ public class ColorWheel extends Subsystem {
     } else {
       setPositionSetPoint(setPoint);
     }
+  }
+
+  public double revs_to_motor_rotations(double setpoint)
+  {
+    return setpoint * gearRatio;
+  }
+
+  public double motor_rotations_to_revs(double setpoint)
+  {
+    return setpoint / gearRatio;
   }
 
   @Override
