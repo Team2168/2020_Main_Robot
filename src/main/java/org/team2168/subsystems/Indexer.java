@@ -12,6 +12,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import org.team2168.RobotMap;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
 /**
@@ -22,30 +23,43 @@ public class Indexer extends Subsystem {
   // here. Call these from Commands.
   private final boolean _INDEXER_MOTOR_REVERSED = false;
   private CANSparkMax _motor;
+  private static DigitalInput entranceLineBreak;
+  private static DigitalInput exitLineBreak;
   private static Indexer _instance = null;
+
   private Indexer(){
     _motor = new CANSparkMax(RobotMap.INDEXER_MOTOR_PDP, MotorType.kBrushless);
-    }
- public static Indexer getInstance(){
-   if(_instance == null){
-     _instance = new Indexer();
-   }
-   return _instance;
- }  
-
- /**
-  * Cycles the indexer 
-  * - positive is toward the shooter
-  * - negative is away from the shooter
-  * @param speed is a double to set the speed
-  */
-public void drive(double speed) {
-  if(_INDEXER_MOTOR_REVERSED){
-    speed = speed * -1;
+    entranceLineBreak = new DigitalInput(RobotMap.ENTRANCE_LINE_BREAK);
+    exitLineBreak = new DigitalInput(RobotMap.EXIT_LINE_BREAK);
   }
 
-  _motor.set(speed);
-}
+  public static Indexer getInstance(){
+    if(_instance == null){
+      _instance = new Indexer();
+    }
+    return _instance;
+  }  
+
+  /**
+    * Cycles the indexer 
+    * - positive is toward the shooter
+    * - negative is away from the shooter
+    * @param speed is a double to set the speed
+    */
+  public void drive(double speed) {
+    if(_INDEXER_MOTOR_REVERSED) {
+      speed = speed * -1;
+    }
+    _motor.set(speed);
+  }
+
+  public boolean isBallEntering() {
+    return entranceLineBreak.get();
+  }
+
+  public boolean isBallExiting() {
+    return exitLineBreak.get();
+  }
 
   @Override
   public void initDefaultCommand() {

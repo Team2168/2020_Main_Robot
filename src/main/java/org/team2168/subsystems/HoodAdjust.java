@@ -22,11 +22,13 @@ public class HoodAdjust extends Subsystem {
   private DoubleSolenoid _pancakeSolenoid;
 
   private static HoodAdjust _instance;
+  public HoodPosition shooterPosition;
 
   private HoodAdjust()
   {
     _hoodSolenoid = new DoubleSolenoid(RobotMap.PCM_CAN_ID_SHOOTER, RobotMap.HOOD_SOLENOID_ENGAGE, RobotMap.HOOD_SOLENOID_DISENGAGE);
     _pancakeSolenoid = new DoubleSolenoid(RobotMap.PCM_CAN_ID_SHOOTER, RobotMap.PANCAKE_SOLENOID_IN, RobotMap.PANCAKE_SOLENOID_OUT);
+    shooterPosition = HoodPosition.WALL;
   }
   /**
    * Creates a new Instance of the HoodAdjust
@@ -113,6 +115,19 @@ public class HoodAdjust extends Subsystem {
   {
     return _pancakeSolenoid.get()==DoubleSolenoid.Value.kReverse;
   }
+
+  public enum HoodPosition{
+    WALL,
+    WHITE_LINE,
+    FRONT_TRENCH,
+    BACK_TRENCH
+  }
+
+  public void setHoodPosition(HoodPosition newPosition){
+    shooterPosition = newPosition;
+  }
+
+
 
   @Override
   public void initDefaultCommand() {
