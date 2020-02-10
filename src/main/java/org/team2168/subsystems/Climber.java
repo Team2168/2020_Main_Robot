@@ -82,7 +82,7 @@ public class Climber extends Subsystem {
    */
   final double TICKS_PER_REV = 8192; //one event per edge on each quadrature channel
   final double TICKS_PER_100MS = TICKS_PER_REV / 10.0;
-  final double GEAR_RATIO = 1.0; //TODO SET
+  final double GEAR_RATIO = 21.0; //TODO SET
   final double SPOOL_CIRCUMFERENCE = 4.375;
   final double TICKS_PER_INCH = TICKS_PER_REV * GEAR_RATIO / SPOOL_CIRCUMFERENCE;
   final double TICKS_PER_INCH_PER_100MS = TICKS_PER_100MS * GEAR_RATIO / SPOOL_CIRCUMFERENCE;

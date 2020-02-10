@@ -31,7 +31,7 @@ public class Balancer extends Subsystem {
   private CANSparkMax _balancerMotor;
   private CANPIDController m_pidController;
   private CANEncoder m_encoder;
-  private final double gearRatio = 30.0; // 50 internal means 1 external TODO changed for testing
+  private final double gearRatio = 100.0; // 50 internal means 1 external
   private final double ALLOWED_ERROR = (2.0 / 360.0);
   private double kP, kI, kD, kIz, kFF, kMaxOutput, kMinOutput, maxRPM, maxVel, minVel, maxAcc, allowedErr = ALLOWED_ERROR;
   private double velocitySetPoint_sensorUnits, positionSetPoint_sensorUnits;
