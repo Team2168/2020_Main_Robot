@@ -1,17 +1,14 @@
 
 package org.team2168;
 
+import org.team2168.commands.auto.FinishFiring;
 import org.team2168.commands.auto.FireBalls;
-import org.team2168.commands.climber.DriveClimberXPosition;
-import org.team2168.commands.climber.ResetClimberPosition;
 import org.team2168.commands.color_wheel_pivot.DisengageColorWheel;
 import org.team2168.commands.color_wheel_pivot.EngageColorWheel;
 import org.team2168.commands.hood_adjust.MoveToBackTrench;
 import org.team2168.commands.hood_adjust.MoveToFrontTrench;
 import org.team2168.commands.hood_adjust.MoveToWall;
 import org.team2168.commands.hood_adjust.MoveToWhiteLine;
-import org.team2168.commands.intakeMotor.IntakeBallStart;
-import org.team2168.commands.intakeMotor.IntakeBallStop;
 import org.team2168.commands.shooter.DriveShooterSpeedHoodPosition;
 import org.team2168.utils.F310;
 import org.team2168.utils.LinearInterpolator;
@@ -101,18 +98,19 @@ public class OI
 
 		operatorJoystick.ButtonX().whenPressed(new DriveShooterSpeedHoodPosition());
 		operatorJoystick.ButtonB().whenPressed(new FireBalls());
+		operatorJoystick.ButtonB().whenPressed(new FinishFiring());
 
-		operatorJoystick.ButtonLeftBumper().whenPressed(new IntakeBallStop());
-		operatorJoystick.ButtonRightBumper().whenPressed(new IntakeBallStart());
+		// operatorJoystick.ButtonLeftBumper().whenPressed(new IntakeBallStop());
+		// operatorJoystick.ButtonRightBumper().whenPressed(new IntakeBallStart());
 
 
 		/***********************************************************************
 		 * Commands Test Joystick
 		 ***********************************************************************/
 
-		pidTestJoystick.ButtonX().whenPressed(new ResetClimberPosition());
-		pidTestJoystick.ButtonY().whenPressed(new DriveClimberXPosition(33, 0.1));
-		pidTestJoystick.ButtonA().whenPressed(new DriveClimberXPosition(-28, 0.1));
+		// pidTestJoystick.ButtonX().whenPressed(new ResetClimberPosition());
+		// pidTestJoystick.ButtonY().whenPressed(new DriveClimberXPosition(33, 0.1));
+		// pidTestJoystick.ButtonA().whenPressed(new DriveClimberXPosition(-28, 0.1));
 
 
 		

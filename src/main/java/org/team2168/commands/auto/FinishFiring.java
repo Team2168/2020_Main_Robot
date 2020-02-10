@@ -34,7 +34,8 @@ public class FinishFiring extends CommandGroup {
     // e.g. if Command1 requires chassis, and Command2 requires arm,
     // a CommandGroup containing them would require both the chassis and the
     // arm.
-    addParallel(new DriveIntakeWithConstant(0.0));
+    
+    // addParallel(new DriveIntakeWithConstant(0.0));
     addSequential(new DriveHopperWithConstant(0.0), 0.2);
     addParallel(new DriveIndexerWithConstant(0.0));
   }
