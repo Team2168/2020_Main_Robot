@@ -14,6 +14,7 @@ import com.revrobotics.CANSparkMaxLowLevel.PeriodicFrame;
 import org.team2168.RobotMap;
 
 import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj.DriverStation;
 
 
 public class ColorWheel extends Subsystem {
@@ -46,6 +47,132 @@ public class ColorWheel extends Subsystem {
       speed = -speed;
     }
     colorWheelMotor.set(speed);
+  }
+
+  public char getSensorColor() //update to have code that specifically pulls the data from the sensor into one of 4 characters
+  {
+    return 'B';
+  }
+
+  public char getFieldColor()
+  {
+    String gameData;
+    gameData = DriverStation.getInstance().getGameSpecificMessage();
+    if(gameData.length() > 0)
+    {
+      switch (gameData.charAt(0))
+      {
+        case 'B' :
+         return 'B';
+       case 'G' :
+          return 'G';
+        case 'R' :
+          return 'R';
+        case 'Y' :
+          return 'Y';
+        default :
+          return 'N';
+      }
+    }
+    else {
+      return 'N';
+    } 
+  }
+
+  public int degToSpin()
+  {
+    char desiredColor = getFieldColor();
+    char currentColor = getSensorColor();
+    int valueToBeReturned = 1;
+    if (currentColor == 'B')
+    {
+      if (desiredColor == 'B')
+      {
+        valueToBeReturned = 90;
+      }
+      else if (desiredColor == 'G')
+      {
+        valueToBeReturned = 135;
+      }
+      else if (desiredColor == 'R')
+      {
+        valueToBeReturned = 0;
+      }
+      else if (desiredColor == 'Y')
+      {
+        valueToBeReturned = 45;
+      }
+      else
+      {
+        valueToBeReturned = 1;
+      }
+    }
+    else if (currentColor == 'Y')
+    {
+      if (desiredColor == 'B')
+      {
+        valueToBeReturned = 135;
+      }
+      else if (desiredColor == 'G')
+      {
+        valueToBeReturned = 0;
+      }
+      else if (desiredColor == 'R')
+      {
+        valueToBeReturned = 45;
+      }
+      else if (desiredColor == 'Y')
+      {
+        valueToBeReturned = 90;
+      }
+      else
+      {
+        valueToBeReturned = 1;
+      }
+    }
+    else if (currentColor == 'G')
+    {
+      if (desiredColor == 'B')
+      {
+        valueToBeReturned = 45;
+      }
+      else if (desiredColor == 'G')
+      {
+        valueToBeReturned = 90;
+      }
+      else if (desiredColor == 'R')
+      {
+        valueToBeReturned = 135;
+      }
+      else if (desiredColor == 'Y')
+      {
+        valueToBeReturned = 0;
+      }
+    }
+    else if (currentColor == 'R')
+    {
+      if (desiredColor == 'B')
+      {
+        valueToBeReturned = 0;
+      }
+      else if (desiredColor == 'G')
+      {
+        valueToBeReturned = 45;
+      }
+      else if (desiredColor == 'R')
+      {
+        valueToBeReturned = 90;
+      }
+      else if (desiredColor == 'Y')
+      {
+        valueToBeReturned = 135;
+      }
+    }
+    else
+    {
+      valueToBeReturned = 1; //error return value
+    }
+    return valueToBeReturned;
   }
 
   /**
