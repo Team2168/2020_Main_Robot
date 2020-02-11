@@ -129,7 +129,7 @@ public class Shooter extends Subsystem {
         ConsolePrinter.putNumber("Shooter Velocity", () -> {return getVelocity();}, true, false);
         ConsolePrinter.putNumber("Shooter Error", () -> {return getError();}, true, false);
         ConsolePrinter.putNumber("Shooter Motor Output Percent", () -> {return _motorOne.getMotorOutputPercent();}, true, false);
-        ConsolePrinter.putNumber("Shooter Setpoint", () -> {return ticks_per_100ms_to_revs_per_minute( _motorOne.getClosedLoopTarget());}, true, false);
+        //ConsolePrinter.putNumber("Shooter Setpoint", () -> {return ticks_per_100ms_to_revs_per_minute( _motorOne.getClosedLoopTarget());}, true, false);
     }
     /**
      * Creates a new Instance of the shooter
