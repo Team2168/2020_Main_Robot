@@ -47,7 +47,7 @@ public class Balancer extends Subsystem {
     _balancerMotor.setIdleMode(IdleMode.kBrake);
 
     //speed limit 60
-    _balancerMotor.setSmartCurrentLimit(60);
+    _balancerMotor.setSmartCurrentLimit(30);
 
     //control frame every 20ms
     _balancerMotor.setControlFramePeriodMs(20);

@@ -9,9 +9,9 @@ package org.team2168.subsystems;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.CANSparkMaxLowLevel.PeriodicFrame;
 
 import org.team2168.RobotMap;
-import org.team2168.commands.indexer.DriveIndexerWithJoystick;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.command.Subsystem;
@@ -33,7 +33,11 @@ public class Indexer extends Subsystem {
     entranceLineBreak = new DigitalInput(RobotMap.ENTRANCE_LINE_BREAK);
     exitLineBreak = new DigitalInput(RobotMap.EXIT_LINE_BREAK);
 
-    //TODO: Set current limit 
+    _motor.setSmartCurrentLimit(30);
+    _motor.setControlFramePeriodMs(20);
+    _motor.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 500);
+    _motor.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 500);
+    _motor.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 500);
   }
 
   public static Indexer getInstance(){
