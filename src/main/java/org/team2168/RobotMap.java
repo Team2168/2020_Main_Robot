@@ -59,7 +59,7 @@ public class RobotMap {
 	/*************************************************************************
 	*                         SPI DEVICES                                    *
 	*************************************************************************/
-	public static final int GYRO = 0;
+	
 
 
 	/*************************************************************************
@@ -73,10 +73,10 @@ public class RobotMap {
 	public static final int INTAKE_DISENGAGE_PCM = 1;
 	public static final int COLORWHEEL_ENGAGE_PCM = 4;
 	public static final int COLORWHEEL_DISENGAGE_PCM = 5;
-	//Double Soldenoids PCM ID = 1 ///////////////////////////////////////////
 
-	public static final int PANCAKE_SOLENOID_IN = 1;
+	//Double Soldenoids PCM ID = 1 ///////////////////////////////////////////
 	public static final int PANCAKE_SOLENOID_OUT = 0;
+	public static final int PANCAKE_SOLENOID_IN = 1;
 	public static final int HOOD_SOLENOID_ENGAGE = 2;
 	public static final int HOOD_SOLENOID_DISENGAGE = 3;
 	
@@ -87,21 +87,22 @@ public class RobotMap {
 	public static final int DRIVETRAIN_LEFT_MOTOR_1_PDP = 0;
 	public static final int DRIVETRAIN_LEFT_MOTOR_2_PDP = 1;
 	public static final int DRIVETRAIN_LEFT_MOTOR_3_PDP = 2;
-	public static final int DRIVETRAIN_RIGHT_MOTOR_1_PDP = 15;
-	public static final int DRIVETRAIN_RIGHT_MOTOR_2_PDP = 14;
-	public static final int DRIVETRAIN_RIGHT_MOTOR_3_PDP = 13;
 	public static final int CLIMBER_MOTOR_1_PDP = 3;
-	public static final int CLIMBER_MOTOR_2_PDP = 12;
+	public static final int SHOOTER_MOTOR_ONE_PDP = 4;
 	public static final int INTAKE_MOTOR_PDP = 5;
 	public static final int INDEXER_MOTOR_PDP = 6;
 	public static final int BALANCER_MOTOR_PDP = 7;
+	public static final int CUSTOM_CIRCUITS = 8;
 	public static final int HOPPER_MOTOR_PDP = 9;
 	public static final int COLORWHEEL_MOTOR_PDP = 10;
-
+	public static final int SHOOTER_MOTOR_TWO_PDP = 11;
+	public static final int CLIMBER_MOTOR_2_PDP = 12;
+	public static final int DRIVETRAIN_RIGHT_MOTOR_3_PDP = 13;
+	public static final int DRIVETRAIN_RIGHT_MOTOR_2_PDP = 14;
+	public static final int DRIVETRAIN_RIGHT_MOTOR_1_PDP = 15;
 
 	// Relay Channels///////////////////////////////////////////////////////////
-	public static final int SHOOTER_MOTOR_ONE_PDP = 4;
-	public static final int SHOOTER_MOTOR_TWO_PDP = 11;
+
 
 	/*************************************************************************
 	 *                         PBOT DIFFERENCES  PARAMETERS                  *
