@@ -11,6 +11,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import org.team2168.RobotMap;
+import org.team2168.commands.indexer.DriveIndexerWithJoystick;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.command.Subsystem;
@@ -31,6 +32,8 @@ public class Indexer extends Subsystem {
     _motor = new CANSparkMax(RobotMap.INDEXER_MOTOR_PDP, MotorType.kBrushless);
     entranceLineBreak = new DigitalInput(RobotMap.ENTRANCE_LINE_BREAK);
     exitLineBreak = new DigitalInput(RobotMap.EXIT_LINE_BREAK);
+
+    //TODO: Set current limit 
   }
 
   public static Indexer getInstance(){
@@ -41,10 +44,8 @@ public class Indexer extends Subsystem {
   }  
 
   /**
-    * Cycles the indexer 
-    * - positive is toward the shooter
-    * - negative is away from the shooter
-    * @param speed is a double to set the speed
+    * Cycles the indexer
+    * @param speed 1.0 to -1.0,  positive is toward the shooter, negative is away from the shooter
     */
   public void drive(double speed) {
     if(_INDEXER_MOTOR_REVERSED) {
@@ -64,8 +65,6 @@ public class Indexer extends Subsystem {
   @Override
   public void initDefaultCommand() {
     // Set the default command for a subsystem here.
-    // setDefaultCommand(new MySpecialCommand());
-
-  
+    //setDefaultCommand(new DriveIndexerWithJoystick());
   }
 }
