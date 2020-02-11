@@ -8,9 +8,12 @@
 package org.team2168.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import org.team2168.RobotMap;
+import org.team2168.commands.hopper.DriveHopperWithJoystick;
 
 import edu.wpi.first.wpilibj.command.Subsystem;
 
@@ -18,13 +21,28 @@ import edu.wpi.first.wpilibj.command.Subsystem;
  * Subsystem class for the Hopper
  */
 public class Hopper extends Subsystem {
-  public static final boolean HOPPER_MOTOR_REVERSE = false;
+  public static final boolean HOPPER_MOTOR_INVERTED = true;
   private TalonSRX hopperMotor;
 
   private static Hopper _instance = null;
 
+  private SupplyCurrentLimitConfiguration talonCurrentLimit;
+  private final boolean ENABLE_CURRENT_LIMIT = true;
+  private final double CONTINUOUS_CURRENT_LIMIT = 20; //amps
+  private final double TRIGGER_THRESHOLD_LIMIT = 30; //amp
+  private final double TRIGGER_THRESHOLD_TIME = 200; //ms
+
   private Hopper() {
     hopperMotor = new TalonSRX(RobotMap.HOPPER_MOTOR_PDP);
+
+    talonCurrentLimit = new SupplyCurrentLimitConfiguration(ENABLE_CURRENT_LIMIT,
+    CONTINUOUS_CURRENT_LIMIT, TRIGGER_THRESHOLD_LIMIT, TRIGGER_THRESHOLD_TIME);
+
+    hopperMotor.configSupplyCurrentLimit(talonCurrentLimit);
+
+    hopperMotor.setNeutralMode(NeutralMode.Brake);
+    hopperMotor.setInverted(HOPPER_MOTOR_INVERTED);
+    hopperMotor.configNeutralDeadband(0.05);
   }
 
   /**
@@ -42,15 +60,12 @@ public class Hopper extends Subsystem {
    * @param speed is a double from -1 to 1; positive is heading towards the shooter
    */
   public void drive(double speed) {
-    if(HOPPER_MOTOR_REVERSE) {
-      speed = -speed;
-    }
     hopperMotor.set(ControlMode.PercentOutput, speed);
   }
 
   @Override
   public void initDefaultCommand() {
     // Set the default command for a subsystem here.
-    // setDefaultCommand(new MySpecialCommand());
+    setDefaultCommand(new DriveHopperWithJoystick());
   }
 }
