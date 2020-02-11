@@ -75,13 +75,17 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
+	ConsolePrinter.init();
+
     // colorWheel = ColorWheel.getInstance();
     m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
     m_chooser.addOption("My Auto", kCustomAuto);
-    SmartDashboard.putData("Auto choices", m_chooser);
+	SmartDashboard.putData("Auto choices", m_chooser);
+	
+	//Init Subsystems
     // climber = Climber.getInstance();
-   // intakeMotor = IntakeMotor.getInstance();
-   // intakePivot = IntakePivot.getInstance();
+   	// intakeMotor = IntakeMotor.getInstance();
+   	// intakePivot = IntakePivot.getInstance();
     // balancer = Balancer.getInstance();
     indexer = Indexer.getInstance();
     hopper = Hopper.getInstance();
@@ -90,10 +94,10 @@ public class Robot extends TimedRobot {
     shooter = Shooter.getInstance();
     hoodAdjust = HoodAdjust.getInstance();
     drivetrain = Drivetrain.getInstance();
-    oi = OI.getInstance();
+	oi = OI.getInstance();
+	
     // pdp = new PowerDistribution(RobotMap.PDPThreadPeriod);
     // pdp.startThread();
-    ConsolePrinter.init();
     ConsolePrinter.startThread();
   }
 
