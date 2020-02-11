@@ -1,9 +1,17 @@
 
 package org.team2168;
 
+import org.team2168.commands.auto.FinishFiring;
+import org.team2168.commands.auto.FireBalls;
+import org.team2168.commands.color_wheel_pivot.DisengageColorWheel;
+import org.team2168.commands.color_wheel_pivot.EngageColorWheel;
+import org.team2168.commands.hood_adjust.MoveToBackTrench;
+import org.team2168.commands.hood_adjust.MoveToFrontTrench;
+import org.team2168.commands.hood_adjust.MoveToWall;
+import org.team2168.commands.hood_adjust.MoveToWhiteLine;
+import org.team2168.commands.shooter.DriveShooterSpeedHoodPosition;
 import org.team2168.utils.F310;
 import org.team2168.utils.LinearInterpolator;
-import org.team2168.commands.drivetrain.*;
 
 
 /**
@@ -52,10 +60,10 @@ public class OI
 	private LinearInterpolator gunStyleYInterpolator;
 	private LinearInterpolator gunStyleXInterpolator;
 	private double[][] gunStyleYArray = {
-		{ -1.0, -0.75}, //limiting speed to 75%
+		{ -1.0, -0.8}, //limiting speed to 80%
 		{ -.15, 0.0},
 		{ .15, 0.0},
-		{ 1.0, 0.75}
+		{ 1.0, 0.8}
 	};
 	private double[][] gunStyleXArray = {
 		{ -1.0, -0.65},  //scale down turning to max 65%
@@ -80,22 +88,30 @@ public class OI
 		/*************************************************************************
 		 * Operator Joystick *
 		 *************************************************************************/
+		operatorJoystick.ButtonUpDPad().whenPressed(new MoveToBackTrench());
+		operatorJoystick.ButtonLeftDPad().whenPressed(new MoveToFrontTrench());
+		operatorJoystick.ButtonRightDPad().whenPressed(new MoveToWhiteLine());
+		operatorJoystick.ButtonDownDPad().whenPressed(new MoveToWall());
+
+		operatorJoystick.ButtonY().whenPressed(new EngageColorWheel());
+		operatorJoystick.ButtonA().whenPressed(new DisengageColorWheel());
+
+		operatorJoystick.ButtonX().whenPressed(new DriveShooterSpeedHoodPosition());
+		operatorJoystick.ButtonB().whenPressed(new FireBalls());
+		operatorJoystick.ButtonB().whenPressed(new FinishFiring());
+
+		// operatorJoystick.ButtonLeftBumper().whenPressed(new IntakeBallStop());
+		// operatorJoystick.ButtonRightBumper().whenPressed(new IntakeBallStart());
+
 
 		/***********************************************************************
 		 * Commands Test Joystick
 		 ***********************************************************************/
-		// //leds testing
-		// pidTestJoystick.ButtonA().whenPressed(new DisabledPattern());
-		// pidTestJoystick.ButtonB().whenPressed(new TeleopWithoutGamePiecePattern());
-		// pidTestJoystick.ButtonX().whenPressed(new AutoWithoutGamePiecePattern());
-		// pidTestJoystick.ButtonY().whenPressed(new HABClimbPattern());
-		// pidTestJoystick.ButtonLeftBumper().whenPressed(new PivotingPattern());
-		// pidTestJoystick.ButtonRightBumper().whenPressed(new LiftRaisingPattern());
-		// pidTestJoystick.ButtonRightTrigger().whenPressed(new LiftLoweringPattern());
-		// pidTestJoystick.ButtonDownDPad().whenPressed(new WheelsInPattern());
-		// pidTestJoystick.ButtonLeftDPad().whenPressed(new WheelsOutPattern());
-		// pidTestJoystick.ButtonRightDPad().whenPressed(new MonkeyBarPattern());
-		// pidTestJoystick.ButtonUpDPad().whenPressed(new WithGamePiecePattern());
+
+		// pidTestJoystick.ButtonX().whenPressed(new ResetClimberPosition());
+		// pidTestJoystick.ButtonY().whenPressed(new DriveClimberXPosition(33, 0.1));
+		// pidTestJoystick.ButtonA().whenPressed(new DriveClimberXPosition(-28, 0.1));
+
 
 		
 	}
@@ -157,7 +173,7 @@ public class OI
 	}
 
 	public double getIntakeMotorJoyStick() {
-		return 0.0; //not done, waiting for control system from driver
+		return operatorJoystick.getRightTriggerAxisRaw() - operatorJoystick.getLeftTriggerAxisRaw();
 	}
 	/**
 	 * Return value of axis for the indexer
@@ -174,18 +190,18 @@ public class OI
 	******************************************************************************/
 	public double getClimberJoystickValue()
 	{
-		return 0.0;
+		return pidTestJoystick.getRightStickRaw_Y();
 	}
 
 	public double getShooterJoystick()
 	{
-		 return operatorJoystick.getRightStickRaw_Y();
+		 return 0.0;
 	}
 	/*************************************************************************
 	 *Balancer Joystick*
 	*************************************************************************/
 	public double getBalancerJoystickValue(){
-		return (0.0);
+		return (pidTestJoystick.getLeftStickRaw_Y());
 	}
 	/*************************************************************************
 	 *Hopper Joystick*

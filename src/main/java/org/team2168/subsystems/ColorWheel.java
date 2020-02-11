@@ -12,6 +12,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.CANSparkMaxLowLevel.PeriodicFrame;
 
 import org.team2168.RobotMap;
+import org.team2168.commands.color_wheel.DriveColorWheelWithJoystick;
 
 import edu.wpi.first.wpilibj.command.Subsystem;
 
@@ -65,5 +66,6 @@ public class ColorWheel extends Subsystem {
   public void initDefaultCommand() {
     // Set the default command for a subsystem here.
     // setDefaultCommand(new MySpecialCommand());
+    setDefaultCommand(new DriveColorWheelWithJoystick());
   }
 }

@@ -5,54 +5,69 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package org.team2168.commands.color_wheel;
+package org.team2168.commands.shooter;
 
-import org.team2168.OI;
-import org.team2168.Robot;
-import org.team2168.subsystems.ColorWheel;
+import org.team2168.subsystems.HoodAdjust;
+import org.team2168.subsystems.Shooter;
 
 import edu.wpi.first.wpilibj.command.Command;
 
-public class DriveColorWheelWithJoystick extends Command {
-  private ColorWheel colorWheel;
-  private OI oi;
-  private final double MAX_SPEED = 0.2;
-  public DriveColorWheelWithJoystick() {
-    colorWheel = ColorWheel.getInstance();
-  
-    requires(colorWheel);
-      
+public class DriveShooterSpeedHoodPosition extends Command {
+
+    private Shooter shooter;
+    private HoodAdjust pos;
+    /**target position */
+    private double _targetVelocity;
+    private static final double WALL_VEL = 2500.0; //TODO SET ALL
+    private static final double WHITE_LINE_VEL = 3580.0 ;
+    private static final double FRONT_TRENCH_VEL = 4655.0;
+    private static final double BACK_TRENCH_VEL = 7160.0;
+
+
+  public DriveShooterSpeedHoodPosition() {
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
+    shooter = Shooter.getInstance();
+    pos = HoodAdjust.getInstance();
+    requires(shooter);
   }
+
 
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
-    oi = OI.getInstance();
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    if(Math.abs(oi.getColorWheelJoystick()) < MAX_SPEED) {
-      colorWheel.drive(oi.getColorWheelJoystick());
+    switch(pos.shooterPosition){  
+      //setting target_velocity based on current position of the hood
+      case WALL : 
+        _targetVelocity = WALL_VEL;
+        break;
+      case WHITE_LINE :
+        _targetVelocity = WHITE_LINE_VEL;
+        break;
+      case FRONT_TRENCH :
+        _targetVelocity = FRONT_TRENCH_VEL;
+        break;
+      case BACK_TRENCH :
+        _targetVelocity = BACK_TRENCH_VEL;
+        break;
     }
-    else {
-      colorWheel.drive(MAX_SPEED);
-    }
+    shooter.setSetPoint(_targetVelocity);
   }
 
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    return false;
+    return false; 
   }
 
   // Called once after isFinished returns true
   @Override
   protected void end() {
-    colorWheel.drive(0);
   }
 
   // Called when another command which requires one or more of the same

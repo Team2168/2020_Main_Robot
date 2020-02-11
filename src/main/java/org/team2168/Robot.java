@@ -7,18 +7,23 @@
 
 package org.team2168;
 
+import org.team2168.subsystems.Climber;
 import org.team2168.subsystems.Indexer;
 import org.team2168.subsystems.Hopper;
 import org.team2168.subsystems.ColorWheel;
+import org.team2168.subsystems.ColorWheelPivot;
 import org.team2168.subsystems.Drivetrain;
+import org.team2168.subsystems.HoodAdjust;
 import org.team2168.subsystems.IntakeMotor;
 import org.team2168.subsystems.IntakePivot;
+import org.team2168.subsystems.Shooter;
 //import org.team2168.utils.Debouncer;
 import org.team2168.utils.PowerDistribution;
 
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import org.team2168.utils.consoleprinter.*;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.team2168.subsystems.Balancer;
 import org.team2168.OI;
@@ -35,11 +40,22 @@ public class Robot extends TimedRobot {
   private static final String kCustomAuto = "My Auto";
   private String m_autoSelected;
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
-  public static IntakeMotor intakeMotor;
-  public static IntakePivot intakePivot;
-  public static Indexer indexer;
 
+    // Subsystems
+  private static Climber climber;
+  private static IntakeMotor intakeMotor;
+  private static IntakePivot intakePivot;
+  private static Indexer indexer;
+  private static Balancer balancer;
+  private static Hopper hopper;
+  private static ColorWheel colorWheel;
+  private static ColorWheelPivot colorWheelPivot;
+  private static Shooter shooter;
+  private static HoodAdjust hoodAdjust;
   private static Drivetrain drivetrain;
+
+  private static OI oi;
+
   private static PowerDistribution pdp;
 
   static boolean autoMode;
@@ -49,12 +65,7 @@ public class Robot extends TimedRobot {
   // private Debouncer gyroDriftDetector = new Debouncer(1.0);
   private static boolean gyroCalibrating = false;
 
-  // Subsystems
-  private static Balancer balancer;
-  private static Hopper hopper;
-  public static ColorWheel colorWheel;
 
-  private static OI oi;
 
 
   // private boolean lastGyroCalibrating = false;
@@ -68,20 +79,27 @@ public class Robot extends TimedRobot {
     m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
     m_chooser.addOption("My Auto", kCustomAuto);
     SmartDashboard.putData("Auto choices", m_chooser);
+    // climber = Climber.getInstance();
    // intakeMotor = IntakeMotor.getInstance();
    // intakePivot = IntakePivot.getInstance();
-    //  indexer = Indexer.GetInstance();
-
-   // hopper = Hopper.getInstance();
-    
+    // balancer = Balancer.getInstance();
+    indexer = Indexer.getInstance();
+    hopper = Hopper.getInstance();
+    colorWheel = ColorWheel.getInstance();
+    colorWheelPivot = ColorWheelPivot.getInstance();
+    shooter = Shooter.getInstance();
+    hoodAdjust = HoodAdjust.getInstance();
     drivetrain = Drivetrain.getInstance();
     oi = OI.getInstance();
     // pdp = new PowerDistribution(RobotMap.PDPThreadPeriod);
     // pdp.startThread();
+    ConsolePrinter.init();
+    ConsolePrinter.startThread();
   }
 
   @Override
   public void robotPeriodic() {
+    
   }
 
   /**
