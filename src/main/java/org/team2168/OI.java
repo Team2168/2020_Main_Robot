@@ -3,6 +3,7 @@ package org.team2168;
 
 import org.team2168.commands.auto.FinishFiring;
 import org.team2168.commands.auto.FireBalls;
+import org.team2168.commands.color_wheel.DriveColorWheelXRotations;
 import org.team2168.commands.color_wheel_pivot.DisengageColorWheel;
 import org.team2168.commands.color_wheel_pivot.EngageColorWheel;
 import org.team2168.commands.hood_adjust.MoveToBackTrench;
@@ -88,17 +89,17 @@ public class OI
 		/*************************************************************************
 		 * Operator Joystick *
 		 *************************************************************************/
-		operatorJoystick.ButtonUpDPad().whenPressed(new MoveToBackTrench());
-		operatorJoystick.ButtonLeftDPad().whenPressed(new MoveToFrontTrench());
-		operatorJoystick.ButtonRightDPad().whenPressed(new MoveToWhiteLine());
-		operatorJoystick.ButtonDownDPad().whenPressed(new MoveToWall());
+		// operatorJoystick.ButtonUpDPad().whenPressed(new MoveToBackTrench());
+		// operatorJoystick.ButtonLeftDPad().whenPressed(new MoveToFrontTrench());
+		// operatorJoystick.ButtonRightDPad().whenPressed(new MoveToWhiteLine());
+		// operatorJoystick.ButtonDownDPad().whenPressed(new MoveToWall());
 
-		operatorJoystick.ButtonY().whenPressed(new EngageColorWheel());
-		operatorJoystick.ButtonA().whenPressed(new DisengageColorWheel());
+		// operatorJoystick.ButtonY().whenPressed(new EngageColorWheel());
+		// operatorJoystick.ButtonA().whenPressed(new DisengageColorWheel());
 
-		operatorJoystick.ButtonX().whenPressed(new DriveShooterSpeedHoodPosition());
-		operatorJoystick.ButtonB().whenPressed(new FireBalls());
-		operatorJoystick.ButtonB().whenPressed(new FinishFiring());
+		// operatorJoystick.ButtonX().whenPressed(new DriveShooterSpeedHoodPosition());
+		// operatorJoystick.ButtonB().whenPressed(new FireBalls());
+		// operatorJoystick.ButtonB().whenPressed(new FinishFiring());
 
 		// operatorJoystick.ButtonLeftBumper().whenPressed(new IntakeBallStop());
 		// operatorJoystick.ButtonRightBumper().whenPressed(new IntakeBallStart());
@@ -111,6 +112,10 @@ public class OI
 		// pidTestJoystick.ButtonX().whenPressed(new ResetClimberPosition());
 		// pidTestJoystick.ButtonY().whenPressed(new DriveClimberXPosition(33, 0.1));
 		// pidTestJoystick.ButtonA().whenPressed(new DriveClimberXPosition(-28, 0.1));
+		pidTestJoystick.ButtonY().whenPressed(new DriveColorWheelXRotations(1.0));
+		pidTestJoystick.ButtonA().whenPressed(new DriveColorWheelXRotations(-1.0));
+		pidTestJoystick.ButtonB().whenPressed(new DriveColorWheelXRotations(4.0));
+		pidTestJoystick.ButtonX().whenPressed(new DriveColorWheelXRotations(-4.0));
 
 
 		
@@ -169,7 +174,7 @@ public class OI
 	}
 	public double getColorWheelJoystick()
 	{
-		return 0.0;
+		return pidTestJoystick.getRightStickRaw_Y();
 	}
 
 	public double getIntakeMotorJoyStick() {

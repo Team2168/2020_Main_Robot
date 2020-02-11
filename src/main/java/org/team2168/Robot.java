@@ -83,18 +83,18 @@ public class Robot extends TimedRobot {
    // intakeMotor = IntakeMotor.getInstance();
    // intakePivot = IntakePivot.getInstance();
     // balancer = Balancer.getInstance();
-    indexer = Indexer.getInstance();
-    hopper = Hopper.getInstance();
+    // indexer = Indexer.getInstance();
+    // hopper = Hopper.getInstance();
     colorWheel = ColorWheel.getInstance();
-    colorWheelPivot = ColorWheelPivot.getInstance();
-    shooter = Shooter.getInstance();
-    hoodAdjust = HoodAdjust.getInstance();
-    drivetrain = Drivetrain.getInstance();
+    // colorWheelPivot = ColorWheelPivot.getInstance();
+    // shooter = Shooter.getInstance();
+    // hoodAdjust = HoodAdjust.getInstance();
+    // drivetrain = Drivetrain.getInstance();
     oi = OI.getInstance();
     // pdp = new PowerDistribution(RobotMap.PDPThreadPeriod);
     // pdp.startThread();
-    ConsolePrinter.init();
-    ConsolePrinter.startThread();
+    // ConsolePrinter.init();
+    // ConsolePrinter.startThread();
   }
 
   @Override
