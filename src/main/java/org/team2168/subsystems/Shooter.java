@@ -80,6 +80,10 @@ public class Shooter extends Subsystem {
         _motorOne = new TalonFX(RobotMap.SHOOTER_MOTOR_ONE_PDP);
         _motorTwo = new TalonFX(RobotMap.SHOOTER_MOTOR_TWO_PDP);
 
+        /* Factory Default all hardware to prevent unexpected behaviour */
+        _motorOne.configFactoryDefault();
+        _motorTwo.configFactoryDefault();
+
         talonCurrentLimit = new SupplyCurrentLimitConfiguration(ENABLE_CURRENT_LIMIT,
         CONTINUOUS_CURRENT_LIMIT, TRIGGER_THRESHOLD_LIMIT, TRIGGER_THRESHOLD_TIME);
   
@@ -89,12 +93,10 @@ public class Shooter extends Subsystem {
         _motorOne.setNeutralMode(NeutralMode.Coast);
         _motorTwo.setNeutralMode(NeutralMode.Coast);
 
-                        /* Configure output and sensor direction */
+        /* Configure output and sensor direction */
         _motorOne.setInverted(_motorOneInvert);
         _motorTwo.setInverted(_motorTwoInvert);
 
-                /* Factory Default all hardware to prevent unexpected behaviour */
-        _motorOne.configFactoryDefault();
         
         /* Config neutral deadband to be the smallest possible */
         _motorOne.configNeutralDeadband(0.001);
@@ -117,12 +119,12 @@ public class Shooter extends Subsystem {
         _motorOne.config_kI(kPIDLoopIdx, kGains_Velocity.kI, kTimeoutMs);
         _motorOne.config_kD(kPIDLoopIdx, kGains_Velocity.kD, kTimeoutMs);
         /*
-            * Talon FX does not need sensor phase set for its integrated sensor
-            * This is because it will always be correct if the selected feedback device is integrated sensor (default value)
-            * and the user calls getSelectedSensor* to get the sensor's position/velocity.
-            * 
-            * https://phoenix-documentation.readthedocs.io/en/latest/ch14_MCSensor.html#sensor-phase
-            */
+         * Talon FX does not need sensor phase set for its integrated sensor
+         * This is because it will always be correct if the selected feedback device is integrated sensor (default value)
+         * and the user calls getSelectedSensor* to get the sensor's position/velocity.
+         * 
+         * https://phoenix-documentation.readthedocs.io/en/latest/ch14_MCSensor.html#sensor-phase
+         */
         // _motorOne.setSensorPhase(true);
 
         //set second motor as a follower
