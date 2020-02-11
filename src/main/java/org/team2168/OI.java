@@ -60,16 +60,16 @@ public class OI
 	private LinearInterpolator gunStyleYInterpolator;
 	private LinearInterpolator gunStyleXInterpolator;
 	private double[][] gunStyleYArray = {
-		{ -1.0, -0.8}, //limiting speed to 80%
-		{ -.15, 0.0},
-		{ .15, 0.0},
-		{ 1.0, 0.8}
+		{-1.0, -0.80}, //limiting speed to 80%
+		{-0.15, 0.00},
+		{+0.15, 0.00},
+		{+1.00,+0.80}
 	};
 	private double[][] gunStyleXArray = {
-		{ -1.0, -0.65},  //scale down turning to max 65%
-		{ -.05, 0.0},  //set neutral deadband to 5%
-		{ .05, 0.0},
-		{ 1.0, 0.65}  
+		{-1.0, -0.65},  //scale down turning to max 65%
+		{-0.05, 0.00},  //set neutral deadband to 5%
+		{+0.05, 0.00},
+		{+1.00,+0.65}  
 	};
 
 	/**
