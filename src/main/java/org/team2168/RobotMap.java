@@ -69,8 +69,8 @@ public class RobotMap {
 	public static final int CLIMBER_RATCHET_DISENGAGE_PCM = 3;
 
 	//Double Soldenoids PCM ID = 0 ///////////////////////////////////////////
-	public static final int INTAKE_ENGAGE_PCM = 0;
-	public static final int INTAKE_DISENGAGE_PCM = 1;
+	public static final int INTAKE_DISENGAGE_PCM = 0;
+	public static final int INTAKE_ENGAGE_PCM = 1;
 	public static final int COLORWHEEL_ENGAGE_PCM = 4;
 	public static final int COLORWHEEL_DISENGAGE_PCM = 5;
 
