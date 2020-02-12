@@ -3,13 +3,7 @@ package org.team2168;
 
 import org.team2168.commands.auto.FinishFiring;
 import org.team2168.commands.auto.FireBalls;
-import org.team2168.commands.color_wheel_pivot.DisengageColorWheel;
-import org.team2168.commands.color_wheel_pivot.EngageColorWheel;
-import org.team2168.commands.hood_adjust.MoveToBackTrench;
-import org.team2168.commands.hood_adjust.MoveToFrontTrench;
-import org.team2168.commands.hood_adjust.MoveToWall;
-import org.team2168.commands.hood_adjust.MoveToWhiteLine;
-import org.team2168.commands.shooter.DriveShooterSpeedHoodPosition;
+import org.team2168.commands.shooter.DriveShooterWithConstant;
 import org.team2168.utils.F310;
 import org.team2168.utils.LinearInterpolator;
 
@@ -87,17 +81,18 @@ public class OI
 		/*************************************************************************
 		 * Operator Joystick *
 		 *************************************************************************/
-		operatorJoystick.ButtonUpDPad().whenPressed(new MoveToBackTrench());
-		operatorJoystick.ButtonLeftDPad().whenPressed(new MoveToFrontTrench());
-		operatorJoystick.ButtonRightDPad().whenPressed(new MoveToWhiteLine());
-		operatorJoystick.ButtonDownDPad().whenPressed(new MoveToWall());
+		// operatorJoystick.ButtonUpDPad().whenPressed(new MoveToBackTrench());
+		// operatorJoystick.ButtonLeftDPad().whenPressed(new MoveToFrontTrench());
+		// operatorJoystick.ButtonRightDPad().whenPressed(new MoveToWhiteLine());
+		// operatorJoystick.ButtonDownDPad().whenPressed(new MoveToWall());
 
-		operatorJoystick.ButtonY().whenPressed(new EngageColorWheel());
-		operatorJoystick.ButtonA().whenPressed(new DisengageColorWheel());
+		// operatorJoystick.ButtonY().whenPressed(new EngageColorWheel());
+		// operatorJoystick.ButtonA().whenPressed(new DisengageColorWheel());
 
-		operatorJoystick.ButtonX().whenPressed(new DriveShooterSpeedHoodPosition());
+		// operatorJoystick.ButtonX().whenPressed(new DriveShooterSpeedHoodPosition());
 		operatorJoystick.ButtonB().whenPressed(new FireBalls());
-		operatorJoystick.ButtonB().whenPressed(new FinishFiring());
+		operatorJoystick.ButtonB().whenReleased(new FinishFiring());
+		operatorJoystick.ButtonUpDPad().whenPressed(new DriveShooterWithConstant(0.5));
 
 		// operatorJoystick.ButtonLeftBumper().whenPressed(new IntakeBallStop());
 		// operatorJoystick.ButtonRightBumper().whenPressed(new IntakeBallStart());
@@ -109,6 +104,22 @@ public class OI
 		// pidTestJoystick.ButtonX().whenPressed(new ResetClimberPosition());
 		// pidTestJoystick.ButtonY().whenPressed(new DriveClimberXPosition(33, 0.1));
 		// pidTestJoystick.ButtonA().whenPressed(new DriveClimberXPosition(-28, 0.1));	
+		// pidTestJoystick.ButtonY().whenPressed(new EngageColorWheel());
+		// pidTestJoystick.ButtonA().whenPressed(new DisengageColorWheel());
+
+		// pidTestJoystick.ButtonX().whenPressed(new EngageRatchet());
+		// pidTestJoystick.ButtonB().whenPressed(new DisengageRatchet());
+
+		// pidTestJoystick.ButtonUpDPad().whenPressed(new ExtendShooterHood());
+		// pidTestJoystick.ButtonDownDPad().whenPressed(new RetractShooterHood());
+		// pidTestJoystick.ButtonLeftDPad().whenPressed(new ExtendShooterHardstop());
+		// pidTestJoystick.ButtonRightDPad().whenPressed(new RetractShooterHardstop());
+
+		// pidTestJoystick.ButtonStart().whenPressed(new ExtendIntakePneumatic());
+		// pidTestJoystick.ButtonBack().whenPressed(new RetractIntakePneumatic());
+
+
+
 	}
 	
 	/**

@@ -22,19 +22,19 @@ HoodAdjust pos = HoodAdjust.getInstance();
       // to the back trench position.
       case FRONT_TRENCH :
         addSequential(new RetractShooterHood());
-        addSequential(new Sleep(), 0.2);
+        addSequential(new Sleep(), 0.5);
         addSequential(new RetractShooterHardstop());
-        addSequential(new Sleep(), 0.2);
+        addSequential(new Sleep(), 0.5);
       // This code will bring the hood from the back trench to the wall
       // position.
       case BACK_TRENCH :
         addSequential(new ExtendShooterHood());
-        addSequential(new Sleep(), 0.2);
+        addSequential(new Sleep(), 0.5);
       // This final part will carry the hood from the wall position to the 
       // white line position.
       case WALL :
         addSequential(new ExtendShooterHardstop());
-        addSequential(new Sleep(), 0.2);
+        addSequential(new Sleep(), 0.5);
         addSequential(new RetractShooterHood());
         addSequential(new Sleep(), 0.1);
       // If the hood starts in the white line position, 

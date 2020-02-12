@@ -20,15 +20,15 @@ public class MoveToBackTrench extends CommandGroup {
       // This code will carry the hood from the white line to the wall position.
       case WHITE_LINE :
         addSequential(new ExtendShooterHood());
-        addSequential(new Sleep(), 0.2);
+        addSequential(new Sleep(), 0.5);
         addSequential(new RetractShooterHardstop());
-        addSequential(new Sleep(), 0.2);
+        addSequential(new Sleep(), 0.5);
       // The wall and front trench codes need to follow the same steps, 
       // allowing for the use of the same lines.
       case WALL :
       case FRONT_TRENCH :
         addSequential(new RetractShooterHood());
-        addSequential(new Sleep(), 0.2);
+        addSequential(new Sleep(), 0.5);
         addSequential(new RetractShooterHardstop());
         addSequential(new Sleep(), 0.1);
       // If the hood starts at the back trench, then it does not need to move, 

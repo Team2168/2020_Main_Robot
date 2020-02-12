@@ -36,7 +36,7 @@ public class FinishFiring extends CommandGroup {
     // arm.
     
     // addParallel(new DriveIntakeWithConstant(0.0));
-    addSequential(new DriveHopperWithConstant(0.0), 0.2);
-    addParallel(new DriveIndexerWithConstant(0.0));
+    addSequential(new DriveHopperWithConstant(0.0), 0.5);
+    addSequential(new DriveIndexerWithConstant(0.0));
   }
 }

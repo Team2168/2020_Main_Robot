@@ -22,15 +22,15 @@ public class MoveToWall extends CommandGroup {
     // back trench position.
       case FRONT_TRENCH :
         addSequential(new RetractShooterHood());
-        addSequential(new Sleep(), 0.2);
+        addSequential(new Sleep(), 0.5);
         addSequential(new RetractShooterHardstop());
-        addSequential(new Sleep(), 0.2);
+        addSequential(new Sleep(), 0.5);
       // Because the motions are the same, the back trench and 
       // white line do not need seperate sets of code
       case BACK_TRENCH :
       case WHITE_LINE : 
         addSequential(new ExtendShooterHood());
-        addSequential(new Sleep(), 0.2);
+        addSequential(new Sleep(), 0.5);
         addSequential(new RetractShooterHardstop());
         addSequential(new Sleep(), 0.1);
       // Because the hood is already in the wall position,
