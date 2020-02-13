@@ -41,7 +41,7 @@ public class Robot extends TimedRobot {
   private String m_autoSelected;
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
 
-    // Subsystems
+  // Subsystems
   private static Climber climber;
   private static IntakeMotor intakeMotor;
   private static IntakePivot intakePivot;
@@ -60,10 +60,10 @@ public class Robot extends TimedRobot {
 
   static boolean autoMode;
   // private static boolean matchStarted = false;
-  private static int gyroReinits;
+  // private static int gyroReinits;
   // private double lastAngle;
   // private Debouncer gyroDriftDetector = new Debouncer(1.0);
-  private static boolean gyroCalibrating = false;
+  // private static boolean gyroCalibrating = false;
 
 
 
@@ -75,17 +75,17 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
-	ConsolePrinter.init();
+  	ConsolePrinter.init();
 
     // colorWheel = ColorWheel.getInstance();
     m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
     m_chooser.addOption("My Auto", kCustomAuto);
-	SmartDashboard.putData("Auto choices", m_chooser);
+	  SmartDashboard.putData("Auto choices", m_chooser);
 	
-	//Init Subsystems
+    //Init Subsystems
     // climber = Climber.getInstance();
-   	// intakeMotor = IntakeMotor.getInstance();
-   	// intakePivot = IntakePivot.getInstance();
+    // intakeMotor = IntakeMotor.getInstance();
+    // intakePivot = IntakePivot.getInstance();
     // balancer = Balancer.getInstance();
     indexer = Indexer.getInstance();
     hopper = Hopper.getInstance();
@@ -94,8 +94,8 @@ public class Robot extends TimedRobot {
     shooter = Shooter.getInstance();
     hoodAdjust = HoodAdjust.getInstance();
     drivetrain = Drivetrain.getInstance();
-	oi = OI.getInstance();
-	
+    oi = OI.getInstance();
+    
     // pdp = new PowerDistribution(RobotMap.PDPThreadPeriod);
     // pdp.startThread();
     ConsolePrinter.startThread();
