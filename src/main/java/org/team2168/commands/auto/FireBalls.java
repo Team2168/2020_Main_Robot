@@ -38,9 +38,10 @@ public class FireBalls extends CommandGroup {
     // arm.
 
     // addSequential(new WaitForShooterAtSpeed());
-    addSequential(new DriveIndexerWithConstantNoStop(0.8), 0.5); //TODO set ALL 
-    addParallel(new DriveIndexerWithConstant(0.8));
-    addParallel(new DriveHopperWithConstant(0.8));
+    addSequential(new DriveIndexerWithConstantNoStop(1.0), 0.5); //TODO set ALL 
+    addParallel(new DriveIndexerWithConstant(1.0));
+    addParallel(new DriveHopperWithConstant(1.0));
     // addParallel(new DriveIntakeWithConstant(0.5));
   }
 }
+
