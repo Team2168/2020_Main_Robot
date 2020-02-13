@@ -16,7 +16,7 @@ import edu.wpi.first.wpilibj.command.Command;
 public class DriveColorWheelWithJoystick extends Command {
   private ColorWheel colorWheel;
   private OI oi;
-  private final double MAX_SPEED = 0.2;
+  private final double MAX_SPEED = 0.8;
   public DriveColorWheelWithJoystick() {
     colorWheel = ColorWheel.getInstance();
   

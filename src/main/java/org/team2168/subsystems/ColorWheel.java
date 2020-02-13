@@ -21,7 +21,7 @@ public class ColorWheel extends Subsystem {
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
 
-  private final boolean COLOR_WHEEL_MOTOR_REVERSE = false;
+  private final boolean COLOR_WHEEL_MOTOR_REVERSE = true;
   private CANSparkMax colorWheelMotor;
   private static ColorWheel instance = null;
 
@@ -38,7 +38,9 @@ public class ColorWheel extends Subsystem {
   /**
    * Sets the speed of the motor
    * 
-   * @param speed positive is right, negative is left, 0 is hold still
+   * @param speed positive moves big wheel ccw, 
+   * negative moves big wheel cw, 0 is hold still
+   * (positive moves little wheel cw, neg ccw)
    */
   public void drive(double speed)
   {
