@@ -19,7 +19,7 @@ public class DriveShooterSpeedHoodPosition extends Command {
     /**target position */
     private double _targetVelocity;
     private static final double WALL_VEL = 2500.0; //TODO SET ALL
-    private static final double WHITE_LINE_VEL = 3580.0 ;
+    private static final double WHITE_LINE_VEL = 3580.0;
     private static final double FRONT_TRENCH_VEL = 4655.0;
     private static final double BACK_TRENCH_VEL = 7160.0;
 
@@ -41,7 +41,7 @@ public class DriveShooterSpeedHoodPosition extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    switch(pos.shooterPosition){  
+    switch(pos.getHoodPosition()){  
       //setting target_velocity based on current position of the hood
       case WALL : 
         _targetVelocity = WALL_VEL;
@@ -55,8 +55,12 @@ public class DriveShooterSpeedHoodPosition extends Command {
       case BACK_TRENCH :
         _targetVelocity = BACK_TRENCH_VEL;
         break;
+      default : //We should never get here
+        _targetVelocity = 0.0;
+        break;
     }
-    shooter.setSetPoint(_targetVelocity);
+
+    shooter.setSpeed(_targetVelocity);
   }
 
   // Make this return true when this Command no longer needs to run execute()

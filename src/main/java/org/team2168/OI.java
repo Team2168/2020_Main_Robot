@@ -2,6 +2,7 @@
 package org.team2168;
 
 import org.team2168.commands.shooter.DriveShooterSpeedHoodPosition;
+import org.team2168.commands.shooter.DriveShooterWithConstant;
 import org.team2168.utils.F310;
 import org.team2168.utils.LinearInterpolator;
 
@@ -88,6 +89,7 @@ public class OI
 		// operatorJoystick.ButtonA().whenPressed(new DisengageColorWheel());
 
 		operatorJoystick.ButtonX().whenPressed(new DriveShooterSpeedHoodPosition());
+		operatorJoystick.ButtonY().whenPressed(new DriveShooterWithConstant(0.0));
 		// operatorJoystick.ButtonB().whenPressed(new FireBalls());
 		// operatorJoystick.ButtonB().whenReleased(new FinishFiring());
 		// operatorJoystick.ButtonUpDPad().whenPressed(new DriveShooterWithConstant(0.5));
