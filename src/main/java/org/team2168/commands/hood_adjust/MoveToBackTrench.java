@@ -16,26 +16,34 @@ public class MoveToBackTrench extends CommandGroup {
   public MoveToBackTrench() {
     //By not using a break in the switch statement, the cases will
     //follow through, allowing for less lines of code.
-    switch(pos.shooterPosition){
-      // This code will carry the hood from the white line to the wall position.
-      case WHITE_LINE :
-        addSequential(new ExtendShooterHood());
-        addSequential(new Sleep(), 0.5);
-        addSequential(new RetractShooterHardstop());
-        addSequential(new Sleep(), 0.5);
-      // The wall and front trench codes need to follow the same steps, 
-      // allowing for the use of the same lines.
-      case WALL :
-      case FRONT_TRENCH :
-        addSequential(new RetractShooterHood());
-        addSequential(new Sleep(), 0.5);
-        addSequential(new RetractShooterHardstop());
-        addSequential(new Sleep(), 0.1);
-      // If the hood starts at the back trench, then it does not need to move, 
-      // meaning we just need to break; no further action is needed.
-      case BACK_TRENCH :
-        break;
-    }
+    // switch(pos.shooterPosition){
+    //   // This code will carry the hood from the white line to the wall position.
+    //   case WHITE_LINE :
+    //     addSequential(new ExtendShooterHood());
+    //     addSequential(new Sleep(), 0.5);
+    //     addSequential(new RetractShooterHardstop());
+    //     addSequential(new Sleep(), 0.5);
+    //   // The wall and front trench codes need to follow the same steps, 
+    //   // allowing for the use of the same lines.
+    //   case WALL :
+    //   case FRONT_TRENCH :
+    //     addSequential(new RetractShooterHood());
+    //     addSequential(new Sleep(), 0.5);
+    //     addSequential(new RetractShooterHardstop());
+    //     addSequential(new Sleep(), 0.1);
+    //   // If the hood starts at the back trench, then it does not need to move, 
+    //   // meaning we just need to break; no further action is needed.
+    //   case BACK_TRENCH :
+    //     break;
+    // }
+
+    //updated---allows for any possible position, allows retract pancake under load;
+    addSequential(new ExtendShooterHood());
+    addSequential(new RetractShooterHardstop());
+    addSequential(new Sleep(), 0.1);
+    addSequential(new RetractShooterHood());
+    addSequential(new Sleep(), 0.2);
     pos.setHoodPosition(HoodAdjust.HoodPosition.BACK_TRENCH);
   }
 }
+

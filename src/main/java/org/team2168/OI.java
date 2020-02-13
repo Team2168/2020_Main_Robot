@@ -1,9 +1,10 @@
 
 package org.team2168;
 
-import org.team2168.commands.auto.FinishFiring;
-import org.team2168.commands.auto.FireBalls;
-import org.team2168.commands.shooter.DriveShooterWithConstant;
+import org.team2168.commands.hood_adjust.MoveToBackTrench;
+import org.team2168.commands.hood_adjust.MoveToFrontTrench;
+import org.team2168.commands.hood_adjust.MoveToWall;
+import org.team2168.commands.hood_adjust.MoveToWhiteLine;
 import org.team2168.utils.F310;
 import org.team2168.utils.LinearInterpolator;
 
@@ -81,18 +82,18 @@ public class OI
 		/*************************************************************************
 		 * Operator Joystick *
 		 *************************************************************************/
-		// operatorJoystick.ButtonUpDPad().whenPressed(new MoveToBackTrench());
-		// operatorJoystick.ButtonLeftDPad().whenPressed(new MoveToFrontTrench());
-		// operatorJoystick.ButtonRightDPad().whenPressed(new MoveToWhiteLine());
-		// operatorJoystick.ButtonDownDPad().whenPressed(new MoveToWall());
+		operatorJoystick.ButtonUpDPad().whenPressed(new MoveToBackTrench());
+		operatorJoystick.ButtonLeftDPad().whenPressed(new MoveToFrontTrench());
+		operatorJoystick.ButtonRightDPad().whenPressed(new MoveToWhiteLine());
+		operatorJoystick.ButtonDownDPad().whenPressed(new MoveToWall());
 
 		// operatorJoystick.ButtonY().whenPressed(new EngageColorWheel());
 		// operatorJoystick.ButtonA().whenPressed(new DisengageColorWheel());
 
 		// operatorJoystick.ButtonX().whenPressed(new DriveShooterSpeedHoodPosition());
-		operatorJoystick.ButtonB().whenPressed(new FireBalls());
-		operatorJoystick.ButtonB().whenReleased(new FinishFiring());
-		operatorJoystick.ButtonUpDPad().whenPressed(new DriveShooterWithConstant(0.5));
+		// operatorJoystick.ButtonB().whenPressed(new FireBalls());
+		// operatorJoystick.ButtonB().whenReleased(new FinishFiring());
+		// operatorJoystick.ButtonUpDPad().whenPressed(new DriveShooterWithConstant(0.5));
 
 		// operatorJoystick.ButtonLeftBumper().whenPressed(new IntakeBallStop());
 		// operatorJoystick.ButtonRightBumper().whenPressed(new IntakeBallStart());
