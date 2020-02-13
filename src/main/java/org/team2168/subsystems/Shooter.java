@@ -71,7 +71,7 @@ public class Shooter extends Subsystem {
      * 
      * 	                                      kP    kI   kD          kF               Iz   PeakOut
      */
-    final Gains kGains_Velocity = new Gains( 0.775, 0.000, 0, 0.17825/TICKS_PER_100MS,  300,  1.00); // kF = 1023*0.00016/ticks_per_100ms
+    final Gains kGains_Velocity = new Gains( 0.2, 0.000, 0, 0,  300,  1.00); // kF = 1023*0.00016/ticks_per_100ms
     
     private double setPointVelocity_sensorUnits;
 
@@ -127,8 +127,6 @@ public class Shooter extends Subsystem {
          */
         // _motorOne.setSensorPhase(true);
 
-        //set second motor as a follower
-        _motorTwo.follow(_motorTwo, FollowerType.PercentOutput);
 
         ConsolePrinter.putNumber("Shooter Velocity", () -> {return getVelocity();}, true, false);
         ConsolePrinter.putNumber("Shooter Error", () -> {return getError();}, true, false);
@@ -184,6 +182,8 @@ public class Shooter extends Subsystem {
     {
         setPointVelocity_sensorUnits = revs_per_minute_to_ticks_per_100ms(setPoint) ;
         _motorOne.set(ControlMode.Velocity, setPointVelocity_sensorUnits);
+        //set second motor as a follower
+        _motorTwo.follow(_motorTwo, FollowerType.PercentOutput);
     }
 
     public double getError()
@@ -200,6 +200,6 @@ public class Shooter extends Subsystem {
     }
 
     public void initDefaultCommand() {
-        //setDefaultCommand(new DriveShooterWithJoystick());
+        setDefaultCommand(new DriveShooterWithJoystick());
     }
 }

@@ -1,8 +1,7 @@
 
 package org.team2168;
 
-import org.team2168.commands.color_wheel_pivot.DisengageColorWheel;
-import org.team2168.commands.color_wheel_pivot.EngageColorWheel;
+import org.team2168.commands.shooter.DriveShooterSpeedHoodPosition;
 import org.team2168.utils.F310;
 import org.team2168.utils.LinearInterpolator;
 
@@ -88,7 +87,7 @@ public class OI
 		// operatorJoystick.ButtonY().whenPressed(new EngageColorWheel());
 		// operatorJoystick.ButtonA().whenPressed(new DisengageColorWheel());
 
-		// operatorJoystick.ButtonX().whenPressed(new DriveShooterSpeedHoodPosition());
+		operatorJoystick.ButtonX().whenPressed(new DriveShooterSpeedHoodPosition());
 		// operatorJoystick.ButtonB().whenPressed(new FireBalls());
 		// operatorJoystick.ButtonB().whenReleased(new FinishFiring());
 		// operatorJoystick.ButtonUpDPad().whenPressed(new DriveShooterWithConstant(0.5));
@@ -103,8 +102,7 @@ public class OI
 		// pidTestJoystick.ButtonX().whenPressed(new ResetClimberPosition());
 		// pidTestJoystick.ButtonY().whenPressed(new DriveClimberXPosition(33, 0.1));
 		// pidTestJoystick.ButtonA().whenPressed(new DriveClimberXPosition(-28, 0.1));	
-		pidTestJoystick.ButtonY().whenPressed(new EngageColorWheel());
-		pidTestJoystick.ButtonA().whenPressed(new DisengageColorWheel());
+
 
 		// pidTestJoystick.ButtonX().whenPressed(new EngageRatchet());
 		// pidTestJoystick.ButtonB().whenPressed(new DisengageRatchet());
@@ -168,7 +166,7 @@ public class OI
 
 	public double getColorWheelJoystick()
 	{
-		return pidTestJoystick.getRightStickRaw_Y();
+		return 0.0; //pidTestJoystick.getRightStickRaw_Y();
 	}
 
 	public double getIntakeMotorJoyStick() {
@@ -201,7 +199,7 @@ public class OI
 	 */
 	public double getShooterJoystick()
 	{
-		return 0.0; //pidTestJoystick.getRightStickRaw_Y();
+		return pidTestJoystick.getRightStickRaw_Y(); //;
 	}
 
 	/**
