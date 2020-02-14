@@ -229,8 +229,8 @@ public class Drivetrain extends Subsystem {
    *        forward, 0 is stationary
    */
   private void driveleftMotor1(double speed) {
-    if (DT_REVERSE_LEFT1)
-      speed = -speed;
+    // if (DT_REVERSE_LEFT1)
+    //   speed = -speed;
 
     _leftMotor1.set(ControlMode.PercentOutput, speed);
 
@@ -243,8 +243,8 @@ public class Drivetrain extends Subsystem {
    *        forward, 0 is stationary
    */
   private void driveleftMotor2(double speed) {
-    if (DT_REVERSE_LEFT2)
-      speed = -speed;
+    // if (DT_REVERSE_LEFT2)
+    //   speed = -speed;
 
     _leftMotor2.set(ControlMode.PercentOutput, speed);
   }
@@ -256,8 +256,8 @@ public class Drivetrain extends Subsystem {
    *        forward, 0 is stationary
    */
   private void driveleftMotor3(double speed) {
-    if (DT_REVERSE_LEFT3)
-      speed = -speed;
+    // if (DT_REVERSE_LEFT3)
+    //   speed = -speed;
 
     _leftMotor3.set(ControlMode.PercentOutput, speed);
   }
@@ -285,8 +285,8 @@ public class Drivetrain extends Subsystem {
    *        forward, 0 is stationary
    */
   private void driverightMotor1(double speed) {
-    if (DT_REVERSE_RIGHT1)
-      speed = -speed;
+    // if (DT_REVERSE_RIGHT1)
+    //   speed = -speed;
 
     _rightMotor1.set(ControlMode.PercentOutput, speed);
   }
@@ -298,8 +298,8 @@ public class Drivetrain extends Subsystem {
    *        forward, 0 is stationary
    */
   private void driverightMotor2(double speed) {
-    if (DT_REVERSE_RIGHT2)
-      speed = -speed;
+    // if (DT_REVERSE_RIGHT2)
+    //   speed = -speed;
 
     _rightMotor2.set(ControlMode.PercentOutput, speed);
   }
@@ -311,8 +311,8 @@ public class Drivetrain extends Subsystem {
    *        forward, 0 is stationary
    */
   private void driverightMotor3(double speed) {
-    if (DT_REVERSE_RIGHT3)
-      speed = -speed;
+    // if (DT_REVERSE_RIGHT3)
+    //   speed = -speed;
 
     _rightMotor3.set(ControlMode.PercentOutput, speed);
   }
