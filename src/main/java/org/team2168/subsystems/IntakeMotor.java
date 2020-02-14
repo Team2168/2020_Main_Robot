@@ -32,6 +32,7 @@ public class IntakeMotor extends Subsystem {
    */
   private IntakeMotor() {
     intakeMotor = new TalonSRX(RobotMap.INTAKE_MOTOR_PDP);
+    //The methods for the voltage and current do not yet exist.
     }
 
   /**

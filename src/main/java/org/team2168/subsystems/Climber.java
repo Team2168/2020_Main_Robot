@@ -29,6 +29,8 @@ private Climber() {
   climberMotor1 = new TalonSRX(RobotMap.CLIMBER_MOTOR_1_PDP);
   climberMotor2 = new TalonSRX(RobotMap.CLIMBER_MOTOR_2_PDP);
   climberSolenoid = new DoubleSolenoid(RobotMap.CLIMBER_RATCHET_ENGAGE_PCM,RobotMap.CLIMBER_RATCHET_DISENGAGE_PCM);
+  //The current and voltage methods do not yet exist.
+
 }
 /** 
  *  This method will set the climbers motors to a new speed, allowing

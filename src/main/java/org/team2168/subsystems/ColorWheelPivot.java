@@ -8,6 +8,7 @@
 package org.team2168.subsystems;
 
 import org.team2168.RobotMap;
+import org.team2168.utils.consoleprinter.ConsolePrinter;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
@@ -26,6 +27,8 @@ public class ColorWheelPivot extends Subsystem {
   private ColorWheelPivot()
   {
     colorWheelExtender = new DoubleSolenoid(RobotMap.COLORWHEEL_ENGAGE_PCM,RobotMap.COLORWHEEL_DISENGAGE_PCM);
+    ConsolePrinter.putBoolean("PistonExtended", () -> {return this.isExtended();}, true, false);
+    ConsolePrinter.putBoolean("PistonRetracted", () -> {return this.isRetracted();}, true, false);
   }
 
     /**

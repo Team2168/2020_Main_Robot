@@ -9,6 +9,7 @@ package org.team2168.subsystems;
 
 import org.team2168.RobotMap;
 import org.team2168.commands.intakePivot.ExtendIntakePneumatic;
+import org.team2168.utils.consoleprinter.ConsolePrinter;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.command.Subsystem;
@@ -28,6 +29,8 @@ public class IntakePivot extends Subsystem {
    */
   private IntakePivot() {
     intakePivot = new DoubleSolenoid(RobotMap.INTAKE_ENGAGE_PCM, RobotMap.INTAKE_DISENGAGE_PCM);
+    ConsolePrinter.putBoolean("Intake Extended", () -> {return this.isIntakeExtended();}, true, false);
+    ConsolePrinter.putBoolean("Intake Retracted", () -> {return this.isIntakeRetracted();}, true, false);
   }
 
   /**

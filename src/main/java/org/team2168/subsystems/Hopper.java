@@ -25,6 +25,7 @@ public class Hopper extends Subsystem {
 
   private Hopper() {
     hopperMotor = new TalonSRX(RobotMap.HOPPER_MOTOR_PDP);
+    //The methods for the voltage and currents do not yet exist.
   }
 
   /**

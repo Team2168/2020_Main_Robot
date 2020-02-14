@@ -39,6 +39,8 @@ public class Balancer extends Subsystem {
 
     //status frame every 500ms
     _balancerMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 500);
+    //ConsolePrinter.putNumber("BalancerMotorVoltage", () -> (return this.))
+    //The methods for the voltage and current do not exist yet.
   }
   
   /**

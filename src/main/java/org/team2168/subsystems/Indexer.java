@@ -25,6 +25,7 @@ public class Indexer extends Subsystem {
   private static Indexer _instance = null;
   private Indexer(){
     _motor = new CANSparkMax(RobotMap.INDEXER_MOTOR_PDP, MotorType.kBrushless);
+    //The methods for the voltage and current do not exist.
     }
  public static Indexer getInstance(){
    if(_instance == null){

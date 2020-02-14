@@ -9,6 +9,7 @@ package org.team2168.subsystems;
 
 import org.team2168.Robot;
 import org.team2168.RobotMap;
+import org.team2168.utils.consoleprinter.ConsolePrinter;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.command.Subsystem;
@@ -29,6 +30,10 @@ public class HoodAdjust extends Subsystem {
     _hoodSolenoid = new DoubleSolenoid(RobotMap.PCM_CAN_ID_SHOOTER, RobotMap.HOOD_SOLENOID_ENGAGE, RobotMap.HOOD_SOLENOID_DISENGAGE);
     _pancakeSolenoid = new DoubleSolenoid(RobotMap.PCM_CAN_ID_SHOOTER, RobotMap.PANCAKE_SOLENOID_IN, RobotMap.PANCAKE_SOLENOID_OUT);
     shooterPosition = HoodPosition.WALL;
+    ConsolePrinter.putBoolean("Pancake Extended", () -> {return this.isPancakeExtended();}, true, false);
+    ConsolePrinter.putBoolean("Pancake Retracted", () -> {return this.isPancakeRetracted();}, true, false);
+    ConsolePrinter.putBoolean("Hood Extended", () -> {return this.isHoodExtended();}, true, false);
+    ConsolePrinter.putBoolean("Hood Retracted", () -> {return this.isHoodRetracted();}, true, false);
   }
   /**
    * Creates a new Instance of the HoodAdjust

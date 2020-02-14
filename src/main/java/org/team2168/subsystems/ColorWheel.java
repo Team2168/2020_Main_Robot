@@ -32,6 +32,7 @@ public class ColorWheel extends Subsystem {
     colorWheelMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 500);
     colorWheelMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 500);
     colorWheelMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 500);
+    //The methods for the voltage and current do not exist.
   }
 
   /**
