@@ -5,53 +5,71 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package org.team2168.commands.color_wheel;
+package org.team2168.commands.balancer;
 
 import org.team2168.OI;
-import org.team2168.subsystems.ColorWheel;
+import org.team2168.subsystems.Balancer;
 
 import edu.wpi.first.wpilibj.command.Command;
 
-public class DriveColorWheelWithJoystick extends Command {
-  private ColorWheel colorWheel;
-  private OI oi;
-  private final double MAX_SPEED = 0.8;
-  public DriveColorWheelWithJoystick() {
-    colorWheel = ColorWheel.getInstance();
-  
-    requires(colorWheel);
-      
+public class DriveBalancerUpdatingPosition extends Command {
+
+  private static Balancer balancer;
+  private static OI oi;
+  private double _setPoint;
+  private boolean _readPIDFromDashboard = false;
+  private double _loopsToSettle = 10;
+  private int _withinThresholdLoops = 0;
+  private double numRevolutions = 5.0;
+
+  public DriveBalancerUpdatingPosition() {
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
+    balancer = Balancer.getInstance();
+    requires(balancer);
   }
 
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
     oi = OI.getInstance();
+    if(_readPIDFromDashboard) {
+      balancer.updatePIDValues();
+    }
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    if(Math.abs(oi.getColorWheelJoystick()) < MAX_SPEED) {
-      colorWheel.drive(oi.getColorWheelJoystick());
+    if(Math.abs(oi.getBalancerJoystickValue())>0.1){
+      _setPoint = balancer.getPosition() + (oi.getBalancerJoystickValue() * numRevolutions);
     }
     else {
-      colorWheel.drive(MAX_SPEED);
+      _setPoint = balancer.getPosition();
+    }
+
+    balancer.setPositionSetPoint(_setPoint);
+
+    /* Check if closed loop error is within the threshld */
+    if (Math.abs(_setPoint-balancer.getPosition()) < balancer.getAllowedClosedLoopError()) {
+      ++_withinThresholdLoops;
+    } 
+    else {
+      _withinThresholdLoops = 0;
     }
   }
 
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    return false;
+    return _withinThresholdLoops > _loopsToSettle;
   }
 
   // Called once after isFinished returns true
   @Override
   protected void end() {
-    colorWheel.drive(0);
+    balancer.driveMotor(0.0);
+
   }
 
   // Called when another command which requires one or more of the same
