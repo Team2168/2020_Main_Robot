@@ -19,8 +19,8 @@ public class DriveXDistance extends Command {
 
     private static final double DEFAULT_ERROR_TOLERANCE = 0.5;
 
-    private double _errorTolerancePosition; //0.5 inches TODO need to figure out conversion
-    private double _errorToleranceAngle = 1.0; //1.0 degree of tolerance TODO need to figure out conversion
+    private double _errorTolerancePosition; //0.5 inches
+    private double _errorToleranceAngle = 1.0; //1.0 degree of tolerance 
     private double _loopsToSettle = 10;
     private int _withinThresholdLoops = 0;
 
