@@ -146,13 +146,8 @@ public class Robot extends TimedRobot {
     oi = OI.getInstance();
     
     // pdp = new PowerDistribution(RobotMap.PDPThreadPeriod);
-	// pdp.startThread();
-	ConsolePrinter.init();
-    ConsolePrinter.putNumber("DT Position", ()->{return drivetrain.getPosition();}, true, false);
-    ConsolePrinter.putNumber("Heading", ()->{return drivetrain.getHeading();}, true, false);
-    ConsolePrinter.putNumber("Position Error", ()->{return drivetrain.getErrorPosition();}, true, false);
-    ConsolePrinter.putNumber("Heading Error", ()->{return drivetrain.getErrorHeading();}, true, false);
-
+    // pdp.startThread();
+    ConsolePrinter.init();
     ConsolePrinter.startThread();
   }
 

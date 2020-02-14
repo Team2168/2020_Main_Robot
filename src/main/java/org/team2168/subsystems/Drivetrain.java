@@ -17,6 +17,7 @@ import com.ctre.phoenix.sensors.PigeonIMU_StatusFrame;
 import org.team2168.Constants;
 import org.team2168.RobotMap;
 import org.team2168.commands.drivetrain.DriveWithJoystick;
+import org.team2168.utils.consoleprinter.ConsolePrinter;
 
 import edu.wpi.first.wpilibj.command.Subsystem;
 
@@ -204,6 +205,10 @@ public class Drivetrain extends Subsystem {
     // ConsolePrinter.putNumber("DTLeft1MotorCurrent", () -> {return Robot.pdp.getChannelCurrent(RobotMap.DRIVETRAIN_LEFT_MOTOR_1_PDP);}, true, false);
     // ConsolePrinter.putNumber("DTLeft2MotorCurrent", () -> {return Robot.pdp.getChannelCurrent(RobotMap.DRIVETRAIN_LEFT_MOTOR_2_PDP);}, true, false);
     // ConsolePrinter.putNumber("DTLeft3MotorCurrent", () -> {return Robot.pdp.getChannelCurrent(RobotMap.DRIVETRAIN_LEFT_MOTOR_3_PDP);}, true, false);
+    ConsolePrinter.putNumber("DT Position", ()->{return getPosition();}, true, false);
+    ConsolePrinter.putNumber("Heading", ()->{return getHeading();}, true, false);
+    ConsolePrinter.putNumber("Position Error", ()->{return getErrorPosition();}, true, false);
+    ConsolePrinter.putNumber("Heading Error", ()->{return getErrorHeading();}, true, false);
     
   }
 
