@@ -1,9 +1,9 @@
 
 package org.team2168;
 
-import org.team2168.commands.intakeMotor.DriveIntakeWithConstant;
-import org.team2168.commands.intakeMotor.IntakeBallStart;
-import org.team2168.commands.intakeMotor.IntakeBallStop;
+import org.team2168.commands.color_wheel.DriveColorWheelXRotations;
+import org.team2168.commands.color_wheel_pivot.DisengageColorWheel;
+import org.team2168.commands.color_wheel_pivot.EngageColorWheel;
 import org.team2168.utils.F310;
 import org.team2168.utils.LinearInterpolator;
 
@@ -86,8 +86,12 @@ public class OI
 		// operatorJoystick.ButtonRightDPad().whenPressed(new MoveToWhiteLine());
 		// operatorJoystick.ButtonDownDPad().whenPressed(new MoveToWall());
 
-		// operatorJoystick.ButtonY().whenPressed(new EngageColorWheel());
-		// operatorJoystick.ButtonA().whenPressed(new DisengageColorWheel());
+		operatorJoystick.ButtonY().whenPressed(new EngageColorWheel());
+		operatorJoystick.ButtonA().whenPressed(new DisengageColorWheel());
+
+		operatorJoystick.ButtonUpDPad().whenPressed(new DriveColorWheelXRotations(4.0*8.0));
+		operatorJoystick.ButtonDownDPad().whenPressed(new DriveColorWheelXRotations(-4.0*8.0));
+
 
 		// operatorJoystick.ButtonX().whenPressed(new DriveShooterSpeedHoodPosition());
 		// operatorJoystick.ButtonY().whenPressed(new DriveShooterWithConstant(0.0));
@@ -95,12 +99,9 @@ public class OI
 		// operatorJoystick.ButtonB().whenReleased(new FinishFiring());
 		// operatorJoystick.ButtonUpDPad().whenPressed(new DriveShooterWithConstant(0.5));
 
-		operatorJoystick.ButtonLeftBumper().whenPressed(new IntakeBallStop());
-		operatorJoystick.ButtonRightBumper().whenPressed(new IntakeBallStart());
-		operatorJoystick.ButtonA().whenPressed(new DriveIntakeWithConstant(-0.2));
-		operatorJoystick.ButtonA().whenReleased(new DriveIntakeWithConstant(0.0));
-		operatorJoystick.ButtonY().whenPressed(new DriveIntakeWithConstant(0.2));
-		operatorJoystick.ButtonY().whenReleased(new DriveIntakeWithConstant(0.0));
+		// operatorJoystick.ButtonLeftBumper().whenPressed(new IntakeBallStop());
+		// operatorJoystick.ButtonRightBumper().whenPressed(new IntakeBallStart());
+
 
 
 
@@ -174,7 +175,7 @@ public class OI
 
 	public double getColorWheelJoystick()
 	{
-		return 0.0; //pidTestJoystick.getRightStickRaw_Y();
+		return operatorJoystick.getRightStickRaw_Y();
 	}
 
 	public double getIntakeMotorJoyStick() {

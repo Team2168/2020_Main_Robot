@@ -32,14 +32,14 @@ public class ColorWheel extends Subsystem {
   private static ColorWheel instance = null;
   private CANPIDController m_pidController;
   private CANEncoder m_encoder;
-  private final double gearRatio = 30.0; // 25 internal means 1 external TODO fix
+  private final double gearRatio = 25.0; // 25 internal means 1 external TODO fix
   private final double ALLOWED_ERROR = (2.0 / 360.0);
   private double kP, kI, kD, kIz, kFF, kMaxOutput, kMinOutput, maxRPM, maxVel, minVel, maxAcc, allowedErr = ALLOWED_ERROR;
   private double velocitySetPoint_sensorUnits, positionSetPoint_sensorUnits;
 
   private ColorWheel()
   {
-    colorWheelMotor = new CANSparkMax(2,MotorType.kBrushless); //RobotMap.COLORWHEEL_MOTOR_PDP
+    colorWheelMotor = new CANSparkMax(RobotMap.COLORWHEEL_MOTOR_PDP,MotorType.kBrushless); 
     colorWheelMotor.setSmartCurrentLimit(30);
     colorWheelMotor.setControlFramePeriodMs(20);
     colorWheelMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 500);
@@ -70,8 +70,8 @@ public class ColorWheel extends Subsystem {
     maxRPM = 8.0;
 
     // Smart Motion Coefficients
-    maxVel = 60.0; // rpm
-    maxAcc = 60.0;
+    maxVel = 8.0*60.0; // rpm
+    maxAcc = 8.0*60.0;
 
     // set PID coefficients
     m_pidController.setP(kP);
@@ -224,6 +224,7 @@ public class ColorWheel extends Subsystem {
     positionSetPoint_sensorUnits = revs_to_motor_rotations(setPoint);
 
     m_pidController.setReference(positionSetPoint_sensorUnits, ControlType.kSmartMotion);
+    System.out.println("setting inside method");
   }
 
   public void setSetpoint(double setPoint, boolean velocityMode)

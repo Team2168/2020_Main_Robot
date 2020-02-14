@@ -16,7 +16,7 @@ public class DriveColorWheelXRotations extends Command {
 
   private static ColorWheel colorWheel;
   private double _setPoint;
-  private boolean _readPIDFromDashboard = true;
+  private boolean _readPIDFromDashboard = false;
   private double _loopsToSettle = 10;
   private int _withinThresholdLoops = 0;
 
@@ -41,7 +41,6 @@ public class DriveColorWheelXRotations extends Command {
   @Override
   protected void execute() {
     colorWheel.setPositionSetPoint(_setPoint);
-
     SmartDashboard.putNumber("SetPoint", _setPoint);
     SmartDashboard.putNumber("CW Velocity", colorWheel.getVelocity());
     SmartDashboard.putNumber("CW Position", colorWheel.getPosition());
