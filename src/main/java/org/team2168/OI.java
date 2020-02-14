@@ -175,7 +175,7 @@ public class OI
 
 	public double getColorWheelJoystick()
 	{
-		return operatorJoystick.getRightStickRaw_Y();
+		return 0.0; //pidTestJoystick.getRightStickRaw_Y();
 	}
 
 	public double getIntakeMotorJoyStick() {
