@@ -23,7 +23,7 @@ public class IntakeMotor extends Subsystem {
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
   private TalonSRX intakeMotor;
-  public boolean INTAKE_MOTOR_REVERSE = false; //change manually
+  public boolean INTAKE_MOTOR_REVERSE = true; //change manually
   public static final double maxSpeed = 0.5;
 
   private static IntakeMotor _instance = null;

@@ -198,6 +198,6 @@ public class Shooter extends Subsystem {
     }
 
     public void initDefaultCommand() {
-        setDefaultCommand(new DriveShooterWithJoystick());
+        // setDefaultCommand(new DriveShooterWithJoystick());
     }
 }

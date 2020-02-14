@@ -322,7 +322,7 @@ public class Climber extends Subsystem {
    * This sets the default command to drive via a joystick.
    */
   public void initDefaultCommand() {
-    setDefaultCommand(new DriveClimberWithJoystick());
+    // setDefaultCommand(new DriveClimberWithJoystick());
   }
 
 }
