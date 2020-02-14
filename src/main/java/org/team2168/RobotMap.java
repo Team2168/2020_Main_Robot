@@ -64,9 +64,9 @@ public class RobotMap {
 	/*************************************************************************
 	*                         PDP/CAN DEVICES                                 *
     *************************************************************************/
-	public static final int DRIVETRAIN_LEFT_MOTOR_1_PDP = 0;
-	public static final int DRIVETRAIN_LEFT_MOTOR_2_PDP = 1;
-	public static final int DRIVETRAIN_LEFT_MOTOR_3_PDP = 2;
+	public static final int DRIVETRAIN_RIGHT_MOTOR_1_PDP = 0;
+	public static final int DRIVETRAIN_RIGHT_MOTOR_2_PDP = 1;
+	public static final int DRIVETRAIN_RIGHT_MOTOR_3_PDP = 2;
 	public static final int CLIMBER_MOTOR_1_PDP = 3;
 	public static final int SHOOTER_MOTOR_ONE_PDP = 4;
 	public static final int INTAKE_MOTOR_PDP = 5;
@@ -77,9 +77,9 @@ public class RobotMap {
 	public static final int COLORWHEEL_MOTOR_PDP = 10;
 	public static final int SHOOTER_MOTOR_TWO_PDP = 11;
 	public static final int CLIMBER_MOTOR_2_PDP = 12;
-	public static final int DRIVETRAIN_RIGHT_MOTOR_3_PDP = 13;
-	public static final int DRIVETRAIN_RIGHT_MOTOR_2_PDP = 14;
-	public static final int DRIVETRAIN_RIGHT_MOTOR_1_PDP = 15;
+	public static final int DRIVETRAIN_LEFT_MOTOR_3_PDP = 13;
+	public static final int DRIVETRAIN_LEFT_MOTOR_2_PDP = 14;
+	public static final int DRIVETRAIN_LEFT_MOTOR_1_PDP = 15;
 
 	//PCMs
 	public static final int PCM_CAN_ID_BELLYPAN = 0;
