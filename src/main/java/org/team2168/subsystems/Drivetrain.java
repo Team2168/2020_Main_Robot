@@ -374,7 +374,7 @@ public class Drivetrain extends Subsystem {
     else {
       /* Motion Magic Configs */
       _rightMotor1.configMotionAcceleration((int) (inches_per_sec_to_ticks_per_100ms(5.0*12.0))); //(distance units per 100 ms) per second 
-      _rightMotor1.configMotionCruiseVelocity((int) (inches_per_sec_to_ticks_per_100ms(10.0*12.0))); //distance units per 100 ms
+      _rightMotor1.configMotionCruiseVelocity((int) (inches_per_sec_to_ticks_per_100ms(5.0*12.0))); //distance units per 100 ms
 
     }
 
