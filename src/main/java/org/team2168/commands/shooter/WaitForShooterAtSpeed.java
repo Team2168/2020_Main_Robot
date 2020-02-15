@@ -17,7 +17,7 @@ public class WaitForShooterAtSpeed extends Command {
   private double _errorTolerance;
   private double _loopsToSettle = 10;
   private int _withinThresholdLoops = 0;
-  private static final double DEFAULT_ERROR_TOLERANCE = 10;
+  private static final double DEFAULT_ERROR_TOLERANCE = 50.0;
 
   public WaitForShooterAtSpeed(double errorTolerance) {
     // this can't require the shooter because we want shooter to keep running independently

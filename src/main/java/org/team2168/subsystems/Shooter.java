@@ -26,8 +26,8 @@ public class Shooter extends Subsystem {
 
     private StatorCurrentLimitConfiguration talonCurrentLimit;
     private final boolean ENABLE_CURRENT_LIMIT = true;
-    private final double CONTINUOUS_CURRENT_LIMIT = 30; //amps
-    private final double TRIGGER_THRESHOLD_LIMIT = 35; //amp
+    private final double CONTINUOUS_CURRENT_LIMIT = 60; //amps
+    private final double TRIGGER_THRESHOLD_LIMIT = 70; //amp
     private final double TRIGGER_THRESHOLD_TIME = 100; //ms
 
     private static Shooter _instance;
@@ -63,7 +63,7 @@ public class Shooter extends Subsystem {
 
     private static final double TICKS_PER_REV = 2048.0; //one event per edge on each quadrature channel
     private static final double TICKS_PER_100MS = TICKS_PER_REV / 10.0;
-    private static final double GEAR_RATIO = 24.0/18.0;  // motor pulley/shooter wheel pulley
+    private static final double GEAR_RATIO = 18.0/24.0;  // motor pulley/shooter wheel pulley
     private static final double SECS_PER_MIN = 60.0;
 
     /**
@@ -72,7 +72,7 @@ public class Shooter extends Subsystem {
      * 
      * 	                                      kP    kI    kD          kF               Iz   PeakOut
      */
-    final Gains kGains_Velocity = new Gains( 0.775, 0.000, 0, 0.17825/TICKS_PER_100MS,  300,  1.00); // kF = 1023*0.00016/ticks_per_100ms
+    final Gains kGains_Velocity = new Gains( 4.0, 0.000, 0, 1.00*1023.0/19225.0,  300,  1.00); // kF = 75% * 1023.0 / max_vel in sensor ticks
     
     private double setPointVelocity_sensorUnits;
 
@@ -101,7 +101,7 @@ public class Shooter extends Subsystem {
         _motorTwo.follow(_motorOne, FollowerType.PercentOutput);
         
         /* Config neutral deadband to be the smallest possible */
-        _motorOne.configNeutralDeadband(0.001);
+        _motorOne.configNeutralDeadband(0.01);
 
         /* Config sensor used for Primary PID [Velocity] */
         _motorOne.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor,
@@ -175,7 +175,7 @@ public class Shooter extends Subsystem {
 
     public double getError()
     {
-        return _motorOne.getClosedLoopError(kPIDLoopIdx)/TICKS_PER_100MS;
+        return ticks_per_100ms_to_revs_per_minute(_motorOne.getClosedLoopError(kPIDLoopIdx)) ;
     }
 
     /**
@@ -194,10 +194,10 @@ public class Shooter extends Subsystem {
      */
     private double ticks_per_100ms_to_revs_per_minute(double ticks) {
         //TODO: Verify conversion is correct
-        return ((ticks * 10.0) / SECS_PER_MIN) / GEAR_RATIO;
+        return ticks * SECS_PER_MIN / (GEAR_RATIO * TICKS_PER_100MS);
     }
 
     public void initDefaultCommand() {
-        // setDefaultCommand(new DriveShooterWithJoystick());
+        setDefaultCommand(new DriveShooterWithJoystick());
     }
 }
