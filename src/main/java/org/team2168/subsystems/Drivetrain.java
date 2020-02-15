@@ -163,6 +163,17 @@ public class Drivetrain extends Subsystem {
     _leftConfig.neutralDeadband = Constants.kNeutralDeadband;
     _rightConfig.neutralDeadband = Constants.kNeutralDeadband;
 
+    _leftConfig.nominalOutputForward = 0.08;
+    _leftConfig.nominalOutputReverse = -0.08;
+    _leftConfig.peakOutputForward = 1.0;
+    _leftConfig.peakOutputReverse = -1.0;
+    _rightConfig.nominalOutputForward = 0.08;
+    _rightConfig.nominalOutputReverse = -0.08;
+    _rightConfig.peakOutputForward = 1.0;
+    _rightConfig.peakOutputReverse = -1.0;
+
+
+
 
     /**
      * 1ms per loop.  PID loop can be slowed down if need be.
@@ -209,6 +220,7 @@ public class Drivetrain extends Subsystem {
     ConsolePrinter.putNumber("Heading", ()->{return getHeading();}, true, false);
     ConsolePrinter.putNumber("Position Error", ()->{return getErrorPosition();}, true, false);
     ConsolePrinter.putNumber("Heading Error", ()->{return getErrorHeading();}, true, false);
+    ConsolePrinter.putNumber("Motor output dt", ()->{return _rightMotor1.getMotorOutputPercent();}, true, false);
     
   }
 
@@ -373,7 +385,7 @@ public class Drivetrain extends Subsystem {
     }
     else {
       /* Motion Magic Configs */
-      _rightMotor1.configMotionAcceleration((int) (inches_per_sec_to_ticks_per_100ms(5.0*12.0))); //(distance units per 100 ms) per second 
+      _rightMotor1.configMotionAcceleration((int) (inches_per_sec_to_ticks_per_100ms(8.0*12.0))); //(distance units per 100 ms) per second 
       _rightMotor1.configMotionCruiseVelocity((int) (inches_per_sec_to_ticks_per_100ms(5.0*12.0))); //distance units per 100 ms
 
     }

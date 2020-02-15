@@ -228,7 +228,7 @@ public class OI
 	 */
 	public double getShooterJoystick()
 	{
-		return 0.0; //pidTestJoystick.getRightStickRaw_Y();
+		return pidTestJoystick.getRightStickRaw_Y();
 	}
 
 	/**
