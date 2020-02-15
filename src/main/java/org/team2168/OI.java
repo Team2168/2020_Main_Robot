@@ -1,21 +1,22 @@
 
 package org.team2168;
 
-import org.team2168.commands.drivetrain.FirstPath;
-import org.team2168.commands.drivetrain.FirstPathReverse;
-import org.team2168.commands.drivetrain.PIDCommands.DriveXDistance;
-import org.team2168.commands.drivetrain.PIDCommands.TurnXAngle;
+import org.team2168.commands.auto.FinishFiring;
+import org.team2168.commands.auto.FireBalls;
 import org.team2168.commands.color_wheel.DriveColorWheelXRotations;
 import org.team2168.commands.color_wheel_pivot.DisengageColorWheel;
 import org.team2168.commands.color_wheel_pivot.EngageColorWheel;
-import org.team2168.commands.auto.FinishFiring;
-import org.team2168.commands.auto.FireBalls;
+import org.team2168.commands.drivetrain.FirstPath;
+import org.team2168.commands.drivetrain.PIDCommands.DriveXDistance;
+import org.team2168.commands.drivetrain.PIDCommands.TurnXAngle;
 import org.team2168.commands.hood_adjust.MoveToBackTrench;
 import org.team2168.commands.hood_adjust.MoveToFrontTrench;
 import org.team2168.commands.hood_adjust.MoveToWall;
 import org.team2168.commands.hood_adjust.MoveToWhiteLine;
-import org.team2168.commands.shooter.DriveShooterSpeedHoodPosition;
-import org.team2168.commands.shooter.DriveShooterWithConstant;
+import org.team2168.commands.intakeMotor.IntakeBallStart;
+import org.team2168.commands.intakeMotor.IntakeBallStop;
+import org.team2168.commands.shooter.DriveToXSpeed;
+import org.team2168.subsystems.Shooter;
 import org.team2168.utils.F310;
 import org.team2168.utils.LinearInterpolator;
 
@@ -98,21 +99,19 @@ public class OI
 		operatorJoystick.ButtonRightDPad().whenPressed(new MoveToWhiteLine());
 		operatorJoystick.ButtonDownDPad().whenPressed(new MoveToWall());
 
-		// operatorJoystick.ButtonY().whenPressed(new EngageColorWheel());
-		// operatorJoystick.ButtonA().whenPressed(new DisengageColorWheel());
+		operatorJoystick.ButtonY().whenPressed(new EngageColorWheel());
+		operatorJoystick.ButtonA().whenPressed(new DisengageColorWheel());
+		operatorJoystick.ButtonA().whenPressed(new MoveToWall());
 
-		// operatorJoystick.ButtonUpDPad().whenPressed(new DriveColorWheelXRotations(4.0*8.0));
-		// operatorJoystick.ButtonDownDPad().whenPressed(new DriveColorWheelXRotations(-4.0*8.0));
+		operatorJoystick.ButtonStart().whenPressed(new DriveColorWheelXRotations(4.0*8.0));
 
 
-		operatorJoystick.ButtonX().whenPressed(new DriveShooterSpeedHoodPosition());
-		operatorJoystick.ButtonY().whenPressed(new DriveShooterWithConstant(0.0));
+		operatorJoystick.ButtonX().whenPressed(new DriveToXSpeed(Shooter.getInstance().WALL_VEL));
 		operatorJoystick.ButtonB().whenPressed(new FireBalls());
 		operatorJoystick.ButtonB().whenReleased(new FinishFiring());
-		// operatorJoystick.ButtonUpDPad().whenPressed(new DriveShooterWithConstant(0.5));
 
-		// operatorJoystick.ButtonLeftBumper().whenPressed(new IntakeBallStop());
-		// operatorJoystick.ButtonRightBumper().whenPressed(new IntakeBallStart());
+		operatorJoystick.ButtonLeftBumper().whenPressed(new IntakeBallStop());
+		operatorJoystick.ButtonRightBumper().whenPressed(new IntakeBallStart());
 
 
 
@@ -124,8 +123,10 @@ public class OI
 		// pidTestJoystick.ButtonA().whenPressed(new DisabledPattern());
 		pidTestJoystick.ButtonY().whenPressed(new DriveXDistance(10.0*12.0));
 		pidTestJoystick.ButtonA().whenPressed(new DriveXDistance(-10.0*12.0));
-		pidTestJoystick.ButtonRightDPad().whenPressed(new TurnXAngle(90.0));
-		pidTestJoystick.ButtonLeftDPad().whenPressed(new TurnXAngle(-90.0));
+		pidTestJoystick.ButtonRightDPad().whenPressed(new TurnXAngle(30.0));
+		pidTestJoystick.ButtonLeftDPad().whenPressed(new TurnXAngle(-30.0));
+		pidTestJoystick.ButtonUpDPad().whenPressed(new TurnXAngle(90.0));
+		pidTestJoystick.ButtonDownDPad().whenPressed(new TurnXAngle(-90.0));
 		pidTestJoystick.ButtonStart().whenPressed(new FirstPath());
 		// pidTestJoystick.ButtonBack().whenPressed(new FirstPathReverse());
 
@@ -227,7 +228,7 @@ public class OI
 	 */
 	public double getShooterJoystick()
 	{
-		return pidTestJoystick.getRightStickRaw_Y();
+		return 0.0; //pidTestJoystick.getRightStickRaw_Y();
 	}
 
 	/**
