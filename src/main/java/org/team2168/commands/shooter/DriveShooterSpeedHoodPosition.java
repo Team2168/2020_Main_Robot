@@ -18,10 +18,10 @@ public class DriveShooterSpeedHoodPosition extends Command {
     private HoodAdjust pos;
     /**target position */
     private double _targetVelocity;
-    private static final double WALL_VEL = 2500.0; //TODO SET ALL
+    private static final double WALL_VEL = 7160.0; //TODO SET ALL
     private static final double WHITE_LINE_VEL = 3580.0;
     private static final double FRONT_TRENCH_VEL = 4655.0;
-    private static final double BACK_TRENCH_VEL = 7160.0;
+    private static final double BACK_TRENCH_VEL = 5000.0; //7160.0
 
 
   public DriveShooterSpeedHoodPosition() {
