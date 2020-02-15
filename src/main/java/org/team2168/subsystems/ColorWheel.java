@@ -49,12 +49,24 @@ public class ColorWheel extends Subsystem {
     colorWheelMotor.set(speed);
   }
 
+
+  /**
+   * Gets the current color sensed by the color sensor on the robot
+   * 
+   */
   public char getSensorColor() //update to have code that specifically pulls the data from the sensor into one of 4 characters
   {
     return 'B';
   }
 
-  public char getFieldColor()
+  
+
+  /**
+  * gets the color we need to sping to from the FMS 
+  * 
+  * @return the first letter of the color we need to position to as a char
+  */
+  public char getTargetColor()
   {
     String gameData;
     gameData = DriverStation.getInstance().getGameSpecificMessage();
@@ -79,101 +91,101 @@ public class ColorWheel extends Subsystem {
     } 
   }
 
-  public int degToSpin()
+  /**
+  * Translates what our color sensor sees into what the Color Sensor on the color wheel itself sees
+  * 
+  * @return the first letter of the color that the field should be reading as a char
+  */
+
+  public char getCalculatedFieldColor()
   {
-    char desiredColor = getFieldColor();
-    char currentColor = getSensorColor();
-    int valueToBeReturned = 1;
-    if (currentColor == 'B')
+    char robotSensor = getSensorColor();
+    if(robotSensor == 'B')
     {
-      if (desiredColor == 'B')
-      {
-        valueToBeReturned = 90;
-      }
-      else if (desiredColor == 'G')
-      {
-        valueToBeReturned = 135;
-      }
-      else if (desiredColor == 'R')
-      {
-        valueToBeReturned = 0;
-      }
-      else if (desiredColor == 'Y')
-      {
-        valueToBeReturned = 45;
-      }
-      else
-      {
-        valueToBeReturned = 1;
-      }
+      return 'Y';
     }
-    else if (currentColor == 'Y')
+    else if(robotSensor == 'G')
     {
-      if (desiredColor == 'B')
-      {
-        valueToBeReturned = 135;
-      }
-      else if (desiredColor == 'G')
-      {
-        valueToBeReturned = 0;
-      }
-      else if (desiredColor == 'R')
-      {
-        valueToBeReturned = 45;
-      }
-      else if (desiredColor == 'Y')
-      {
-        valueToBeReturned = 90;
-      }
-      else
-      {
-        valueToBeReturned = 1;
-      }
+      return 'B';
     }
-    else if (currentColor == 'G')
+    else if(robotSensor == 'R')
     {
-      if (desiredColor == 'B')
-      {
-        valueToBeReturned = 45;
-      }
-      else if (desiredColor == 'G')
-      {
-        valueToBeReturned = 90;
-      }
-      else if (desiredColor == 'R')
-      {
-        valueToBeReturned = 135;
-      }
-      else if (desiredColor == 'Y')
-      {
-        valueToBeReturned = 0;
-      }
+      return 'G';
     }
-    else if (currentColor == 'R')
+    else if(robotSensor == 'Y')
     {
-      if (desiredColor == 'B')
-      {
-        valueToBeReturned = 0;
-      }
-      else if (desiredColor == 'G')
-      {
-        valueToBeReturned = 45;
-      }
-      else if (desiredColor == 'R')
-      {
-        valueToBeReturned = 90;
-      }
-      else if (desiredColor == 'Y')
-      {
-        valueToBeReturned = 135;
-      }
+      return 'R';
     }
     else
     {
-      valueToBeReturned = 1; //error return value
+      return 'N';
     }
-    return valueToBeReturned;
   }
+
+  /**
+  * @return the value of the inputted color as a consistent integer or the number 5 to indicate error data
+  */
+
+  public int colorWheelMapping(char inputColor)
+  {
+    if (inputColor == 'B') //create a method for this
+    {
+      return 0;
+    }
+    else if (inputColor == 'G')
+    {
+      return 1;
+    }
+    else if (inputColor == 'R')
+    {
+      return 2;
+    }
+    else if (inputColor == 'Y')
+    {
+      return 3;
+    }
+    else
+    {
+      return 5; //error return value
+    }
+  }
+
+  /**
+  * @return the number of degrees required to spin the color wheel in order to land on 
+  * the color needed by the FMS
+  */
+  
+  public int degToSpin()
+  {
+    char desiredColor = getTargetColor(); 
+    char currentColor = getCalculatedFieldColor(); 
+    int desiredColorNum = 0;
+    int currentColorNum = 0;
+    int degrees = 0;
+    
+    currentColorNum = colorWheelMapping(currentColor);
+    if (currentColorNum == 5)
+    {
+      return 0;
+    }
+    desiredColorNum = colorWheelMapping(desiredColor);
+    if (desiredColorNum == 5)
+    {
+      return 0;
+    }
+
+    degrees = currentColorNum - desiredColorNum;
+    if (degrees == 3)
+    {
+      degrees = 1;
+    }
+    else if (degrees == -3)
+    {
+      degrees = -1;
+    }
+
+    return degrees * 45;
+    }
 
   /**
    * 
