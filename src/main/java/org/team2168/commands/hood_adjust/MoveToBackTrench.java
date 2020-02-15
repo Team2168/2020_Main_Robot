@@ -7,8 +7,11 @@
 
 package org.team2168.commands.hood_adjust;
 
-import org.team2168.subsystems.HoodAdjust;
 import org.team2168.commands.auto.Sleep;
+import org.team2168.commands.shooter.DriveToXSpeed;
+import org.team2168.subsystems.HoodAdjust;
+import org.team2168.subsystems.Shooter;
+
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
 public class MoveToBackTrench extends CommandGroup {
@@ -38,12 +41,13 @@ public class MoveToBackTrench extends CommandGroup {
     // }
 
     //updated---allows for any possible position, allows retract pancake under load;
+    addParallel(new DriveToXSpeed(Shooter.getInstance().BACK_TRENCH_VEL));
     addSequential(new ExtendShooterHood());
     addSequential(new RetractShooterHardstop());
     addSequential(new Sleep(), 0.1);
     addSequential(new RetractShooterHood());
     addSequential(new Sleep(), 0.2);
-    pos.setHoodPosition(HoodAdjust.HoodPosition.BACK_TRENCH);
+    pos.setHoodPosition(HoodAdjust.HoodPosition.BACK_TRENCH);// doesn't work
   }
 }
 
