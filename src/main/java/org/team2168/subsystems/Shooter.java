@@ -72,14 +72,14 @@ public class Shooter extends Subsystem {
      * 
      * 	                                      kP    kI    kD          kF               Iz   PeakOut
      */
-    final Gains kGains_Velocity = new Gains( 4.0, 0.000, 0, 1.00*1023.0/19225.0,  300,  1.00); // kF = 75% * 1023.0 / max_vel in sensor ticks
+    final Gains kGains_Velocity = new Gains( 0.5, 0.000, 0.0, 1.00*1023.0/19225.0,  300,  1.00); // kF = 75% * 1023.0 / max_vel in sensor ticks, kP = 3.6, kD = 160.0, kF  = 
     
     private double setPointVelocity_sensorUnits;
 
     public final double WALL_VEL = 2500.0; //TODO SET ALL
     public final double WHITE_LINE_VEL = 3580.0;
-    public final double FRONT_TRENCH_VEL = 4655.0;
-    public final double BACK_TRENCH_VEL = 7160.0;
+    public final double FRONT_TRENCH_VEL = 3950.0;
+    public final double BACK_TRENCH_VEL = 4500.0; //7160
 
     private Shooter() {
         _motorOne = new TalonFX(RobotMap.SHOOTER_MOTOR_ONE_PDP);
@@ -115,16 +115,17 @@ public class Shooter extends Subsystem {
                                             
 
         /* Config the peak and nominal outputs */
-        _motorOne.configNominalOutputForward(0, kTimeoutMs);
-        _motorOne.configNominalOutputReverse(0, kTimeoutMs);
-        _motorOne.configPeakOutputForward(1, kTimeoutMs);
-        _motorOne.configPeakOutputReverse(0, kTimeoutMs); //set so that the shooter CANNOT run backwards
+        _motorOne.configNominalOutputForward(0.0, kTimeoutMs);
+        _motorOne.configNominalOutputReverse(0.0, kTimeoutMs);
+        _motorOne.configPeakOutputForward(1.0, kTimeoutMs);
+        _motorOne.configPeakOutputReverse(0.0, kTimeoutMs); //set so that the shooter CANNOT run backwards
 
         /* Config the Velocity closed loop gains in slot0 */
         _motorOne.config_kF(kPIDLoopIdx, kGains_Velocity.kF, kTimeoutMs);
         _motorOne.config_kP(kPIDLoopIdx, kGains_Velocity.kP, kTimeoutMs);
         _motorOne.config_kI(kPIDLoopIdx, kGains_Velocity.kI, kTimeoutMs);
         _motorOne.config_kD(kPIDLoopIdx, kGains_Velocity.kD, kTimeoutMs);
+        _motorOne.config_IntegralZone(kPIDLoopIdx, kGains_Velocity.kIzone, kTimeoutMs);
         /*
          * Talon FX does not need sensor phase set for its integrated sensor
          * This is because it will always be correct if the selected feedback device is integrated sensor (default value)

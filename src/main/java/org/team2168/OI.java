@@ -15,6 +15,7 @@ import org.team2168.commands.hood_adjust.MoveToWall;
 import org.team2168.commands.hood_adjust.MoveToWhiteLine;
 import org.team2168.commands.intakeMotor.IntakeBallStart;
 import org.team2168.commands.intakeMotor.IntakeBallStop;
+import org.team2168.commands.shooter.DriveShooterWithConstant;
 import org.team2168.commands.shooter.DriveToXSpeed;
 import org.team2168.subsystems.Shooter;
 import org.team2168.utils.F310;
@@ -106,7 +107,9 @@ public class OI
 		operatorJoystick.ButtonStart().whenPressed(new DriveColorWheelXRotations(4.0*8.0));
 
 
-		operatorJoystick.ButtonX().whenPressed(new DriveToXSpeed(Shooter.getInstance().WALL_VEL));
+		// operatorJoystick.ButtonX().whenPressed(new DriveToXSpeed(Shooter.getInstance().WALL_VEL));
+		// operatorJoystick.ButtonX().whenPressed(new DriveShooterWithConstant(0.306));
+
 		operatorJoystick.ButtonB().whenPressed(new FireBalls());
 		operatorJoystick.ButtonB().whenReleased(new FinishFiring());
 
