@@ -17,7 +17,7 @@ public class IntakeBallStop extends CommandGroup {
   public IntakeBallStop() {
     addParallel(new DriveIntakeWithConstant(0.3));
     addSequential(new RetractIntakePneumatic());
-    addSequential(new Sleep(), 2.0);
+    addSequential(new Sleep(), 1.5);
     addSequential(new DriveIntakeWithConstant(0.0));
    
   }
