@@ -13,6 +13,7 @@ import org.team2168.commands.hood_adjust.MoveToFrontTrench;
 import org.team2168.commands.intakeMotor.DriveIntakeWithConstant;
 import org.team2168.commands.intakeMotor.IntakeBallStop;
 import org.team2168.commands.intakePivot.ExtendIntakePneumatic;
+import org.team2168.commands.intakePivot.RetractIntakePneumatic;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
@@ -41,9 +42,11 @@ public class DefaultTrenchAuto extends CommandGroup {
     addParallel(new MoveToFrontTrench());
     addParallel(new DriveIntakeWithConstant(0.8));//TODO set
     addSequential(new ExtendIntakePneumatic());
-    addSequential(new DriveXDistance(-115.0));
-    addParallel(new IntakeBallStop());
-    addSequential(new TurnXAngle(12.25), 2.0);
+    addSequential(new DriveXDistance(-115.0), 4.0);
+    // addSequential(new IntakeBallStop());
+    addParallel(new DriveIntakeWithConstant(0.3));
+    addSequential(new RetractIntakePneumatic());  //want to run the intake constantly during firing... TODO: cleanup
+    addSequential(new TurnXAngle(13.25), 2.0); //12.25), 2.0);
     addSequential(new FireBalls(), 4.0);
   }
 }

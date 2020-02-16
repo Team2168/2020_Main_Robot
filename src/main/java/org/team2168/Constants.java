@@ -46,7 +46,7 @@ public class Constants {
 	 * 	                                    			   kP     kI     kD   kF             Iz    PeakOut */
 	public final static Gains kGains_Distance = new Gains( 0.18,  0.00,   0.0, 0.0,            120,  0.75 );
 	public final static Gains kGains_Turning  = new Gains( 0.45, 0.00,  1.0, 0.0,            200,  0.5 );
-	public final static Gains kGains_Turning_Straight  = new Gains( 0.8, 0.0, 1.0, 0.0,  300,  0.50 ); //TODO set
+	public final static Gains kGains_Turning_Straight  = new Gains( 1.0, 0.0, 1.0, 0.0,  300,  0.50 ); //TODO set
 	// public final static Gains kGains_MotProf  = new Gains( 1.0, 0.0,  0.0, 1023.0/6800.0,  400,  1.00 );
 	
 	/** ---- Flat constants, you should not need to change these ---- */
