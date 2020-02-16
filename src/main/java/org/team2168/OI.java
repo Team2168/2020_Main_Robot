@@ -123,10 +123,10 @@ public class OI
 		// pidTestJoystick.ButtonA().whenPressed(new DisabledPattern());
 		pidTestJoystick.ButtonY().whenPressed(new DriveXDistance(10.0*12.0));
 		pidTestJoystick.ButtonA().whenPressed(new DriveXDistance(-10.0*12.0));
-		pidTestJoystick.ButtonRightDPad().whenPressed(new TurnXAngle(30.0));
-		pidTestJoystick.ButtonLeftDPad().whenPressed(new TurnXAngle(-30.0));
-		pidTestJoystick.ButtonUpDPad().whenPressed(new TurnXAngle(90.0));
-		pidTestJoystick.ButtonDownDPad().whenPressed(new TurnXAngle(-90.0));
+		pidTestJoystick.ButtonRightDPad().whenPressed(new TurnXAngle(-11.0, 0.25));
+		pidTestJoystick.ButtonLeftDPad().whenPressed(new TurnXAngle(+11.0,0.25));
+		pidTestJoystick.ButtonUpDPad().whenPressed(new TurnXAngle(-90.0,0.25));
+		pidTestJoystick.ButtonDownDPad().whenPressed(new TurnXAngle(+90.0, 0.25));
 		pidTestJoystick.ButtonStart().whenPressed(new DefaultTrenchAuto());
 		// pidTestJoystick.ButtonBack().whenPressed(new FirstPathReverse());
 
