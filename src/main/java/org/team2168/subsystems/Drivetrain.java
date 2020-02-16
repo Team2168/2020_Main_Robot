@@ -163,12 +163,12 @@ public class Drivetrain extends Subsystem {
     _leftConfig.neutralDeadband = Constants.kNeutralDeadband;
     _rightConfig.neutralDeadband = Constants.kNeutralDeadband;
 
-    _leftConfig.nominalOutputForward = 0.08;
-    _leftConfig.nominalOutputReverse = -0.08;
+    _leftConfig.nominalOutputForward = 0.045; //0.08 
+    _leftConfig.nominalOutputReverse = -0.045;
     _leftConfig.peakOutputForward = 1.0;
     _leftConfig.peakOutputReverse = -1.0;
-    _rightConfig.nominalOutputForward = 0.08;
-    _rightConfig.nominalOutputReverse = -0.08;
+    _rightConfig.nominalOutputForward = 0.045;
+    _rightConfig.nominalOutputReverse = -0.045;
     _rightConfig.peakOutputForward = 1.0;
     _rightConfig.peakOutputReverse = -1.0;
 
@@ -379,7 +379,7 @@ public class Drivetrain extends Subsystem {
   {
     if(straightmode) {
       /* Motion Magic Configs */
-      _rightMotor1.configMotionAcceleration((int) (inches_per_sec_to_ticks_per_100ms(10.0*12.0))); //(distance units per 100 ms) per second 
+      _rightMotor1.configMotionAcceleration((int) (inches_per_sec_to_ticks_per_100ms(8.0*12.0))); //(distance units per 100 ms) per second 
       _rightMotor1.configMotionCruiseVelocity((int) (inches_per_sec_to_ticks_per_100ms(10.0*12.0))); //distance units per 100 ms
           /* FPID for Heading */
       _rightMotor1.config_kF(Constants.SLOT_1, Constants.kGains_Turning_Straight.kF,Constants.kTimeoutMs);
