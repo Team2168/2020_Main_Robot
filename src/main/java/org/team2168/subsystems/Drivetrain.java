@@ -221,7 +221,7 @@ public class Drivetrain extends Subsystem {
     ConsolePrinter.putNumber("Position Error", ()->{return getErrorPosition();}, true, false);
     ConsolePrinter.putNumber("Heading Error", ()->{return getErrorHeading();}, true, false);
     ConsolePrinter.putNumber("Motor output dt", ()->{return _rightMotor1.getMotorOutputPercent();}, true, false);
-    switchGains(false);
+    switchGains(true);
     
   }
 
@@ -378,28 +378,28 @@ public class Drivetrain extends Subsystem {
 
   public void switchGains(boolean straightmode)
   {
-    // if(straightmode) {
-    //   /* Motion Magic Configs */
-    //   _rightMotor1.configMotionAcceleration((int) (inches_per_sec_to_ticks_per_100ms(8.0*12.0))); //(distance units per 100 ms) per second 
-    //   _rightMotor1.configMotionCruiseVelocity((int) (inches_per_sec_to_ticks_per_100ms(10.0*12.0))); //distance units per 100 ms
-    //       /* FPID for Heading */
-    //   _rightMotor1.config_kF(Constants.SLOT_1, Constants.kGains_Turning_Straight.kF,Constants.kTimeoutMs);
-    //   _rightMotor1.config_kP(Constants.SLOT_1, Constants.kGains_Turning_Straight.kP,Constants.kTimeoutMs);
-    //   _rightMotor1.config_kI(Constants.SLOT_1, Constants.kGains_Turning_Straight.kI,Constants.kTimeoutMs);
-    //   _rightMotor1.config_kD(Constants.SLOT_1, Constants.kGains_Turning_Straight.kD,Constants.kTimeoutMs);
-    //   _rightMotor1.config_IntegralZone(Constants.SLOT_1, Constants.kGains_Turning_Straight.kIzone, Constants.kTimeoutMs);
-    //   _rightMotor1.configClosedLoopPeakOutput(Constants.SLOT_1, Constants.kGains_Turning_Straight.kPeakOutput, Constants.kTimeoutMs);
+    if(straightmode) {
+      /* Motion Magic Configs */
+      _rightMotor1.configMotionAcceleration((int) (inches_per_sec_to_ticks_per_100ms(8.0*12.0))); //(distance units per 100 ms) per second 
+      _rightMotor1.configMotionCruiseVelocity((int) (inches_per_sec_to_ticks_per_100ms(10.0*12.0))); //distance units per 100 ms
+          /* FPID for Heading */
+      _rightMotor1.config_kF(Constants.SLOT_1, Constants.kGains_Turning_Straight.kF,Constants.kTimeoutMs);
+      _rightMotor1.config_kP(Constants.SLOT_1, Constants.kGains_Turning_Straight.kP,Constants.kTimeoutMs);
+      _rightMotor1.config_kI(Constants.SLOT_1, Constants.kGains_Turning_Straight.kI,Constants.kTimeoutMs);
+      _rightMotor1.config_kD(Constants.SLOT_1, Constants.kGains_Turning_Straight.kD,Constants.kTimeoutMs);
+      _rightMotor1.config_IntegralZone(Constants.SLOT_1, Constants.kGains_Turning_Straight.kIzone, Constants.kTimeoutMs);
+      _rightMotor1.configClosedLoopPeakOutput(Constants.SLOT_1, Constants.kGains_Turning_Straight.kPeakOutput, Constants.kTimeoutMs);
 
-    //   _rightMotor1.configNominalOutputForward(0.045, Constants.kTimeoutMs);
-    //   _rightMotor1.configNominalOutputReverse(-0.045, Constants.kTimeoutMs);
-    //   _rightMotor1.configPeakOutputForward(1.0, Constants.kTimeoutMs);
-    //   _rightMotor1.configPeakOutputReverse(-1.0, Constants.kTimeoutMs);
-    //   _leftMotor1.configNominalOutputForward(0.045, Constants.kTimeoutMs);
-    //   _leftMotor1.configNominalOutputReverse(-0.045, Constants.kTimeoutMs);
-    //   _leftMotor1.configPeakOutputForward(1.0, Constants.kTimeoutMs);
-    //   _leftMotor1.configPeakOutputReverse(-1.0, Constants.kTimeoutMs);
-    // }
-    // else {
+      _rightMotor1.configNominalOutputForward(0.045, Constants.kTimeoutMs);
+      _rightMotor1.configNominalOutputReverse(-0.045, Constants.kTimeoutMs);
+      _rightMotor1.configPeakOutputForward(1.0, Constants.kTimeoutMs);
+      _rightMotor1.configPeakOutputReverse(-1.0, Constants.kTimeoutMs);
+      _leftMotor1.configNominalOutputForward(0.045, Constants.kTimeoutMs);
+      _leftMotor1.configNominalOutputReverse(-0.045, Constants.kTimeoutMs);
+      _leftMotor1.configPeakOutputForward(1.0, Constants.kTimeoutMs);
+      _leftMotor1.configPeakOutputReverse(-1.0, Constants.kTimeoutMs);
+    }
+    else {
       /* Motion Magic Configs */
       _rightMotor1.configMotionAcceleration((int) (inches_per_sec_to_ticks_per_100ms(8.0*12.0))); //(distance units per 100 ms) per second 
       _rightMotor1.configMotionCruiseVelocity((int) (inches_per_sec_to_ticks_per_100ms(5.0*12.0))); //distance units per 100 ms
@@ -418,9 +418,7 @@ public class Drivetrain extends Subsystem {
       _leftMotor1.configNominalOutputReverse(-0.08, Constants.kTimeoutMs);
       _leftMotor1.configPeakOutputForward(1.0, Constants.kTimeoutMs);
       _leftMotor1.configPeakOutputReverse(-1.0, Constants.kTimeoutMs);
-    // }
-
-
+    }
   }
 
   public double getErrorPosition() {
