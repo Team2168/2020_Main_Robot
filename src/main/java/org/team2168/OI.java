@@ -1,12 +1,12 @@
 
 package org.team2168;
 
+import org.team2168.commands.auto.DefaultTrenchAuto;
 import org.team2168.commands.auto.FinishFiring;
 import org.team2168.commands.auto.FireBalls;
 import org.team2168.commands.color_wheel.DriveColorWheelXRotations;
 import org.team2168.commands.color_wheel_pivot.DisengageColorWheel;
 import org.team2168.commands.color_wheel_pivot.EngageColorWheel;
-import org.team2168.commands.drivetrain.FirstPath;
 import org.team2168.commands.drivetrain.PIDCommands.DriveXDistance;
 import org.team2168.commands.drivetrain.PIDCommands.TurnXAngle;
 import org.team2168.commands.hood_adjust.MoveToBackTrench;
@@ -15,9 +15,6 @@ import org.team2168.commands.hood_adjust.MoveToWall;
 import org.team2168.commands.hood_adjust.MoveToWhiteLine;
 import org.team2168.commands.intakeMotor.IntakeBallStart;
 import org.team2168.commands.intakeMotor.IntakeBallStop;
-import org.team2168.commands.shooter.DriveShooterWithConstant;
-import org.team2168.commands.shooter.DriveToXSpeed;
-import org.team2168.subsystems.Shooter;
 import org.team2168.utils.F310;
 import org.team2168.utils.LinearInterpolator;
 
@@ -68,10 +65,10 @@ public class OI
 	private LinearInterpolator gunStyleYInterpolator;
 	private LinearInterpolator gunStyleXInterpolator;
 	private double[][] gunStyleYArray = {
-		{-1.0, -0.20}, //limiting speed to 80%
+		{-1.0, -0.30}, //limiting speed to 80%
 		{-0.15, 0.00},
 		{+0.15, 0.00},
-		{+1.00,+0.20}
+		{+1.00,+0.30}
 	};
 	private double[][] gunStyleXArray = {
 		{-1.0, -0.65},  //scale down turning to max 65%
@@ -130,7 +127,7 @@ public class OI
 		pidTestJoystick.ButtonLeftDPad().whenPressed(new TurnXAngle(-30.0));
 		pidTestJoystick.ButtonUpDPad().whenPressed(new TurnXAngle(90.0));
 		pidTestJoystick.ButtonDownDPad().whenPressed(new TurnXAngle(-90.0));
-		pidTestJoystick.ButtonStart().whenPressed(new FirstPath());
+		pidTestJoystick.ButtonStart().whenPressed(new DefaultTrenchAuto());
 		// pidTestJoystick.ButtonBack().whenPressed(new FirstPathReverse());
 
 

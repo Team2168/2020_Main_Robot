@@ -151,12 +151,12 @@ public class Drivetrain extends Subsystem {
     _rightConfig.auxPIDPolarity = false;
 
     /* FPID for Heading */
-    _rightConfig.slot1.kF = Constants.kGains_Turning.kF;
-    _rightConfig.slot1.kP = Constants.kGains_Turning.kP;
-    _rightConfig.slot1.kI = Constants.kGains_Turning.kI;
-    _rightConfig.slot1.kD = Constants.kGains_Turning.kD;
-    _rightConfig.slot1.integralZone = Constants.kGains_Turning.kIzone;
-    _rightConfig.slot1.closedLoopPeakOutput = Constants.kGains_Turning.kPeakOutput;
+    _rightConfig.slot1.kF = Constants.kGains_Turning_Straight.kF;
+    _rightConfig.slot1.kP = Constants.kGains_Turning_Straight.kP;
+    _rightConfig.slot1.kI = Constants.kGains_Turning_Straight.kI;
+    _rightConfig.slot1.kD = Constants.kGains_Turning_Straight.kD;
+    _rightConfig.slot1.integralZone = Constants.kGains_Turning_Straight.kIzone;
+    _rightConfig.slot1.closedLoopPeakOutput = Constants.kGains_Turning_Straight.kPeakOutput;
 
 
     /* Config the neutral deadband. */
@@ -375,18 +375,30 @@ public class Drivetrain extends Subsystem {
     _leftMotor3.follow(_rightMotor1, FollowerType.AuxOutput1);
   }
 
-  public void changeMaxVelAcc(boolean straightmode)
+  public void switchGains(boolean straightmode)
   {
     if(straightmode) {
       /* Motion Magic Configs */
       _rightMotor1.configMotionAcceleration((int) (inches_per_sec_to_ticks_per_100ms(10.0*12.0))); //(distance units per 100 ms) per second 
       _rightMotor1.configMotionCruiseVelocity((int) (inches_per_sec_to_ticks_per_100ms(10.0*12.0))); //distance units per 100 ms
-
+          /* FPID for Heading */
+      _rightMotor1.config_kF(Constants.SLOT_1, Constants.kGains_Turning_Straight.kF,Constants.kTimeoutMs);
+      _rightMotor1.config_kP(Constants.SLOT_1, Constants.kGains_Turning_Straight.kP,Constants.kTimeoutMs);
+      _rightMotor1.config_kI(Constants.SLOT_1, Constants.kGains_Turning_Straight.kI,Constants.kTimeoutMs);
+      _rightMotor1.config_kD(Constants.SLOT_1, Constants.kGains_Turning_Straight.kD,Constants.kTimeoutMs);
+      _rightMotor1.config_IntegralZone(Constants.SLOT_1, Constants.kGains_Turning_Straight.kIzone, Constants.kTimeoutMs);
+      _rightMotor1.configClosedLoopPeakOutput(Constants.SLOT_1, Constants.kGains_Turning_Straight.kPeakOutput, Constants.kTimeoutMs);
     }
     else {
       /* Motion Magic Configs */
       _rightMotor1.configMotionAcceleration((int) (inches_per_sec_to_ticks_per_100ms(8.0*12.0))); //(distance units per 100 ms) per second 
       _rightMotor1.configMotionCruiseVelocity((int) (inches_per_sec_to_ticks_per_100ms(5.0*12.0))); //distance units per 100 ms
+      _rightMotor1.config_kF(Constants.SLOT_1, Constants.kGains_Turning.kF,Constants.kTimeoutMs);
+      _rightMotor1.config_kP(Constants.SLOT_1, Constants.kGains_Turning.kP,Constants.kTimeoutMs);
+      _rightMotor1.config_kI(Constants.SLOT_1, Constants.kGains_Turning.kI,Constants.kTimeoutMs);
+      _rightMotor1.config_kD(Constants.SLOT_1, Constants.kGains_Turning.kD,Constants.kTimeoutMs);
+      _rightMotor1.config_IntegralZone(Constants.SLOT_1, Constants.kGains_Turning.kIzone, Constants.kTimeoutMs);
+      _rightMotor1.configClosedLoopPeakOutput(Constants.SLOT_1, Constants.kGains_Turning.kPeakOutput, Constants.kTimeoutMs);
 
     }
 

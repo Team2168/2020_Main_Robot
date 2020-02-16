@@ -43,7 +43,7 @@ public class DriveXDistance extends Command {
   @Override
   protected void initialize() {
     dt.zeroSensors(); //heading and position
-    dt.changeMaxVelAcc(true);
+    dt.switchGains(true);
   }
 
   // Called repeatedly when this Command is scheduled to run
