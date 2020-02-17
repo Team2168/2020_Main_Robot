@@ -18,32 +18,40 @@ public class DriveXDistance extends Command {
     private double _targetAngle = 0.0;
 
     private static final double DEFAULT_ERROR_TOLERANCE = 0.5;
+    private static final double DEFAULT_MAX_VEL = 10.0*12.0;
 
     private double _errorTolerancePosition; //0.5 inches
     private double _errorToleranceAngle = 1.0; //1.0 degree of tolerance 
+    private double _maxVel;
     private double _loopsToSettle = 10;
     private int _withinThresholdLoops = 0;
 
   public DriveXDistance(double setPoint) {
-    this(setPoint, DEFAULT_ERROR_TOLERANCE);
+    this(setPoint, DEFAULT_ERROR_TOLERANCE, DEFAULT_MAX_VEL);
   }
 
   public DriveXDistance(double setPoint, double errorTolerancePosition) {
+    this(setPoint, errorTolerancePosition, DEFAULT_MAX_VEL);
+  }
+
+  public DriveXDistance(double setPoint, double errorTolerancePosition, double maxVelocity) {
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
     dt = Drivetrain.getInstance();
     requires(dt);
 
     _errorTolerancePosition = errorTolerancePosition;
-    
     _targetPos = setPoint;
+    _maxVel = maxVelocity;
   }
+
 
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
     dt.zeroSensors(); //heading and position
     dt.switchGains(true);
+    dt.setCruiseVelocity(_maxVel);
   }
 
   // Called repeatedly when this Command is scheduled to run

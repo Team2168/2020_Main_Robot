@@ -410,15 +410,19 @@ public class Drivetrain extends Subsystem {
       _rightMotor1.config_IntegralZone(Constants.SLOT_1, Constants.kGains_Turning.kIzone, Constants.kTimeoutMs);
       _rightMotor1.configClosedLoopPeakOutput(Constants.SLOT_1, Constants.kGains_Turning.kPeakOutput, Constants.kTimeoutMs);
 
-      _rightMotor1.configNominalOutputForward(0.08, Constants.kTimeoutMs);
-      _rightMotor1.configNominalOutputReverse(-0.08, Constants.kTimeoutMs);
+      _rightMotor1.configNominalOutputForward(0.13, Constants.kTimeoutMs);
+      _rightMotor1.configNominalOutputReverse(-0.13, Constants.kTimeoutMs);
       _rightMotor1.configPeakOutputForward(1.0, Constants.kTimeoutMs);
       _rightMotor1.configPeakOutputReverse(-1.0, Constants.kTimeoutMs);
-      _leftMotor1.configNominalOutputForward(0.08, Constants.kTimeoutMs);
-      _leftMotor1.configNominalOutputReverse(-0.08, Constants.kTimeoutMs);
+      _leftMotor1.configNominalOutputForward(0.13, Constants.kTimeoutMs);
+      _leftMotor1.configNominalOutputReverse(-0.13, Constants.kTimeoutMs);
       _leftMotor1.configPeakOutputForward(1.0, Constants.kTimeoutMs);
       _leftMotor1.configPeakOutputReverse(-1.0, Constants.kTimeoutMs);
     }
+  }
+
+  public void setCruiseVelocity(double vel) {
+    _rightMotor1.configMotionCruiseVelocity((int) (inches_per_sec_to_ticks_per_100ms(vel))); //distance units per 100 ms
   }
 
   public double getErrorPosition() {
