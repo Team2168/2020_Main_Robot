@@ -7,7 +7,6 @@
 
 package org.team2168.subsystems;
 
-import org.team2168.Robot;
 import org.team2168.RobotMap;
 import org.team2168.utils.consoleprinter.ConsolePrinter;
 
@@ -19,11 +18,18 @@ import edu.wpi.first.wpilibj.command.Subsystem;
  */
 public class HoodAdjust extends Subsystem {
 
+  public enum HoodPosition{
+    WALL,
+    WHITE_LINE,
+    FRONT_TRENCH,
+    BACK_TRENCH
+  }
+
   private DoubleSolenoid _hoodSolenoid;
-  private DoubleSolenoid _pancakeSolenoid;
+  private DoubleSolenoid _hardstopSolenoid;
 
   private static HoodAdjust _instance;
-  public HoodPosition shooterPosition;
+  private HoodPosition hoodPosition;
 
   private HoodAdjust()
   {
@@ -34,7 +40,10 @@ public class HoodAdjust extends Subsystem {
     ConsolePrinter.putBoolean("Pancake Retracted", () -> {return this.isPancakeRetracted();}, true, false);
     ConsolePrinter.putBoolean("Hood Extended", () -> {return this.isHoodExtended();}, true, false);
     ConsolePrinter.putBoolean("Hood Retracted", () -> {return this.isHoodRetracted();}, true, false);
+    _hardstopSolenoid = new DoubleSolenoid(RobotMap.PCM_CAN_ID_SHOOTER, RobotMap.PANCAKE_SOLENOID_OUT,RobotMap.PANCAKE_SOLENOID_IN);
+    hoodPosition = HoodPosition.WALL;
   }
+
   /**
    * Creates a new Instance of the HoodAdjust
    * @return - Returns the new instance of
@@ -71,7 +80,7 @@ public class HoodAdjust extends Subsystem {
    */
   public void extendPancake()
   {
-    _pancakeSolenoid.set(DoubleSolenoid.Value.kForward);
+    _hardstopSolenoid.set(DoubleSolenoid.Value.kForward);
   }
 /**
    * The hard stop, or pancake, is retracted,
@@ -80,7 +89,7 @@ public class HoodAdjust extends Subsystem {
    */
   public void retractPancake()
   {
-    _pancakeSolenoid.set(DoubleSolenoid.Value.kReverse);
+    _hardstopSolenoid.set(DoubleSolenoid.Value.kReverse);
   }
  /**
   * Checks to see if the hood is extended
@@ -108,7 +117,7 @@ public class HoodAdjust extends Subsystem {
   */
   public boolean isPancakeExtended()
   {
-    return _pancakeSolenoid.get()==DoubleSolenoid.Value.kForward;
+    return _hardstopSolenoid.get()==DoubleSolenoid.Value.kForward;
   }
   /**
   * Checks to see if the pancake
@@ -118,21 +127,16 @@ public class HoodAdjust extends Subsystem {
   */
   public boolean isPancakeRetracted()
   {
-    return _pancakeSolenoid.get()==DoubleSolenoid.Value.kReverse;
-  }
-
-  public enum HoodPosition{
-    WALL,
-    WHITE_LINE,
-    FRONT_TRENCH,
-    BACK_TRENCH
+    return _hardstopSolenoid.get()==DoubleSolenoid.Value.kReverse;
   }
 
   public void setHoodPosition(HoodPosition newPosition){
-    shooterPosition = newPosition;
+    hoodPosition = newPosition;
   }
 
-
+  public HoodPosition getHoodPosition() {
+    return hoodPosition;
+  }
 
   @Override
   public void initDefaultCommand() {
