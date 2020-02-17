@@ -8,6 +8,8 @@
 package org.team2168.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import org.team2168.RobotMap;
@@ -22,17 +24,30 @@ public class IntakeMotor extends Subsystem {
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
   private TalonSRX intakeMotor;
-  public boolean INTAKE_MOTOR_REVERSE = false; //change manually
-  public static final double maxSpeed = 60;
+  public boolean INTAKE_MOTOR_REVERSE = true; //change manually
+  public static final double MAX_SPEED = 1.0;
 
   private static IntakeMotor _instance = null;
+  private SupplyCurrentLimitConfiguration talonCurrentLimit;
+  private final boolean ENABLE_CURRENT_LIMIT = true;
+  private final double CONTINUOUS_CURRENT_LIMIT = 20; //amps
+  private final double TRIGGER_THRESHOLD_LIMIT = 30; //amp
+  private final double TRIGGER_THRESHOLD_TIME = 200; //ms
 
   /**
    * Default constructors for Intake
    */
   private IntakeMotor() {
     intakeMotor = new TalonSRX(RobotMap.INTAKE_MOTOR_PDP);
-    }
+
+    talonCurrentLimit = new SupplyCurrentLimitConfiguration(ENABLE_CURRENT_LIMIT,
+    CONTINUOUS_CURRENT_LIMIT, TRIGGER_THRESHOLD_LIMIT, TRIGGER_THRESHOLD_TIME);
+    intakeMotor.configSupplyCurrentLimit(talonCurrentLimit);
+
+    intakeMotor.setNeutralMode(NeutralMode.Brake);
+    intakeMotor.setInverted(INTAKE_MOTOR_REVERSE);
+    intakeMotor.configNeutralDeadband(0.05);
+  }
 
   /**
    * @return an instance of the Intake Subsystem
@@ -51,16 +66,12 @@ public class IntakeMotor extends Subsystem {
    */
   public void driveMotor(double speed)
   {
-    //can set negative speed if a wire is reversed
-    if (INTAKE_MOTOR_REVERSE) {
-      speed = -speed;
-    }
     intakeMotor.set(ControlMode.PercentOutput, speed);
   }
 
   @Override
   public void initDefaultCommand() {
     // Set the default command for a subsystem here.
-    //setDefaultCommand(new DriveIntakeWithJoystick());
+    setDefaultCommand(new DriveIntakeWithJoystick());
   }
 }
