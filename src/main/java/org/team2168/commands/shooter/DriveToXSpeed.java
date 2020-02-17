@@ -35,7 +35,6 @@ public class DriveToXSpeed extends Command {
   @Override
   protected void execute() {
     shooter.setSpeed(_targetVelocity);
-    System.out.println("getting inside of shooter command");
   }
 
   // Make this return true when this Command no longer needs to run execute()
