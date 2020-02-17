@@ -65,16 +65,16 @@ public class OI
 	private LinearInterpolator gunStyleYInterpolator;
 	private LinearInterpolator gunStyleXInterpolator;
 	private double[][] gunStyleYArray = {
-		{-1.0, -0.30}, //limiting speed to 80%
+		{-1.0, -0.80}, //limiting speed to 80%
 		{-0.15, 0.00},
 		{+0.15, 0.00},
-		{+1.00,+0.30}
+		{+1.00,+0.80}
 	};
 	private double[][] gunStyleXArray = {
-		{-1.0, -0.65},  //scale down turning to max 65%
+		{-1.0, -0.70},  //scale down turning to max 65%
 		{-0.05, 0.00},  //set neutral deadband to 5%
 		{+0.05, 0.00},
-		{+1.00,+0.65}  
+		{+1.00,+0.70}  
 	};
 
 	/**
@@ -103,7 +103,6 @@ public class OI
 
 		operatorJoystick.ButtonStart().whenPressed(new DriveColorWheelXRotations(4.0*8.0));
 
-
 		// operatorJoystick.ButtonX().whenPressed(new DriveToXSpeed(Shooter.getInstance().WALL_VEL));
 		// operatorJoystick.ButtonX().whenPressed(new DriveShooterWithConstant(0.306));
 
@@ -121,13 +120,13 @@ public class OI
 		 ***********************************************************************/
 		// //leds testing
 		// pidTestJoystick.ButtonA().whenPressed(new DisabledPattern());
-		pidTestJoystick.ButtonY().whenPressed(new DriveXDistance(10.0*12.0));
-		pidTestJoystick.ButtonA().whenPressed(new DriveXDistance(-10.0*12.0));
-		pidTestJoystick.ButtonRightDPad().whenPressed(new TurnXAngle(-11.0, 0.25));
-		pidTestJoystick.ButtonLeftDPad().whenPressed(new TurnXAngle(+11.0,0.25));
-		pidTestJoystick.ButtonUpDPad().whenPressed(new TurnXAngle(-90.0,0.25));
-		pidTestJoystick.ButtonDownDPad().whenPressed(new TurnXAngle(+90.0, 0.25));
-		pidTestJoystick.ButtonStart().whenPressed(new DefaultTrenchAuto());
+		// pidTestJoystick.ButtonY().whenPressed(new DriveXDistance(115.0));
+		// pidTestJoystick.ButtonA().whenPressed(new DriveXDistance(-115.0));
+		// pidTestJoystick.ButtonRightDPad().whenPressed(new TurnXAngle(-9.0, 0.3));
+		// pidTestJoystick.ButtonLeftDPad().whenPressed(new TurnXAngle(+9.0,0.3));
+		// pidTestJoystick.ButtonUpDPad().whenPressed(new TurnXAngle(-90.0,0.3));
+		// pidTestJoystick.ButtonDownDPad().whenPressed(new TurnXAngle(+90.0, 0.3));
+		// pidTestJoystick.ButtonStart().whenPressed(new DefaultTrenchAuto());
 		// pidTestJoystick.ButtonBack().whenPressed(new FirstPathReverse());
 
 
