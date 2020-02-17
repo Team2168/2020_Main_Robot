@@ -72,45 +72,44 @@ public class Drivetrain extends Subsystem {
    * Default constructors for Drivetrain
    */
   private Drivetrain() {
-      System.out.println("CAN Comp Bot Drivetrain enabled - 6 motors");
-      _leftMotor1 = new TalonFX(RobotMap.DRIVETRAIN_LEFT_MOTOR_1_PDP);
-      _leftMotor2 = new TalonFX(RobotMap.DRIVETRAIN_LEFT_MOTOR_2_PDP);
-      _leftMotor3 = new TalonFX(RobotMap.DRIVETRAIN_LEFT_MOTOR_3_PDP);
-      _rightMotor1 = new TalonFX(RobotMap.DRIVETRAIN_RIGHT_MOTOR_1_PDP);
-      _rightMotor2 = new TalonFX(RobotMap.DRIVETRAIN_RIGHT_MOTOR_2_PDP);
-      _rightMotor3 = new TalonFX(RobotMap.DRIVETRAIN_RIGHT_MOTOR_3_PDP);
-      _pidgey = new PigeonIMU(17);
+    System.out.println("CAN Comp Bot Drivetrain enabled - 6 motors");
+    _leftMotor1 = new TalonFX(RobotMap.DRIVETRAIN_LEFT_MOTOR_1_PDP);
+    _leftMotor2 = new TalonFX(RobotMap.DRIVETRAIN_LEFT_MOTOR_2_PDP);
+    _leftMotor3 = new TalonFX(RobotMap.DRIVETRAIN_LEFT_MOTOR_3_PDP);
+    _rightMotor1 = new TalonFX(RobotMap.DRIVETRAIN_RIGHT_MOTOR_1_PDP);
+    _rightMotor2 = new TalonFX(RobotMap.DRIVETRAIN_RIGHT_MOTOR_2_PDP);
+    _rightMotor3 = new TalonFX(RobotMap.DRIVETRAIN_RIGHT_MOTOR_3_PDP);
+    _pidgey = new PigeonIMU(17);
 
-    
-      talonCurrentLimit = new SupplyCurrentLimitConfiguration(ENABLE_CURRENT_LIMIT,
-      CONTINUOUS_CURRENT_LIMIT, TRIGGER_THRESHOLD_LIMIT, TRIGGER_THRESHOLD_TIME);
+    _leftMotor1.configFactoryDefault();
+    _leftMotor2.configFactoryDefault();
+    _leftMotor3.configFactoryDefault();
+    _rightMotor1.configFactoryDefault();
+    _rightMotor2.configFactoryDefault();
+    _rightMotor3.configFactoryDefault();
+    _pidgey.configFactoryDefault();
+  
+    talonCurrentLimit = new SupplyCurrentLimitConfiguration(ENABLE_CURRENT_LIMIT,
+    CONTINUOUS_CURRENT_LIMIT, TRIGGER_THRESHOLD_LIMIT, TRIGGER_THRESHOLD_TIME);
 
-      _leftMotor1.configSupplyCurrentLimit(talonCurrentLimit);
-      _leftMotor2.configSupplyCurrentLimit(talonCurrentLimit);
-      _leftMotor3.configSupplyCurrentLimit(talonCurrentLimit);
-      _rightMotor1.configSupplyCurrentLimit(talonCurrentLimit);
-      _rightMotor2.configSupplyCurrentLimit(talonCurrentLimit);
-      _rightMotor3.configSupplyCurrentLimit(talonCurrentLimit);
+    _leftMotor1.configSupplyCurrentLimit(talonCurrentLimit);
+    _leftMotor2.configSupplyCurrentLimit(talonCurrentLimit);
+    _leftMotor3.configSupplyCurrentLimit(talonCurrentLimit);
+    _rightMotor1.configSupplyCurrentLimit(talonCurrentLimit);
+    _rightMotor2.configSupplyCurrentLimit(talonCurrentLimit);
+    _rightMotor3.configSupplyCurrentLimit(talonCurrentLimit);
 
-      _leftMotor1.setNeutralMode(NeutralMode.Brake);
-      _leftMotor2.setNeutralMode(NeutralMode.Coast);
-      _leftMotor3.setNeutralMode(NeutralMode.Coast);
-      _rightMotor1.setNeutralMode(NeutralMode.Brake);
-      _rightMotor2.setNeutralMode(NeutralMode.Coast);
-      _rightMotor3.setNeutralMode(NeutralMode.Coast);
+    setDefaultBrakeMode();
 
-          /* Configure output and sensor direction */
+    /* Configure output and sensor direction */
     _leftMotor1.setInverted(_leftInvert);
     _leftMotor2.setInverted(_leftInvert);
     _leftMotor3.setInverted(_leftInvert);
     _rightMotor1.setInverted(_rightInvert);
     _rightMotor2.setInverted(_rightInvert);
     _rightMotor3.setInverted(_rightInvert);
-
-    /* Reset Pigeon Configs */
-    _pidgey.configFactoryDefault();
     
-        /** Feedback Sensor Configuration */
+    /** Feedback Sensor Configuration */
 
     /** Distance Configs */
 
@@ -458,6 +457,32 @@ public class Drivetrain extends Subsystem {
     _leftMotor1.getSensorCollection().setIntegratedSensorPosition(0, Constants.kTimeoutMs);
     _rightMotor1.getSensorCollection().setIntegratedSensorPosition(0, Constants.kTimeoutMs);
     System.out.println("[Quadrature Encoders] All encoders are zeroed.\n");
+  }
+
+  /**
+   * Change all motors to their default mix of brake/coast modes.
+   * Should be used for normal match play.
+   */
+  public void setDefaultBrakeMode() {
+    _leftMotor1.setNeutralMode(NeutralMode.Brake);
+    _leftMotor2.setNeutralMode(NeutralMode.Coast);
+    _leftMotor3.setNeutralMode(NeutralMode.Coast);
+    _rightMotor1.setNeutralMode(NeutralMode.Brake);
+    _rightMotor2.setNeutralMode(NeutralMode.Coast);
+    _rightMotor3.setNeutralMode(NeutralMode.Coast);
+  }
+
+  /**
+   * Change all the drivetrain motor controllers to coast mode.
+   * Useful for allowing robot to be manually pushed around the field.
+   */
+  public void setAllMotorsCoast() {
+    _leftMotor1.setNeutralMode(NeutralMode.Coast);
+    _leftMotor2.setNeutralMode(NeutralMode.Coast);
+    _leftMotor3.setNeutralMode(NeutralMode.Coast);
+    _rightMotor1.setNeutralMode(NeutralMode.Coast);
+    _rightMotor2.setNeutralMode(NeutralMode.Coast);
+    _rightMotor3.setNeutralMode(NeutralMode.Coast);
   }
 
   /** 
