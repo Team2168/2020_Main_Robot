@@ -1,5 +1,7 @@
 package org.team2168.subsystems;
 
+import java.util.ArrayList;
+
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FollowerType;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
@@ -8,6 +10,7 @@ import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
 import com.ctre.phoenix.motorcontrol.TalonFXInvertType;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
+import com.ctre.phoenix.music.Orchestra;
 
 import org.team2168.Gains;
 import org.team2168.RobotMap;
@@ -81,6 +84,8 @@ public class Shooter extends Subsystem {
     public final double FRONT_TRENCH_VEL = 3950.0; //steady state: 40 over
     public final double BACK_TRENCH_VEL = 4500.0; //steady state: 40 over
 
+    Orchestra _o;
+
     private Shooter() {
         _motorOne = new TalonFX(RobotMap.SHOOTER_MOTOR_ONE_PDP);
         _motorTwo = new TalonFX(RobotMap.SHOOTER_MOTOR_TWO_PDP);
@@ -140,6 +145,14 @@ public class Shooter extends Subsystem {
         ConsolePrinter.putNumber("Shooter Error", () -> {return getError();}, true, false);
         ConsolePrinter.putNumber("Shooter Motor Output Percent", () -> {return _motorOne.getMotorOutputPercent();}, true, false);
         //ConsolePrinter.putNumber("Shooter Setpoint", () -> {return ticks_per_100ms_to_revs_per_minute( _motorOne.getClosedLoopTarget());}, true, false);
+
+        ArrayList<TalonFX> motors = new ArrayList<TalonFX>();
+        motors.add(_motorOne);
+        motors.add(_motorTwo);
+    
+        _o = new Orchestra(motors);
+    
+        _o.loadMusic("imperial.chrp");
     }
     /**
      * Creates a new Instance of the shooter
@@ -206,4 +219,11 @@ public class Shooter extends Subsystem {
     public void initDefaultCommand() {
         setDefaultCommand(new DriveShooterWithJoystick());
     }
+
+  /**
+   * Play songs on the drivetrain motors
+   */
+  public void playChirp() {
+    _o.play();
+  }
 }

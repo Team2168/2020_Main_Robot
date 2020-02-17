@@ -78,6 +78,7 @@ import org.team2168.subsystems.Shooter;
 import org.team2168.utils.PowerDistribution;
 import org.team2168.utils.consoleprinter.ConsolePrinter;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -149,6 +150,8 @@ public class Robot extends TimedRobot {
     // pdp.startThread();
     ConsolePrinter.init();
     ConsolePrinter.startThread();
+
+    drivetrain.setDefaultBrakeMode();
   }
 
   @Override
@@ -170,9 +173,13 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
+    drivetrain.setDefaultBrakeMode();
+
     m_autoSelected = m_chooser.getSelected();
     // m_autoSelected = SmartDashboard.getString("Auto Selector", kDefaultAuto);
     System.out.println("Auto selected: " + m_autoSelected);
+
+    shooter.playChirp();
   }
 
   /**
@@ -190,6 +197,11 @@ public class Robot extends TimedRobot {
       break;
 
     }
+  }
+
+  @Override
+  public void teleopInit() {
+    drivetrain.setDefaultBrakeMode();
   }
 
   /**
@@ -210,7 +222,10 @@ public class Robot extends TimedRobot {
 
   @Override
   public void disabledInit() {
-
+    if(!DriverStation.getInstance().isFMSAttached()) {
+      //If we're not on a real field, let the robot be pushed around if it's disabled.
+      drivetrain.setAllMotorsCoast();
+    }
   }
 
   @Override
