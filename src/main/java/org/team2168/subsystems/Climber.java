@@ -10,6 +10,7 @@ package org.team2168.subsystems;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.DemandType;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.FollowerType;
 import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
 import com.ctre.phoenix.motorcontrol.LimitSwitchSource;
 import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
@@ -19,7 +20,6 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import org.team2168.Gains;
 import org.team2168.RobotMap;
 import org.team2168.PID.sensors.CanDigitalInput;
-import org.team2168.commands.climber.DriveClimberWithJoystick;
 import org.team2168.utils.consoleprinter.ConsolePrinter;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
@@ -35,7 +35,7 @@ public class Climber extends Subsystem {
   public DoubleSolenoid climberSolenoid;
   private CanDigitalInput hallEffectSensor;
 
-  private final boolean CLIMBER_MOTOR_1_REVERSE = false;
+  private final boolean CLIMBER_MOTOR_1_REVERSE = true;
   private final boolean CLIMBER_MOTOR_2_REVERSE = false;
   public static final boolean CLIMBER_ENABLE_HIGHT_HOLD = true;
 
@@ -92,7 +92,7 @@ public class Climber extends Subsystem {
 
   private Climber() {
     climberMotor1 = new TalonSRX(RobotMap.CLIMBER_MOTOR_1_PDP);
-    // climberMotor2 = new TalonSRX(RobotMap.CLIMBER_MOTOR_2);
+    climberMotor2 = new TalonSRX(RobotMap.CLIMBER_MOTOR_2_PDP);
     climberSolenoid = new DoubleSolenoid(RobotMap.CLIMBER_RATCHET_ENGAGE_PCM,RobotMap.CLIMBER_RATCHET_DISENGAGE_PCM);
     climberMotor1.configForwardLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen);
     hallEffectSensor = new CanDigitalInput(climberMotor1);
@@ -115,7 +115,7 @@ public class Climber extends Subsystem {
      * invert motors if necessary
      */
     climberMotor1.setInverted(CLIMBER_MOTOR_1_REVERSE);
-    // climberMotor2.setInverted(CLIMBER_MOTOR_2_REVERSE);
+    climberMotor2.setInverted(CLIMBER_MOTOR_2_REVERSE);
 
         /* Set relevant frame periods to be at least as fast as periodic rate */
     climberMotor1.setStatusFramePeriod(StatusFrameEnhanced.Status_13_Base_PIDF0, 10, kTimeoutMs);
@@ -145,7 +145,7 @@ public class Climber extends Subsystem {
     CONTINUOUS_CURRENT_LIMIT, TRIGGER_THRESHOLD_LIMIT, TRIGGER_THRESHOLD_TIME);
 
     climberMotor1.configSupplyCurrentLimit(talonCurrentLimit);
-    // climberMotor2.configSupplyCurrentLimit(talonCurrentLimit);
+    climberMotor2.configSupplyCurrentLimit(talonCurrentLimit);
 
     /* Zero the sensor */
     climberMotor1.setSelectedSensorPosition(0, kPIDLoopIdx, kTimeoutMs);
@@ -178,7 +178,7 @@ public class Climber extends Subsystem {
   
   public void driveClimberMotors(double speed){
     driveClimberMotor1(speed);
-    // driveClimberMotor2(speed);
+    driveClimberMotor2(speed);
   }
 
   /**
@@ -277,7 +277,7 @@ public class Climber extends Subsystem {
     }
     setPoint_sensorunits = setPoint*TICKS_PER_INCH;
     climberMotor1.set(ControlMode.MotionMagic, setPoint_sensorunits, DemandType.ArbitraryFeedForward, arbFeedForward);
-    // climberMotor2.follow(climberMotor1, FollowerType.PercentOutput);
+    climberMotor2.follow(climberMotor1, FollowerType.PercentOutput);
   }
 
   public double getErrorPosition()
