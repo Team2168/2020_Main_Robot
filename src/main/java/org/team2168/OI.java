@@ -1,14 +1,15 @@
 
 package org.team2168;
 
-import org.team2168.commands.auto.DefaultTrenchAuto;
 import org.team2168.commands.auto.FinishFiring;
 import org.team2168.commands.auto.FireBalls;
+import org.team2168.commands.climber.DisengageRatchet;
+import org.team2168.commands.climber.DriveClimberXPosition;
+import org.team2168.commands.climber.EngageRatchet;
+import org.team2168.commands.climber.ResetClimberPosition;
 import org.team2168.commands.color_wheel.DriveColorWheelXRotations;
 import org.team2168.commands.color_wheel_pivot.DisengageColorWheel;
 import org.team2168.commands.color_wheel_pivot.EngageColorWheel;
-import org.team2168.commands.drivetrain.PIDCommands.DriveXDistance;
-import org.team2168.commands.drivetrain.PIDCommands.TurnXAngle;
 import org.team2168.commands.hood_adjust.MoveToBackTrench;
 import org.team2168.commands.hood_adjust.MoveToFrontTrench;
 import org.team2168.commands.hood_adjust.MoveToWall;
@@ -130,16 +131,16 @@ public class OI
 		// pidTestJoystick.ButtonBack().whenPressed(new FirstPathReverse());
 
 
-		// pidTestJoystick.ButtonX().whenPressed(new ResetClimberPosition());
-		// pidTestJoystick.ButtonY().whenPressed(new DriveClimberXPosition(33, 0.1));
-		// pidTestJoystick.ButtonA().whenPressed(new DriveClimberXPosition(-28, 0.1));	
+		pidTestJoystick.ButtonX().whenPressed(new ResetClimberPosition());
+		pidTestJoystick.ButtonY().whenPressed(new DriveClimberXPosition(45.0, 0.1)); //33
+		pidTestJoystick.ButtonA().whenPressed(new DriveClimberXPosition(7.0, 0.1));	//28
 
-
-		// pidTestJoystick.ButtonX().whenPressed(new EngageRatchet());
-		// pidTestJoystick.ButtonB().whenPressed(new DisengageRatchet());
 
 		// pidTestJoystick.ButtonB().whenPressed(new FireBalls());
 		// pidTestJoystick.ButtonB().whenReleased(new FinishFiring());
+
+		pidTestJoystick.ButtonUpDPad().whenPressed(new EngageRatchet());
+		pidTestJoystick.ButtonDownDPad().whenPressed(new DisengageRatchet());
 
 
 	}
@@ -218,7 +219,7 @@ public class OI
 	 */
 	public double getClimberJoystickValue()
 	{
-		return 0.0; //pidTestJoystick.getRightStickRaw_Y();
+		return pidTestJoystick.getRightStickRaw_Y();
 	}
 
 	/**
@@ -227,7 +228,7 @@ public class OI
 	 */
 	public double getShooterJoystick()
 	{
-		return pidTestJoystick.getRightStickRaw_Y();
+		return 0.0; //pidTestJoystick.getRightStickRaw_Y();
 	}
 
 	/**

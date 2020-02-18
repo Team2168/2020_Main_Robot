@@ -17,7 +17,7 @@ public class DriveClimberWithJoystick extends Command {
   double _speed;
   private Climber climber;
   private OI oi;
-  private final double MAX_SPEED = 0.2;
+  private final double MAX_SPEED = 0.8;
   public DriveClimberWithJoystick() {
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);

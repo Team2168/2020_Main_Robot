@@ -20,6 +20,7 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import org.team2168.Gains;
 import org.team2168.RobotMap;
 import org.team2168.PID.sensors.CanDigitalInput;
+import org.team2168.commands.climber.DriveClimberWithJoystick;
 import org.team2168.utils.consoleprinter.ConsolePrinter;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
@@ -82,10 +83,10 @@ public class Climber extends Subsystem {
    */
   final double TICKS_PER_REV = 8192; //one event per edge on each quadrature channel
   final double TICKS_PER_100MS = TICKS_PER_REV / 10.0;
-  final double GEAR_RATIO = 21.0; //TODO SET
-  final double SPOOL_CIRCUMFERENCE = 4.375;
-  final double TICKS_PER_INCH = TICKS_PER_REV * GEAR_RATIO / SPOOL_CIRCUMFERENCE;
-  final double TICKS_PER_INCH_PER_100MS = TICKS_PER_100MS * GEAR_RATIO / SPOOL_CIRCUMFERENCE;
+  final double GEAR_RATIO = 42.0; 
+  final double SPOOL_CIRCUMFERENCE = 3.625; //TODO CHECK
+  final double TICKS_PER_INCH = 2245.0; //TICKS_PER_REV * GEAR_RATIO / SPOOL_CIRCUMFERENCE;
+  final double TICKS_PER_INCH_PER_100MS = 2245.0 / 10.0; //TICKS_PER_100MS * GEAR_RATIO / SPOOL_CIRCUMFERENCE;
 
   private double setPoint_sensorunits;
 
@@ -235,12 +236,12 @@ public class Climber extends Subsystem {
 
   public double getPosition()
   {
-    return climberMotor1.getSelectedSensorPosition(kPIDLoopIdx)/(TICKS_PER_INCH);
+    return climberMotor1.getSelectedSensorPosition(kPIDLoopIdx) /(TICKS_PER_INCH);
   }
 
   public double getVelocity()
   {
-    return climberMotor1.getSelectedSensorVelocity(kPIDLoopIdx)/(TICKS_PER_INCH_PER_100MS);
+    return climberMotor1.getSelectedSensorVelocity(kPIDLoopIdx) /(TICKS_PER_INCH_PER_100MS);
   }
 
   public void setGains(double setPoint)
@@ -275,14 +276,14 @@ public class Climber extends Subsystem {
     {
       arbFeedForward = ARB_FEEDFORWARD_DOWN;
     }
-    setPoint_sensorunits = setPoint*TICKS_PER_INCH;
+    setPoint_sensorunits = setPoint *TICKS_PER_INCH;
     climberMotor1.set(ControlMode.MotionMagic, setPoint_sensorunits, DemandType.ArbitraryFeedForward, arbFeedForward);
     climberMotor2.follow(climberMotor1, FollowerType.PercentOutput);
   }
 
   public double getErrorPosition()
   {
-    return (setPoint_sensorunits-climberMotor1.getSelectedSensorPosition(kPIDLoopIdx))/(TICKS_PER_INCH);
+    return (setPoint_sensorunits-climberMotor1.getSelectedSensorPosition(kPIDLoopIdx)) / (TICKS_PER_INCH);
     //return climberMotor1.getClosedLoopError(kPIDLoopIdx)/TICKS_PER_REV;--only for nonMotionMagic or nonMotion Profile
   }
 
@@ -322,7 +323,7 @@ public class Climber extends Subsystem {
    * This sets the default command to drive via a joystick.
    */
   public void initDefaultCommand() {
-    // setDefaultCommand(new DriveClimberWithJoystick());
+    setDefaultCommand(new DriveClimberWithJoystick());
   }
 
 }
