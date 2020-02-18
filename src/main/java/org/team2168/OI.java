@@ -3,14 +3,12 @@ package org.team2168;
 
 import org.team2168.commands.auto.FinishFiring;
 import org.team2168.commands.auto.FireBalls;
-import org.team2168.commands.climber.DisengageRatchet;
-import org.team2168.commands.climber.DriveClimberXPosition;
-import org.team2168.commands.climber.EngageRatchet;
-import org.team2168.commands.climber.PrepareToClimb;
-import org.team2168.commands.climber.ResetClimberPosition;
+import org.team2168.commands.auto.OppositeTrenchAuto;
 import org.team2168.commands.color_wheel.DriveColorWheelXRotations;
 import org.team2168.commands.color_wheel_pivot.DisengageColorWheel;
 import org.team2168.commands.color_wheel_pivot.EngageColorWheel;
+import org.team2168.commands.drivetrain.PIDCommands.DriveXDistance;
+import org.team2168.commands.drivetrain.PIDCommands.TurnXAngle;
 import org.team2168.commands.hood_adjust.MoveToBackTrench;
 import org.team2168.commands.hood_adjust.MoveToFrontTrench;
 import org.team2168.commands.hood_adjust.MoveToWall;
@@ -121,15 +119,14 @@ public class OI
 		 * Commands Test Joystick
 		 ***********************************************************************/
 		// //leds testing
-		// pidTestJoystick.ButtonA().whenPressed(new DisabledPattern());
-		// pidTestJoystick.ButtonY().whenPressed(new DriveXDistance(115.0));
-		// pidTestJoystick.ButtonA().whenPressed(new DriveXDistance(-115.0));
-		// pidTestJoystick.ButtonRightDPad().whenPressed(new TurnXAngle(-9.0, 0.3));
-		// pidTestJoystick.ButtonLeftDPad().whenPressed(new TurnXAngle(+9.0,0.3));
-		// pidTestJoystick.ButtonUpDPad().whenPressed(new TurnXAngle(-90.0,0.3));
-		// pidTestJoystick.ButtonDownDPad().whenPressed(new TurnXAngle(+90.0, 0.3));
+		pidTestJoystick.ButtonY().whenPressed(new DriveXDistance(115.0));
+		pidTestJoystick.ButtonA().whenPressed(new DriveXDistance(-115.0));
+		pidTestJoystick.ButtonRightDPad().whenPressed(new TurnXAngle(-9.0, 0.3));
+		pidTestJoystick.ButtonLeftDPad().whenPressed(new TurnXAngle(+9.0,0.3));
+		pidTestJoystick.ButtonUpDPad().whenPressed(new TurnXAngle(-90.0,0.3));
+		pidTestJoystick.ButtonDownDPad().whenPressed(new TurnXAngle(+90.0, 0.3));
 		// pidTestJoystick.ButtonStart().whenPressed(new DefaultTrenchAuto());
-		// pidTestJoystick.ButtonBack().whenPressed(new FirstPathReverse());
+		pidTestJoystick.ButtonBack().whenPressed(new OppositeTrenchAuto());
 
 
 		// pidTestJoystick.ButtonX().whenPressed(new ResetClimberPosition());
