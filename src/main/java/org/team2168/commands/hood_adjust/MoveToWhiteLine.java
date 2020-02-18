@@ -9,6 +9,7 @@ package org.team2168.commands.hood_adjust;
 
 import org.team2168.commands.auto.Sleep;
 import org.team2168.commands.shooter.DriveToXSpeed;
+import org.team2168.subsystems.Drivetrain;
 import org.team2168.subsystems.HoodAdjust;
 import org.team2168.subsystems.Shooter;
 
@@ -16,6 +17,7 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
 
 public class MoveToWhiteLine extends CommandGroup {
 HoodAdjust pos = HoodAdjust.getInstance();
+Drivetrain dt = Drivetrain.getInstance();
   public MoveToWhiteLine() {
   //By not using a break in the switch statement, the cases will
   //follow through, allowing for less lines of code.
@@ -46,6 +48,14 @@ HoodAdjust pos = HoodAdjust.getInstance();
     // }
 
     //updated---allows for any possible position, allows retract pancake under load;
+    if(Robot.onBlueAlliance())
+      {
+        dt.limelight.setPipeline(0);
+      }
+      else
+      {
+        dt.limelight.setPipeline(2);
+      }
     addParallel(new DriveToXSpeed(Shooter.getInstance().WHITE_LINE_VEL));
     addSequential(new RetractShooterHardstop());
     addSequential(new Sleep(), 0.1);
