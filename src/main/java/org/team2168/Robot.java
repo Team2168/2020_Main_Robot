@@ -1,65 +1,3 @@
-/**
- * Phoenix Software License Agreement
- *
- * Copyright (C) Cross The Road Electronics.  All rights
- * reserved.
- * 
- * Cross The Road Electronics (CTRE) licenses to you the right to 
- * use, publish, and distribute copies of CRF (Cross The Road) firmware files (*.crf) and 
- * Phoenix Software API Libraries ONLY when in use with CTR Electronics hardware products
- * as well as the FRC roboRIO when in use in FRC Competition.
- * 
- * THE SOFTWARE AND DOCUMENTATION ARE PROVIDED "AS IS" WITHOUT
- * WARRANTY OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT
- * LIMITATION, ANY WARRANTY OF MERCHANTABILITY, FITNESS FOR A
- * PARTICULAR PURPOSE, TITLE AND NON-INFRINGEMENT. IN NO EVENT SHALL
- * CROSS THE ROAD ELECTRONICS BE LIABLE FOR ANY INCIDENTAL, SPECIAL, 
- * INDIRECT OR CONSEQUENTIAL DAMAGES, LOST PROFITS OR LOST DATA, COST OF
- * PROCUREMENT OF SUBSTITUTE GOODS, TECHNOLOGY OR SERVICES, ANY CLAIMS
- * BY THIRD PARTIES (INCLUDING BUT NOT LIMITED TO ANY DEFENSE
- * THEREOF), ANY CLAIMS FOR INDEMNITY OR CONTRIBUTION, OR OTHER
- * SIMILAR COSTS, WHETHER ASSERTED ON THE BASIS OF CONTRACT, TORT
- * (INCLUDING NEGLIGENCE), BREACH OF WARRANTY, OR OTHERWISE
- */
-
-/**
- * Description:
- * The MotionMagic_TalonFX_AuxStraightPigeon example demonstrates the Talon auxiliary and 
- * remote features to peform complex closed loops. This example has the robot performing 
- * Motion Magic with an auxiliary closed loop on Pigeon Yaw to keep the robot straight.
- * 
- * This example uses:
- * - 2x Talon FX's (one per side).  
- *     Talon FX calculates the distance by taking the sum of both integrated sensors and dividing it by 2.
- * - Pigeon IMU wired on CAN Bus for Auxiliary Closed Loop on Yaw
- * 
- * This example has two modes of operation, which can be switched between with Button 2.
- * 1.) Arcade Drive
- * 2.) Motion Magic with Talon FX's Encoders and Drive Straight With Pigeon yaw
- * 
- * Controls:
- * Button 1: When pressed, zero sensors. Set integrated encoders' positions + Pigeon yaw to 0.
- * Button 2: When pressed, toggle between Arcade Drive and Motion Magic
- * 	When toggling into Motion Magic, the current heading is saved and used as the 
- * 	auxiliary closed loop target. Can be changed by toggling out and in again.
- * Y Button (button 4): when in motion magic mode, sets the heading to 0.0 degrees
- * Button 5(Left shoulder): When pushed, will decrement the smoothing of the motion magic down to 0
- * Button 6(Right shoulder): When pushed, will increment the smoothing of the motion magic up to 8
- * Select button (button 7): when in motion magic mode, sets the heading to -90 degrees
- * Start button (button 8): when in motion magic mode, sets the heading to +90.0 degrees
- * Left Joystick Y-Axis: 
- * 	+ Arcade Drive: Drive robot forward and reverse
- * 	+ Motion Magic: Servo robot forward and reverse [-6, 6] rotations
- * Right Joystick X-Axis: 
- *  + Arcade Drive: Turn robot in left and right direction
- *  + Motion Magic: Not used
- * 
- * Gains for Motion Magic and Auxiliary may need to be adjusted in Constants.java
- * 
- * Supported Version:
- * - Talon FX: 20.2.3.0
- * - Pigeon IMU: 20.0
- */
 
 package org.team2168;
 
@@ -108,6 +46,9 @@ public class Robot extends TimedRobot {
 
   private static PowerDistribution pdp;
 
+  	//Driverstation Instance
+	public static DriverStation driverstation;
+
   static boolean autoMode;
   // private static boolean matchStarted = false;
   // private static int gyroReinits;
@@ -147,7 +88,9 @@ public class Robot extends TimedRobot {
     oi = OI.getInstance();
     
     // pdp = new PowerDistribution(RobotMap.PDPThreadPeriod);
-    // pdp.startThread();
+  // pdp.startThread();
+    driverstation = DriverStation.getInstance();
+
     ConsolePrinter.init();
     ConsolePrinter.startThread();
 
@@ -234,4 +177,9 @@ public class Robot extends TimedRobot {
     //controlStyle = (int) controlStyleChooser.getSelected();
     Scheduler.getInstance().run();
   }
+
+  public static boolean onBlueAlliance() {
+		return driverstation.getAlliance() == DriverStation.Alliance.Blue;
+
+	}
 }

@@ -81,9 +81,41 @@ public class RobotMap {
 	public static final int DRIVETRAIN_LEFT_MOTOR_2_PDP = 14;
 	public static final int DRIVETRAIN_LEFT_MOTOR_1_PDP = 15;
 
-	//PCMs
-	public static final int PCM_CAN_ID_BELLYPAN = 0;
-	public static final int PCM_CAN_ID_SHOOTER = 1;
+	/*************************************************************************
+	 *                         PBOT DIFFERENCES  PARAMETERS                  *
+	 *************************************************************************/
+
+	/*************************************************************************
+	 *                         DRIVETRAIN PARAMETERS                         *
+	 *************************************************************************/
+	
+
+	
+
+	/*************************************************************************
+	 *                         PDP PARAMETERS                                *
+	 *************************************************************************/
+
+	/*************************************************************************
+	 *                         PID PARAMETERS                                *
+	 *************************************************************************/
+
+	/****************************************************************
+	 *                         TCP Servers (ONLY FOR DEBUGGING)     *
+	 ****************************************************************/
+	// public static final int TCP_SERVER_DRIVE_TRAIN_POS = 1180;
+	// public static final int TCP_SERVER_ROTATE_CONTROLLER = 1181;
+	// public static final int TCO_SERVER_RIGHT_DRIVE_TRAIN_SPEED = 1182;
+	// public static final int TCP_SERVER_LEFT_DRIVE_TRAIN_SPEED = 1183;
+	// public static final int TCP_SERVER_LIFT_POT_CONTROLLER = 1184;
+	// public static final int TCP_SERVER_ROTATE_CONTROLLER_STRAIGHT = 1185;
+	// public static final int TCP_SERVER_RIGHT_DRIVE_TRAIN_POSITION = 1186;
+	// public static final int TCP_SERVER_LEFT_DRIVE_TRAIN_POSITION = 1187;
+	public static final int TCP_SERVER_ROTATE_CONTROLLER_WITH_CAMERA = 1188;
+	// public static final int TCP_SERVER_MB_POT_CONTROLLER = 1189;
+	// public static final int TCP_SERVER_HP_POT_CONTROLLER = 1190;
+	// public static final int TCP_SERVER_RIGHT_STINGER_POSITION = 1191;
+	// public static final int TCP_SERVER_LEFT_STINGER_POSITION = 1192;
 
 	// Relay Channels///////////////////////////////////////////////////////////
 

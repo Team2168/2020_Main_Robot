@@ -9,17 +9,31 @@ package org.team2168.commands.drivetrain;
 
 import org.team2168.OI;
 import org.team2168.subsystems.Drivetrain;
+import org.team2168.utils.LinearInterpolator;
+
 import edu.wpi.first.wpilibj.command.Command;
 
-public class DriveWithJoystick extends Command 
+public class DriveWithJoystickLimelight extends Command 
 {
   private Drivetrain dt;
   private OI oi;
+  private LinearInterpolator limeLightInterpolator;
+  private static final double LIMELIGHT_ERROR_TOLERANCE = 1.0;
+  private double[][] limelightArray = { 
+    { -27.0, 0.2}, //limelight offset, turning gain
+    { -LIMELIGHT_ERROR_TOLERANCE, 0.07}, 
+    { LIMELIGHT_ERROR_TOLERANCE, -0.07}, 
+    { 27.0, -0.2}
+  };
+  private double limelight_offset;
+  private double turnGain;
   
-  public DriveWithJoystick() 
+  public DriveWithJoystickLimelight() 
   {
     dt = Drivetrain.getInstance();
     requires(dt);
+    limeLightInterpolator = new LinearInterpolator(limelightArray);
+
   }
 
   // Called just before this Command runs the first time
@@ -36,8 +50,19 @@ public class DriveWithJoystick extends Command
 	 */
   @Override
   protected void execute() {
-    dt.tankDrive(oi.getGunStyleYValue()+ oi.getGunStyleXValue(),
-      oi.getGunStyleYValue() - oi.getGunStyleXValue());
+    limelight_offset = dt.limelight.getPos();
+    if(dt.isLimelightEnabled()) {
+      if(limelight_offset > LIMELIGHT_ERROR_TOLERANCE) {
+        turnGain = limeLightInterpolator.interpolate(limelight_offset) + oi.getGunStyleXValue();
+      }
+      else {
+        turnGain = oi.getGunStyleXValue();
+      }
+    }
+    else {
+      turnGain = oi.getGunStyleXValue();
+    }
+    dt.drive(oi.getGunStyleYValue(), turnGain);
   }
 
   // Called repeatedly when this Command is scheduled to run
@@ -57,6 +82,7 @@ public class DriveWithJoystick extends Command
   // subsystems is scheduled to run
   @Override
   protected void interrupted() {
+    end();
     
   }
 }

@@ -7,6 +7,9 @@ import org.team2168.commands.auto.FireBalls;
 import org.team2168.commands.color_wheel.DriveColorWheelXRotations;
 import org.team2168.commands.color_wheel_pivot.DisengageColorWheel;
 import org.team2168.commands.color_wheel_pivot.EngageColorWheel;
+import org.team2168.commands.drivetrain.EnableLimelight;
+import org.team2168.commands.drivetrain.FirstPath;
+import org.team2168.commands.drivetrain.PauseLimelight;
 import org.team2168.commands.drivetrain.PIDCommands.DriveXDistance;
 import org.team2168.commands.drivetrain.PIDCommands.TurnXAngle;
 import org.team2168.commands.hood_adjust.MoveToBackTrench;
@@ -87,6 +90,9 @@ public class OI
 		 *************************************************************************/
 		gunStyleYInterpolator = new LinearInterpolator(gunStyleYArray);
 		gunStyleXInterpolator = new LinearInterpolator(gunStyleXArray);
+
+		driverJoystick.ButtonLeftStick().whenPressed(new EnableLimelight()); //taken care of in DriveWithJoystickCommand
+		driverJoystick.ButtonLeftStick().whenReleased(new PauseLimelight());
 
 		
 		/*************************************************************************

@@ -44,9 +44,9 @@ public class Constants {
      * Not all set of Gains are used in this project and may be removed as desired.
      * 
 	 * 	                                    			   kP     kI     kD   kF             Iz    PeakOut */
-	public final static Gains kGains_Distance = new Gains( 0.125,  0.00,   0.0, 0.0,            120,  0.75 ); //always used for linear path
-	public final static Gains kGains_Turning  = new Gains( 0.48, 0.00,  0.0, 0.0,            200,  0.5 ); //used to turn during autos
-	public final static Gains kGains_Turning_Straight  = new Gains( 3.9, 0.0, 0.0, 0.0,  300,  0.50 ); //used to maintain heading while auto driving straight
+	public final static Gains kGains_Distance = new Gains( 0.2,  0.00,   0.0, 0.0,            120,  0.75 );
+	public final static Gains kGains_Turning  = new Gains( 4.0, 0.00,  0.0, 0.0,            200,  0.5 );
+	public final static Gains kGains_Velocit  = new Gains( 0.1, 0.0, 20.0, 1023.0/6800.0,  300,  0.50 );
 	// public final static Gains kGains_MotProf  = new Gains( 1.0, 0.0,  0.0, 1023.0/6800.0,  400,  1.00 );
 	
 	/** ---- Flat constants, you should not need to change these ---- */
