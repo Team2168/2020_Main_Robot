@@ -44,7 +44,7 @@ public class OppositeTrenchAuto extends CommandGroup {
 
     //start shooter
     addParallel(new MoveToWhiteLine());
-    addParallel(new DriveToXSpeed(3300.0)); //blind guess
+    addParallel(new DriveToXSpeed(3300.0)); //fix later so this doesn't cancel the hood moving
     
     //drive and intake
     addParallel(new DriveIntakeWithConstant(1.0));//TODO set
