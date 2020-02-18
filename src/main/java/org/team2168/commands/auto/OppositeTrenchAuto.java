@@ -10,6 +10,7 @@ package org.team2168.commands.auto;
 import org.team2168.commands.drivetrain.PIDCommands.DriveXDistance;
 import org.team2168.commands.drivetrain.PIDCommands.TurnXAngle;
 import org.team2168.commands.hood_adjust.MoveToFrontTrench;
+import org.team2168.commands.hood_adjust.MoveToWLNoShoot;
 import org.team2168.commands.hood_adjust.MoveToWhiteLine;
 import org.team2168.commands.hopper.DriveHopperWithConstant;
 import org.team2168.commands.indexer.DriveIndexerWithConstant;
@@ -43,36 +44,37 @@ public class OppositeTrenchAuto extends CommandGroup {
     // arm.
 
     //start shooter
-    addParallel(new MoveToWhiteLine());
+    addParallel(new MoveToWLNoShoot());
     addParallel(new DriveToXSpeed(3300.0)); //fix later so this doesn't cancel the hood moving
     
     //drive and intake
-    addParallel(new DriveIntakeWithConstant(1.0));//TODO set
+    addParallel(new DriveIntakeWithConstant(0.95));//TODO set
     addSequential(new ExtendIntakePneumatic());
     addSequential(new DriveXDistance(-91.0, 0.5)); //91 in working inner port
     addParallel(new DriveIntakeWithConstant(0.3));
     addSequential(new RetractIntakePneumatic()); 
 
     //turn and drive to firing location 
-    addSequential(new TurnXAngle(-60.0, 0.5), 2.0);
-    addSequential(new DriveXDistance(180.0, 0.5), 4.0); //176, 
-    addSequential(new TurnXAngle(47.8, 0.3), 2.0); //45.8--four inner port, not in line for next pickup
+    addSequential(new TurnXAngle(-68.0, 0.5), 2.0);
+    addSequential(new DriveXDistance(190.0, 0.5), 4.0); //176, 
+    addSequential(new TurnXAngle(61.0, 0.3), 2.0); //45.8--four inner port, not in line for next pickup
     
     //Fire 
     addSequential(new FireBallsAutoNoLineBreak(), 2.5);
     addParallel(new DriveHopperWithConstant(0.0), 0.1);
     addParallel(new DriveIndexerWithConstant(0.0), 0.0);
+    addSequential(new TurnXAngle(-30.0, 0.3), 2.0); //45.8--four inner port, not in line for next pickup
 
-    addParallel(new MoveToFrontTrench());
+    // addParallel(new MoveToFrontTrench()); //reduce battery load to prevent brownout 
 
     addParallel(new DriveIntakeWithConstant(0.95));//TODO set
     addSequential(new ExtendIntakePneumatic());
-    addSequential(new DriveXDistance(-76.0, 0.5));
+    addSequential(new DriveXDistance(-80.0, 0.5));
 
-    addSequential(new TurnXAngle(-18.0, 0.3), 2.0);
-    addSequential(new DriveXDistance(-18.0, 0.5), 2.0);
-    addParallel(new DriveIntakeWithConstant(0.3));
-    addSequential(new RetractIntakePneumatic()); 
+    // addSequential(new TurnXAngle(-18.0, 0.3), 2.0);
+    // addSequential(new DriveXDistance(-18.0, 0.5), 2.0);
+    // addParallel(new DriveIntakeWithConstant(0.3));
+    // addSequential(new RetractIntakePneumatic()); 
 
     //addSequential(new TurnXAngle(35.0, 0.3));
 

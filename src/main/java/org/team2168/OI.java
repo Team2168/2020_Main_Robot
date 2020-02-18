@@ -97,11 +97,11 @@ public class OI
 		operatorJoystick.ButtonRightDPad().whenPressed(new MoveToWhiteLine());
 		operatorJoystick.ButtonDownDPad().whenPressed(new MoveToWall());
 
-		operatorJoystick.ButtonY().whenPressed(new EngageColorWheel());
-		operatorJoystick.ButtonA().whenPressed(new DisengageColorWheel());
+		// operatorJoystick.ButtonY().whenPressed(new EngageColorWheel());
+		// operatorJoystick.ButtonA().whenPressed(new DisengageColorWheel());
 		operatorJoystick.ButtonA().whenPressed(new MoveToWall());
 
-		operatorJoystick.ButtonStart().whenPressed(new DriveColorWheelXRotations(4.0*8.0));
+		// operatorJoystick.ButtonStart().whenPressed(new DriveColorWheelXRotations(4.0*8.0));
 
 		// operatorJoystick.ButtonX().whenPressed(new DriveToXSpeed(Shooter.getInstance().WALL_VEL));
 		// operatorJoystick.ButtonX().whenPressed(new DriveShooterWithConstant(0.306));
