@@ -6,6 +6,7 @@ import org.team2168.commands.auto.FireBalls;
 import org.team2168.commands.climber.DisengageRatchet;
 import org.team2168.commands.climber.DriveClimberXPosition;
 import org.team2168.commands.climber.EngageRatchet;
+import org.team2168.commands.climber.PrepareToClimb;
 import org.team2168.commands.climber.ResetClimberPosition;
 import org.team2168.commands.color_wheel.DriveColorWheelXRotations;
 import org.team2168.commands.color_wheel_pivot.DisengageColorWheel;
@@ -131,16 +132,13 @@ public class OI
 		// pidTestJoystick.ButtonBack().whenPressed(new FirstPathReverse());
 
 
-		pidTestJoystick.ButtonX().whenPressed(new ResetClimberPosition());
-		pidTestJoystick.ButtonY().whenPressed(new DriveClimberXPosition(45.0, 0.1)); //33
-		pidTestJoystick.ButtonA().whenPressed(new DriveClimberXPosition(7.0, 0.1));	//28
+		// pidTestJoystick.ButtonX().whenPressed(new ResetClimberPosition());
+		// pidTestJoystick.ButtonY().whenPressed(new PrepareToClimb()); 
+		// pidTestJoystick.ButtonA().whenPressed(new DriveClimberXPosition(7.0, 0.1));
 
 
 		// pidTestJoystick.ButtonB().whenPressed(new FireBalls());
 		// pidTestJoystick.ButtonB().whenReleased(new FinishFiring());
-
-		pidTestJoystick.ButtonUpDPad().whenPressed(new EngageRatchet());
-		pidTestJoystick.ButtonDownDPad().whenPressed(new DisengageRatchet());
 
 
 	}
