@@ -115,10 +115,10 @@ public class ColorWheel extends Subsystem {
     SmartDashboard.putNumber("Max Acceleration", maxAcc);
     SmartDashboard.putNumber("Allowed Closed Loop Error", allowedErr);   
 
-    // ConsolePrinter.putNumber("CW Velocity", () -> {return getVelocity();}, true, false);
-    // ConsolePrinter.putNumber("CW Position", () -> {return getPosition();}, true, false);
-    // ConsolePrinter.putNumber("CW Position Error", () -> {return getPositionError();}, true, false);
-    // ConsolePrinter.putNumber("CW Motor Output Percent", () -> {return getMotorOutput();}, true, false);
+    ConsolePrinter.putNumber("CW Velocity", () -> {return getVelocity();}, true, false);
+    ConsolePrinter.putNumber("CW Position", () -> {return getPosition();}, true, false);
+    ConsolePrinter.putNumber("CW Position Error", () -> {return getPositionError();}, true, false);
+    ConsolePrinter.putNumber("CW Motor Output Percent", () -> {return getMotorOutput();}, true, false);
   }
 
   /**
