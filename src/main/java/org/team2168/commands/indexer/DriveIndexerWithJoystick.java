@@ -21,7 +21,6 @@ public class DriveIndexerWithJoystick extends Command
     _indexer = Indexer.getInstance();
     
     requires (_indexer);
-    
   }
 
   // Called just before this Command runs the first time
@@ -29,6 +28,7 @@ public class DriveIndexerWithJoystick extends Command
   protected void initialize() {
     _oi = OI.getInstance();
   }
+  
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {

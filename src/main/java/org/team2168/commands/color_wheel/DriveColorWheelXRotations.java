@@ -5,59 +5,50 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package org.team2168.commands.drivetrain.PIDCommands;
+package org.team2168.commands.color_wheel;
 
-import org.team2168.subsystems.Drivetrain;
+import org.team2168.subsystems.ColorWheel;
 
 import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-public class TurnXAngle extends Command {
-  private Drivetrain dt;
-  /**target position */
-  private double _targetPos = 0.0;
-  private double _targetAngle;
+public class DriveColorWheelXRotations extends Command {
 
-  private static final double DEFAULT_ERROR_TOLERANCE = 1.0;
-
-  private double _errorTolerancePosition = 0.5; //0.5 inches 
-  private double _errorToleranceAngle; //1.0 degree of tolerance 
+  private static ColorWheel colorWheel;
+  private double _setPoint;
+  private boolean _readPIDFromDashboard = false;
   private double _loopsToSettle = 10;
   private int _withinThresholdLoops = 0;
 
-  /**
-   * positive turns left
-   */
-  public TurnXAngle(double setPoint) {
+  public DriveColorWheelXRotations(double setPoint) {
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
-    this(setPoint, DEFAULT_ERROR_TOLERANCE);
-  }
-
-  public TurnXAngle(double setPoint, double errorToleranceAngle) {
-    // Use requires() here to declare subsystem dependencies
-    // eg. requires(chassis);
-    dt = Drivetrain.getInstance();
-    requires(dt);
-
-    _errorToleranceAngle = errorToleranceAngle;
-    _targetAngle = setPoint;
+    colorWheel = ColorWheel.getInstance();
+    requires(colorWheel);
+    _setPoint =setPoint;
   }
 
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
-    dt.zeroSensors();
-    dt.switchGains(false);
-
+    if(_readPIDFromDashboard) {
+      colorWheel.updatePIDValues();
+    }
+    colorWheel.zeroEncoders();
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    dt.setSetPointPosition(_targetPos, _targetAngle);
+    colorWheel.setPositionSetPoint(_setPoint);
+    SmartDashboard.putNumber("SetPoint", _setPoint);
+    SmartDashboard.putNumber("CW Velocity", colorWheel.getVelocity());
+    SmartDashboard.putNumber("CW Position", colorWheel.getPosition());
+    SmartDashboard.putNumber("CW Position Error", colorWheel.getPositionError());
+    SmartDashboard.putNumber("CW Motor Output Percent", colorWheel.getMotorOutput());
+
     /* Check if closed loop error is within the threshld */
-    if ((Math.abs(dt.getErrorPosition()) < _errorTolerancePosition) && (Math.abs(dt.getErrorHeading()) < _errorToleranceAngle)) 
-    {
+    if (Math.abs(_setPoint-colorWheel.getPosition()) < colorWheel.getAllowedClosedLoopError()) {
       ++_withinThresholdLoops;
     } 
     else {
@@ -74,7 +65,8 @@ public class TurnXAngle extends Command {
   // Called once after isFinished returns true
   @Override
   protected void end() {
-    dt.tankDrive(0.0, 0.0);
+    colorWheel.drive(0.0);
+
   }
 
   // Called when another command which requires one or more of the same

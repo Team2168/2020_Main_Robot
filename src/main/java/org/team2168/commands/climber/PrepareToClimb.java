@@ -5,20 +5,15 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package org.team2168.commands.drivetrain;
-
-import org.team2168.commands.drivetrain.PIDCommands.DriveXDistance;
-import org.team2168.commands.drivetrain.PIDCommands.TurnXAngle;
-import org.team2168.commands.intakeMotor.IntakeBallStart;
-import org.team2168.commands.intakeMotor.IntakeBallStop;
+package org.team2168.commands.climber;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
-public class FirstPath extends CommandGroup {
+public class PrepareToClimb extends CommandGroup {
   /**
    * Add your docs here.
    */
-  public FirstPath() {
+  public PrepareToClimb() {
     // Add Commands here:
     // e.g. addSequential(new Command1());
     // addSequential(new Command2());
@@ -35,15 +30,8 @@ public class FirstPath extends CommandGroup {
     // e.g. if Command1 requires chassis, and Command2 requires arm,
     // a CommandGroup containing them would require both the chassis and the
     // arm.
-    addSequential(new TurnXAngle(36.0));
-    addSequential(new DriveXDistance(-100.0, 0.5)); //-111.52
-    addSequential(new TurnXAngle(-36.0));
-    // addParallel(new IntakeBallStart());
-    // addSequential(new DriveXDistance(-162.0, 0.25));
-    // addSequential(new DriveXDistance(162.0, 0.25));
-    // addParallel(new IntakeBallStop());
-
-
-
+    addSequential(new DisengageRatchet());
+    addSequential(new DriveClimberXPosition(49.0, 0.1));
+    addSequential(new EngageRatchet());
   }
 }

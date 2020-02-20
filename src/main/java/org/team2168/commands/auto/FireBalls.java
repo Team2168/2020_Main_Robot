@@ -5,20 +5,21 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package org.team2168.commands.drivetrain;
+package org.team2168.commands.auto;
 
-import org.team2168.commands.drivetrain.PIDCommands.DriveXDistance;
-import org.team2168.commands.drivetrain.PIDCommands.TurnXAngle;
-import org.team2168.commands.intakeMotor.IntakeBallStart;
-import org.team2168.commands.intakeMotor.IntakeBallStop;
+import org.team2168.commands.hopper.DriveHopperWithConstant;
+import org.team2168.commands.indexer.DriveIndexerWithConstant;
+import org.team2168.commands.indexer.DriveIndexerWithConstantNoStop;
+import org.team2168.commands.intakeMotor.DriveIntakeWithConstant;
+import org.team2168.commands.shooter.WaitForShooterAtSpeed;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
-public class FirstPath extends CommandGroup {
+public class FireBalls extends CommandGroup {
   /**
    * Add your docs here.
    */
-  public FirstPath() {
+  public FireBalls() {
     // Add Commands here:
     // e.g. addSequential(new Command1());
     // addSequential(new Command2());
@@ -35,15 +36,12 @@ public class FirstPath extends CommandGroup {
     // e.g. if Command1 requires chassis, and Command2 requires arm,
     // a CommandGroup containing them would require both the chassis and the
     // arm.
-    addSequential(new TurnXAngle(36.0));
-    addSequential(new DriveXDistance(-100.0, 0.5)); //-111.52
-    addSequential(new TurnXAngle(-36.0));
-    // addParallel(new IntakeBallStart());
-    // addSequential(new DriveXDistance(-162.0, 0.25));
-    // addSequential(new DriveXDistance(162.0, 0.25));
-    // addParallel(new IntakeBallStop());
 
-
-
+    addSequential(new WaitForShooterAtSpeed());
+    addSequential(new DriveIndexerWithConstantNoStop(1.0), 0.5); 
+    addParallel(new DriveIndexerWithConstant(1.0));
+    addParallel(new DriveHopperWithConstant(0.9));
+    addParallel(new DriveIntakeWithConstant(0.2));
   }
 }
+

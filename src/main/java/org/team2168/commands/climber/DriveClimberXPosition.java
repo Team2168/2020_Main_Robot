@@ -5,62 +5,50 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package org.team2168.commands.drivetrain.PIDCommands;
+package org.team2168.commands.climber;
 
-import org.team2168.subsystems.Drivetrain;
+import org.team2168.subsystems.Climber;
 
 import edu.wpi.first.wpilibj.command.Command;
 
-public class DriveXDistance extends Command {
-  private Drivetrain dt;
-    /**target position */
-    private double _targetPos;
-    private double _targetAngle = 0.0;
+public class DriveClimberXPosition extends Command {
 
-    private static final double DEFAULT_ERROR_TOLERANCE = 0.5;
-    private static final double DEFAULT_MAX_VEL = 10.0*12.0;
+  private Climber climber;
+  /**target position */
+  private double _targetPos;
+  
+  private final double DEFAULT_ERROR_TOLERANCE = 0.5;
+  private double _errorTolerance; //inches
+  private double _loopsToSettle = 10;
+  private int _withinThresholdLoops = 0;
 
-    private double _errorTolerancePosition; //0.5 inches
-    private double _errorToleranceAngle = 1.0; //1.0 degree of tolerance 
-    private double _maxVel;
-    private double _loopsToSettle = 10;
-    private int _withinThresholdLoops = 0;
-
-  public DriveXDistance(double setPoint) {
-    this(setPoint, DEFAULT_ERROR_TOLERANCE, DEFAULT_MAX_VEL);
-  }
-
-  public DriveXDistance(double setPoint, double errorTolerancePosition) {
-    this(setPoint, errorTolerancePosition, DEFAULT_MAX_VEL);
-  }
-
-  public DriveXDistance(double setPoint, double errorTolerancePosition, double maxVelocity) {
+  public DriveClimberXPosition(double setPoint, double errorTolerance) {
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
-    dt = Drivetrain.getInstance();
-    requires(dt);
-
-    _errorTolerancePosition = errorTolerancePosition;
+    climber = Climber.getInstance();
+    requires(climber);
+    _errorTolerance = errorTolerance;
     _targetPos = setPoint;
-    _maxVel = maxVelocity;
   }
 
-
+  // public DriveClimberXPosition(double setPoint)
+  // {
+  //   this.DriveClimberXPosition(setPoint, DEFAULT_ERROR_TOLERANCE);
+  // }
+  
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
-    dt.zeroSensors(); //heading and position
-    dt.switchGains(true);
-    dt.setCruiseVelocity(_maxVel);
+    // climber.zeroEncoder(); //don't do this except for testing
+    climber.setGains(_targetPos);
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    dt.setSetPointPosition(_targetPos, _targetAngle);
+    climber.setSetPoint(_targetPos);
     /* Check if closed loop error is within the threshld */
-    if ((Math.abs(dt.getErrorPosition()) < _errorTolerancePosition) && (Math.abs(dt.getErrorHeading()) < _errorToleranceAngle)) 
-    {
+    if (Math.abs(climber.getErrorPosition()) < _errorTolerance) {
       ++_withinThresholdLoops;
     } 
     else {
@@ -77,7 +65,7 @@ public class DriveXDistance extends Command {
   // Called once after isFinished returns true
   @Override
   protected void end() {
-    dt.tankDrive(0.0, 0.0);
+    climber.driveClimberMotors(0.0);
   }
 
   // Called when another command which requires one or more of the same

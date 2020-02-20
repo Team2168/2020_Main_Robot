@@ -5,59 +5,53 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package org.team2168.commands.drivetrain.PIDCommands;
+package org.team2168.commands.balancer;
 
-import org.team2168.subsystems.Drivetrain;
+import org.team2168.OI;
+import org.team2168.subsystems.Balancer;
 
 import edu.wpi.first.wpilibj.command.Command;
 
-public class TurnXAngle extends Command {
-  private Drivetrain dt;
-  /**target position */
-  private double _targetPos = 0.0;
-  private double _targetAngle;
+public class DriveBalancerUpdatingPosition extends Command {
 
-  private static final double DEFAULT_ERROR_TOLERANCE = 1.0;
-
-  private double _errorTolerancePosition = 0.5; //0.5 inches 
-  private double _errorToleranceAngle; //1.0 degree of tolerance 
+  private static Balancer balancer;
+  private static OI oi;
+  private double _setPoint;
+  private boolean _readPIDFromDashboard = false;
   private double _loopsToSettle = 10;
   private int _withinThresholdLoops = 0;
+  private double numRevolutions = 5.0;
 
-  /**
-   * positive turns left
-   */
-  public TurnXAngle(double setPoint) {
+  public DriveBalancerUpdatingPosition() {
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
-    this(setPoint, DEFAULT_ERROR_TOLERANCE);
-  }
-
-  public TurnXAngle(double setPoint, double errorToleranceAngle) {
-    // Use requires() here to declare subsystem dependencies
-    // eg. requires(chassis);
-    dt = Drivetrain.getInstance();
-    requires(dt);
-
-    _errorToleranceAngle = errorToleranceAngle;
-    _targetAngle = setPoint;
+    balancer = Balancer.getInstance();
+    requires(balancer);
   }
 
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
-    dt.zeroSensors();
-    dt.switchGains(false);
-
+    oi = OI.getInstance();
+    if(_readPIDFromDashboard) {
+      balancer.updatePIDValues();
+    }
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    dt.setSetPointPosition(_targetPos, _targetAngle);
+    if(Math.abs(oi.getBalancerJoystickValue())>0.1){
+      _setPoint = balancer.getPosition() + (oi.getBalancerJoystickValue() * numRevolutions);
+    }
+    else {
+      _setPoint = balancer.getPosition();
+    }
+
+    balancer.setPositionSetPoint(_setPoint);
+
     /* Check if closed loop error is within the threshld */
-    if ((Math.abs(dt.getErrorPosition()) < _errorTolerancePosition) && (Math.abs(dt.getErrorHeading()) < _errorToleranceAngle)) 
-    {
+    if (Math.abs(_setPoint-balancer.getPosition()) < balancer.getAllowedClosedLoopError()) {
       ++_withinThresholdLoops;
     } 
     else {
@@ -74,7 +68,8 @@ public class TurnXAngle extends Command {
   // Called once after isFinished returns true
   @Override
   protected void end() {
-    dt.tankDrive(0.0, 0.0);
+    balancer.driveMotor(0.0);
+
   }
 
   // Called when another command which requires one or more of the same

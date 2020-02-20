@@ -8,7 +8,6 @@
 package org.team2168.commands.color_wheel;
 
 import org.team2168.OI;
-import org.team2168.Robot;
 import org.team2168.subsystems.ColorWheel;
 
 import edu.wpi.first.wpilibj.command.Command;
@@ -16,6 +15,7 @@ import edu.wpi.first.wpilibj.command.Command;
 public class DriveColorWheelWithJoystick extends Command {
   private ColorWheel colorWheel;
   private OI oi;
+  private final double MAX_SPEED = 0.8;
   public DriveColorWheelWithJoystick() {
     colorWheel = ColorWheel.getInstance();
   
@@ -34,7 +34,12 @@ public class DriveColorWheelWithJoystick extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    colorWheel.drive(oi.getColorWheelJoystick());
+    if(Math.abs(oi.getColorWheelJoystick()) < MAX_SPEED) {
+      colorWheel.drive(oi.getColorWheelJoystick());
+    }
+    else {
+      colorWheel.drive(MAX_SPEED);
+    }
   }
 
   // Make this return true when this Command no longer needs to run execute()
