@@ -400,6 +400,10 @@ public class Drivetrain extends Subsystem {
     _leftMotor3.follow(_rightMotor1, FollowerType.AuxOutput1);
   }
 
+  /**
+   * @param straightmode is true for setting a distance, false for setting a turn angle
+   * @param teleopmode is true for maintaining heading/using limelight, false for auto paths
+   */
   public void switchGains(boolean straightmode, boolean teleopMode)
   {
     if(teleopMode) {
