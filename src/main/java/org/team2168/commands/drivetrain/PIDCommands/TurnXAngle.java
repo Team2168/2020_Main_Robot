@@ -47,7 +47,7 @@ public class TurnXAngle extends Command {
   @Override
   protected void initialize() {
     dt.zeroSensors();
-    dt.switchGains(false);
+    dt.switchGains(false, false);
 
   }
 

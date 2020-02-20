@@ -50,7 +50,7 @@ public class DriveXDistance extends Command {
   @Override
   protected void initialize() {
     dt.zeroSensors(); //heading and position
-    dt.switchGains(true);
+    dt.switchGains(true, false);
     dt.setCruiseVelocity(_maxVel);
   }
 
