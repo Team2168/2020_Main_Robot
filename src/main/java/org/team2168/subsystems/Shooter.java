@@ -81,6 +81,11 @@ public class Shooter extends Subsystem {
     public final double FRONT_TRENCH_VEL = 3950.0; //steady state: 40 over
     public final double BACK_TRENCH_VEL = 4500.0; //steady state: 40 over
 
+    public final double WALL_VEL_PBOT = 2500.0; //steady state: 25 over
+    public final double WHITE_LINE_VEL_PBOT = 3500.0; //untuned
+    public final double FRONT_TRENCH_VEL_PBOT = 4300.0; //
+    public final double BACK_TRENCH_VEL_PBOT = 4700.0; //
+
     private Shooter() {
         _motorOne = new TalonFX(RobotMap.SHOOTER_MOTOR_ONE_PDP);
         _motorTwo = new TalonFX(RobotMap.SHOOTER_MOTOR_TWO_PDP);

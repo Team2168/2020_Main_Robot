@@ -219,4 +219,11 @@ public class Robot extends TimedRobot {
     //controlStyle = (int) controlStyleChooser.getSelected();
     Scheduler.getInstance().run();
   }
+
+  /**
+   * TODO return jumper value from DIO 24
+   */
+  public static boolean isPracticeBot() {
+    return true;
+  }
 }

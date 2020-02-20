@@ -7,6 +7,7 @@
 
 package org.team2168.commands.hood_adjust;
 
+import org.team2168.Robot;
 import org.team2168.commands.auto.Sleep;
 import org.team2168.commands.shooter.DriveToXSpeed;
 import org.team2168.subsystems.HoodAdjust;
@@ -41,6 +42,12 @@ public class MoveToBackTrench extends CommandGroup {
     // }
 
     //updated---allows for any possible position, allows retract pancake under load;
+    if(Robot.isPracticeBot()) {
+      addParallel(new DriveToXSpeed(Shooter.getInstance().BACK_TRENCH_VEL_PBOT));
+    }
+    else {
+      addParallel(new DriveToXSpeed(Shooter.getInstance().BACK_TRENCH_VEL));
+    } 
     addParallel(new DriveToXSpeed(Shooter.getInstance().BACK_TRENCH_VEL));
     addSequential(new ExtendShooterHood());
     addSequential(new RetractShooterHardstop());
