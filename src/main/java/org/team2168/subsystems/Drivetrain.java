@@ -19,6 +19,7 @@ import org.team2168.Robot;
 import org.team2168.RobotMap;
 import org.team2168.PID.sensors.Limelight;
 import org.team2168.commands.drivetrain.DriveWithJoystickLimelight;
+import org.team2168.subsystems.HoodAdjust.HoodPosition;
 import org.team2168.commands.drivetrain.DriveWithJoystick;
 import org.team2168.utils.consoleprinter.ConsolePrinter;
 
@@ -521,25 +522,67 @@ public class Drivetrain extends Subsystem {
     _pidgey.setAccumZAngle(0, Constants.kTimeoutMs);
   }
 
-  public void enableLimelight()
+  public void enableLimelight(HoodPosition hoodPos)
   {
     limelight.setCamMode(0);
     limelight.setLedMode(0);
-    // if(Robot.driverstation.isFMSAttached())
-    // {
-      if(Robot.onBlueAlliance())
-      {
-        limelight.setPipeline(3);
+    if(Robot.driverstation.isFMSAttached())
+    {
+      // if(Robot.onBlueAlliance())
+      // {
+      //   limelight.setPipeline(3);
+      // }
+      // else
+      // {
+      //   limelight.setPipeline(2);
+      // }
+      switch (hoodPos) {
+        case WALL : 
+          if(Robot.onBlueAlliance())
+          {
+            limelight.setPipeline(1);
+          }
+          else
+          {
+            limelight.setPipeline(3);
+          }
+          break;
+        case WHITE_LINE :
+          if(Robot.onBlueAlliance())
+          {
+            limelight.setPipeline(0);
+          }
+          else
+          {
+            limelight.setPipeline(2);
+          }
+          break;
+        case FRONT_TRENCH : 
+          if(Robot.onBlueAlliance())
+          {
+            limelight.setPipeline(0);
+          }
+          else
+          {
+            limelight.setPipeline(2);
+          }
+          break;
+        case BACK_TRENCH: 
+          if(Robot.onBlueAlliance())
+          {
+            limelight.setPipeline(1);
+          }
+          else
+          {
+            limelight.setPipeline(3);
+          }
+          break;
       }
-      else
-      {
-        limelight.setPipeline(2);
-      }
-    //   }
-    //   else
-    //   {
-    //     dt.limelight.setPipeline(0);
-    //   }
+    }
+    else
+    {
+      limelight.setPipeline(0);
+    }
     isLimelightEnabled = true;
   }
 
@@ -555,7 +598,7 @@ public class Drivetrain extends Subsystem {
   public boolean isLimelightEnabled() {
     return isLimelightEnabled;
   }
-  
+
   /**
    * Change all motors to their default mix of brake/coast modes.
    * Should be used for normal match play.
