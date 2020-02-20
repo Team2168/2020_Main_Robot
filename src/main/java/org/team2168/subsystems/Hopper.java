@@ -12,8 +12,10 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
+import org.team2168.Robot;
 import org.team2168.RobotMap;
 import org.team2168.commands.hopper.DriveHopperWithJoystick;
+import org.team2168.utils.consoleprinter.ConsolePrinter;
 
 import edu.wpi.first.wpilibj.command.Subsystem;
 
@@ -32,7 +34,10 @@ public class Hopper extends Subsystem {
   private final double TRIGGER_THRESHOLD_LIMIT = 30; //amp
   private final double TRIGGER_THRESHOLD_TIME = 200; //ms
 
+  public volatile double hopperMotorVoltage;
+
   private Hopper() {
+    hopperMotorVoltage = 0;
     hopperMotor = new TalonSRX(RobotMap.HOPPER_MOTOR_PDP);
 
     talonCurrentLimit = new SupplyCurrentLimitConfiguration(ENABLE_CURRENT_LIMIT,
@@ -43,6 +48,9 @@ public class Hopper extends Subsystem {
     hopperMotor.setNeutralMode(NeutralMode.Brake);
     hopperMotor.setInverted(HOPPER_MOTOR_INVERTED);
     hopperMotor.configNeutralDeadband(0.05);
+
+    ConsolePrinter.putNumber("HopperCurrent", () -> {return Robot.pdp.getChannelCurrent(RobotMap.HOPPER_MOTOR_PDP);}, true, false);
+    ConsolePrinter.putNumber("HopperVoltage", () -> {return this.getHopperMotorVoltage();},true, false);
   }
 
   /**
@@ -61,6 +69,11 @@ public class Hopper extends Subsystem {
    */
   public void drive(double speed) {
     hopperMotor.set(ControlMode.PercentOutput, speed);
+    hopperMotorVoltage = Robot.pdp.getBatteryVoltage() * speed;
+  }
+
+  public double getHopperMotorVoltage(){
+    return hopperMotorVoltage;
   }
 
   @Override

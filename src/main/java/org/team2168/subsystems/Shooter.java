@@ -13,6 +13,7 @@ import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
 import com.ctre.phoenix.music.Orchestra;
 
 import org.team2168.Gains;
+import org.team2168.Robot;
 import org.team2168.RobotMap;
 import org.team2168.commands.shooter.DriveShooterWithJoystick;
 import org.team2168.utils.consoleprinter.ConsolePrinter;
@@ -83,6 +84,7 @@ public class Shooter extends Subsystem {
     public final double WHITE_LINE_VEL = 3580.0; //untuned
     public final double FRONT_TRENCH_VEL = 3950.0; //steady state: 40 over
     public final double BACK_TRENCH_VEL = 4500.0; //steady state: 40 over
+    public volatile double shooterMotor1Voltage;
 
     Orchestra _o;
 
@@ -139,11 +141,14 @@ public class Shooter extends Subsystem {
          * https://phoenix-documentation.readthedocs.io/en/latest/ch14_MCSensor.html#sensor-phase
          */
         // _motorOne.setSensorPhase(true);
-
+        shooterMotor1Voltage = 0;
 
         ConsolePrinter.putNumber("Shooter Velocity", () -> {return getVelocity();}, true, false);
         ConsolePrinter.putNumber("Shooter Error", () -> {return getError();}, true, false);
         ConsolePrinter.putNumber("Shooter Motor Output Percent", () -> {return _motorOne.getMotorOutputPercent();}, true, false);
+        ConsolePrinter.putNumber("ShooterCurrent", () -> {return Robot.pdp.getChannelCurrent(RobotMap.SHOOTER_MOTOR_ONE_PDP);}, true, false);
+        ConsolePrinter.putNumber("ShooterVoltage", () -> {return this.getShooterMotorVoltage();}, true, false);
+
         //ConsolePrinter.putNumber("Shooter Setpoint", () -> {return ticks_per_100ms_to_revs_per_minute( _motorOne.getClosedLoopTarget());}, true, false);
 
         ArrayList<TalonFX> motors = new ArrayList<TalonFX>();
@@ -174,6 +179,7 @@ public class Shooter extends Subsystem {
     {
         _motorOne.set(ControlMode.PercentOutput, speed);
         //driveShooterMotorTwo(speed); //Not needed this is configured as a follower
+        shooterMotor1Voltage = Robot.pdp.getBatteryVoltage() * speed;
     }
 
     public double getVelocity()
@@ -214,6 +220,10 @@ public class Shooter extends Subsystem {
     private double ticks_per_100ms_to_revs_per_minute(double ticks) {
         //TODO: Verify conversion is correct
         return ticks * SECS_PER_MIN / (GEAR_RATIO * TICKS_PER_100MS);
+    }
+
+    public double getShooterMotorVoltage(){
+        return shooterMotor1Voltage;
     }
 
     public void initDefaultCommand() {

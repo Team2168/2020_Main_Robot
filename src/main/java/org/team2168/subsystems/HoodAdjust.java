@@ -34,8 +34,8 @@ public class HoodAdjust extends Subsystem {
   private HoodAdjust()
   {
     _hoodSolenoid = new DoubleSolenoid(RobotMap.PCM_CAN_ID_SHOOTER, RobotMap.HOOD_SOLENOID_ENGAGE, RobotMap.HOOD_SOLENOID_DISENGAGE);
-    _pancakeSolenoid = new DoubleSolenoid(RobotMap.PCM_CAN_ID_SHOOTER, RobotMap.PANCAKE_SOLENOID_IN, RobotMap.PANCAKE_SOLENOID_OUT);
-    shooterPosition = HoodPosition.WALL;
+    _hardstopSolenoid = new DoubleSolenoid(RobotMap.PCM_CAN_ID_SHOOTER, RobotMap.PANCAKE_SOLENOID_IN, RobotMap.PANCAKE_SOLENOID_OUT);
+    _hoodSolenoid= _hoodSolenoid.WALL;
     ConsolePrinter.putBoolean("Pancake Extended", () -> {return this.isPancakeExtended();}, true, false);
     ConsolePrinter.putBoolean("Pancake Retracted", () -> {return this.isPancakeRetracted();}, true, false);
     ConsolePrinter.putBoolean("Hood Extended", () -> {return this.isHoodExtended();}, true, false);

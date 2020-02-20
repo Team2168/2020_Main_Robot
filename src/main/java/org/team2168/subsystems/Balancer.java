@@ -17,6 +17,8 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.CANSparkMaxLowLevel.PeriodicFrame;
 import com.revrobotics.ControlType;
 
+import org.team2168.Robot;
+import org.team2168.RobotMap;
 import org.team2168.commands.balancer.DriveBalancerVelocityJoystick;
 import org.team2168.utils.consoleprinter.ConsolePrinter;
 
@@ -36,6 +38,7 @@ public class Balancer extends Subsystem {
   private double kP, kI, kD, kIz, kFF, kMaxOutput, kMinOutput, maxRPM, maxVel, minVel, maxAcc, allowedErr = ALLOWED_ERROR;
   private double velocitySetPoint_sensorUnits, positionSetPoint_sensorUnits;
   private static Balancer instance = null;
+  public volatile double balancerMotorVoltage;
 
   /**
    * Basic constructors for Balancer
@@ -54,8 +57,8 @@ public class Balancer extends Subsystem {
 
     //status frame every 500ms
     _balancerMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 500);
-    //ConsolePrinter.putNumber("BalancerMotorVoltage", () -> (return this.))
-    //The methods for the voltage and current do not exist yet.
+
+    balancerMotorVoltage = 0;
 
         /**
      * The RestoreFactoryDefaults method can be used to reset the configuration parameters
@@ -130,6 +133,8 @@ public class Balancer extends Subsystem {
     ConsolePrinter.putNumber("Balancer Position Error", () -> {return getPositionError();}, true, false);
     ConsolePrinter.putNumber("Balancer Velocity Error", () -> {return getVelocityError();}, true, false);
     ConsolePrinter.putNumber("Balancer Motor Output Percent", () -> {return getMotorOutput();}, true, false);
+    ConsolePrinter.putNumber("BalancerCurrent", () -> {return Robot.pdp.getChannelCurrent(RobotMap.BALANCER_MOTOR_PDP);}, true, false);
+    ConsolePrinter.putNumber("BalancerVoltage", () -> {return this.getBalancerMotorVoltage();}, true, false);
 
   }
   
@@ -156,6 +161,7 @@ public class Balancer extends Subsystem {
         speed = -speed;
 
       _balancerMotor.set(speed);
+      balancerMotorVoltage = Robot.pdp.getBatteryVoltage() * speed;
     }
 
     public void updatePIDValues()
@@ -274,7 +280,10 @@ public class Balancer extends Subsystem {
       m_encoder.setPosition(0.0);
     }
     
-
+  
+    public double getBalancerMotorVoltage() {
+      return balancerMotorVoltage;
+    }
   
   @Override
   public void initDefaultCommand() {

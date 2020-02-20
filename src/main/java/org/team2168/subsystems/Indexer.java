@@ -12,6 +12,7 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.CANSparkMaxLowLevel.PeriodicFrame;
 
+import org.team2168.Robot;
 import org.team2168.RobotMap;
 import org.team2168.utils.consoleprinter.ConsolePrinter;
 
@@ -30,12 +31,15 @@ public class Indexer extends Subsystem {
   private static DigitalInput exitLineBreak;
   private static Indexer _instance = null;
 
+  public volatile double indexerMotorVoltage;
+
   private Indexer(){
     _motor = new CANSparkMax(RobotMap.INDEXER_MOTOR_PDP, MotorType.kBrushed);
     entranceLineBreak = new DigitalInput(RobotMap.ENTRANCE_LINE_BREAK);
     exitLineBreak = new DigitalInput(RobotMap.EXIT_LINE_BREAK);
     _motor.setIdleMode(IdleMode.kBrake);
 
+    indexerMotorVoltage = 0;
 
     _motor.setSmartCurrentLimit(30);
     _motor.setControlFramePeriodMs(20);
@@ -45,6 +49,8 @@ public class Indexer extends Subsystem {
 
     ConsolePrinter.putBoolean("Cell Entering", () -> {return this.isBallEntering();}, true, false);
     ConsolePrinter.putBoolean("Cell Exiting", () -> {return this.isBallExiting();}, true, false);
+    ConsolePrinter.putNumber("IndexerCurrent", () -> {return Robot.pdp.getChannelCurrent(RobotMap.INDEXER_MOTOR_PDP);}, true, false);
+    ConsolePrinter.putNumber("IndexerVoltage", () -> {return this.getIndexerMotorVoltage();}, true, false);
     
   }
 
@@ -64,6 +70,8 @@ public class Indexer extends Subsystem {
       speed = speed * -1;
     }
     _motor.set(speed);
+
+    indexerMotorVoltage = Robot.pdp.getBatteryVoltage() * speed;
   }
 
   public boolean isBallEntering() {
@@ -72,6 +80,10 @@ public class Indexer extends Subsystem {
 
   public boolean isBallExiting() {
     return exitLineBreak.get();
+  }
+
+  public double getIndexerMotorVoltage(){
+    return indexerMotorVoltage;
   }
 
   @Override

@@ -15,6 +15,7 @@ import com.ctre.phoenix.sensors.PigeonIMU;
 import com.ctre.phoenix.sensors.PigeonIMU_StatusFrame;
 
 import org.team2168.Constants;
+import org.team2168.Robot;
 import org.team2168.RobotMap;
 import org.team2168.commands.drivetrain.DriveWithJoystick;
 import org.team2168.utils.consoleprinter.ConsolePrinter;
@@ -45,6 +46,12 @@ public class Drivetrain extends Subsystem {
 	public static final boolean DT_REVERSE_RIGHT2 = true;
   public static final boolean DT_REVERSE_RIGHT3 = true; 
   public static final boolean DT_3_MOTORS_PER_SIDE = true;
+  public volatile double drivetrainRightMotor1Voltage;
+  public volatile double drivetrainRightMotor2Voltage;
+  public volatile double drivetrainRightMotor3Voltage;
+  public volatile double drivetrainLeftMotor1Voltage;
+  public volatile double drivetrainLeftMotor2Voltage;
+  public volatile double drivetrainLeftMotor3Voltage;
 
   	/** Invert Directions for Left and Right */
 	TalonFXInvertType _leftInvert = TalonFXInvertType.CounterClockwise; //Same as invert = "false"
@@ -208,13 +215,26 @@ public class Drivetrain extends Subsystem {
     _leftMotor1.setStatusFramePeriod(StatusFrame.Status_2_Feedback0, 5, Constants.kTimeoutMs);
     _pidgey.setStatusFramePeriod(PigeonIMU_StatusFrame.CondStatus_9_SixDeg_YPR , 5, Constants.kTimeoutMs);
 
+    drivetrainRightMotor1Voltage = 0;
+    drivetrainRightMotor2Voltage = 0;
+    drivetrainRightMotor3Voltage = 0;
+    drivetrainLeftMotor1Voltage = 0;
+    drivetrainLeftMotor2Voltage = 0;
+    drivetrainLeftMotor3Voltage = 0;
     // Log sensor data
-    //ConsolePrinter.putNumber("DTRight1MotorCurrent", () -> {return Robot.pdp.getChannelCurrent(RobotMap.DRIVETRAIN_RIGHT_MOTOR_1_PDP);}, true, false);
-   //ConsolePrinter.putNumber("DTRight2MotorCurrent", () -> {return Robot.pdp.getChannelCurrent(RobotMap.DRIVETRAIN_RIGHT_MOTOR_2_PDP);}, true, false);
-   //ConsolePrinter.putNumber("DTRight3MotorCurrent", () -> {return Robot.pdp.getChannelCurrent(RobotMap.DRIVETRAIN_RIGHT_MOTOR_3_PDP);}, true, false);
-    //ConsolePrinter.putNumber("DTLeft1MotorCurrent", () -> {return Robot.pdp.getChannelCurrent(RobotMap.DRIVETRAIN_LEFT_MOTOR_1_PDP);}, true, false);
-   //ConsolePrinter.putNumber("DTLeft2MotorCurrent", () -> {return Robot.pdp.getChannelCurrent(RobotMap.DRIVETRAIN_LEFT_MOTOR_2_PDP);}, true, false);
-   //ConsolePrinter.putNumber("DTLeft3MotorCurrent", () -> {return Robot.pdp.getChannelCurrent(RobotMap.DRIVETRAIN_LEFT_MOTOR_3_PDP);}, true, false);
+    ConsolePrinter.putNumber("DTRight1MotorCurrent", () -> {return Robot.pdp.getChannelCurrent(RobotMap.DRIVETRAIN_RIGHT_MOTOR_1_PDP);}, true, false);
+    ConsolePrinter.putNumber("DTRight2MotorCurrent", () -> {return Robot.pdp.getChannelCurrent(RobotMap.DRIVETRAIN_RIGHT_MOTOR_2_PDP);}, true, false);
+    ConsolePrinter.putNumber("DTRight3MotorCurrent", () -> {return Robot.pdp.getChannelCurrent(RobotMap.DRIVETRAIN_RIGHT_MOTOR_3_PDP);}, true, false);
+    ConsolePrinter.putNumber("DTLeft1MotorCurrent", () -> {return Robot.pdp.getChannelCurrent(RobotMap.DRIVETRAIN_LEFT_MOTOR_1_PDP);}, true, false);
+    ConsolePrinter.putNumber("DTLeft2MotorCurrent", () -> {return Robot.pdp.getChannelCurrent(RobotMap.DRIVETRAIN_LEFT_MOTOR_2_PDP);}, true, false);
+    ConsolePrinter.putNumber("DTLeft3MotorCurrent", () -> {return Robot.pdp.getChannelCurrent(RobotMap.DRIVETRAIN_LEFT_MOTOR_3_PDP);}, true, false);
+    ConsolePrinter.putNumber("DTRight1MotorVoltage", () -> {return this.getRightMotor1Voltage();}, true, false);
+    ConsolePrinter.putNumber("DTRight2MotorVoltage", () -> {return this.getRightMotor1Voltage();}, true, false);
+    ConsolePrinter.putNumber("DTRight3MotorVoltage", () -> {return this.getRightMotor3Voltage();}, true, false);
+    ConsolePrinter.putNumber("DTLeft1MotorVoltage", () -> {return this.getLeftMotor1Voltage();}, true, false);
+    ConsolePrinter.putNumber("DTLeft2MotorVoltage", () -> {return this.getLeftMotor2Voltage();}, true, false);
+    ConsolePrinter.putNumber("DTLeft3MotorVoltage", () -> {return this.getLeftMotor3Voltage();}, true, false);
+    
    //ConsolePrinter.putNumber("DT Position", ()->{return getPosition();}, true, false);
     ConsolePrinter.putNumber("Heading", ()->{return getHeading();}, true, false);
     ConsolePrinter.putNumber("Position Error", ()->{return getErrorPosition();}, true, false);
@@ -245,7 +265,7 @@ public class Drivetrain extends Subsystem {
     //   speed = -speed;
 
     _leftMotor1.set(ControlMode.PercentOutput, speed);
-
+    drivetrainLeftMotor1Voltage = Robot.pdp.getBatteryVoltage() * speed;
   }
 
   /**
@@ -259,6 +279,7 @@ public class Drivetrain extends Subsystem {
     //   speed = -speed;
 
     _leftMotor2.set(ControlMode.PercentOutput, speed);
+    drivetrainLeftMotor2Voltage = Robot.pdp.getBatteryVoltage() * speed;
   }
 
   /**
@@ -272,6 +293,7 @@ public class Drivetrain extends Subsystem {
     //   speed = -speed;
 
     _leftMotor3.set(ControlMode.PercentOutput, speed);
+    drivetrainLeftMotor3Voltage = Robot.pdp.getBatteryVoltage() * speed;
   }
 
   /**
@@ -301,6 +323,7 @@ public class Drivetrain extends Subsystem {
     //   speed = -speed;
 
     _rightMotor1.set(ControlMode.PercentOutput, speed);
+    drivetrainRightMotor1Voltage = Robot.pdp.getBatteryVoltage() * speed;
   }
 
   /**
@@ -314,6 +337,7 @@ public class Drivetrain extends Subsystem {
     //   speed = -speed;
 
     _rightMotor2.set(ControlMode.PercentOutput, speed);
+    drivetrainRightMotor2Voltage = Robot.pdp.getBatteryVoltage() * speed;
   }
 
   /**
@@ -327,6 +351,7 @@ public class Drivetrain extends Subsystem {
     //   speed = -speed;
 
     _rightMotor3.set(ControlMode.PercentOutput, speed);
+    drivetrainRightMotor1Voltage = Robot.pdp.getBatteryVoltage() * speed;
   }
 
   public void driveRight(double speed) {
@@ -601,6 +626,30 @@ public class Drivetrain extends Subsystem {
   @Override
   protected void initDefaultCommand() {
     setDefaultCommand(new DriveWithJoystick());
+  }
+
+  public double getLeftMotor1Voltage(){
+    return drivetrainLeftMotor1Voltage;
+  }
+
+  public double getLeftMotor2Voltage(){
+    return drivetrainLeftMotor2Voltage;
+  }
+
+  public double getLeftMotor3Voltage(){
+    return drivetrainLeftMotor3Voltage;
+  }
+
+  public double getRightMotor1Voltage(){
+    return drivetrainRightMotor1Voltage;
+  }
+
+  public double getRightMotor2Voltage(){
+    return drivetrainRightMotor2Voltage;
+  }
+
+  public double getRightMotor3Voltage(){
+    return drivetrainRightMotor3Voltage;
   }
 
 }

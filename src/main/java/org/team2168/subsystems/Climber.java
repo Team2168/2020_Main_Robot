@@ -17,6 +17,7 @@ import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import org.team2168.Gains;
+import org.team2168.Robot;
 import org.team2168.RobotMap;
 import org.team2168.PID.sensors.CanDigitalInput;
 import org.team2168.commands.climber.DriveClimberWithJoystick;
@@ -89,6 +90,9 @@ public class Climber extends Subsystem {
 
   private double setPoint_sensorunits;
 
+  public volatile double climberMotor1Voltage;
+  public volatile double climberMotor2Voltage;
+
 
   private Climber() {
     climberMotor1 = new TalonSRX(RobotMap.CLIMBER_MOTOR_1_PDP);
@@ -153,9 +157,15 @@ public class Climber extends Subsystem {
     ConsolePrinter.putBoolean("Lift is down", () -> {return isLiftDown();}, true, false);
 
     lastCall = isLiftDown();
+    climberMotor1Voltage = 0;
+    climberMotor2Voltage = 0;
     ConsolePrinter.putNumber("Climber Position", ()->{return getPosition();}, true, false);
     ConsolePrinter.putNumber("Climber Position Error", ()->{return getErrorPosition();}, true, false);
     ConsolePrinter.putNumber("Climber Velocity", ()->{return getVelocity();}, true, false);
+    ConsolePrinter.putNumber("Climber1Current", () -> {return Robot.pdp.getChannelCurrent(RobotMap.CLIMBER_MOTOR_1_PDP);}, true, false);
+    ConsolePrinter.putNumber("Climber2Current", () -> {return Robot.pdp.getChannelCurrent(RobotMap.CLIMBER_MOTOR_2_PDP);}, true, false);
+    ConsolePrinter.putNumber("Climber1Voltage", () -> {return this.getClimberMotor1Voltage();}, true, false);
+    ConsolePrinter.putNumber("Climber2Voltage", () -> {return this.getClimberMotor2Voltage();}, true, false);
   }
   
   /**
@@ -191,6 +201,7 @@ public class Climber extends Subsystem {
     // }
       
     climberMotor1.set(ControlMode.PercentOutput, speed);
+    climberMotor1Voltage = Robot.pdp.getBatteryVoltage() * speed;
   }
   /**
    * This method is used for testing only motor two.
@@ -201,6 +212,7 @@ public class Climber extends Subsystem {
     //   speed = -speed;
     // }
     climberMotor2.set(ControlMode.PercentOutput, speed);
+    climberMotor2Voltage = Robot.pdp.getBatteryVoltage() * speed;
   }
 
   /** 
@@ -317,6 +329,14 @@ public class Climber extends Subsystem {
     lastCall = isLiftDown();
   }
 
+ 
+  public double getClimberMotor1Voltage() {
+    return climberMotor1Voltage;
+  }
+  
+  public double getClimberMotor2Voltage(){
+    return climberMotor2Voltage;
+  }
   @Override
   /**
    * This sets the default command to drive via a joystick.

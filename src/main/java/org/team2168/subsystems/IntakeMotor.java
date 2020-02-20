@@ -12,8 +12,10 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
+import org.team2168.Robot;
 import org.team2168.RobotMap;
 import org.team2168.commands.intakeMotor.DriveIntakeWithJoystick;
+import org.team2168.utils.consoleprinter.ConsolePrinter;
 
 import edu.wpi.first.wpilibj.command.Subsystem;
 
@@ -34,11 +36,15 @@ public class IntakeMotor extends Subsystem {
   private final double TRIGGER_THRESHOLD_LIMIT = 30; //amp
   private final double TRIGGER_THRESHOLD_TIME = 200; //ms
 
+  public volatile double intakeMotorVoltage;
+
   /**
    * Default constructors for Intake
    */
   private IntakeMotor() {
     intakeMotor = new TalonSRX(RobotMap.INTAKE_MOTOR_PDP);
+
+    intakeMotorVoltage = 0;
 
     talonCurrentLimit = new SupplyCurrentLimitConfiguration(ENABLE_CURRENT_LIMIT,
     CONTINUOUS_CURRENT_LIMIT, TRIGGER_THRESHOLD_LIMIT, TRIGGER_THRESHOLD_TIME);
@@ -47,6 +53,9 @@ public class IntakeMotor extends Subsystem {
     intakeMotor.setNeutralMode(NeutralMode.Brake);
     intakeMotor.setInverted(INTAKE_MOTOR_REVERSE);
     intakeMotor.configNeutralDeadband(0.05);
+
+    ConsolePrinter.putNumber("IntakeCurrent", () -> {return Robot.pdp.getChannelCurrent(RobotMap.INTAKE_MOTOR_PDP);}, true, false);
+    ConsolePrinter.putNumber("IntakeVoltage", () -> {return this.getIntakeMotorVoltage();}, true, false);
   }
 
   /**
@@ -67,6 +76,12 @@ public class IntakeMotor extends Subsystem {
   public void driveMotor(double speed)
   {
     intakeMotor.set(ControlMode.PercentOutput, speed);
+    intakeMotorVoltage = Robot.pdp.getBatteryVoltage() * speed;
+  }
+
+
+  public double getIntakeMotorVoltage() {
+    return intakeMotorVoltage;
   }
 
   @Override

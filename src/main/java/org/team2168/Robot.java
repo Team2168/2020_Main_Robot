@@ -106,7 +106,7 @@ public class Robot extends TimedRobot {
 
   private static OI oi;
 
-  private static PowerDistribution pdp;
+  public static PowerDistribution pdp;
 
   static boolean autoMode;
   // private static boolean matchStarted = false;

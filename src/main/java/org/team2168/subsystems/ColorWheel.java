@@ -15,6 +15,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.CANSparkMaxLowLevel.PeriodicFrame;
 import com.revrobotics.ControlType;
 
+import org.team2168.Robot;
 import org.team2168.RobotMap;
 import org.team2168.commands.color_wheel.DriveColorWheelWithJoystick;
 import org.team2168.utils.consoleprinter.ConsolePrinter;
@@ -36,9 +37,11 @@ public class ColorWheel extends Subsystem {
   private final double ALLOWED_ERROR = (2.0 / 360.0);
   private double kP, kI, kD, kIz, kFF, kMaxOutput, kMinOutput, maxRPM, maxVel, minVel, maxAcc, allowedErr = ALLOWED_ERROR;
   private double velocitySetPoint_sensorUnits, positionSetPoint_sensorUnits;
+  public volatile double colorWheelMotorVoltage;
 
   private ColorWheel()
   {
+    colorWheelMotorVoltage = 0;
     colorWheelMotor = new CANSparkMax(RobotMap.COLORWHEEL_MOTOR_PDP,MotorType.kBrushless); 
     colorWheelMotor.setSmartCurrentLimit(30);
     colorWheelMotor.setControlFramePeriodMs(20);
@@ -119,6 +122,8 @@ public class ColorWheel extends Subsystem {
     ConsolePrinter.putNumber("CW Position", () -> {return getPosition();}, true, false);
     ConsolePrinter.putNumber("CW Position Error", () -> {return getPositionError();}, true, false);
     ConsolePrinter.putNumber("CW Motor Output Percent", () -> {return getMotorOutput();}, true, false);
+    ConsolePrinter.putNumber("CWMotorCurrent", () -> {return Robot.pdp.getChannelCurrent(RobotMap.COLORWHEEL_MOTOR_PDP);}, true, false);
+    ConsolePrinter.putNumber("CWMotorVoltage", () -> {return this.getColorWheelMotorVoltage();}, true, false);
   }
 
   /**
@@ -148,6 +153,7 @@ public class ColorWheel extends Subsystem {
       speed = -speed;
     }
     colorWheelMotor.set(speed);
+    colorWheelMotorVoltage = Robot.pdp.getBatteryVoltage() * speed;
   }
 
   public void updatePIDValues()
@@ -265,6 +271,11 @@ public class ColorWheel extends Subsystem {
   public void zeroEncoders()
   {
     m_encoder.setPosition(0.0);
+  }
+
+
+  public double getColorWheelMotorVoltage() {
+    return colorWheelMotorVoltage;
   }
 
   @Override
