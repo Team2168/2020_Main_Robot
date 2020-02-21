@@ -18,6 +18,7 @@ import org.team2168.utils.consoleprinter.ConsolePrinter;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * Add your docs here.
@@ -47,10 +48,10 @@ public class Indexer extends Subsystem {
     _motor.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 500);
     _motor.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 500);
 
-    ConsolePrinter.putBoolean("Cell Entering", () -> {return this.isBallEntering();}, true, false);
-    ConsolePrinter.putBoolean("Cell Exiting", () -> {return this.isBallExiting();}, true, false);
-    ConsolePrinter.putNumber("IndexerCurrent", () -> {return Robot.pdp.getChannelCurrent(RobotMap.INDEXER_MOTOR_PDP);}, true, false);
-    ConsolePrinter.putNumber("IndexerVoltage", () -> {return this.getIndexerMotorVoltage();}, true, false);
+    SmartDashboard.putBoolean("Cell Entering", isBallEntering());
+    SmartDashboard.putBoolean("Cell Exiting", isBallExiting());
+    SmartDashboard.putNumber("IndexerCurrent", Robot.pdp.getChannelCurrent(RobotMap.INDEXER_MOTOR_PDP));
+    SmartDashboard.putNumber("IndexerVoltage", getIndexerMotorVoltage());
     
   }
 

@@ -18,6 +18,7 @@ import org.team2168.commands.intakeMotor.DriveIntakeWithJoystick;
 import org.team2168.utils.consoleprinter.ConsolePrinter;
 
 import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * Add your docs here.
@@ -54,8 +55,8 @@ public class IntakeMotor extends Subsystem {
     intakeMotor.setInverted(INTAKE_MOTOR_REVERSE);
     intakeMotor.configNeutralDeadband(0.05);
 
-    ConsolePrinter.putNumber("IntakeCurrent", () -> {return Robot.pdp.getChannelCurrent(RobotMap.INTAKE_MOTOR_PDP);}, true, false);
-    ConsolePrinter.putNumber("IntakeVoltage", () -> {return this.getIntakeMotorVoltage();}, true, false);
+    SmartDashboard.putNumber("IntakeCurrent", Robot.pdp.getChannelCurrent(RobotMap.INTAKE_MOTOR_PDP));
+    SmartDashboard.putNumber("IntakeVoltage", getIntakeMotorVoltage());
   }
 
   /**
