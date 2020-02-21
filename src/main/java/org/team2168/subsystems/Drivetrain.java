@@ -37,7 +37,7 @@ public class Drivetrain extends Subsystem {
   private final boolean ENABLE_CURRENT_LIMIT = true;
   private final double CONTINUOUS_CURRENT_LIMIT = 40; //amps
   private final double TRIGGER_THRESHOLD_LIMIT = 60; //amp
-  private final double TRIGGER_THRESHOLD_TIME = 200; //ms
+  private final double TRIGGER_THRESHOLD_TIME = 0.2; //s
   public static final boolean DT_REVERSE_LEFT1 = false;
 	public static final boolean DT_REVERSE_LEFT2 = false;
   public static final boolean DT_REVERSE_LEFT3 = false;
