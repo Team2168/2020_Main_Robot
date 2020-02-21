@@ -12,6 +12,7 @@ import org.team2168.utils.consoleprinter.ConsolePrinter;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * Add your docs here.
@@ -36,10 +37,10 @@ public class HoodAdjust extends Subsystem {
     _hoodSolenoid = new DoubleSolenoid(RobotMap.PCM_CAN_ID_SHOOTER, RobotMap.HOOD_SOLENOID_ENGAGE, RobotMap.HOOD_SOLENOID_DISENGAGE);
     _hardstopSolenoid = new DoubleSolenoid(RobotMap.PCM_CAN_ID_SHOOTER, RobotMap.PANCAKE_SOLENOID_IN, RobotMap.PANCAKE_SOLENOID_OUT);
  
-    ConsolePrinter.putBoolean("Pancake Extended", () -> {return this.isPancakeExtended();}, true, false);
-    ConsolePrinter.putBoolean("Pancake Retracted", () -> {return this.isPancakeRetracted();}, true, false);
-    ConsolePrinter.putBoolean("Hood Extended", () -> {return this.isHoodExtended();}, true, false);
-    ConsolePrinter.putBoolean("Hood Retracted", () -> {return this.isHoodRetracted();}, true, false);
+    SmartDashboard.putBoolean("Pancake Extended",isPancakeExtended());
+    SmartDashboard.putBoolean("Pancake Retracted",isPancakeRetracted());
+    SmartDashboard.putBoolean("Hood Extended",isHoodExtended());
+    SmartDashboard.putBoolean("Hood Retracted",isHoodRetracted());
     _hardstopSolenoid = new DoubleSolenoid(RobotMap.PCM_CAN_ID_SHOOTER, RobotMap.PANCAKE_SOLENOID_OUT,RobotMap.PANCAKE_SOLENOID_IN);
     hoodPosition = HoodPosition.WALL;
   }

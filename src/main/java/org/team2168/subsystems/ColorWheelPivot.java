@@ -13,6 +13,7 @@ import org.team2168.utils.consoleprinter.ConsolePrinter;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * Add your docs here.
@@ -27,8 +28,8 @@ public class ColorWheelPivot extends Subsystem {
   private ColorWheelPivot()
   {
     colorWheelExtender = new DoubleSolenoid(RobotMap.COLORWHEEL_ENGAGE_PCM,RobotMap.COLORWHEEL_DISENGAGE_PCM);
-    ConsolePrinter.putBoolean("PistonExtended", () -> {return this.isExtended();}, true, false);
-    ConsolePrinter.putBoolean("PistonRetracted", () -> {return this.isRetracted();}, true, false);
+    SmartDashboard.putBoolean("PistonExtended",isExtended());
+    SmartDashboard.putBoolean("PistonRetracted",isRetracted());
   }
 
     /**

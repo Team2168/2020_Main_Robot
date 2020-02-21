@@ -128,13 +128,13 @@ public class Balancer extends Subsystem {
     
     
 
-    ConsolePrinter.putNumber("Balancer Velocity", () -> {return getVelocity();}, true, false);
-    ConsolePrinter.putNumber("Balancer Position", () -> {return getPosition();}, true, false);
-    ConsolePrinter.putNumber("Balancer Position Error", () -> {return getPositionError();}, true, false);
-    ConsolePrinter.putNumber("Balancer Velocity Error", () -> {return getVelocityError();}, true, false);
-    ConsolePrinter.putNumber("Balancer Motor Output Percent", () -> {return getMotorOutput();}, true, false);
-    ConsolePrinter.putNumber("BalancerCurrent", () -> {return Robot.pdp.getChannelCurrent(RobotMap.BALANCER_MOTOR_PDP);}, true, false);
-    ConsolePrinter.putNumber("BalancerVoltage", () -> {return this.getBalancerMotorVoltage();}, true, false);
+    SmartDashboard.putNumber("Balancer Velocity",getVelocity());
+    SmartDashboard.putNumber("Balancer Position",getPosition());
+    SmartDashboard.putNumber("Balancer Position Error",getPositionError());
+    SmartDashboard.putNumber("Balancer Velocity Error",getVelocityError());
+    SmartDashboard.putNumber("Balancer Motor Output Percent",getMotorOutput());
+    SmartDashboard.putNumber("BalancerCurrent",Robot.pdp.getChannelCurrent(RobotMap.BALANCER_MOTOR_PDP));
+    SmartDashboard.putNumber("BalancerVoltage",getBalancerMotorVoltage());
 
   }
   

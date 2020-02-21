@@ -21,6 +21,7 @@ import org.team2168.commands.drivetrain.DriveWithJoystick;
 import org.team2168.utils.consoleprinter.ConsolePrinter;
 
 import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 
 public class Drivetrain extends Subsystem {  
@@ -222,24 +223,23 @@ public class Drivetrain extends Subsystem {
     drivetrainLeftMotor2Voltage = 0;
     drivetrainLeftMotor3Voltage = 0;
     // Log sensor data
-    ConsolePrinter.putNumber("DTRight1MotorCurrent", () -> {return Robot.pdp.getChannelCurrent(RobotMap.DRIVETRAIN_RIGHT_MOTOR_1_PDP);}, true, false);
-    ConsolePrinter.putNumber("DTRight2MotorCurrent", () -> {return Robot.pdp.getChannelCurrent(RobotMap.DRIVETRAIN_RIGHT_MOTOR_2_PDP);}, true, false);
-    ConsolePrinter.putNumber("DTRight3MotorCurrent", () -> {return Robot.pdp.getChannelCurrent(RobotMap.DRIVETRAIN_RIGHT_MOTOR_3_PDP);}, true, false);
-    ConsolePrinter.putNumber("DTLeft1MotorCurrent", () -> {return Robot.pdp.getChannelCurrent(RobotMap.DRIVETRAIN_LEFT_MOTOR_1_PDP);}, true, false);
-    ConsolePrinter.putNumber("DTLeft2MotorCurrent", () -> {return Robot.pdp.getChannelCurrent(RobotMap.DRIVETRAIN_LEFT_MOTOR_2_PDP);}, true, false);
-    ConsolePrinter.putNumber("DTLeft3MotorCurrent", () -> {return Robot.pdp.getChannelCurrent(RobotMap.DRIVETRAIN_LEFT_MOTOR_3_PDP);}, true, false);
-    ConsolePrinter.putNumber("DTRight1MotorVoltage", () -> {return this.getRightMotor1Voltage();}, true, false);
-    ConsolePrinter.putNumber("DTRight2MotorVoltage", () -> {return this.getRightMotor1Voltage();}, true, false);
-    ConsolePrinter.putNumber("DTRight3MotorVoltage", () -> {return this.getRightMotor3Voltage();}, true, false);
-    ConsolePrinter.putNumber("DTLeft1MotorVoltage", () -> {return this.getLeftMotor1Voltage();}, true, false);
-    ConsolePrinter.putNumber("DTLeft2MotorVoltage", () -> {return this.getLeftMotor2Voltage();}, true, false);
-    ConsolePrinter.putNumber("DTLeft3MotorVoltage", () -> {return this.getLeftMotor3Voltage();}, true, false);
-    
-   //ConsolePrinter.putNumber("DT Position", ()->{return getPosition();}, true, false);
-    ConsolePrinter.putNumber("Heading", ()->{return getHeading();}, true, false);
-    ConsolePrinter.putNumber("Position Error", ()->{return getErrorPosition();}, true, false);
-    ConsolePrinter.putNumber("Heading Error", ()->{return getErrorHeading();}, true, false);
-    ConsolePrinter.putNumber("Motor output dt", ()->{return _rightMotor1.getMotorOutputPercent();}, true, false);
+    SmartDashboard.putNumber("DTRight1MotorCurrent",Robot.pdp.getChannelCurrent(RobotMap.DRIVETRAIN_RIGHT_MOTOR_1_PDP));
+    SmartDashboard.putNumber("DTRight2MotorCurrent",Robot.pdp.getChannelCurrent(RobotMap.DRIVETRAIN_RIGHT_MOTOR_2_PDP));
+    SmartDashboard.putNumber("DTRight3MotorCurrent",Robot.pdp.getChannelCurrent(RobotMap.DRIVETRAIN_RIGHT_MOTOR_3_PDP));
+    SmartDashboard.putNumber("DTLeft1MotorCurrent", Robot.pdp.getChannelCurrent(RobotMap.DRIVETRAIN_LEFT_MOTOR_1_PDP));
+    SmartDashboard.putNumber("DTLeft2MotorCurrent",Robot.pdp.getChannelCurrent(RobotMap.DRIVETRAIN_LEFT_MOTOR_2_PDP));
+    SmartDashboard.putNumber("DTLeft3MotorCurrent",Robot.pdp.getChannelCurrent(RobotMap.DRIVETRAIN_LEFT_MOTOR_3_PDP));
+    SmartDashboard.putNumber("DTRight1MotorVoltage",getRightMotor1Voltage());
+    SmartDashboard.putNumber("DTRight2MotorVoltage",getRightMotor1Voltage());
+    SmartDashboard.putNumber("DTRight3MotorVoltage",getRightMotor3Voltage());
+    SmartDashboard.putNumber("DTLeft1MotorVoltage",getLeftMotor1Voltage());
+    SmartDashboard.putNumber("DTLeft2MotorVoltage",getLeftMotor2Voltage());
+    SmartDashboard.putNumber("DTLeft3MotorVoltage",getLeftMotor3Voltage());
+    SmartDashboard.putNumber("DT Position",getPosition());
+    SmartDashboard.putNumber("Heading",getHeading());
+    SmartDashboard.putNumber("Position Error",getErrorPosition());
+    SmartDashboard.putNumber("Heading Error",getErrorHeading());
+  //  SmartDashboard.putNumber("Motor output dt",getMotorOutputPercent());
     switchGains(true);
     
   }

@@ -118,12 +118,12 @@ public class ColorWheel extends Subsystem {
     SmartDashboard.putNumber("Max Acceleration", maxAcc);
     SmartDashboard.putNumber("Allowed Closed Loop Error", allowedErr);   
 
-    ConsolePrinter.putNumber("CW Velocity", () -> {return getVelocity();}, true, false);
-    ConsolePrinter.putNumber("CW Position", () -> {return getPosition();}, true, false);
-    ConsolePrinter.putNumber("CW Position Error", () -> {return getPositionError();}, true, false);
-    ConsolePrinter.putNumber("CW Motor Output Percent", () -> {return getMotorOutput();}, true, false);
-    ConsolePrinter.putNumber("CWMotorCurrent", () -> {return Robot.pdp.getChannelCurrent(RobotMap.COLORWHEEL_MOTOR_PDP);}, true, false);
-    ConsolePrinter.putNumber("CWMotorVoltage", () -> {return this.getColorWheelMotorVoltage();}, true, false);
+    SmartDashboard.putNumber("CW Velocity",getVelocity());
+    SmartDashboard.putNumber("CW Position", getPosition());
+    SmartDashboard.putNumber("CW Position Error",getPositionError());
+    SmartDashboard.putNumber("CW Motor Output Percent", getMotorOutput());
+    SmartDashboard.putNumber("CWMotorCurrent",Robot.pdp.getChannelCurrent(RobotMap.COLORWHEEL_MOTOR_PDP));
+    SmartDashboard.putNumber("CWMotorVoltage",getColorWheelMotorVoltage());
   }
 
   /**

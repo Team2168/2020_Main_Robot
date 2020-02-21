@@ -25,6 +25,7 @@ import org.team2168.utils.consoleprinter.ConsolePrinter;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Climber extends Subsystem {
 
@@ -154,18 +155,18 @@ public class Climber extends Subsystem {
     /* Zero the sensor */
     climberMotor1.setSelectedSensorPosition(0, kPIDLoopIdx, kTimeoutMs);
                     
-    ConsolePrinter.putBoolean("Lift is down", () -> {return isLiftDown();}, true, false);
+    SmartDashboard.putBoolean("Lift is down",isLiftDown());
 
     lastCall = isLiftDown();
     climberMotor1Voltage = 0;
     climberMotor2Voltage = 0;
-    ConsolePrinter.putNumber("Climber Position", ()->{return getPosition();}, true, false);
-    ConsolePrinter.putNumber("Climber Position Error", ()->{return getErrorPosition();}, true, false);
-    ConsolePrinter.putNumber("Climber Velocity", ()->{return getVelocity();}, true, false);
-    ConsolePrinter.putNumber("Climber1Current", () -> {return Robot.pdp.getChannelCurrent(RobotMap.CLIMBER_MOTOR_1_PDP);}, true, false);
-    ConsolePrinter.putNumber("Climber2Current", () -> {return Robot.pdp.getChannelCurrent(RobotMap.CLIMBER_MOTOR_2_PDP);}, true, false);
-    ConsolePrinter.putNumber("Climber1Voltage", () -> {return this.getClimberMotor1Voltage();}, true, false);
-    ConsolePrinter.putNumber("Climber2Voltage", () -> {return this.getClimberMotor2Voltage();}, true, false);
+    SmartDashboard.putNumber("Climber Position",getPosition());
+    SmartDashboard.putNumber("Climber Position Error",getErrorPosition());
+    SmartDashboard.putNumber("Climber Velocity",getVelocity());
+    SmartDashboard.putNumber("Climber1Current",Robot.pdp.getChannelCurrent(RobotMap.CLIMBER_MOTOR_1_PDP));
+    SmartDashboard.putNumber("Climber2Current",Robot.pdp.getChannelCurrent(RobotMap.CLIMBER_MOTOR_2_PDP));
+    SmartDashboard.putNumber("Climber1Voltage",getClimberMotor1Voltage());
+    SmartDashboard.putNumber("Climber2Voltage",getClimberMotor2Voltage());
   }
   
   /**
