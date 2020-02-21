@@ -18,6 +18,7 @@ import org.team2168.commands.hopper.DriveHopperWithJoystick;
 import org.team2168.utils.consoleprinter.ConsolePrinter;
 
 import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * Subsystem class for the Hopper
@@ -49,8 +50,8 @@ public class Hopper extends Subsystem {
     hopperMotor.setInverted(HOPPER_MOTOR_INVERTED);
     hopperMotor.configNeutralDeadband(0.05);
 
-    ConsolePrinter.putNumber("HopperCurrent", () -> {return Robot.pdp.getChannelCurrent(RobotMap.HOPPER_MOTOR_PDP);}, true, false);
-    ConsolePrinter.putNumber("HopperVoltage", () -> {return this.getHopperMotorVoltage();},true, false);
+    SmartDashboard.putNumber("HopperCurrent", Robot.pdp.getChannelCurrent(RobotMap.HOPPER_MOTOR_PDP));
+    SmartDashboard.putNumber("HopperVoltage", getHopperMotorVoltage());
   }
 
   /**

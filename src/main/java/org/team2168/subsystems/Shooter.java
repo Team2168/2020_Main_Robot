@@ -19,6 +19,7 @@ import org.team2168.commands.shooter.DriveShooterWithJoystick;
 import org.team2168.utils.consoleprinter.ConsolePrinter;
 
 import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Shooter extends Subsystem {
 
@@ -143,13 +144,13 @@ public class Shooter extends Subsystem {
         // _motorOne.setSensorPhase(true);
         shooterMotor1Voltage = 0;
 
-        ConsolePrinter.putNumber("Shooter Velocity", () -> {return getVelocity();}, true, false);
-        ConsolePrinter.putNumber("Shooter Error", () -> {return getError();}, true, false);
-        ConsolePrinter.putNumber("Shooter Motor Output Percent", () -> {return _motorOne.getMotorOutputPercent();}, true, false);
-        ConsolePrinter.putNumber("ShooterCurrent", () -> {return Robot.pdp.getChannelCurrent(RobotMap.SHOOTER_MOTOR_ONE_PDP);}, true, false);
-        ConsolePrinter.putNumber("ShooterVoltage", () -> {return this.getShooterMotorVoltage();}, true, false);
+        SmartDashboard.putNumber("Shooter Velocity", getVelocity());
+        SmartDashboard.putNumber("Shooter Error", getError());
+        SmartDashboard.putNumber("Shooter Motor Output Percent", _motorOne.getMotorOutputPercent());
+        SmartDashboard.putNumber("ShooterCurrent", Robot.pdp.getChannelCurrent(RobotMap.SHOOTER_MOTOR_ONE_PDP));
+        SmartDashboard.putNumber("ShooterVoltage", getShooterMotorVoltage());
 
-        //ConsolePrinter.putNumber("Shooter Setpoint", () -> {return ticks_per_100ms_to_revs_per_minute( _motorOne.getClosedLoopTarget());}, true, false);
+        //SmartDashboard.putNumber("Shooter Setpoint", () -> {return ticks_per_100ms_to_revs_per_minute( _motorOne.getClosedLoopTarget());}, true, false);
 
         ArrayList<TalonFX> motors = new ArrayList<TalonFX>();
         motors.add(_motorOne);
