@@ -44,7 +44,7 @@ public class Climber extends Subsystem {
   private final boolean ENABLE_CURRENT_LIMIT = true;
   private final double CONTINUOUS_CURRENT_LIMIT = 20; //amps
   private final double TRIGGER_THRESHOLD_LIMIT = 30; //amp
-  private final double TRIGGER_THRESHOLD_TIME = 200; //ms
+  private final double TRIGGER_THRESHOLD_TIME = 0.2; //s
 
   private boolean lastCall;
 

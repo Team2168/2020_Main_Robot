@@ -4,6 +4,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FollowerType;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.StatorCurrentLimitConfiguration;
+import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
 import com.ctre.phoenix.motorcontrol.TalonFXInvertType;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
@@ -24,11 +25,17 @@ public class Shooter extends Subsystem {
     // private final boolean _motorOneReversed = false;
     // private final boolean _motorTwoReversed = false;
 
-    private StatorCurrentLimitConfiguration talonCurrentLimit;
-    private final boolean ENABLE_CURRENT_LIMIT = true;
-    private final double CONTINUOUS_CURRENT_LIMIT = 60; //amps
-    private final double TRIGGER_THRESHOLD_LIMIT = 70; //amp
-    private final double TRIGGER_THRESHOLD_TIME = 100; //ms
+    private StatorCurrentLimitConfiguration talonCurrentLimitStator;
+    private final boolean ENABLE_CURRENT_LIMIT_STATOR = true;
+    private final double CONTINUOUS_CURRENT_LIMIT_STATOR = 60; //amps
+    private final double TRIGGER_THRESHOLD_LIMIT_STATOR = 70; //amp
+    private final double TRIGGER_THRESHOLD_TIME_STATOR = 100; //ms
+
+    private SupplyCurrentLimitConfiguration talonCurrentLimitSupply;
+    private final boolean ENABLE_CURRENT_LIMIT_SUPPLY = true;
+    private final double CONTINUOUS_CURRENT_LIMIT_SUPPLY = 45; //amps
+    private final double TRIGGER_THRESHOLD_LIMIT_SUPPLY = 50; //amp
+    private final double TRIGGER_THRESHOLD_TIME_SUPPLY = 0.2; //s
 
     private static Shooter _instance;
 
@@ -72,19 +79,19 @@ public class Shooter extends Subsystem {
      * 
      * 	                                      kP    kI    kD          kF               Iz   PeakOut
      */
-    final Gains kGains_Velocity = new Gains( 0.5, 0.000, 0.0, 1.00*1023.0/19225.0,  300,  1.00); // kF = 75% * 1023.0 / max_vel in sensor ticks, kP = 3.6, kD = 160.0, kF  = 
-    
+    final Gains kGains_Velocity = new Gains( 1.0, 0.000, 0.0, 0.52*1023.0/11205.0,  300,  1.00); // kF = 75% * 1023.0 / max_vel in sensor ticks, kF = 1.00*1023.0/19225.0--better, kP = 0.5
+    //in process--kP = 0.8, kF = 0.52*1023.0/10894.0
     private double setPointVelocity_sensorUnits;
 
-    public final double WALL_VEL = 2500.0; //steady state: 25 over
-    public final double WHITE_LINE_VEL = 3200.0; //untuned
-    public final double FRONT_TRENCH_VEL = 3950.0; //steady state: 40 over
-    public final double BACK_TRENCH_VEL = 4500.0; //steady state: 40 over
+    public final double WALL_VEL =2540.0; //steady state: 25 over
+    public final double WHITE_LINE_VEL = 3240.0; //untuned
+    public final double FRONT_TRENCH_VEL = 3900.0; //steady state: 40 over
+    public final double BACK_TRENCH_VEL = 4540.0; //steady state: 40 over 4500
 
-    public final double WALL_VEL_PBOT = 2500.0; //steady state: 25 over
-    public final double WHITE_LINE_VEL_PBOT = 3500.0; //untuned
-    public final double FRONT_TRENCH_VEL_PBOT = 4300.0; //
-    public final double BACK_TRENCH_VEL_PBOT = 4700.0; //
+    public final double WALL_VEL_PBOT = 2540.0; //steady state: 25 over
+    public final double WHITE_LINE_VEL_PBOT = 3240.0; //untuned
+    public final double FRONT_TRENCH_VEL_PBOT = 4140.0; //
+    public final double BACK_TRENCH_VEL_PBOT = 4690.0; //
 
     private Shooter() {
         _motorOne = new TalonFX(RobotMap.SHOOTER_MOTOR_ONE_PDP);
@@ -94,11 +101,16 @@ public class Shooter extends Subsystem {
         _motorOne.configFactoryDefault();
         _motorTwo.configFactoryDefault();
 
-        talonCurrentLimit = new StatorCurrentLimitConfiguration(ENABLE_CURRENT_LIMIT,
-        CONTINUOUS_CURRENT_LIMIT, TRIGGER_THRESHOLD_LIMIT, TRIGGER_THRESHOLD_TIME);
+        talonCurrentLimitStator = new StatorCurrentLimitConfiguration(ENABLE_CURRENT_LIMIT_STATOR,
+        CONTINUOUS_CURRENT_LIMIT_STATOR, TRIGGER_THRESHOLD_LIMIT_STATOR, TRIGGER_THRESHOLD_TIME_STATOR);
+        
+        _motorOne.configStatorCurrentLimit(talonCurrentLimitStator);
+        _motorTwo.configStatorCurrentLimit(talonCurrentLimitStator);
 
-        _motorOne.configStatorCurrentLimit(talonCurrentLimit);
-        _motorTwo.configStatorCurrentLimit(talonCurrentLimit);
+        talonCurrentLimitSupply = new SupplyCurrentLimitConfiguration(ENABLE_CURRENT_LIMIT_SUPPLY,
+        CONTINUOUS_CURRENT_LIMIT_SUPPLY, TRIGGER_THRESHOLD_LIMIT_SUPPLY, TRIGGER_THRESHOLD_TIME_SUPPLY);
+        _motorOne.configSupplyCurrentLimit(talonCurrentLimitSupply);
+        _motorTwo.configSupplyCurrentLimit(talonCurrentLimitSupply);
   
         _motorOne.setNeutralMode(NeutralMode.Coast);
         _motorTwo.setNeutralMode(NeutralMode.Coast);

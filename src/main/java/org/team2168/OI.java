@@ -4,6 +4,9 @@ package org.team2168;
 import org.team2168.commands.auto.FinishFiring;
 import org.team2168.commands.auto.FireBalls;
 import org.team2168.commands.auto.OppositeTrenchAuto;
+import org.team2168.commands.color_wheel.DriveColorWheelXRotations;
+import org.team2168.commands.color_wheel_pivot.DisengageColorWheel;
+import org.team2168.commands.color_wheel_pivot.EngageColorWheel;
 import org.team2168.commands.drivetrain.PIDCommands.DriveXDistance;
 import org.team2168.commands.drivetrain.PIDCommands.TurnXAngle;
 import org.team2168.commands.hood_adjust.MoveToBackTrench;
@@ -14,6 +17,7 @@ import org.team2168.commands.intakeMotor.IntakeBallStart;
 import org.team2168.commands.intakeMotor.IntakeBallStop;
 import org.team2168.commands.limelight.EnableLimelight;
 import org.team2168.commands.limelight.PauseLimelight;
+import org.team2168.commands.shooter.DriveShooterWithConstant;
 import org.team2168.utils.F310;
 import org.team2168.utils.LinearInterpolator;
 
@@ -70,10 +74,10 @@ public class OI
 		{+1.00,+0.80}
 	};
 	private double[][] gunStyleXArray = {
-		{-1.0, -0.75},  //scale down turning to max 65%
+		{-1.0, -0.70},  //scale down turning to max 65%
 		{-0.05, 0.00},  //set neutral deadband to 5%
 		{+0.05, 0.00},
-		{+1.00,+0.75}  
+		{+1.00,+0.70}  
 	};
 
 	/**
@@ -99,14 +103,15 @@ public class OI
 		operatorJoystick.ButtonRightDPad().whenPressed(new MoveToWhiteLine());
 		operatorJoystick.ButtonDownDPad().whenPressed(new MoveToWall());
 
-		// operatorJoystick.ButtonY().whenPressed(new EngageColorWheel());
-		// operatorJoystick.ButtonA().whenPressed(new DisengageColorWheel());
-		operatorJoystick.ButtonA().whenPressed(new MoveToWall());
 
-		// operatorJoystick.ButtonStart().whenPressed(new DriveColorWheelXRotations(4.0*8.0));
+		operatorJoystick.ButtonY().whenPressed(new EngageColorWheel());
+		operatorJoystick.ButtonA().whenPressed(new DisengageColorWheel());
+		// operatorJoystick.ButtonA().whenPressed(new MoveToWall());
+
+		operatorJoystick.ButtonStart().whenPressed(new DriveColorWheelXRotations(4.0*8.0));
 
 		// operatorJoystick.ButtonX().whenPressed(new DriveToXSpeed(Shooter.getInstance().WALL_VEL));
-		// operatorJoystick.ButtonX().whenPressed(new DriveShooterWithConstant(0.306));
+		operatorJoystick.ButtonX().whenPressed(new DriveShooterWithConstant(0.52));
 
 		operatorJoystick.ButtonB().whenPressed(new FireBalls());
 		operatorJoystick.ButtonB().whenReleased(new FinishFiring());

@@ -40,7 +40,7 @@ public class FireBalls extends CommandGroup {
     addSequential(new WaitForShooterAtSpeed());
     addSequential(new DriveIndexerWithConstantNoStop(1.0), 0.5); 
     addParallel(new DriveIndexerWithConstant(1.0));
-    addParallel(new DriveHopperWithConstant(0.9));
+    addParallel(new DriveHopperWithConstant(0.8));
     addParallel(new DriveIntakeWithConstant(0.2));
   }
 }
