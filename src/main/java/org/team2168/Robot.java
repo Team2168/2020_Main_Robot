@@ -132,7 +132,9 @@ public class Robot extends TimedRobot {
     m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
     m_chooser.addOption("My Auto", kCustomAuto);
 	  SmartDashboard.putData("Auto choices", m_chooser);
-	
+  
+    practiceBot = new DigitalInput(RobotMap.PRACTICE_BOT_JUMPER);
+
     //Init Subsystems
     // climber = Climber.getInstance();
     intakeMotor = IntakeMotor.getInstance();
@@ -147,12 +149,14 @@ public class Robot extends TimedRobot {
     drivetrain = Drivetrain.getInstance();
     oi = OI.getInstance();
 
-    practiceBot = new DigitalInput(RobotMap.PRACTICE_BOT_JUMPER);
     
     // pdp = new PowerDistribution(RobotMap.PDPThreadPeriod);
     // pdp.startThread();
     ConsolePrinter.init();
     ConsolePrinter.startThread();
+
+    ConsolePrinter.putBoolean("isPracticeBot", ()->{return isPracticeBot();}, true, false);
+
   }
 
   @Override
@@ -228,6 +232,7 @@ public class Robot extends TimedRobot {
    * TODO return jumper value from DIO 24
    */
   public static boolean isPracticeBot() {
+    // return true;
     return !practiceBot.get();
   }
 }
