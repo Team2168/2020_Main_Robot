@@ -16,11 +16,8 @@ import com.ctre.phoenix.sensors.PigeonIMU;
 import com.ctre.phoenix.sensors.PigeonIMU_StatusFrame;
 
 import org.team2168.Constants;
-import org.team2168.Robot;
 import org.team2168.RobotMap;
-import org.team2168.PID.sensors.Limelight;
 import org.team2168.commands.drivetrain.DriveWithJoystickLimelight;
-import org.team2168.subsystems.HoodAdjust.HoodPosition;
 import org.team2168.utils.consoleprinter.ConsolePrinter;
 
 import edu.wpi.first.wpilibj.command.Subsystem;
@@ -35,10 +32,6 @@ public class Drivetrain extends Subsystem {
   private static TalonFX _rightMotor3;
   private static PigeonIMU _pidgey;
   
-  public Limelight limelight;
-
-  private boolean isLimelightEnabled;
-
   private static Drivetrain instance = null;
 
   private SupplyCurrentLimitConfiguration talonCurrentLimit;
@@ -96,12 +89,6 @@ public class Drivetrain extends Subsystem {
     _rightMotor2 = new TalonFX(RobotMap.DRIVETRAIN_RIGHT_MOTOR_2_PDP);
     _rightMotor3 = new TalonFX(RobotMap.DRIVETRAIN_RIGHT_MOTOR_3_PDP);
     _pidgey = new PigeonIMU(17);
-
-    //set up limelight
-    limelight = new Limelight();
-    limelight.setCamMode(0);
-    limelight.setPipeline(4);
-    isLimelightEnabled = false;
 
 
     _leftMotor1.configFactoryDefault();
@@ -527,83 +514,6 @@ public class Drivetrain extends Subsystem {
   public void zeroPigeon() {
     _pidgey.setYaw(0, Constants.kTimeoutMs);
     _pidgey.setAccumZAngle(0, Constants.kTimeoutMs);
-  }
-
-  public void enableLimelight(HoodPosition hoodPos)
-  {
-    limelight.setCamMode(0);
-    limelight.setLedMode(0);
-    // if(Robot.driverstation.isFMSAttached())
-    // {
-      // if(Robot.onBlueAlliance())
-      // {
-      //   limelight.setPipeline(3);
-      // }
-      // else
-      // {
-      //   limelight.setPipeline(2);
-      // }
-      switch (hoodPos) {
-        case WALL : 
-          if(Robot.onBlueAlliance())
-          {
-            limelight.setPipeline(1);
-          }
-          else
-          {
-            limelight.setPipeline(3);
-          }
-          break;
-        case WHITE_LINE :
-          if(Robot.onBlueAlliance())
-          {
-            limelight.setPipeline(0);
-          }
-          else
-          {
-            limelight.setPipeline(2);
-          }
-          break;
-        case FRONT_TRENCH : 
-          if(Robot.onBlueAlliance())
-          {
-            limelight.setPipeline(0);
-          }
-          else
-          {
-            limelight.setPipeline(2);
-          }
-          break;
-        case BACK_TRENCH: 
-          if(Robot.onBlueAlliance())
-          {
-            limelight.setPipeline(1);
-          }
-          else
-          {
-            limelight.setPipeline(3);
-          }
-          break;
-      }
-    // }
-    // else
-    // {
-    //   limelight.setPipeline(0);
-    // }
-    isLimelightEnabled = true;
-  }
-
-  public void pauseLimelight()
-  {
-    limelight.setCamMode(1);
-    limelight.setLedMode(1);
-    limelight.setPipeline(7);
-    isLimelightEnabled = false;
-
-  }
-
-  public boolean isLimelightEnabled() {
-    return isLimelightEnabled;
   }
 
   /**

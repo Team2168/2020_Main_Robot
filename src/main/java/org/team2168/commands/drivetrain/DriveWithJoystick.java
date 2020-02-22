@@ -9,17 +9,21 @@ package org.team2168.commands.drivetrain;
 
 import org.team2168.OI;
 import org.team2168.subsystems.Drivetrain;
+import org.team2168.subsystems.Limelight;
+
 import edu.wpi.first.wpilibj.command.Command;
 
 public class DriveWithJoystick extends Command 
 {
   private Drivetrain dt;
+  private Limelight limelight;
   private OI oi;
   private double heading_setpoint;
   
   public DriveWithJoystick() 
   {
     dt = Drivetrain.getInstance();
+    limelight = Limelight.getInstance();
     requires(dt);
   }
 
@@ -44,9 +48,9 @@ public class DriveWithJoystick extends Command
 
     // I think for limelight, to the right = positive, to the left = negative
     //for the gyro, to the left = pos, to the right = neg
-    if(dt.isLimelightEnabled()) {
+    if(limelight.isLimelightEnabled()) {
       //if limelight is enabled, command to that heading, with manual turning as an arbitrary ff
-      heading_setpoint = dt.getHeading() - dt.limelight.getPos(); //TODO CHECK SIGN FOR LIMELIGHT
+      heading_setpoint = dt.getHeading() - limelight.getPosition(); //TODO CHECK SIGN FOR LIMELIGHT
       dt.drive(heading_setpoint, oi.getGunStyleYValue(), oi.getGunStyleXValue());
     } else if (Math.abs(oi.getGunStyleXValue()) >= 0.01) {
       //drive straight - heading setpoint is the last heading set before turning

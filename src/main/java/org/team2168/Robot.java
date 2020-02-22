@@ -3,14 +3,15 @@ package org.team2168;
 
 import org.team2168.subsystems.Balancer;
 import org.team2168.subsystems.Climber;
-import org.team2168.subsystems.Indexer;
-import org.team2168.subsystems.Hopper;
 import org.team2168.subsystems.ColorWheel;
 import org.team2168.subsystems.ColorWheelPivot;
 import org.team2168.subsystems.Drivetrain;
 import org.team2168.subsystems.HoodAdjust;
+import org.team2168.subsystems.Hopper;
+import org.team2168.subsystems.Indexer;
 import org.team2168.subsystems.IntakeMotor;
 import org.team2168.subsystems.IntakePivot;
+import org.team2168.subsystems.Limelight;
 import org.team2168.subsystems.Shooter;
 //import org.team2168.utils.Debouncer;
 import org.team2168.utils.PowerDistribution;
@@ -20,7 +21,6 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import org.team2168.utils.consoleprinter.*;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Robot extends TimedRobot {	
@@ -41,6 +41,7 @@ public class Robot extends TimedRobot {
   private static Shooter shooter;
   private static HoodAdjust hoodAdjust;
   private static Drivetrain drivetrain;
+  private static Limelight limelight;
 
   private static OI oi;
 
@@ -85,6 +86,7 @@ public class Robot extends TimedRobot {
     shooter = Shooter.getInstance();
     hoodAdjust = HoodAdjust.getInstance();
     drivetrain = Drivetrain.getInstance();
+    limelight = Limelight.getInstance();
     oi = OI.getInstance();
     
     // pdp = new PowerDistribution(RobotMap.PDPThreadPeriod);

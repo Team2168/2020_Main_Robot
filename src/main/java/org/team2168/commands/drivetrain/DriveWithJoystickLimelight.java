@@ -9,6 +9,7 @@ package org.team2168.commands.drivetrain;
 
 import org.team2168.OI;
 import org.team2168.subsystems.Drivetrain;
+import org.team2168.subsystems.Limelight;
 import org.team2168.utils.LinearInterpolator;
 
 import edu.wpi.first.wpilibj.command.Command;
@@ -16,6 +17,7 @@ import edu.wpi.first.wpilibj.command.Command;
 public class DriveWithJoystickLimelight extends Command 
 {
   private Drivetrain dt;
+  private Limelight limelight;
   private OI oi;
   private LinearInterpolator limeLightInterpolator;
   private static final double LIMELIGHT_ERROR_TOLERANCE = 1.0;
@@ -31,6 +33,7 @@ public class DriveWithJoystickLimelight extends Command
   public DriveWithJoystickLimelight() 
   {
     dt = Drivetrain.getInstance();
+    limelight = Limelight.getInstance();
     requires(dt);
     limeLightInterpolator = new LinearInterpolator(limelightArray);
 
@@ -50,8 +53,8 @@ public class DriveWithJoystickLimelight extends Command
 	 */
   @Override
   protected void execute() {
-    limelight_offset = dt.limelight.getPos();
-    if(dt.isLimelightEnabled()) {
+    limelight_offset = limelight.getPosition();
+    if(limelight.isLimelightEnabled()) {
       if(limelight_offset > LIMELIGHT_ERROR_TOLERANCE) {
         turnGain = limeLightInterpolator.interpolate(limelight_offset) + oi.getGunStyleXValue();
       }

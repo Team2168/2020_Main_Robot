@@ -5,24 +5,25 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package org.team2168.commands.drivetrain;
+package org.team2168.commands.limelight;
 
-import org.team2168.subsystems.Drivetrain;
+import org.team2168.subsystems.Limelight;
 
 import edu.wpi.first.wpilibj.command.Command;
 
 public class PauseLimelight extends Command {
-  private Drivetrain dt;
+  private Limelight limelight;
   public PauseLimelight() {
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
-    dt = Drivetrain.getInstance();
+    limelight = Limelight.getInstance();
+    requires(limelight);
   }
 
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
-    dt.pauseLimelight();
+    limelight.pauseLimelight();
   }
 
   // Called repeatedly when this Command is scheduled to run
@@ -33,7 +34,7 @@ public class PauseLimelight extends Command {
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    return !dt.isLimelightEnabled();
+    return !limelight.isLimelightEnabled();
   }
 
   // Called once after isFinished returns true
