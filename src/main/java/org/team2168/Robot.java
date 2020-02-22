@@ -147,6 +147,16 @@ public class Robot extends TimedRobot {
 
   }
 
+    /**
+   * This function is called periodically during operator control.
+   */
+  @Override
+  public void teleopInit() {
+    Scheduler.getInstance().run();
+    limelight.pauseLimelight();
+
+  }
+
   /**
    * This function is called periodically during test mode.
    */
@@ -174,6 +184,6 @@ public class Robot extends TimedRobot {
    * TODO return jumper value from DIO 24
    */
   public static boolean isPracticeBot() {
-    return true;
+    return false;
   }
 }

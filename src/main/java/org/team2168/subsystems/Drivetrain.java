@@ -17,7 +17,7 @@ import com.ctre.phoenix.sensors.PigeonIMU_StatusFrame;
 
 import org.team2168.Constants;
 import org.team2168.RobotMap;
-import org.team2168.commands.drivetrain.DriveWithJoystickLimelight;
+import org.team2168.commands.drivetrain.DriveWithJoystick;
 import org.team2168.utils.consoleprinter.ConsolePrinter;
 
 import edu.wpi.first.wpilibj.command.Subsystem;
@@ -74,6 +74,9 @@ public class Drivetrain extends Subsystem {
 
   private static final double CRUISE_VEL_TURN = 10.0*12.0;
   private static final double MAX_ACC_TURN = 5.0*12.0;
+
+  private boolean straightMode;
+  private boolean teleopMode;
 
 
 
@@ -372,7 +375,14 @@ public class Drivetrain extends Subsystem {
   public double getHeading()
   {
     //return _pidgey.getFusedHeading();
-    return ticks_to_degrees(_rightMotor1.getSelectedSensorPosition(Constants.PID_TURN));
+    double heading = 0.0;
+    if(teleopMode) {
+      heading = ticks_to_degrees(_rightMotor1.getSelectedSensorPosition(Constants.PID_PRIMARY));
+    }
+    else {
+      heading = ticks_to_degrees(_rightMotor1.getSelectedSensorPosition(Constants.PID_TURN));
+    }
+    return heading;
   }
 
   public void setSetPointPosition(double setPoint, double setAngle) {
@@ -393,6 +403,8 @@ public class Drivetrain extends Subsystem {
    */
   public void switchGains(boolean straightmode, boolean teleopMode)
   {
+    this.straightMode = straightmode;
+    this.teleopMode = teleopMode;
     if(teleopMode) {
       _rightConfig.primaryPID.selectedFeedbackSensor = TalonFXFeedbackDevice.RemoteSensor1.toFeedbackDevice();
       _rightConfig.primaryPID.selectedFeedbackCoefficient = 3600.0 / Constants.kPigeonUnitsPerRotation;
@@ -407,6 +419,7 @@ public class Drivetrain extends Subsystem {
       _leftMotor1.selectProfileSlot(Constants.kSlot_Turning_Straight_Teleop, Constants.PID_PRIMARY);
     }
     else {
+      teleopMode = false;
         /** Distance Configs */
 
       /* Configure the left Talon's selected sensor as integrated sensor */
@@ -473,7 +486,16 @@ public class Drivetrain extends Subsystem {
   }
 
   public double getErrorHeading() {
-    return ticks_to_degrees(setPointHeading_sensorUnits-_rightMotor1.getSelectedSensorPosition(Constants.PID_TURN)); 
+    double errorHeading = 0.0;
+    if(teleopMode) {
+      errorHeading = ticks_to_degrees(setPointHeading_sensorUnits-_rightMotor1.getSelectedSensorPosition(Constants.PID_PRIMARY)); 
+
+    }
+    else {
+      errorHeading = ticks_to_degrees(setPointHeading_sensorUnits-_rightMotor1.getSelectedSensorPosition(Constants.PID_TURN)); 
+
+    }
+    return errorHeading;
   }
 
   public double getErrorVelocity() {
@@ -657,8 +679,8 @@ public class Drivetrain extends Subsystem {
 
   @Override
   protected void initDefaultCommand() {
-    setDefaultCommand(new DriveWithJoystickLimelight());
-    // setDefaultCommand(new DriveWithJoystick());
+    // setDefaultCommand(new DriveWithJoystickLimelight());
+    setDefaultCommand(new DriveWithJoystick());
   }
 
 }

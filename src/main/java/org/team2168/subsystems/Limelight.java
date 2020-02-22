@@ -76,11 +76,11 @@ public class Limelight extends Subsystem {
         case WALL : 
           if(Robot.onBlueAlliance())
           {
-            limelight.setPipeline(1); //TODO deal with this--we can't see from wall??
+            limelight.setPipeline(PIPELINE_FORWARD_BLUE); //TODO deal with this--we can't see from wall??
           }
           else
           {
-            limelight.setPipeline(3);
+            limelight.setPipeline(PIPELINE_FORWARD_RED);
           }
           break;
         case WHITE_LINE :
