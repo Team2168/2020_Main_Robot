@@ -11,6 +11,7 @@ import org.team2168.Robot;
 import org.team2168.commands.auto.Sleep;
 import org.team2168.commands.shooter.DriveToXSpeed;
 import org.team2168.subsystems.HoodAdjust;
+import org.team2168.subsystems.HoodAdjust.HoodPosition;
 import org.team2168.subsystems.Shooter;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
@@ -46,6 +47,7 @@ public class MoveToFrontTrench extends CommandGroup {
     // }
 
     //updated---allows for any possible position, allows retract pancake under load;
+    addParallel(new SetHoodPosition(HoodPosition.FRONT_TRENCH));
     if(Robot.isPracticeBot()) {
       addParallel(new DriveToXSpeed(Shooter.getInstance().FRONT_TRENCH_VEL_PBOT));
     }
@@ -60,6 +62,5 @@ public class MoveToFrontTrench extends CommandGroup {
     addSequential(new Sleep(), 0.1);
     addSequential(new ExtendShooterHood());
     addSequential(new Sleep(), 0.1);
-    pos.setHoodPosition(HoodAdjust.HoodPosition.FRONT_TRENCH);
   }
 }

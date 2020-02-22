@@ -9,6 +9,7 @@ package org.team2168.commands.hood_adjust;
 
 import org.team2168.commands.auto.Sleep;
 import org.team2168.subsystems.HoodAdjust;
+import org.team2168.subsystems.HoodAdjust.HoodPosition;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
@@ -34,6 +35,7 @@ public class MoveToWLNoShoot extends CommandGroup {
     // e.g. if Command1 requires chassis, and Command2 requires arm,
     // a CommandGroup containing them would require both the chassis and the
     // arm.
+    addParallel(new SetHoodPosition(HoodPosition.WHITE_LINE));
     addSequential(new RetractShooterHardstop());
     addSequential(new Sleep(), 0.1);
     addSequential(new ExtendShooterHood());
@@ -42,6 +44,5 @@ public class MoveToWLNoShoot extends CommandGroup {
     addSequential(new Sleep(), 0.1);
     addSequential(new RetractShooterHood());
     addSequential(new Sleep(), 0.1);
-    pos.setHoodPosition(HoodAdjust.HoodPosition.WHITE_LINE);
   }
 }

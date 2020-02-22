@@ -12,6 +12,7 @@ import org.team2168.commands.auto.Sleep;
 import org.team2168.commands.shooter.DriveToXSpeed;
 import org.team2168.subsystems.HoodAdjust;
 import org.team2168.subsystems.Shooter;
+import org.team2168.subsystems.HoodAdjust.HoodPosition;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
@@ -43,6 +44,7 @@ public class MoveToWall extends CommandGroup {
     // }
 
     // updated---allows for any possible position, allows retract pancake under load;
+    addParallel(new SetHoodPosition(HoodPosition.WALL));
     if(Robot.isPracticeBot()) {
       addParallel(new DriveToXSpeed(Shooter.getInstance().WALL_VEL_PBOT));
     }
@@ -53,7 +55,5 @@ public class MoveToWall extends CommandGroup {
     addSequential(new Sleep(), 0.1);
     addSequential(new ExtendShooterHood());
     addSequential(new Sleep(), 0.1);
-
-    pos.setHoodPosition(HoodAdjust.HoodPosition.WALL);
   }
 }
