@@ -354,7 +354,8 @@ public class Drivetrain extends Subsystem {
   
   public void drive(double heading, double speed, double turn)
   {
-    _leftMotor1.set(ControlMode.MotionMagic, heading, DemandType.ArbitraryFeedForward, speed + turn);
+    setPointHeading_sensorUnits = ticks_to_degrees(heading);
+    _leftMotor1.set(ControlMode.MotionMagic, setPointHeading_sensorUnits, DemandType.ArbitraryFeedForward, speed + turn);
     _leftMotor2.follow(_leftMotor1, FollowerType.PercentOutput);
     _leftMotor3.follow(_leftMotor1, FollowerType.PercentOutput);
     _rightMotor1.set(ControlMode.MotionMagic, heading, DemandType.ArbitraryFeedForward, speed - turn);
