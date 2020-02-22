@@ -65,12 +65,12 @@ package org.team2168;
 
 import org.team2168.subsystems.Balancer;
 import org.team2168.subsystems.Climber;
-import org.team2168.subsystems.Indexer;
-import org.team2168.subsystems.Hopper;
 import org.team2168.subsystems.ColorWheel;
 import org.team2168.subsystems.ColorWheelPivot;
 import org.team2168.subsystems.Drivetrain;
 import org.team2168.subsystems.HoodAdjust;
+import org.team2168.subsystems.Hopper;
+import org.team2168.subsystems.Indexer;
 import org.team2168.subsystems.IntakeMotor;
 import org.team2168.subsystems.IntakePivot;
 import org.team2168.subsystems.Shooter;
@@ -78,10 +78,10 @@ import org.team2168.subsystems.Shooter;
 import org.team2168.utils.PowerDistribution;
 import org.team2168.utils.consoleprinter.ConsolePrinter;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import org.team2168.utils.consoleprinter.*;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Robot extends TimedRobot {	
@@ -104,6 +104,8 @@ public class Robot extends TimedRobot {
   private static Drivetrain drivetrain;
 
   private static OI oi;
+
+  private static DigitalInput practiceBot;
 
   private static PowerDistribution pdp;
 
@@ -144,6 +146,8 @@ public class Robot extends TimedRobot {
     hoodAdjust = HoodAdjust.getInstance();
     drivetrain = Drivetrain.getInstance();
     oi = OI.getInstance();
+
+    practiceBot = new DigitalInput(RobotMap.PRACTICE_BOT_JUMPER);
     
     // pdp = new PowerDistribution(RobotMap.PDPThreadPeriod);
     // pdp.startThread();
@@ -224,6 +228,6 @@ public class Robot extends TimedRobot {
    * TODO return jumper value from DIO 24
    */
   public static boolean isPracticeBot() {
-    return true;
+    return !practiceBot.get();
   }
 }

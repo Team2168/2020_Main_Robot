@@ -38,6 +38,8 @@ public class RobotMap {
 	public static final int ENTRANCE_LINE_BREAK = 5; //TODO SET
 	public static final int EXIT_LINE_BREAK = 6;
 
+	public static final int PRACTICE_BOT_JUMPER = 24;
+
 	//Analog Input Channels////////////////////////////////////////////////////
 	//Channels 0-3 on Roborio
 
