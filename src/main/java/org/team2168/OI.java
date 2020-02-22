@@ -10,11 +10,16 @@ import org.team2168.commands.color_wheel_pivot.EngageColorWheel;
 import org.team2168.commands.drivetrain.PIDCommands.DriveXDistance;
 import org.team2168.commands.drivetrain.PIDCommands.TurnXAngle;
 import org.team2168.commands.hood_adjust.MoveToBackTrench;
+import org.team2168.commands.hood_adjust.MoveToBenchNoShoot;
+import org.team2168.commands.hood_adjust.MoveToFrenchNoShoot;
 import org.team2168.commands.hood_adjust.MoveToFrontTrench;
+import org.team2168.commands.hood_adjust.MoveToWLNoShoot;
 import org.team2168.commands.hood_adjust.MoveToWall;
+import org.team2168.commands.hood_adjust.MoveToWallNoShoot;
 import org.team2168.commands.hood_adjust.MoveToWhiteLine;
 import org.team2168.commands.intakeMotor.IntakeBallStart;
 import org.team2168.commands.intakeMotor.IntakeBallStop;
+import org.team2168.commands.shooter.DriveShooterWithConstant;
 import org.team2168.utils.F310;
 import org.team2168.utils.LinearInterpolator;
 
@@ -97,14 +102,15 @@ public class OI
 		operatorJoystick.ButtonRightDPad().whenPressed(new MoveToWhiteLine());
 		operatorJoystick.ButtonDownDPad().whenPressed(new MoveToWall());
 
-		// operatorJoystick.ButtonY().whenPressed(new EngageColorWheel());
-		// operatorJoystick.ButtonA().whenPressed(new DisengageColorWheel());
-		operatorJoystick.ButtonA().whenPressed(new MoveToWall());
 
-		// operatorJoystick.ButtonStart().whenPressed(new DriveColorWheelXRotations(4.0*8.0));
+		operatorJoystick.ButtonY().whenPressed(new EngageColorWheel());
+		operatorJoystick.ButtonA().whenPressed(new DisengageColorWheel());
+		// operatorJoystick.ButtonA().whenPressed(new MoveToWall());
+
+		operatorJoystick.ButtonStart().whenPressed(new DriveColorWheelXRotations(4.0*8.0));
 
 		// operatorJoystick.ButtonX().whenPressed(new DriveToXSpeed(Shooter.getInstance().WALL_VEL));
-		// operatorJoystick.ButtonX().whenPressed(new DriveShooterWithConstant(0.306));
+		operatorJoystick.ButtonX().whenPressed(new DriveShooterWithConstant(0.52));
 
 		operatorJoystick.ButtonB().whenPressed(new FireBalls());
 		operatorJoystick.ButtonB().whenReleased(new FinishFiring());

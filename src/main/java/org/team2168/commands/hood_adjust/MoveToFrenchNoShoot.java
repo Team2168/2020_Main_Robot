@@ -38,7 +38,7 @@ public class MoveToFrenchNoShoot extends CommandGroup {
     addSequential(new RetractShooterHardstop());
     addSequential(new Sleep(), 0.1);
     addSequential(new RetractShooterHood());
-    addSequential(new Sleep(), 2.0); //TODO tune later
+    addSequential(new Sleep(), 0.5); //TODO tune later
     addSequential(new ExtendShooterHardstop());
     addSequential(new Sleep(), 0.1);
     addSequential(new ExtendShooterHood());

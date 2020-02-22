@@ -56,7 +56,7 @@ HoodAdjust pos = HoodAdjust.getInstance();
     addSequential(new RetractShooterHardstop());
     addSequential(new Sleep(), 0.1);
     addSequential(new ExtendShooterHood());
-    addSequential(new Sleep(), 1.0); //TODO tune later
+    addSequential(new Sleep(), 0.5); //TODO tune later
     addSequential(new ExtendShooterHardstop());
     addSequential(new Sleep(), 0.1);
     addSequential(new RetractShooterHood());
