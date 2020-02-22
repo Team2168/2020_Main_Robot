@@ -48,10 +48,10 @@ HoodAdjust pos = HoodAdjust.getInstance();
 
     //updated---allows for any possible position, allows retract pancake under load;
     if(Robot.isPracticeBot()) {
-      addParallel(new DriveToXSpeed(Shooter.getInstance().FRONT_TRENCH_VEL_PBOT));
+      addParallel(new DriveToXSpeed(Shooter.getInstance().WHITE_LINE_VEL_PBOT));
     }
     else {
-      addParallel(new DriveToXSpeed(Shooter.getInstance().FRONT_TRENCH_VEL));
+      addParallel(new DriveToXSpeed(Shooter.getInstance().WHITE_LINE_VEL));
     }     
     addSequential(new RetractShooterHardstop());
     addSequential(new Sleep(), 0.1);

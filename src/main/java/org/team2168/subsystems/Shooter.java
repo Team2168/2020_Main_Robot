@@ -89,7 +89,7 @@ public class Shooter extends Subsystem {
     public final double BACK_TRENCH_VEL = 4540.0; //4540.0; //steady state: 40 over 4500
 
     public final double WALL_VEL_PBOT = 2540.0; //steady state: 25 over
-    public final double WHITE_LINE_VEL_PBOT = 3240.0; //untuned
+    public final double WHITE_LINE_VEL_PBOT = 3640.0; //untuned
     public final double FRONT_TRENCH_VEL_PBOT = 4140.0; //
     public final double BACK_TRENCH_VEL_PBOT = 4690.0; //
 

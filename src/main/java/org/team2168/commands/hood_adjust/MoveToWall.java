@@ -47,7 +47,7 @@ public class MoveToWall extends CommandGroup {
       addParallel(new DriveToXSpeed(Shooter.getInstance().WALL_VEL_PBOT));
     }
     else {
-      addParallel(new DriveToXSpeed(Shooter.getInstance().FRONT_TRENCH_VEL)); 
+      addParallel(new DriveToXSpeed(Shooter.getInstance().WALL_VEL)); 
     }  
     addSequential(new RetractShooterHardstop());
     addSequential(new Sleep(), 0.1);
