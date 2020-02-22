@@ -126,7 +126,7 @@ public class Limelight extends Subsystem {
   {
     limelight.setCamMode(1);
     limelight.setLedMode(1);
-    limelight.setPipeline(7);
+    limelight.setPipeline(PIPELINE_DRIVER_VIEW);
     isLimelightEnabled = false;
 
   }
