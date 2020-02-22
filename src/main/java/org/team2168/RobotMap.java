@@ -28,6 +28,7 @@ public class RobotMap {
 	public static final int NEW_GUN_STYLE_ENUM = 4;
 
 	// PWM (0 to 9) on RoboRio/////////////////////////////////////////////////
+	public static final int PWM_LIGHTS = 9;
 
 	// Digital IO Channels//////////////////////////////////////////////////////
 	// Channels 0-9 on RoboRio
@@ -36,6 +37,8 @@ public class RobotMap {
 	//Channels 10-25 on MXP (PWM and DIO)
 	public static final int ENTRANCE_LINE_BREAK = 5; //TODO SET
 	public static final int EXIT_LINE_BREAK = 6;
+
+	public static final int PRACTICE_BOT_JUMPER = 24;
 
 	//Analog Input Channels////////////////////////////////////////////////////
 	//Channels 0-3 on Roborio

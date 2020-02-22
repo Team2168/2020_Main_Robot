@@ -18,6 +18,7 @@ import org.team2168.utils.PowerDistribution;
 import org.team2168.utils.consoleprinter.ConsolePrinter;
 
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -44,6 +45,8 @@ public class Robot extends TimedRobot {
   private static Limelight limelight;
 
   private static OI oi;
+
+  private static DigitalInput practiceBot;
 
   private static PowerDistribution pdp;
 
@@ -73,7 +76,9 @@ public class Robot extends TimedRobot {
     m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
     m_chooser.addOption("My Auto", kCustomAuto);
 	  SmartDashboard.putData("Auto choices", m_chooser);
-	
+  
+    practiceBot = new DigitalInput(RobotMap.PRACTICE_BOT_JUMPER);
+
     //Init Subsystems
     // climber = Climber.getInstance();
     intakeMotor = IntakeMotor.getInstance();
@@ -88,6 +93,7 @@ public class Robot extends TimedRobot {
     drivetrain = Drivetrain.getInstance();
     limelight = Limelight.getInstance();
     oi = OI.getInstance();
+
     
     // pdp = new PowerDistribution(RobotMap.PDPThreadPeriod);
   // pdp.startThread();
@@ -95,6 +101,9 @@ public class Robot extends TimedRobot {
 
     ConsolePrinter.init();
     ConsolePrinter.startThread();
+
+    ConsolePrinter.putBoolean("isPracticeBot", ()->{return isPracticeBot();}, true, false);
+
   }
 
   @Override
@@ -185,6 +194,7 @@ public class Robot extends TimedRobot {
    * TODO return jumper value from DIO 24
    */
   public static boolean isPracticeBot() {
-    return false;
+    // return true;
+    return !practiceBot.get();
   }
 }

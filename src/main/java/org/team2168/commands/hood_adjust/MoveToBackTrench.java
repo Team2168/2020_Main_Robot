@@ -48,8 +48,7 @@ public class MoveToBackTrench extends CommandGroup {
     }
     else {
       addParallel(new DriveToXSpeed(Shooter.getInstance().BACK_TRENCH_VEL));
-    } 
-    addParallel(new DriveToXSpeed(Shooter.getInstance().BACK_TRENCH_VEL));
+    }  
     addSequential(new ExtendShooterHood());
     addSequential(new RetractShooterHardstop());
     addSequential(new Sleep(), 0.1);
