@@ -28,6 +28,7 @@ public class RobotMap {
 	public static final int NEW_GUN_STYLE_ENUM = 4;
 
 	// PWM (0 to 9) on RoboRio/////////////////////////////////////////////////
+	public static final int PWM_LIGHTS = 9;
 
 	// Digital IO Channels//////////////////////////////////////////////////////
 	// Channels 0-9 on RoboRio

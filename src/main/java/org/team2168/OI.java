@@ -9,13 +9,10 @@ import org.team2168.commands.color_wheel_pivot.DisengageColorWheel;
 import org.team2168.commands.color_wheel_pivot.EngageColorWheel;
 import org.team2168.commands.drivetrain.PIDCommands.DriveXDistance;
 import org.team2168.commands.drivetrain.PIDCommands.TurnXAngle;
+import org.team2168.commands.flashlight.RunFlashlight;
 import org.team2168.commands.hood_adjust.MoveToBackTrench;
-import org.team2168.commands.hood_adjust.MoveToBenchNoShoot;
-import org.team2168.commands.hood_adjust.MoveToFrenchNoShoot;
 import org.team2168.commands.hood_adjust.MoveToFrontTrench;
-import org.team2168.commands.hood_adjust.MoveToWLNoShoot;
 import org.team2168.commands.hood_adjust.MoveToWall;
-import org.team2168.commands.hood_adjust.MoveToWallNoShoot;
 import org.team2168.commands.hood_adjust.MoveToWhiteLine;
 import org.team2168.commands.intakeMotor.IntakeBallStart;
 import org.team2168.commands.intakeMotor.IntakeBallStop;
@@ -92,6 +89,9 @@ public class OI
 		 *************************************************************************/
 		gunStyleYInterpolator = new LinearInterpolator(gunStyleYArray);
 		gunStyleXInterpolator = new LinearInterpolator(gunStyleXArray);
+
+		driverJoystick.ButtonLeftStick().whenPressed(new RunFlashlight(1.0));
+		driverJoystick.ButtonLeftStick().whenReleased(new RunFlashlight(-1.0));
 
 		
 		/*************************************************************************
