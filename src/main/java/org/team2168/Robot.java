@@ -63,6 +63,11 @@
 
 package org.team2168;
 
+import org.team2168.commands.auto.DefaultTrenchAuto;
+import org.team2168.commands.auto.DoNothing;
+import org.team2168.commands.auto.OppositeTrenchAuto;
+import org.team2168.commands.drivetrain.FirstPath;
+import org.team2168.commands.drivetrain.PIDCommands.DriveXDistance;
 import org.team2168.subsystems.Balancer;
 import org.team2168.subsystems.Climber;
 import org.team2168.subsystems.ColorWheel;
@@ -80,6 +85,7 @@ import org.team2168.utils.consoleprinter.ConsolePrinter;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -87,8 +93,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class Robot extends TimedRobot {	
   private static final String kDefaultAuto = "Default";
   private static final String kCustomAuto = "My Auto";
-  private String m_autoSelected;
-  private final SendableChooser<String> m_chooser = new SendableChooser<>();
+  static Command autonomousCommand;
+  public static SendableChooser<Command> autoChooser;
 
   // Subsystems
   private static Climber climber;
@@ -129,9 +135,6 @@ public class Robot extends TimedRobot {
   	ConsolePrinter.init();
 
     // colorWheel = ColorWheel.getInstance();
-    m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
-    m_chooser.addOption("My Auto", kCustomAuto);
-	  SmartDashboard.putData("Auto choices", m_chooser);
   
     practiceBot = new DigitalInput(RobotMap.PRACTICE_BOT_JUMPER);
 
@@ -155,7 +158,11 @@ public class Robot extends TimedRobot {
     ConsolePrinter.init();
     ConsolePrinter.startThread();
 
+    //Initialize Autonomous Selector Choices
+    autoSelectInit();
+
     ConsolePrinter.putBoolean("isPracticeBot", ()->{return isPracticeBot();}, true, false);
+    ConsolePrinter.putSendable("Autonomous Mode Chooser", () -> {return Robot.autoChooser;}, true, false);
 
   }
 
@@ -178,9 +185,11 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
-    m_autoSelected = m_chooser.getSelected();
-    // m_autoSelected = SmartDashboard.getString("Auto Selector", kDefaultAuto);
-    System.out.println("Auto selected: " + m_autoSelected);
+		autonomousCommand = (Command) autoChooser.getSelected();
+    	
+        // schedule the autonomous command
+        if (autonomousCommand != null) 
+        	autonomousCommand.start();
   }
 
   /**
@@ -188,16 +197,18 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousPeriodic() {
-    switch (m_autoSelected) {
-    case kCustomAuto:
-      // Put custom auto code here
-      break;
-    case kDefaultAuto:
-    default:
-      // Put default auto code here
-      break;
+    Scheduler.getInstance().run();
+  }
 
-    }
+      /**
+     * This function called prior to robot entering Teleop Mode
+     */
+	public void teleopInit() {
+    // This makes sure that the autonomous stops running when
+    // teleop starts running. If you want the autonomous to 
+    // continue until interrupted by another command, remove
+    // this line or comment it out.
+    if (autonomousCommand != null) autonomousCommand.cancel();
   }
 
   /**
@@ -226,7 +237,21 @@ public class Robot extends TimedRobot {
     //getControlStyleInt();
     //controlStyle = (int) controlStyleChooser.getSelected();
     Scheduler.getInstance().run();
+    autonomousCommand = (Command) autoChooser.getSelected();
+
   }
+
+      
+    /**
+     * Adds the autos to the selector
+     */
+    public void autoSelectInit() {
+      autoChooser = new SendableChooser<Command>();
+      autoChooser.setDefaultOption("Drive Straight", new DriveXDistance(60.0));
+      autoChooser.addOption("Do Nothing", new DoNothing());
+      autoChooser.addOption("Opposite Trench Auto ", new OppositeTrenchAuto());
+      autoChooser.addOption("Near Trench Auto", new DefaultTrenchAuto());
+    }
 
   /**
    * TODO return jumper value from DIO 24
