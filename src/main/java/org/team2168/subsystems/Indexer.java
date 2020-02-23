@@ -13,6 +13,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.CANSparkMaxLowLevel.PeriodicFrame;
 
 import org.team2168.RobotMap;
+import org.team2168.utils.consoleprinter.ConsolePrinter;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.command.Subsystem;
@@ -41,6 +42,10 @@ public class Indexer extends Subsystem {
     _motor.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 500);
     _motor.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 500);
     _motor.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 500);
+
+    ConsolePrinter.putBoolean("isBallEntering", ()->{return isBallEntering();}, true, false);
+    ConsolePrinter.putBoolean("isBallExiting", ()->{return isBallExiting();}, true, false);
+
   }
 
   public static Indexer getInstance(){
