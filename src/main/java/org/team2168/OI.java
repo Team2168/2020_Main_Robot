@@ -110,7 +110,7 @@ public class OI
 
 		operatorJoystick.ButtonY().whenPressed(new EngageColorWheel());
 		operatorJoystick.ButtonA().whenPressed(new DisengageColorWheel());
-		// operatorJoystick.ButtonA().whenPressed(new MoveToWall());
+		operatorJoystick.ButtonA().whenPressed(new MoveToWall());
 
 		operatorJoystick.ButtonStart().whenPressed(new DriveColorWheelXRotations(4.0*8.0));
 
@@ -147,7 +147,7 @@ public class OI
 
 		// pidTestJoystick.ButtonB().whenPressed(new FireBalls());
 		// pidTestJoystick.ButtonB().whenReleased(new FinishFiring());
-		ConsolePrinter.putNumber("Drivetrain linear speed", ()->{return getGunStyleYValue();}, true, false);
+		// ConsolePrinter.putNumber("Drivetrain linear speed", ()->{return getGunStyleYValue();}, true, false);
 
 
 	}
