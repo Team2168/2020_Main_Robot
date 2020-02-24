@@ -49,7 +49,7 @@ public class Indexer extends Subsystem {
 
     ConsolePrinter.putBoolean("Cell Entering", () -> {return this.isBallEntering();}, true, false);
     ConsolePrinter.putBoolean("Cell Exiting", () -> {return this.isBallExiting();}, true, false);
-    ConsolePrinter.putNumber("IndexerCurrent", () -> {return Robot.pdp.getChannelCurrent(RobotMap.INDEXER_MOTOR_PDP);}, true, false);
+    ConsolePrinter.putNumber("IndexerCurrent", () -> {return 0.0;}, true, false);
     ConsolePrinter.putNumber("IndexerVoltage", () -> {return this.getIndexerMotorVoltage();}, true, false);
     
   }

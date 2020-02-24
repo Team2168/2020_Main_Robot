@@ -122,7 +122,7 @@ public class ColorWheel extends Subsystem {
     ConsolePrinter.putNumber("CW Position", () -> {return getPosition();}, true, false);
     ConsolePrinter.putNumber("CW Position Error", () -> {return getPositionError();}, true, false);
     ConsolePrinter.putNumber("CW Motor Output Percent", () -> {return getMotorOutput();}, true, false);
-    ConsolePrinter.putNumber("CWMotorCurrent", () -> {return Robot.pdp.getChannelCurrent(RobotMap.COLORWHEEL_MOTOR_PDP);}, true, false);
+    ConsolePrinter.putNumber("CWMotorCurrent", () -> {return 0.0;}, true, false);
     ConsolePrinter.putNumber("CWMotorVoltage", () -> {return this.getColorWheelMotorVoltage();}, true, false);
   }
 
@@ -153,7 +153,7 @@ public class ColorWheel extends Subsystem {
       speed = -speed;
     }
     colorWheelMotor.set(speed);
-    colorWheelMotorVoltage = Robot.pdp.getBatteryVoltage() * speed;
+  //  colorWheelMotorVoltage = Robot.pdp.getBatteryVoltage() * speed;
   }
 
   public void updatePIDValues()

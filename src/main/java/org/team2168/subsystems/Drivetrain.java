@@ -222,12 +222,12 @@ public class Drivetrain extends Subsystem {
     drivetrainLeftMotor2Voltage = 0;
     drivetrainLeftMotor3Voltage = 0;
     // Log sensor data
-    ConsolePrinter.putNumber("DTRight1MotorCurrent", () -> {return Robot.pdp.getChannelCurrent(RobotMap.DRIVETRAIN_RIGHT_MOTOR_1_PDP);}, true, false);
-    ConsolePrinter.putNumber("DTRight2MotorCurrent", () -> {return Robot.pdp.getChannelCurrent(RobotMap.DRIVETRAIN_RIGHT_MOTOR_2_PDP);}, true, false);
-    ConsolePrinter.putNumber("DTRight3MotorCurrent", () -> {return Robot.pdp.getChannelCurrent(RobotMap.DRIVETRAIN_RIGHT_MOTOR_3_PDP);}, true, false);
-    ConsolePrinter.putNumber("DTLeft1MotorCurrent", () -> {return Robot.pdp.getChannelCurrent(RobotMap.DRIVETRAIN_LEFT_MOTOR_1_PDP);}, true, false);
-    ConsolePrinter.putNumber("DTLeft2MotorCurrent", () -> {return Robot.pdp.getChannelCurrent(RobotMap.DRIVETRAIN_LEFT_MOTOR_2_PDP);}, true, false);
-    ConsolePrinter.putNumber("DTLeft3MotorCurrent", () -> {return Robot.pdp.getChannelCurrent(RobotMap.DRIVETRAIN_LEFT_MOTOR_3_PDP);}, true, false);
+    ConsolePrinter.putNumber("DTRight1MotorCurrent", () -> {return 0.0;}, true, false);
+    ConsolePrinter.putNumber("DTRight2MotorCurrent", () -> {return 0.0;}, true, false);
+    ConsolePrinter.putNumber("DTRight3MotorCurrent", () -> {return 0.0;}, true, false);
+    ConsolePrinter.putNumber("DTLeft1MotorCurrent", () -> {return 0.0;}, true, false);
+    ConsolePrinter.putNumber("DTLeft2MotorCurrent", () -> {return 0.0;}, true, false);
+    ConsolePrinter.putNumber("DTLeft3MotorCurrent", () -> {return 0.0;}, true, false);
     ConsolePrinter.putNumber("DTRight1MotorVoltage", () -> {return this.getRightMotor1Voltage();}, true, false);
     ConsolePrinter.putNumber("DTRight2MotorVoltage", () -> {return this.getRightMotor1Voltage();}, true, false);
     ConsolePrinter.putNumber("DTRight3MotorVoltage", () -> {return this.getRightMotor3Voltage();}, true, false);
@@ -265,7 +265,7 @@ public class Drivetrain extends Subsystem {
     //   speed = -speed;
 
     _leftMotor1.set(ControlMode.PercentOutput, speed);
-    drivetrainLeftMotor1Voltage = Robot.pdp.getBatteryVoltage() * speed;
+  //  drivetrainLeftMotor1Voltage = Robot.pdp.getBatteryVoltage() * speed;
   }
 
   /**
@@ -279,7 +279,7 @@ public class Drivetrain extends Subsystem {
     //   speed = -speed;
 
     _leftMotor2.set(ControlMode.PercentOutput, speed);
-    drivetrainLeftMotor2Voltage = Robot.pdp.getBatteryVoltage() * speed;
+   // drivetrainLeftMotor2Voltage = Robot.pdp.getBatteryVoltage() * speed;
   }
 
   /**
@@ -293,7 +293,7 @@ public class Drivetrain extends Subsystem {
     //   speed = -speed;
 
     _leftMotor3.set(ControlMode.PercentOutput, speed);
-    drivetrainLeftMotor3Voltage = Robot.pdp.getBatteryVoltage() * speed;
+   // drivetrainLeftMotor3Voltage = Robot.pdp.getBatteryVoltage() * speed;
   }
 
   /**
@@ -323,7 +323,7 @@ public class Drivetrain extends Subsystem {
     //   speed = -speed;
 
     _rightMotor1.set(ControlMode.PercentOutput, speed);
-    drivetrainRightMotor1Voltage = Robot.pdp.getBatteryVoltage() * speed;
+   // drivetrainRightMotor1Voltage = Robot.pdp.getBatteryVoltage() * speed;
   }
 
   /**
@@ -337,7 +337,7 @@ public class Drivetrain extends Subsystem {
     //   speed = -speed;
 
     _rightMotor2.set(ControlMode.PercentOutput, speed);
-    drivetrainRightMotor2Voltage = Robot.pdp.getBatteryVoltage() * speed;
+  //  drivetrainRightMotor2Voltage = Robot.pdp.getBatteryVoltage() * speed;
   }
 
   /**
@@ -351,7 +351,7 @@ public class Drivetrain extends Subsystem {
     //   speed = -speed;
 
     _rightMotor3.set(ControlMode.PercentOutput, speed);
-    drivetrainRightMotor1Voltage = Robot.pdp.getBatteryVoltage() * speed;
+   // drivetrainRightMotor1Voltage = Robot.pdp.getBatteryVoltage() * speed;
   }
 
   public void driveRight(double speed) {

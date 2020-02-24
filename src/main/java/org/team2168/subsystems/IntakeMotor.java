@@ -54,7 +54,7 @@ public class IntakeMotor extends Subsystem {
     intakeMotor.setInverted(INTAKE_MOTOR_REVERSE);
     intakeMotor.configNeutralDeadband(0.05);
 
-    ConsolePrinter.putNumber("IntakeCurrent", () -> {return Robot.pdp.getChannelCurrent(RobotMap.INTAKE_MOTOR_PDP);}, true, false);
+    ConsolePrinter.putNumber("IntakeCurrent", () -> {return 0.0;}, true, false);
     ConsolePrinter.putNumber("IntakeVoltage", () -> {return this.getIntakeMotorVoltage();}, true, false);
   }
 
@@ -76,7 +76,7 @@ public class IntakeMotor extends Subsystem {
   public void driveMotor(double speed)
   {
     intakeMotor.set(ControlMode.PercentOutput, speed);
-    intakeMotorVoltage = Robot.pdp.getBatteryVoltage() * speed;
+   // intakeMotorVoltage = Robot.pdp.getBatteryVoltage() * speed;
   }
 
 

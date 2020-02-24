@@ -162,8 +162,8 @@ public class Climber extends Subsystem {
     ConsolePrinter.putNumber("Climber Position", ()->{return getPosition();}, true, false);
     ConsolePrinter.putNumber("Climber Position Error", ()->{return getErrorPosition();}, true, false);
     ConsolePrinter.putNumber("Climber Velocity", ()->{return getVelocity();}, true, false);
-    ConsolePrinter.putNumber("Climber1Current", () -> {return Robot.pdp.getChannelCurrent(RobotMap.CLIMBER_MOTOR_1_PDP);}, true, false);
-    ConsolePrinter.putNumber("Climber2Current", () -> {return Robot.pdp.getChannelCurrent(RobotMap.CLIMBER_MOTOR_2_PDP);}, true, false);
+    ConsolePrinter.putNumber("Climber1Current", () -> {return 0.0;}, true, false);
+    ConsolePrinter.putNumber("Climber2Current", () -> {return 0.0;}, true, false);
     ConsolePrinter.putNumber("Climber1Voltage", () -> {return this.getClimberMotor1Voltage();}, true, false);
     ConsolePrinter.putNumber("Climber2Voltage", () -> {return this.getClimberMotor2Voltage();}, true, false);
   }
@@ -201,7 +201,7 @@ public class Climber extends Subsystem {
     // }
       
     climberMotor1.set(ControlMode.PercentOutput, speed);
-    climberMotor1Voltage = Robot.pdp.getBatteryVoltage() * speed;
+  //  climberMotor1Voltage = Robot.pdp.getBatteryVoltage() * speed;
   }
   /**
    * This method is used for testing only motor two.
@@ -212,7 +212,7 @@ public class Climber extends Subsystem {
     //   speed = -speed;
     // }
     climberMotor2.set(ControlMode.PercentOutput, speed);
-    climberMotor2Voltage = Robot.pdp.getBatteryVoltage() * speed;
+  //  climberMotor2Voltage = Robot.pdp.getBatteryVoltage() * speed;
   }
 
   /** 

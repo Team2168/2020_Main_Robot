@@ -49,7 +49,7 @@ public class Hopper extends Subsystem {
     hopperMotor.setInverted(HOPPER_MOTOR_INVERTED);
     hopperMotor.configNeutralDeadband(0.05);
 
-    ConsolePrinter.putNumber("HopperCurrent", () -> {return Robot.pdp.getChannelCurrent(RobotMap.HOPPER_MOTOR_PDP);}, true, false);
+    ConsolePrinter.putNumber("HopperCurrent", () -> {return 0.0;}, true, false);
     ConsolePrinter.putNumber("HopperVoltage", () -> {return this.getHopperMotorVoltage();},true, false);
   }
 
@@ -69,7 +69,7 @@ public class Hopper extends Subsystem {
    */
   public void drive(double speed) {
     hopperMotor.set(ControlMode.PercentOutput, speed);
-    hopperMotorVoltage = Robot.pdp.getBatteryVoltage() * speed;
+   // hopperMotorVoltage = Robot.pdp.getBatteryVoltage() * speed;
   }
 
   public double getHopperMotorVoltage(){

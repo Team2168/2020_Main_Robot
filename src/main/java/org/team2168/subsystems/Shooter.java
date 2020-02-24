@@ -146,7 +146,7 @@ public class Shooter extends Subsystem {
         ConsolePrinter.putNumber("Shooter Velocity", () -> {return getVelocity();}, true, false);
         ConsolePrinter.putNumber("Shooter Error", () -> {return getError();}, true, false);
         ConsolePrinter.putNumber("Shooter Motor Output Percent", () -> {return _motorOne.getMotorOutputPercent();}, true, false);
-        ConsolePrinter.putNumber("ShooterCurrent", () -> {return Robot.pdp.getChannelCurrent(RobotMap.SHOOTER_MOTOR_ONE_PDP);}, true, false);
+        ConsolePrinter.putNumber("ShooterCurrent", () -> {return 0.0;}, true, false);
         ConsolePrinter.putNumber("ShooterVoltage", () -> {return this.getShooterMotorVoltage();}, true, false);
 
         //ConsolePrinter.putNumber("Shooter Setpoint", () -> {return ticks_per_100ms_to_revs_per_minute( _motorOne.getClosedLoopTarget());}, true, false);
@@ -179,7 +179,7 @@ public class Shooter extends Subsystem {
     {
         _motorOne.set(ControlMode.PercentOutput, speed);
         //driveShooterMotorTwo(speed); //Not needed this is configured as a follower
-        shooterMotor1Voltage = Robot.pdp.getBatteryVoltage() * speed;
+      //  shooterMotor1Voltage = Robot.pdp.getBatteryVoltage() * speed;
     }
 
     public double getVelocity()

@@ -133,7 +133,7 @@ public class Balancer extends Subsystem {
     ConsolePrinter.putNumber("Balancer Position Error", () -> {return getPositionError();}, true, false);
     ConsolePrinter.putNumber("Balancer Velocity Error", () -> {return getVelocityError();}, true, false);
     ConsolePrinter.putNumber("Balancer Motor Output Percent", () -> {return getMotorOutput();}, true, false);
-    ConsolePrinter.putNumber("BalancerCurrent", () -> {return Robot.pdp.getChannelCurrent(RobotMap.BALANCER_MOTOR_PDP);}, true, false);
+    ConsolePrinter.putNumber("BalancerCurrent", () -> {return 0.0;}, true, false);
     ConsolePrinter.putNumber("BalancerVoltage", () -> {return this.getBalancerMotorVoltage();}, true, false);
 
   }
@@ -161,7 +161,7 @@ public class Balancer extends Subsystem {
         speed = -speed;
 
       _balancerMotor.set(speed);
-      balancerMotorVoltage = Robot.pdp.getBatteryVoltage() * speed;
+     // balancerMotorVoltage = Robot.pdp.getBatteryVoltage() * speed;
     }
 
     public void updatePIDValues()
