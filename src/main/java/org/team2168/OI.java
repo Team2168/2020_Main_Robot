@@ -9,6 +9,7 @@ import org.team2168.commands.climber.ResetClimberPosition;
 import org.team2168.commands.color_wheel.DriveColorWheelXRotations;
 import org.team2168.commands.color_wheel_pivot.DisengageColorWheel;
 import org.team2168.commands.color_wheel_pivot.EngageColorWheel;
+import org.team2168.commands.drivetrain.DriveToLimelightAngle;
 import org.team2168.commands.hood_adjust.MoveToBackTrench;
 import org.team2168.commands.hood_adjust.MoveToFrontTrench;
 import org.team2168.commands.hood_adjust.MoveToWall;
@@ -92,7 +93,7 @@ public class OI
 		gunStyleYInterpolator = new LinearInterpolator(gunStyleYArray);
 		gunStyleXInterpolator = new LinearInterpolator(gunStyleXArray);
 
-		driverJoystick.ButtonLeftStick().whenPressed(new EnableLimelight());
+		driverJoystick.ButtonLeftStick().whenPressed(new DriveToLimelightAngle(0.6));
 		driverJoystick.ButtonLeftStick().whenReleased(new PauseLimelight());
 		// driverJoystick.ButtonLeftStick().whenPressed(new RunFlashlight(1.0));
 		// driverJoystick.ButtonLeftStick().whenReleased(new RunFlashlight(-1.0));

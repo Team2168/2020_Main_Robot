@@ -17,18 +17,20 @@ import edu.wpi.first.wpilibj.command.Command;
 public class EnableLimelight extends Command {
   private Limelight limelight;
   private HoodAdjust hoodPos; 
+  private Drivetrain dt;
   public EnableLimelight() {
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
     limelight = Limelight.getInstance();
     hoodPos = HoodAdjust.getInstance();
+    dt = Drivetrain.getInstance();
     requires(limelight);
   }
 
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
-
+    dt.zeroPigeon();
   }
 
   // Called repeatedly when this Command is scheduled to run
