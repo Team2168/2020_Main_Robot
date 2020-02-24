@@ -207,14 +207,11 @@ public class Drivetrain extends Subsystem {
   
   ConsolePrinter.putNumber("DT Position", ()->{return getPosition();}, true, false);
   ConsolePrinter.putNumber("Heading", ()->{return getHeading();}, true, false);
-  ConsolePrinter.putNumber("Position Error", ()->{return getErrorPosition();}, true, false);
   ConsolePrinter.putNumber("Heading Error", ()->{return getErrorHeading();}, true, false);
-  ConsolePrinter.putNumber("Motor output dt", ()->{return _rightMotor1.getMotorOutputPercent();}, true, false);
-  
-  ConsolePrinter.putNumber("DT Position", ()->{return getPosition();}, true, false);
-  ConsolePrinter.putNumber("Heading", ()->{return getHeading();}, true, false);
+  ConsolePrinter.putNumber("Motor output dt right", ()->{return _rightMotor1.getMotorOutputPercent();}, true, false);
+  ConsolePrinter.putNumber("Motor output dt left", ()->{return _leftMotor1.getMotorOutputPercent();}, true, false);
+
   ConsolePrinter.putNumber("Dt Position Error", ()->{return getErrorPosition();}, true, false);
-  ConsolePrinter.putNumber("Heading Error", ()->{return getErrorHeading();}, true, false);
   ConsolePrinter.putNumber("Dt Velocity", ()->{return getVelocity();}, true, false);
     
   }
@@ -354,11 +351,11 @@ public class Drivetrain extends Subsystem {
   
   public void drive(double heading, double speed, double turn)
   {
-    setPointHeading_sensorUnits = ticks_to_degrees(heading);
-    _leftMotor1.set(ControlMode.MotionMagic, setPointHeading_sensorUnits, DemandType.ArbitraryFeedForward, speed + turn);
+    setPointHeading_sensorUnits = degrees_to_ticks(heading);
+    _leftMotor1.set(ControlMode.Position, setPointHeading_sensorUnits, DemandType.ArbitraryFeedForward, speed + turn);
     _leftMotor2.follow(_leftMotor1, FollowerType.PercentOutput);
     _leftMotor3.follow(_leftMotor1, FollowerType.PercentOutput);
-    _rightMotor1.set(ControlMode.MotionMagic, heading, DemandType.ArbitraryFeedForward, speed - turn);
+    _rightMotor1.set(ControlMode.Position, heading, DemandType.ArbitraryFeedForward, speed - turn);
     _rightMotor2.follow(_rightMotor1, FollowerType.PercentOutput);
     _rightMotor3.follow(_rightMotor1, FollowerType.PercentOutput);
   }
