@@ -10,18 +10,18 @@ import org.team2168.commands.color_wheel.DriveColorWheelXRotations;
 import org.team2168.commands.color_wheel_pivot.DisengageColorWheel;
 import org.team2168.commands.color_wheel_pivot.EngageColorWheel;
 import org.team2168.commands.drivetrain.DriveToLimelightAngle;
+import org.team2168.commands.flashlight.RunFlashlight;
 import org.team2168.commands.hood_adjust.MoveToBackTrench;
 import org.team2168.commands.hood_adjust.MoveToFrontTrench;
 import org.team2168.commands.hood_adjust.MoveToWall;
 import org.team2168.commands.hood_adjust.MoveToWhiteLine;
 import org.team2168.commands.intakeMotor.IntakeBallStart;
 import org.team2168.commands.intakeMotor.IntakeBallStop;
-import org.team2168.commands.limelight.EnableLimelight;
+import org.team2168.commands.limelight.DoNothingLimelight;
 import org.team2168.commands.limelight.PauseLimelight;
 import org.team2168.commands.shooter.DriveShooterWithConstant;
 import org.team2168.utils.F310;
 import org.team2168.utils.LinearInterpolator;
-import org.team2168.utils.consoleprinter.ConsolePrinter;
 
 
 /**
@@ -94,9 +94,11 @@ public class OI
 		gunStyleXInterpolator = new LinearInterpolator(gunStyleXArray);
 
 		driverJoystick.ButtonLeftStick().whenPressed(new DriveToLimelightAngle(0.6));
-		driverJoystick.ButtonLeftStick().whenReleased(new PauseLimelight());
-		// driverJoystick.ButtonLeftStick().whenPressed(new RunFlashlight(1.0));
-		// driverJoystick.ButtonLeftStick().whenReleased(new RunFlashlight(-1.0));
+		// driverJoystick.ButtonLeftStick().whenPressed(new EnableLimelight());
+		// driverJoystick.ButtonLeftStick().whenReleased(new PauseLimelight());
+		driverJoystick.ButtonLeftStick().whenReleased(new DoNothingLimelight());
+		driverJoystick.ButtonLeftStick().whenPressed(new RunFlashlight(1.0));
+		driverJoystick.ButtonLeftStick().whenReleased(new RunFlashlight(-1.0));
 
 		
 		/*************************************************************************

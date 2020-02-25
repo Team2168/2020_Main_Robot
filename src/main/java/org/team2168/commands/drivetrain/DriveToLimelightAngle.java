@@ -25,7 +25,7 @@ public class DriveToLimelightAngle extends Command {
 
   private double _errorTolerancePosition = 0.5; //0.5 inches 
   private double _errorToleranceAngle; //1.0 degree of tolerance 
-  private double _loopsToSettle = 30;
+  private double _loopsToSettle = 10;
   private int _withinThresholdLoops = 0;
 
   public DriveToLimelightAngle() {
