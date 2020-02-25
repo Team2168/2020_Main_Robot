@@ -17,6 +17,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.CANSparkMaxLowLevel.PeriodicFrame;
 import com.revrobotics.ControlType;
 
+import org.team2168.RobotMap;
 import org.team2168.commands.balancer.DriveBalancerVelocityJoystick;
 import org.team2168.utils.consoleprinter.ConsolePrinter;
 
@@ -43,7 +44,7 @@ public class Balancer extends Subsystem {
 
   private Balancer()
   {
-    _balancerMotor = new CANSparkMax(2, MotorType.kBrushless); //RobotMap.BALANCER_MOTOR_PDP
+    _balancerMotor = new CANSparkMax(RobotMap.BALANCER_MOTOR_PDP, MotorType.kBrushless); //RobotMap.BALANCER_MOTOR_PDP
     _balancerMotor.setIdleMode(IdleMode.kBrake);
 
     //speed limit 60
@@ -278,7 +279,7 @@ public class Balancer extends Subsystem {
   public void initDefaultCommand() {
     // Set the default command for a subsystem here.
     //setDefaultCommand(new DriveBalancerMotorWithJoystick());
-    // setDefaultCommand(new DriveBalancerVelocityJoystick());
+    setDefaultCommand(new DriveBalancerVelocityJoystick());
     // setDefaultCommand(new DriveBalancerUpdatingPosition());
 
   }

@@ -3,13 +3,14 @@ package org.team2168;
 
 import org.team2168.commands.auto.FinishFiring;
 import org.team2168.commands.auto.FireBalls;
+import org.team2168.commands.climber.DisengageRatchet;
 import org.team2168.commands.climber.DriveClimberXPosition;
+import org.team2168.commands.climber.EngageRatchet;
 import org.team2168.commands.climber.PrepareToClimb;
 import org.team2168.commands.climber.ResetClimberPosition;
 import org.team2168.commands.color_wheel.DriveColorWheelXRotations;
 import org.team2168.commands.color_wheel_pivot.DisengageColorWheel;
 import org.team2168.commands.color_wheel_pivot.EngageColorWheel;
-import org.team2168.commands.drivetrain.DriveToLimelightAngle;
 import org.team2168.commands.flashlight.RunFlashlight;
 import org.team2168.commands.hood_adjust.MoveToBackTrench;
 import org.team2168.commands.hood_adjust.MoveToFrontTrench;
@@ -17,8 +18,6 @@ import org.team2168.commands.hood_adjust.MoveToWall;
 import org.team2168.commands.hood_adjust.MoveToWhiteLine;
 import org.team2168.commands.intakeMotor.IntakeBallStart;
 import org.team2168.commands.intakeMotor.IntakeBallStop;
-import org.team2168.commands.limelight.DoNothingLimelight;
-import org.team2168.commands.limelight.PauseLimelight;
 import org.team2168.commands.shooter.DriveShooterWithConstant;
 import org.team2168.utils.F310;
 import org.team2168.utils.LinearInterpolator;
@@ -146,6 +145,9 @@ public class OI
 		pidTestJoystick.ButtonY().whenPressed(new PrepareToClimb()); 
 		pidTestJoystick.ButtonA().whenPressed(new DriveClimberXPosition(7.0, 0.1));
 
+		pidTestJoystick.ButtonUpDPad().whenPressed(new EngageRatchet());
+		pidTestJoystick.ButtonDownDPad().whenPressed(new DisengageRatchet());
+
 		// pidTestJoystick.ButtonB().whenPressed(new FireBalls());
 		// pidTestJoystick.ButtonB().whenReleased(new FinishFiring());
 		// ConsolePrinter.putNumber("Drivetrain linear speed", ()->{return getGunStyleYValue();}, true, false);
@@ -245,7 +247,7 @@ public class OI
 	 * @return
 	 */
 	public double getBalancerJoystickValue(){
-		return 0.0; //(pidTestJoystick.getLeftStickRaw_Y());
+		return (pidTestJoystick.getLeftStickRaw_Y());
 	}
 
 	/**

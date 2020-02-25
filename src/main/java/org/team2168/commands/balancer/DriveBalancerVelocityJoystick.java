@@ -31,16 +31,22 @@ public class DriveBalancerVelocityJoystick extends Command {
   @Override
   protected void initialize() {
     oi = OI.getInstance();
-    if(_readPIDFromDashboard) {
-    }
+
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    balancer.updatePIDValues();
-    _setPoint = oi.getBalancerJoystickValue() * balancer.getMaxVelocity();
-
+    if(_readPIDFromDashboard) {
+      balancer.updatePIDValues();
+    }
+    if(Math.abs(oi.getBalancerJoystickValue()) > 0.05) {
+      _setPoint = oi.getBalancerJoystickValue() * balancer.getMaxVelocity();
+    }
+    else {
+      _setPoint = 0.0;
+    }
+    // System.out.println(_setPoint + " " + oi.getBalancerJoystickValue() + " " + balancer.getMaxVelocity());
     balancer.setVelocitySetPoint(_setPoint);
 
     SmartDashboard.putNumber("SetPoint", _setPoint);
