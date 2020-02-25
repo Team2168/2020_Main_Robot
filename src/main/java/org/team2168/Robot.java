@@ -153,7 +153,7 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     Scheduler.getInstance().run();
-    limelight.enableLimelight(hoodAdjust.getHoodPosition());
+    // limelight.enableLimelight(hoodAdjust.getHoodPosition());
   }
 
     /**

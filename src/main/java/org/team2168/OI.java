@@ -93,10 +93,10 @@ public class OI
 		gunStyleYInterpolator = new LinearInterpolator(gunStyleYArray);
 		gunStyleXInterpolator = new LinearInterpolator(gunStyleXArray);
 
-		driverJoystick.ButtonLeftStick().whenPressed(new DriveToLimelightAngle(0.6));
+		// driverJoystick.ButtonLeftStick().whenPressed(new DriveToLimelightAngle(0.6));
 		// driverJoystick.ButtonLeftStick().whenPressed(new EnableLimelight());
 		// driverJoystick.ButtonLeftStick().whenReleased(new PauseLimelight());
-		driverJoystick.ButtonLeftStick().whenReleased(new DoNothingLimelight());
+		// driverJoystick.ButtonLeftStick().whenReleased(new DoNothingLimelight());
 		driverJoystick.ButtonLeftStick().whenPressed(new RunFlashlight(1.0));
 		driverJoystick.ButtonLeftStick().whenReleased(new RunFlashlight(-1.0));
 
@@ -145,7 +145,6 @@ public class OI
 		pidTestJoystick.ButtonX().whenPressed(new ResetClimberPosition());
 		pidTestJoystick.ButtonY().whenPressed(new PrepareToClimb()); 
 		pidTestJoystick.ButtonA().whenPressed(new DriveClimberXPosition(7.0, 0.1));
-
 
 		// pidTestJoystick.ButtonB().whenPressed(new FireBalls());
 		// pidTestJoystick.ButtonB().whenReleased(new FinishFiring());
