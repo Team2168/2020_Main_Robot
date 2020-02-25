@@ -4,7 +4,9 @@ package org.team2168;
 import org.team2168.commands.auto.FinishFiring;
 import org.team2168.commands.auto.FireBalls;
 import org.team2168.commands.auto.OppositeTrenchAuto;
+import org.team2168.commands.climber.DisengageRatchet;
 import org.team2168.commands.climber.DriveClimberXPosition;
+import org.team2168.commands.climber.EngageRatchet;
 import org.team2168.commands.climber.PrepareToClimb;
 import org.team2168.commands.climber.ResetClimberPosition;
 import org.team2168.commands.color_wheel.DriveColorWheelXRotations;
@@ -143,6 +145,9 @@ public class OI
 		// pidTestJoystick.ButtonA().whenPressed(new DriveClimberXPosition(7.0, 0.1));
 
 
+		pidTestJoystick.ButtonUpDPad().whenPressed(new EngageRatchet());
+		pidTestJoystick.ButtonDownDPad().whenPressed(new DisengageRatchet());
+
 		// pidTestJoystick.ButtonB().whenPressed(new FireBalls());
 		// pidTestJoystick.ButtonB().whenReleased(new FinishFiring());
 
@@ -241,7 +246,7 @@ public class OI
 	 * @return
 	 */
 	public double getBalancerJoystickValue(){
-		return 0.0; //(pidTestJoystick.getLeftStickRaw_Y());
+		return (pidTestJoystick.getLeftStickRaw_Y());
 	}
 
 	/**

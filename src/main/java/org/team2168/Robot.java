@@ -142,7 +142,7 @@ public class Robot extends TimedRobot {
     // climber = Climber.getInstance();
     intakeMotor = IntakeMotor.getInstance();
     intakePivot = IntakePivot.getInstance();
-    // balancer = Balancer.getInstance();
+    balancer = Balancer.getInstance();
     indexer = Indexer.getInstance();
     hopper = Hopper.getInstance();
     colorWheel = ColorWheel.getInstance();
