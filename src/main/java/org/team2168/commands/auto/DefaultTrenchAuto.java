@@ -11,6 +11,8 @@ import org.team2168.commands.drivetrain.PIDCommands.DriveXDistance;
 import org.team2168.commands.drivetrain.PIDCommands.TurnXAngle;
 import org.team2168.commands.hood_adjust.MoveToFrontTrench;
 import org.team2168.commands.hood_adjust.MoveToWallNoShoot;
+import org.team2168.commands.hopper.DriveHopperWithConstant;
+import org.team2168.commands.indexer.DriveIndexerWithConstant;
 import org.team2168.commands.intakeMotor.DriveIntakeWithConstant;
 import org.team2168.commands.intakePivot.ExtendIntakePneumatic;
 import org.team2168.commands.intakePivot.RetractIntakePneumatic;
@@ -42,7 +44,7 @@ public class DefaultTrenchAuto extends CommandGroup {
     // arm.
 
     addParallel(new MoveToFrontTrench());
-    addParallel(new DriveIntakeWithConstant(0.95));//TODO set
+    addParallel(new DriveIntakeWithConstant(1.0));//TODO set
     addSequential(new ExtendIntakePneumatic());
     addSequential(new DriveXDistance(-115.0, 0.5), 4.0);
     addParallel(new DriveIntakeWithConstant(0.3));
@@ -64,13 +66,14 @@ public class DefaultTrenchAuto extends CommandGroup {
 
     // //turn straight again
     addSequential(new TurnXAngle(-13.25, 0.3), 2.0);
-    addParallel(new DriveIntakeWithConstant(0.95));//TODO set
+    addParallel(new DriveIntakeWithConstant(1.0));//TODO set
     addSequential(new ExtendIntakePneumatic());
     addSequential(new DriveXDistance(-113.0, 0.5, 8.0*12.0), 4.0);
+    addSequential(new DriveXDistance(113.0, 0.5, 8.0*12.0), 4.0);
+  
     addParallel(new DriveIntakeWithConstant(0.3));
     addSequential(new RetractIntakePneumatic()); 
 
-    addSequential(new DriveXDistance(113.0, 0.5, 8.0*12.0), 4.0);
     addParallel(new MoveToFrontTrench());
     addSequential(new TurnXAngle(+13.25, 0.3), 2.0);
     addSequential(new FireBallsAuto(3), 2.0);
@@ -79,5 +82,8 @@ public class DefaultTrenchAuto extends CommandGroup {
     // addSequential(new RetractIntakePneumatic()); 
     // addSequential(new TurnXAngle(9.0, 0.3), 2.0);
     // addSequential(new FireBallsAutoNoLineBreak(), 4.0);
+    addParallel(new DriveIndexerWithConstant(0.0), 0.0);
+    addParallel(new DriveHopperWithConstant(0.0), 0.0);
+    addParallel(new DriveIntakeWithConstant(0.0), 0.0);
   }
 }

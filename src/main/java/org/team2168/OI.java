@@ -1,6 +1,7 @@
 
 package org.team2168;
 
+import org.team2168.commands.auto.DefaultTrenchAuto;
 import org.team2168.commands.auto.FinishFiring;
 import org.team2168.commands.auto.FireBalls;
 import org.team2168.commands.auto.OppositeTrenchAuto;
@@ -136,7 +137,7 @@ public class OI
 		// pidTestJoystick.ButtonLeftDPad().whenPressed(new TurnXAngle(+9.0,0.3));
 		// pidTestJoystick.ButtonUpDPad().whenPressed(new TurnXAngle(-90.0,0.3));
 		// pidTestJoystick.ButtonDownDPad().whenPressed(new TurnXAngle(+90.0, 0.3));
-		// // pidTestJoystick.ButtonStart().whenPressed(new DefaultTrenchAuto());
+		pidTestJoystick.ButtonStart().whenPressed(new DefaultTrenchAuto());
 		// pidTestJoystick.ButtonBack().whenPressed(new OppositeTrenchAuto());
 
 		// pidTestJoystick.ButtonX().whenPressed(new ResetClimberPosition());
@@ -148,8 +149,8 @@ public class OI
 
 		// pidTestJoystick.ButtonB().whenPressed(new FireBalls());
 		// pidTestJoystick.ButtonB().whenReleased(new FinishFiring());
-
-
+		pidTestJoystick.ButtonDownDPad().whenPressed(new MoveToWall());
+		pidTestJoystick.ButtonLeftBumper().whenPressed(new IntakeBallStop());
 	}
 	
 	/**
