@@ -166,6 +166,8 @@ public class Climber extends Subsystem {
     ConsolePrinter.putNumber("Climber2Current", () -> {return 0.0;}, true, false);
     ConsolePrinter.putNumber("Climber1Voltage", () -> {return this.getClimberMotor1Voltage();}, true, false);
     ConsolePrinter.putNumber("Climber2Voltage", () -> {return this.getClimberMotor2Voltage();}, true, false);
+    ConsolePrinter.putBoolean("RatchetExtended", () -> {return this.isRatchetEngaged();}, true, false);
+    ConsolePrinter.putBoolean("RatchetDisengaged", () -> {return this.isRatchetDisengaged();}, true, false);
   }
   
   /**
