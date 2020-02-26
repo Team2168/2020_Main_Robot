@@ -139,14 +139,12 @@ public class OI
 		// // pidTestJoystick.ButtonStart().whenPressed(new DefaultTrenchAuto());
 		// pidTestJoystick.ButtonBack().whenPressed(new OppositeTrenchAuto());
 
-
 		// pidTestJoystick.ButtonX().whenPressed(new ResetClimberPosition());
 		// pidTestJoystick.ButtonY().whenPressed(new PrepareToClimb()); 
 		// pidTestJoystick.ButtonA().whenPressed(new DriveClimberXPosition(7.0, 0.1));
 
-
-		pidTestJoystick.ButtonUpDPad().whenPressed(new EngageRatchet());
-		pidTestJoystick.ButtonDownDPad().whenPressed(new DisengageRatchet());
+		// pidTestJoystick.ButtonUpDPad().whenPressed(new EngageRatchet());
+		// pidTestJoystick.ButtonDownDPad().whenPressed(new DisengageRatchet());
 
 		// pidTestJoystick.ButtonB().whenPressed(new FireBalls());
 		// pidTestJoystick.ButtonB().whenReleased(new FinishFiring());
