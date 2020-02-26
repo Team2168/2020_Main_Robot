@@ -133,10 +133,10 @@ public class Robot extends TimedRobot {
 	  SmartDashboard.putData("Auto choices", m_chooser);
 	
     //Init Subsystems
-    // climber = Climber.getInstance();
+    climber = Climber.getInstance();
     intakeMotor = IntakeMotor.getInstance();
     intakePivot = IntakePivot.getInstance();
-    // balancer = Balancer.getInstance();
+    balancer = Balancer.getInstance();
     indexer = Indexer.getInstance();
     hopper = Hopper.getInstance();
     colorWheel = ColorWheel.getInstance();
