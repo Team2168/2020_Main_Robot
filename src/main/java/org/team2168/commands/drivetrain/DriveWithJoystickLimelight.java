@@ -65,7 +65,7 @@ public class DriveWithJoystickLimelight extends Command
     else {
       turnGain = oi.getGunStyleXValue();
     }
-    dt.drive(oi.getGunStyleYValue(), turnGain);
+    // dt.drive(oi.getGunStyleYValue(), turnGain);
   }
 
   // Called repeatedly when this Command is scheduled to run

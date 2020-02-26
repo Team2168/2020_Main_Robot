@@ -32,7 +32,7 @@ public class DriveWithJoystickLimelight1 extends Command
   protected void initialize() {
     oi = OI.getInstance();
     heading_setpoint = dt.getHeading();
-    dt.switchGains(true, true);
+    // dt.switchGains(true, true);
 	}
 
 	/**
@@ -51,17 +51,17 @@ public class DriveWithJoystickLimelight1 extends Command
     if(limelight.isLimelightEnabled()) {
       //if limelight is enabled, command to that heading, with manual turning as an arbitrary ff
       heading_setpoint = dt.getHeading() - limelight.getPosition(); //TODO CHECK SIGN FOR LIMELIGHT
-      dt.drive(heading_setpoint, oi.getGunStyleYValue(), oi.getGunStyleXValue());
+      // dt.drive(heading_setpoint, oi.getGunStyleYValue(), oi.getGunStyleXValue());
       System.out.println(limelight.isLimelightEnabled());
     } else if (Math.abs(oi.getGunStyleXValue()) <= 0.01 && Math.abs(oi.getGunStyleYValue()) >= 0.01) {
       //drive straight - heading setpoint is the last heading set before turning
       // dt.drive(heading_setpoint, oi.getGunStyleYValue(), oi.getGunStyleXValue());
-      dt.drive(oi.getGunStyleYValue(), oi.getGunStyleXValue());
+      // dt.drive(oi.getGunStyleYValue(), oi.getGunStyleXValue());
 
     } else {
       //drive open loop with joysticks, store heading for future loop iterations
       heading_setpoint = dt.getHeading();
-      dt.drive(oi.getGunStyleYValue(), oi.getGunStyleXValue());
+      // dt.drive(oi.getGunStyleYValue(), oi.getGunStyleXValue());
 
     }
     System.out.println(heading_setpoint);

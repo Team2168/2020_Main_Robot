@@ -48,7 +48,7 @@ public class DriveToLimelightAngle extends Command {
   protected void initialize() {
     _withinThresholdLoops = 0;
     dt.zeroSensors();
-    dt.switchGains(false, false);
+    // dt.switchGains(false, false);
     limelight.enableLimelight(hoodPos.getHoodPosition());
     _targetAngle = dt.getHeading() - limelight.getPosition();
   }

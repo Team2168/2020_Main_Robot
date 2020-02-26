@@ -48,8 +48,7 @@ public class TurnXAngle extends Command {
   protected void initialize() {
     _withinThresholdLoops = 0;
     dt.zeroSensors();
-    dt.switchGains(false, false);
-
+    dt.switchGains(false);
   }
 
   // Called repeatedly when this Command is scheduled to run
