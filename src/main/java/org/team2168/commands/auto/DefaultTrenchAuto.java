@@ -9,12 +9,8 @@ package org.team2168.commands.auto;
 
 import org.team2168.commands.drivetrain.PIDCommands.DriveXDistance;
 import org.team2168.commands.drivetrain.PIDCommands.TurnXAngle;
-import org.team2168.commands.hood_adjust.ExtendShooterHood;
-import org.team2168.commands.hood_adjust.MoveToBackTrench;
 import org.team2168.commands.hood_adjust.MoveToFrontTrench;
-import org.team2168.commands.hood_adjust.RetractShooterHardstop;
-import org.team2168.commands.hopper.DriveHopperWithConstant;
-import org.team2168.commands.indexer.DriveIndexerWithConstant;
+import org.team2168.commands.hood_adjust.MoveToWallNoShoot;
 import org.team2168.commands.intakeMotor.DriveIntakeWithConstant;
 import org.team2168.commands.intakePivot.ExtendIntakePneumatic;
 import org.team2168.commands.intakePivot.RetractIntakePneumatic;
@@ -52,29 +48,36 @@ public class DefaultTrenchAuto extends CommandGroup {
     addParallel(new DriveIntakeWithConstant(0.3));
     addSequential(new RetractIntakePneumatic());  //want to run the intake constantly during firing... TODO: cleanup
     addSequential(new TurnXAngle(13.25, 0.3), 2.0); //12.25), 2.0);
-    addSequential(new FireBallsAutoNoLineBreak(), 2.0);
+    // addSequential(new FireBallsAutoNoLineBreak(), 2.0);
+    addSequential(new FireBallsAuto(5), 2.0);
 
-    addSequential(new DriveHopperWithConstant(0.0), 0.1);
-    addParallel(new DriveIndexerWithConstant(0.0), 0.0);
+    // addSequential(new DriveHopperWithConstant(0.0), 0.1);
+    // addParallel(new DriveIndexerWithConstant(0.0), 0.0);
     // //moves hood down and leaves shooter at speed 
-    addSequential(new RetractShooterHardstop());
-    addSequential(new Sleep(), 0.1);
-    addSequential(new ExtendShooterHood());
-    addSequential(new Sleep(), 0.1);
+    // addSequential(new RetractShooterHardstop());
+    // addSequential(new Sleep(), 0.1);
+    // addSequential(new ExtendShooterHood());
+    // addSequential(new Sleep(), 0.1);
+    addParallel(new MoveToWallNoShoot());
 
-    addParallel(new DriveToXSpeed(Shooter.getInstance().BACK_TRENCH_VEL));
+    // addParallel(new DriveToXSpeed(Shooter.getInstance().BACK_TRENCH_VEL));
 
     // //turn straight again
     addSequential(new TurnXAngle(-13.25, 0.3), 2.0);
     addParallel(new DriveIntakeWithConstant(0.95));//TODO set
     addSequential(new ExtendIntakePneumatic());
-    addSequential(new DriveXDistance(-147.0, 0.5, 8.0*12.0), 4.0);
-
-
-    addParallel(new MoveToBackTrench());
+    addSequential(new DriveXDistance(-113.0, 0.5, 8.0*12.0), 4.0);
     addParallel(new DriveIntakeWithConstant(0.3));
     addSequential(new RetractIntakePneumatic()); 
-    addSequential(new TurnXAngle(9.0, 0.3), 2.0);
-    addSequential(new FireBallsAutoNoLineBreak(), 4.0);
+
+    addSequential(new DriveXDistance(113.0, 0.5, 8.0*12.0), 4.0);
+    addParallel(new MoveToFrontTrench());
+    addSequential(new TurnXAngle(+13.25, 0.3), 2.0);
+    addSequential(new FireBallsAuto(3), 2.0);
+    // addParallel(new MoveToBackTrench());
+    // addParallel(new DriveIntakeWithConstant(0.3));
+    // addSequential(new RetractIntakePneumatic()); 
+    // addSequential(new TurnXAngle(9.0, 0.3), 2.0);
+    // addSequential(new FireBallsAutoNoLineBreak(), 4.0);
   }
 }
