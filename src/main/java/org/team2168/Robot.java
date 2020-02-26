@@ -84,6 +84,7 @@ import org.team2168.utils.PowerDistribution;
 import org.team2168.utils.consoleprinter.ConsolePrinter;
 
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
@@ -158,12 +159,13 @@ public class Robot extends TimedRobot {
     ConsolePrinter.init();
     ConsolePrinter.startThread();
 
+    // drivetrain.setDefaultBrakeMode();
+
     //Initialize Autonomous Selector Choices
     autoSelectInit();
 
     ConsolePrinter.putBoolean("isPracticeBot", ()->{return isPracticeBot();}, true, false);
     ConsolePrinter.putSendable("Autonomous Mode Chooser", () -> {return Robot.autoChooser;}, true, false);
-
   }
 
   @Override
@@ -185,12 +187,14 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
+    drivetrain.setDefaultBrakeMode();
+
 		autonomousCommand = (Command) autoChooser.getSelected();
     	
-        // schedule the autonomous command
-        if (autonomousCommand != null) 
-        	autonomousCommand.start();
-  }
+    // schedule the autonomous command
+    if (autonomousCommand != null) 
+      autonomousCommand.start();
+}
 
   /**
    * This function is called periodically during autonomous.
@@ -204,6 +208,8 @@ public class Robot extends TimedRobot {
      * This function called prior to robot entering Teleop Mode
      */
 	public void teleopInit() {
+    drivetrain.setDefaultBrakeMode();
+
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to 
     // continue until interrupted by another command, remove
@@ -229,7 +235,10 @@ public class Robot extends TimedRobot {
 
   @Override
   public void disabledInit() {
-
+    if(!DriverStation.getInstance().isFMSAttached()) {
+      //If we're not on a real field, let the robot be pushed around if it's disabled.
+      drivetrain.setAllMotorsCoast();
+    }
   }
 
   @Override
