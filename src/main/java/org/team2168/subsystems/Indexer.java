@@ -43,8 +43,10 @@ public class Indexer extends Subsystem {
     _motor.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 500);
     _motor.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 500);
 
-    ConsolePrinter.putBoolean("isBallEntering", ()->{return isBallEntering();}, true, false);
-    ConsolePrinter.putBoolean("isBallExiting", ()->{return isBallExiting();}, true, false);
+    // ConsolePrinter.putBoolean("isBallEntering", ()->{return isBallEntering();}, true, false);
+    // ConsolePrinter.putBoolean("isBallExiting", ()->{return isBallExiting();}, true, false);
+    ConsolePrinter.putNumber("isBallEntering", ()->{return isBallEnteringDashboard();}, true, false);
+    ConsolePrinter.putNumber("isBallExiting", ()->{return isBallExitingDashboard();}, true, false);
 
   }
 
@@ -66,12 +68,31 @@ public class Indexer extends Subsystem {
     _motor.set(speed);
   }
 
+  public double isBallEnteringDashboard() {
+    if(!entranceLineBreak.get()) {
+      return 1.0;
+    }
+    else {
+      return 0.0;
+    }
+    //return !entranceLineBreak.get();
+  }
+
   public boolean isBallEntering() {
-    return entranceLineBreak.get();
+    return !entranceLineBreak.get();
+  }
+
+  public double isBallExitingDashboard() {
+    if(!exitLineBreak.get()) {
+      return 1.0;
+    }
+    else {
+      return 0.0;
+    }
   }
 
   public boolean isBallExiting() {
-    return exitLineBreak.get();
+    return !exitLineBreak.get();
   }
 
   @Override

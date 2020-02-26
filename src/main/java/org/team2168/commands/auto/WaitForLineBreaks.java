@@ -15,50 +15,37 @@ import edu.wpi.first.wpilibj.command.Command;
 
 public class WaitForLineBreaks extends Command {
   private double _indexerSpeed;
-  private double _hopperSpeed;
-  private double _intakeSpeed;
   private int _numBalls;
   private boolean exitLineBreakLast;
   private int ballCounter;
-  /**
-   * if line break triggers too many times from balls jittering, 
-   * add counter that iterates loops that the ball visible to the line break
-   * above a certain threshold should be a ball actually going through 
-   * and not just jitters
-   */
+
   private Indexer indexer;
-  private Climber climber;
-  private IntakeMotor intake;
-  public WaitForLineBreaks(double indexerSpeed, double hopperSpeed, double intakeSpeed, int numBalls) {
+  public WaitForLineBreaks(double indexerSpeed, int numBalls) {
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
     indexer = Indexer.getInstance();
-    climber = Climber.getInstance();
-    intake = IntakeMotor.getInstance();
     requires(indexer);
-    requires(climber);
-    requires(intake);
-
     this._indexerSpeed = indexerSpeed;
-    this._hopperSpeed = hopperSpeed;
-    this._intakeSpeed = intakeSpeed;
+
     this._numBalls = numBalls;
   }
 
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
-    exitLineBreakLast = indexer.isBallExiting();
+    exitLineBreakLast = false;
     ballCounter = 0;
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
+    indexer.drive(_indexerSpeed);
     if (exitLineBreakLast && !indexer.isBallExiting())
     {
       ballCounter++;
     }
+    System.out.println(exitLineBreakLast + " " + !indexer.isBallExiting());
 
     exitLineBreakLast = indexer.isBallExiting();
   }
@@ -66,7 +53,7 @@ public class WaitForLineBreaks extends Command {
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    return ballCounter < _numBalls;
+    return ballCounter >= _numBalls;
   }
 
   // Called once after isFinished returns true
