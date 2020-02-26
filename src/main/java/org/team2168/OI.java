@@ -143,7 +143,7 @@ public class OI
 
 		pidTestJoystick.ButtonX().whenPressed(new ResetClimberPosition());
 		pidTestJoystick.ButtonY().whenPressed(new PrepareToClimb()); 
-		pidTestJoystick.ButtonA().whenPressed(new DriveClimberXPosition(7.0, 0.1));
+		pidTestJoystick.ButtonA().whenPressed(new DriveClimberXPosition(7.0));
 
 		pidTestJoystick.ButtonUpDPad().whenPressed(new EngageRatchet());
 		pidTestJoystick.ButtonDownDPad().whenPressed(new DisengageRatchet());

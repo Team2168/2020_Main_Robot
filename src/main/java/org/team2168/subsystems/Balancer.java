@@ -45,6 +45,12 @@ public class Balancer extends Subsystem {
   private Balancer()
   {
     _balancerMotor = new CANSparkMax(RobotMap.BALANCER_MOTOR_PDP, MotorType.kBrushless); //RobotMap.BALANCER_MOTOR_PDP
+            /**
+     * The RestoreFactoryDefaults method can be used to reset the configuration parameters
+     * in the SPARK MAX to their factory default state. If no argument is passed, these
+     * parameters will not persist between power cycles
+     */
+    _balancerMotor.restoreFactoryDefaults();
     _balancerMotor.setIdleMode(IdleMode.kBrake);
 
     //speed limit 60
@@ -55,13 +61,6 @@ public class Balancer extends Subsystem {
 
     //status frame every 500ms
     _balancerMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 500);
-
-        /**
-     * The RestoreFactoryDefaults method can be used to reset the configuration parameters
-     * in the SPARK MAX to their factory default state. If no argument is passed, these
-     * parameters will not persist between power cycles
-     */
-    _balancerMotor.restoreFactoryDefaults();
 
     // initialze PID controller and encoder objects
     m_pidController = _balancerMotor.getPIDController();
@@ -78,7 +77,7 @@ public class Balancer extends Subsystem {
     maxRPM = 8.0;
 
     // Smart Motion Coefficients
-    maxVel = 16.0; // rpm
+    maxVel = 24.0; // rpm
     maxAcc = 16.0;
 
     // set PID coefficients
