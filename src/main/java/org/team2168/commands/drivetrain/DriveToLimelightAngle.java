@@ -5,14 +5,18 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package org.team2168.commands.drivetrain.PIDCommands;
+package org.team2168.commands.drivetrain;
 
 import org.team2168.subsystems.Drivetrain;
+import org.team2168.subsystems.HoodAdjust;
+import org.team2168.subsystems.Limelight;
 
 import edu.wpi.first.wpilibj.command.Command;
 
-public class TurnXAngle extends Command {
+public class DriveToLimelightAngle extends Command {
   private Drivetrain dt;
+  private Limelight limelight;
+  private HoodAdjust hoodPos;
   /**target position */
   private double _targetPos = 0.0;
   private double _targetAngle;
@@ -24,23 +28,19 @@ public class TurnXAngle extends Command {
   private double _loopsToSettle = 10;
   private int _withinThresholdLoops = 0;
 
-  /**
-   * positive turns left
-   */
-  public TurnXAngle(double setPoint) {
-    // Use requires() here to declare subsystem dependencies
-    // eg. requires(chassis);
-    this(setPoint, DEFAULT_ERROR_TOLERANCE);
+  public DriveToLimelightAngle() {
+    this(DEFAULT_ERROR_TOLERANCE);
   }
-
-  public TurnXAngle(double setPoint, double errorToleranceAngle) {
+  public DriveToLimelightAngle(double errorToleranceAngle) {
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
     dt = Drivetrain.getInstance();
+    limelight = Limelight.getInstance();
+    hoodPos = HoodAdjust.getInstance();
     requires(dt);
+    requires(limelight);
 
     _errorToleranceAngle = errorToleranceAngle;
-    _targetAngle = setPoint;
   }
 
   // Called just before this Command runs the first time
@@ -49,14 +49,17 @@ public class TurnXAngle extends Command {
     _withinThresholdLoops = 0;
     dt.zeroSensors();
     dt.switchGains(false);
-
+    limelight.enableLimelight(hoodPos.getHoodPosition());
+    _targetAngle = dt.getHeading() - limelight.getPosition();
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
+    _targetAngle = dt.getHeading() - limelight.getPosition();
     dt.setSetPointPosition(_targetPos, _targetAngle);
-    /* Check if closed loop error is within the threshld */
+
+          /* Check if closed loop error is within the threshld */
     if ((Math.abs(dt.getErrorPosition()) < _errorTolerancePosition) && (Math.abs(dt.getErrorHeading()) < _errorToleranceAngle)) 
     {
       ++_withinThresholdLoops;
@@ -64,6 +67,8 @@ public class TurnXAngle extends Command {
     else {
       _withinThresholdLoops = 0;
     }
+    System.out.println(_targetAngle);
+    
   }
 
   // Make this return true when this Command no longer needs to run execute()

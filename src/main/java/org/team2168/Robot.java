@@ -78,6 +78,7 @@ import org.team2168.subsystems.Hopper;
 import org.team2168.subsystems.Indexer;
 import org.team2168.subsystems.IntakeMotor;
 import org.team2168.subsystems.IntakePivot;
+import org.team2168.subsystems.Limelight;
 import org.team2168.subsystems.Shooter;
 //import org.team2168.utils.Debouncer;
 import org.team2168.utils.PowerDistribution;
@@ -109,10 +110,14 @@ public class Robot extends TimedRobot {
   private static Shooter shooter;
   private static HoodAdjust hoodAdjust;
   private static Drivetrain drivetrain;
+  private static Limelight limelight;
 
   private static OI oi;
 
   private static DigitalInput practiceBot;
+
+    	//Driverstation Instance
+	public static DriverStation driverstation;
 
   private static PowerDistribution pdp;
 
@@ -151,8 +156,10 @@ public class Robot extends TimedRobot {
     shooter = Shooter.getInstance();
     hoodAdjust = HoodAdjust.getInstance();
     drivetrain = Drivetrain.getInstance();
+    limelight = Limelight.getInstance();
     oi = OI.getInstance();
 
+    driverstation = DriverStation.getInstance();
     
     // pdp = new PowerDistribution(RobotMap.PDPThreadPeriod);
     // pdp.startThread();
@@ -209,6 +216,8 @@ public class Robot extends TimedRobot {
      */
 	public void teleopInit() {
     drivetrain.setDefaultBrakeMode();
+    // limelight.enableLimelight(hoodAdjust.getHoodPosition());
+
 
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to 
@@ -239,6 +248,7 @@ public class Robot extends TimedRobot {
       //If we're not on a real field, let the robot be pushed around if it's disabled.
       drivetrain.setAllMotorsCoast();
     }
+    limelight.pauseLimelight();
   }
 
   @Override
@@ -269,4 +279,8 @@ public class Robot extends TimedRobot {
     // return true;
     return !practiceBot.get();
   }
+
+  public static boolean onBlueAlliance() {
+		return driverstation.getAlliance() == DriverStation.Alliance.Blue;
+	}
 }
