@@ -8,6 +8,7 @@
 package org.team2168.commands.shooter;
 
 import org.team2168.subsystems.Shooter;
+import org.team2168.subsystems.Shooter.FiringLocation;
 
 import edu.wpi.first.wpilibj.command.Command;
 
@@ -16,6 +17,7 @@ public class DriveToXSpeed extends Command {
     private Shooter shooter;
     /**target position */
     private double _targetVelocity;
+    private FiringLocation _fl;
 
   public DriveToXSpeed(double setPoint) {
     // Use requires() here to declare subsystem dependencies
@@ -25,10 +27,22 @@ public class DriveToXSpeed extends Command {
     this._targetVelocity = setPoint;
   }
 
+  public DriveToXSpeed(FiringLocation setPoint) {
+    // Use requires() here to declare subsystem dependencies
+    // eg. requires(chassis);
+    shooter = Shooter.getInstance();
+    requires(shooter);
+    this._fl = setPoint;
+    this._targetVelocity = setPoint.getSpeed();
+  }
+
 
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
+    if(this._fl != null) {
+      shooter.setFiringLocation(_fl);
+    }
   }
 
   // Called repeatedly when this Command is scheduled to run

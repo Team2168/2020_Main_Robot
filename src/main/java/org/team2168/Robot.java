@@ -187,6 +187,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
+    autoMode = true;
     drivetrain.setDefaultBrakeMode();
 
 		autonomousCommand = (Command) autoChooser.getSelected();
@@ -201,6 +202,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousPeriodic() {
+    autoMode = true;
     Scheduler.getInstance().run();
   }
 
@@ -208,6 +210,7 @@ public class Robot extends TimedRobot {
      * This function called prior to robot entering Teleop Mode
      */
 	public void teleopInit() {
+    autoMode = false;
     drivetrain.setDefaultBrakeMode();
 
     // This makes sure that the autonomous stops running when
@@ -222,6 +225,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
+    autoMode = false;
     Scheduler.getInstance().run();
 
   }
@@ -231,10 +235,12 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void testPeriodic() {
+    autoMode = false;
   }
 
   @Override
   public void disabledInit() {
+    autoMode = false;
     if(!DriverStation.getInstance().isFMSAttached()) {
       //If we're not on a real field, let the robot be pushed around if it's disabled.
       drivetrain.setAllMotorsCoast();
@@ -243,6 +249,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void disabledPeriodic() {
+    autoMode = false;
     //getControlStyleInt();
     //controlStyle = (int) controlStyleChooser.getSelected();
     Scheduler.getInstance().run();
@@ -268,5 +275,9 @@ public class Robot extends TimedRobot {
   public static boolean isPracticeBot() {
     // return true;
     return !practiceBot.get();
+  }
+
+  public static boolean isAutoMode() {
+    return autoMode;
   }
 }

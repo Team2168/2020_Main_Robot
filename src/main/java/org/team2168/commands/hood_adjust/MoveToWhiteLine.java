@@ -11,6 +11,8 @@ import org.team2168.Robot;
 import org.team2168.commands.auto.Sleep;
 import org.team2168.commands.shooter.DriveToXSpeed;
 import org.team2168.subsystems.HoodAdjust;
+import org.team2168.subsystems.HoodAdjust.HoodPosition;
+import org.team2168.subsystems.Shooter.FiringLocation;
 import org.team2168.subsystems.Shooter;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
@@ -47,12 +49,8 @@ HoodAdjust pos = HoodAdjust.getInstance();
     // }
 
     //updated---allows for any possible position, allows retract pancake under load;
-    if(Robot.isPracticeBot()) {
-      addParallel(new DriveToXSpeed(Shooter.getInstance().WHITE_LINE_VEL_PBOT));
-    }
-    else {
-      addParallel(new DriveToXSpeed(Shooter.getInstance().WHITE_LINE_VEL));
-    }     
+    addParallel(new DriveToXSpeed(FiringLocation.WHITE_LINE));
+    
     addSequential(new RetractShooterHardstop());
     addSequential(new Sleep(), 0.1);
     addSequential(new ExtendShooterHood());
@@ -61,6 +59,5 @@ HoodAdjust pos = HoodAdjust.getInstance();
     addSequential(new Sleep(), 0.1);
     addSequential(new RetractShooterHood());
     addSequential(new Sleep(), 0.1);
-    pos.setHoodPosition(HoodAdjust.HoodPosition.WHITE_LINE);
   }
 }

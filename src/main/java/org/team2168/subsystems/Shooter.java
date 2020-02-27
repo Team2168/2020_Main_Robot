@@ -11,6 +11,7 @@ import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
 
 import org.team2168.Gains;
+import org.team2168.Robot;
 import org.team2168.RobotMap;
 import org.team2168.commands.shooter.DriveShooterWithJoystick;
 import org.team2168.utils.consoleprinter.ConsolePrinter;
@@ -21,6 +22,8 @@ public class Shooter extends Subsystem {
 
     private TalonFX _motorOne;
     private TalonFX _motorTwo;
+
+    private FiringLocation _firingLocation;
 
     // private final boolean _motorOneReversed = false;
     // private final boolean _motorTwoReversed = false;
@@ -83,15 +86,21 @@ public class Shooter extends Subsystem {
     //in process--kP = 0.8, kF = 0.52*1023.0/10894.0
     private double setPointVelocity_sensorUnits;
 
-    public final double WALL_VEL =2540.0; //steady state: 25 over
-    public final double WHITE_LINE_VEL = 3240.0; //untuned
-    public final double FRONT_TRENCH_VEL = 3900.0; //steady state: 40 over
-    public final double BACK_TRENCH_VEL = 4540.0; //4540.0; //steady state: 40 over 4500
+    private final double WALL_VEL =2540.0; //steady state: 25 over
+    private final double WHITE_LINE_VEL = 3240.0; //untuned
+    private final double FRONT_TRENCH_VEL = 3900.0; //steady state: 40 over
+    private final double BACK_TRENCH_VEL = 4540.0; //4540.0; //steady state: 40 over 4500
 
-    public final double WALL_VEL_PBOT = 2540.0; //steady state: 25 over
-    public final double WHITE_LINE_VEL_PBOT = 3640.0; //untuned
-    public final double FRONT_TRENCH_VEL_PBOT = 4140.0; //
-    public final double BACK_TRENCH_VEL_PBOT = 4690.0; //
+    private final double WALL_VEL_PBOT = 2540.0; //steady state: 25 over
+    private final double WHITE_LINE_VEL_PBOT = 3640.0; //untuned
+    private final double FRONT_TRENCH_VEL_PBOT = 4140.0; //
+    private final double BACK_TRENCH_VEL_PBOT = 4690.0; //
+
+    private static double _wallVel;
+    private static double _whiteLineVel;
+    private static double _frontTrenchVel;
+    private static double _backTrenchVel;
+    private static double velocityAdjustment = 0.0;
 
     private Shooter() {
         _motorOne = new TalonFX(RobotMap.SHOOTER_MOTOR_ONE_PDP);
@@ -152,6 +161,20 @@ public class Shooter extends Subsystem {
          */
         // _motorOne.setSensorPhase(true);
 
+        if(Robot.isPracticeBot()) {
+            _wallVel = WALL_VEL_PBOT;
+            _whiteLineVel = WHITE_LINE_VEL_PBOT;
+            _frontTrenchVel = FRONT_TRENCH_VEL_PBOT; 
+            _backTrenchVel = BACK_TRENCH_VEL_PBOT;
+        } else {
+            _wallVel = WALL_VEL;
+            _whiteLineVel = WHITE_LINE_VEL;
+            _frontTrenchVel = FRONT_TRENCH_VEL; 
+            _backTrenchVel = BACK_TRENCH_VEL;
+        }
+
+
+
 
         ConsolePrinter.putNumber("Shooter Velocity", () -> {return getVelocity();}, true, false);
         ConsolePrinter.putNumber("Shooter Error", () -> {return getError();}, true, false);
@@ -192,8 +215,20 @@ public class Shooter extends Subsystem {
      */
     public void setSpeed(double setPoint)
     {
-        setPointVelocity_sensorUnits = revs_per_minute_to_ticks_per_100ms(setPoint) ;
+        if(Robot.isAutoMode()) {
+            setPointVelocity_sensorUnits = revs_per_minute_to_ticks_per_100ms(setPoint) ;
+        } else {
+            setPointVelocity_sensorUnits = revs_per_minute_to_ticks_per_100ms(setPoint + velocityAdjustment);
+        }
         _motorOne.set(ControlMode.Velocity, setPointVelocity_sensorUnits);
+    }
+
+    public void incrementSpeed() {
+        velocityAdjustment += 50.0;
+    }
+
+    public void decrementSpeed() {
+        velocityAdjustment -= 50.0;
     }
 
     public double getError()
@@ -218,6 +253,31 @@ public class Shooter extends Subsystem {
     private double ticks_per_100ms_to_revs_per_minute(double ticks) {
         //TODO: Verify conversion is correct
         return ticks * SECS_PER_MIN / (GEAR_RATIO * TICKS_PER_100MS);
+    }
+
+    public enum FiringLocation {
+        WALL(_wallVel),
+        WHITE_LINE(_whiteLineVel),
+        FRONT_TRENCH(_frontTrenchVel),
+        BACK_TRENCH(_backTrenchVel);
+
+        public double getSpeed(){
+            return _speed;
+        }
+
+        private final double _speed; 
+
+        private FiringLocation(double speed) {
+            this._speed = speed;
+        }
+    }
+
+    public FiringLocation getFiringLocation() {
+        return _firingLocation;
+    }
+
+    public void setFiringLocation(FiringLocation fl) {
+        _firingLocation = fl;
     }
 
     public void initDefaultCommand() {

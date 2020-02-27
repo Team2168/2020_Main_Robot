@@ -9,6 +9,7 @@ package org.team2168.commands.hood_adjust;
 
 import org.team2168.commands.auto.Sleep;
 import org.team2168.subsystems.HoodAdjust;
+import org.team2168.subsystems.HoodAdjust.HoodPosition;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
@@ -42,6 +43,5 @@ public class MoveToWLNoShoot extends CommandGroup {
     addSequential(new Sleep(), 0.1);
     addSequential(new RetractShooterHood());
     addSequential(new Sleep(), 0.1);
-    pos.setHoodPosition(HoodAdjust.HoodPosition.WHITE_LINE);
   }
 }

@@ -12,11 +12,12 @@ import org.team2168.commands.auto.Sleep;
 import org.team2168.commands.shooter.DriveToXSpeed;
 import org.team2168.subsystems.HoodAdjust;
 import org.team2168.subsystems.Shooter;
+import org.team2168.subsystems.HoodAdjust.HoodPosition;
+import org.team2168.subsystems.Shooter.FiringLocation;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
 public class MoveToBackTrench extends CommandGroup {
-  HoodAdjust pos = HoodAdjust.getInstance();
   public MoveToBackTrench() {
     //By not using a break in the switch statement, the cases will
     //follow through, allowing for less lines of code.
@@ -42,18 +43,11 @@ public class MoveToBackTrench extends CommandGroup {
     // }
 
     //updated---allows for any possible position, allows retract pancake under load;
-    if(Robot.isPracticeBot()) {
-      addParallel(new DriveToXSpeed(Shooter.getInstance().BACK_TRENCH_VEL_PBOT));
-    }
-    else {
-      addParallel(new DriveToXSpeed(Shooter.getInstance().BACK_TRENCH_VEL));
-    }  
+    addParallel(new DriveToXSpeed(FiringLocation.BACK_TRENCH));
     addSequential(new ExtendShooterHood());
     addSequential(new RetractShooterHardstop());
     addSequential(new Sleep(), 0.1);
     addSequential(new RetractShooterHood());
     addSequential(new Sleep(), 0.2);
-    pos.setHoodPosition(HoodAdjust.HoodPosition.BACK_TRENCH);// doesn't work
   }
 }
-
