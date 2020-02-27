@@ -4,19 +4,29 @@ package org.team2168;
 import org.team2168.commands.auto.DefaultTrenchAuto;
 import org.team2168.commands.auto.FinishFiring;
 import org.team2168.commands.auto.FireBalls;
+import org.team2168.commands.balancer.DriveBalancerMotorWithJoystick;
+import org.team2168.commands.climber.DisengageRatchet;
+import org.team2168.commands.climber.DriveClimberWithJoystick;
+import org.team2168.commands.color_wheel.DriveColorWheelWithJoystick;
 import org.team2168.commands.color_wheel.DriveColorWheelXRotations;
 import org.team2168.commands.color_wheel_pivot.DisengageColorWheel;
 import org.team2168.commands.color_wheel_pivot.EngageColorWheel;
 import org.team2168.commands.drivetrain.PIDCommands.DriveXDistance;
 import org.team2168.commands.flashlight.RunFlashlight;
 import org.team2168.commands.hood_adjust.MoveToBackTrench;
+import org.team2168.commands.hood_adjust.MoveToBenchNoShoot;
 import org.team2168.commands.hood_adjust.MoveToFiringLocation;
+import org.team2168.commands.hood_adjust.MoveToFrenchNoShoot;
 import org.team2168.commands.hood_adjust.MoveToFrontTrench;
+import org.team2168.commands.hood_adjust.MoveToWLNoShoot;
 import org.team2168.commands.hood_adjust.MoveToWall;
 import org.team2168.commands.hood_adjust.MoveToWallNoShoot;
 import org.team2168.commands.hood_adjust.MoveToWhiteLine;
+import org.team2168.commands.hopper.DriveHopperWithConstant;
+import org.team2168.commands.intakeMotor.DriveIntakeWithConstant;
 import org.team2168.commands.intakeMotor.IntakeBallStart;
 import org.team2168.commands.intakeMotor.IntakeBallStop;
+import org.team2168.commands.shooter.DriveShooterSpeedHoodPosition;
 import org.team2168.commands.shooter.DriveShooterWithConstant;
 import org.team2168.commands.shooter.DriveToXSpeed;
 import org.team2168.subsystems.Shooter;
@@ -62,6 +72,8 @@ public class OI
 	public F310 driverJoystick = new F310(RobotMap.DRIVER_JOYSTICK);
 	public F310 operatorJoystick = new F310(RobotMap.OPERATOR_JOYSTICK);
 	public F310 pidTestJoystick = new F310(RobotMap.PID_TEST_JOYSTICK);
+	public F310 buttonBox1 = new F310(RobotMap.BUTTON_BOX_1);
+	public F310 buttonBox2 = new F310(RobotMap.BUTTON_BOX_2);
 
 	// public F310 driverOperatorEJoystick = new
 	// F310(RobotMap.DRIVER_OPERATOR_E_BACKUP);
@@ -260,5 +272,30 @@ public class OI
 	 */
 	public double getHopperJoystickValue(){
 		return  0.0; //pidTestJoystick.getRightStickRaw_Y();
+	}
+	if (Robot.ENABLE_BUTTON_BOX){
+	//******************************************************************* */
+	//*							Button Box I
+	//******************************************************************* */
+	buttonBox1.ButtonUpDPad().whenPressed(new EngageColorWheel());
+	buttonBox1.ButtonDownDPad().whenPressed(new DisengageColorWheel());
+	buttonBox1.ButtonLeftDPad().whileHeld(new DriveColorWheelXRotations(1.0));// Temporary value
+	//I'm not sure what position is used for
+	buttonBox1.ButtonRightStick().whileHeld(new DriveColorWheelWithJoystick());
+	buttonBox1.ButtonY().whenPressed(new MoveToBenchNoShoot());
+	buttonBox1.ButtonLeftBumper().whenPressed(new DriveHopperWithConstant(-1.0));//Temporary value
+
+	//******************************************************************** */
+	//*							Button Box II
+	//******************************************************************** */
+	buttonBox2.ButtonDownDPad().whenPressed(new MoveToWallNoShoot());
+	buttonBox2.ButtonLeftDPad().whenPressed(new MoveToFrenchNoShoot());
+	buttonBox2.ButtonRightDPad().whenPressed(new MoveToWLNoShoot());
+	buttonBox2.ButtonA().whenPressed(new MoveToFiringLocation(fl));//I'm not sure what to do with fl
+	buttonBox2.ButtonB().whenPressed(new DriveShooterSpeedHoodPosition());
+	buttonBox2.ButtonLeftBumper().whenPressed(new DriveIntakeWithConstant(-1.0));//Temporary value
+	buttonBox2.ButtonBack().whenPressed(new DisengageRatchet());
+	buttonBox2.ButtonRightStick().whileHeld(new DriveClimberWithJoystick());
+	buttonBox2.ButtonLeftStick().whileHeld(new DriveBalancerMotorWithJoystick());
 	}
 }
