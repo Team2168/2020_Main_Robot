@@ -223,7 +223,8 @@ public class OI
 		return 0.0; //pidTestJoystick.getRightStickRaw_Y();
 	}
 
-	public double getIntakeMotorJoyStick() {
+	public double getIntakeMotorJoyStick()
+	{
 		return operatorJoystick.getRightTriggerAxisRaw() - operatorJoystick.getLeftTriggerAxisRaw();
 	}
 
@@ -261,7 +262,8 @@ public class OI
 	 * 
 	 * @return
 	 */
-	public double getBalancerJoystickValue(){
+	public double getBalancerJoystickValue()
+	{
 		return (pidTestJoystick.getLeftStickRaw_Y());
 	}
 
@@ -270,32 +272,44 @@ public class OI
 	 * 
 	 * @return
 	 */
-	public double getHopperJoystickValue(){
+	public double getHopperJoystickValue()
+	{
 		return  0.0; //pidTestJoystick.getRightStickRaw_Y();
 	}
-	if (Robot.ENABLE_BUTTON_BOX){
-	//******************************************************************* */
-	//*							Button Box I
-	//******************************************************************* */
-	buttonBox1.ButtonUpDPad().whenPressed(new EngageColorWheel());
-	buttonBox1.ButtonDownDPad().whenPressed(new DisengageColorWheel());
-	buttonBox1.ButtonLeftDPad().whileHeld(new DriveColorWheelXRotations(1.0));// Temporary value
-	//I'm not sure what position is used for
-	buttonBox1.ButtonRightStick().whileHeld(new DriveColorWheelWithJoystick());
-	buttonBox1.ButtonY().whenPressed(new MoveToBenchNoShoot());
-	buttonBox1.ButtonLeftBumper().whenPressed(new DriveHopperWithConstant(-1.0));//Temporary value
 
-	//******************************************************************** */
-	//*							Button Box II
-	//******************************************************************** */
-	buttonBox2.ButtonDownDPad().whenPressed(new MoveToWallNoShoot());
-	buttonBox2.ButtonLeftDPad().whenPressed(new MoveToFrenchNoShoot());
-	buttonBox2.ButtonRightDPad().whenPressed(new MoveToWLNoShoot());
-	buttonBox2.ButtonA().whenPressed(new MoveToFiringLocation(fl));//I'm not sure what to do with fl
-	buttonBox2.ButtonB().whenPressed(new DriveShooterSpeedHoodPosition());
-	buttonBox2.ButtonLeftBumper().whenPressed(new DriveIntakeWithConstant(-1.0));//Temporary value
-	buttonBox2.ButtonBack().whenPressed(new DisengageRatchet());
-	buttonBox2.ButtonRightStick().whileHeld(new DriveClimberWithJoystick());
-	buttonBox2.ButtonLeftStick().whileHeld(new DriveBalancerMotorWithJoystick());
+	if (Robot.ENABLE_BUTTON_BOX)
+	{
+		//******************************************************************* */
+		//*							Button Box I
+		//******************************************************************* */
+		buttonBox1.ButtonUpDPad().whenPressed(new EngageColorWheel());
+		buttonBox1.ButtonDownDPad().whenPressed(new DisengageColorWheel());
+		buttonBox1.ButtonLeftDPad().whileHeld(new DriveColorWheelXRotations(1.0));// Temporary value
+		buttonBox1.getLeftStickRaw_X().whileHeld(new DriveColorWheelWithJoystick());
+		//Right D Pad, Position
+		// Button A, bump up = increment velocity adjustment of shooter
+		// Button B, bump down
+		// Button X, reset
+		buttonBox1.ButtonY().whenPressed(new MoveToBenchNoShoot());
+		buttonBox1.ButtonLeftBumper().whenPressed(new DriveHopperWithConstant(-1.0));// Temporary value
+		buttonBox1.ButtonRightBumper().whenPressed(new MoveToWallNoShoot());
+		// Start button, Stop
+
+		//******************************************************************** */
+		//*							Button Box II
+		//******************************************************************** */
+		buttonBox2.ButtonDownDPad().whenPressed(new MoveToWallNoShoot());
+		buttonBox2.ButtonLeftDPad().whenPressed(new MoveToFrenchNoShoot());
+		buttonBox2.ButtonRightDPad().whenPressed(new MoveToWLNoShoot());
+		buttonBox2.getRightStickRaw_X().whileHeld(new DriveBalancerMotorWithJoystick());
+		buttonBox2.getLeftStickRaw_Y().whileHeld(new DriveClimberWithJoystick());
+		buttonBox2.ButtonA().whenPressed(new MoveToFiringLocation(fl));//I'm not sure what to do with fl
+		buttonBox2.ButtonB().whenPressed(new DriveShooterSpeedHoodPosition());
+		buttonBox2.ButtonLeftBumper().whenPressed(new DriveIntakeWithConstant(-1.0));//Temporary value
+		buttonBox2.ButtonRightBumper().whenPressed(new DriveIntakeWithConstant(-1.0));// Temporary value
+		buttonBox2.ButtonRightBumper().whenReleased(new DriveIntakeWithConstant(1.0));// Temporary value
+		buttonBox2.ButtonBack().whenPressed(new DisengageRatchet());
+		buttonBox2.ButtonStart().whenPressed(new EngageRachet());
+		//buttonBox2.ButtonRightStick().whenPressed(new )
 	}
 }
