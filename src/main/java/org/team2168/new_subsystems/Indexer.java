@@ -1,0 +1,90 @@
+/*----------------------------------------------------------------------------*/
+/* Copyright (c) 2019 FIRST. All Rights Reserved.                             */
+/* Open Source Software - may be modified and shared by FRC teams. The code   */
+/* must be accompanied by the FIRST BSD license file in the root directory of */
+/* the project.                                                               */
+/*----------------------------------------------------------------------------*/
+
+package org.team2168.new_subsystems;
+
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMax.IdleMode;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.CANSparkMaxLowLevel.PeriodicFrame;
+
+import org.team2168.Robot;
+import org.team2168.RobotMap;
+
+import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+
+public class Indexer extends SubsystemBase {
+  // Puts methods for controlling this subsystem
+  // here. Call these from Commands.
+  private final boolean _INDEXER_MOTOR_REVERSED = false;
+  private CANSparkMax _motor;
+  private static DigitalInput entranceLineBreak;
+  private static DigitalInput exitLineBreak;
+  private static Indexer _instance = null;
+
+  public volatile double indexerMotorVoltage;
+
+  private Indexer(){
+    _motor = new CANSparkMax(RobotMap.INDEXER_MOTOR_PDP, MotorType.kBrushed);
+    entranceLineBreak = new DigitalInput(RobotMap.ENTRANCE_LINE_BREAK);
+    exitLineBreak = new DigitalInput(RobotMap.EXIT_LINE_BREAK);
+    _motor.setIdleMode(IdleMode.kBrake);
+
+    indexerMotorVoltage = 0;
+
+    _motor.setSmartCurrentLimit(30);
+    _motor.setControlFramePeriodMs(20);
+    _motor.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 500);
+    _motor.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 500);
+    _motor.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 500);
+
+    SmartDashboard.putBoolean("Cell Entering", isBallEntering());
+    SmartDashboard.putBoolean("Cell Exiting", isBallExiting());
+    SmartDashboard.putNumber("IndexerCurrent", Robot.pdp.getChannelCurrent(RobotMap.INDEXER_MOTOR_PDP));
+    SmartDashboard.putNumber("IndexerVoltage", getIndexerMotorVoltage());
+    
+  }
+
+  public static Indexer getInstance(){
+    if(_instance == null){
+      _instance = new Indexer();
+    }
+    return _instance;
+  }  
+
+  /**
+    * Cycles the indexer
+    * @param speed 1.0 to -1.0,  positive is toward the shooter, negative is away from the shooter
+    */
+  public void drive(double speed) {
+    if(_INDEXER_MOTOR_REVERSED) {
+      speed = speed * -1;
+    }
+    _motor.set(speed);
+
+    indexerMotorVoltage = Robot.pdp.getBatteryVoltage() * speed;
+  }
+
+  public boolean isBallEntering() {
+    return entranceLineBreak.get();
+  }
+
+  public boolean isBallExiting() {
+    return exitLineBreak.get();
+  }
+
+  public double getIndexerMotorVoltage(){
+    return indexerMotorVoltage;
+  }
+
+  // @Override
+  // public void initDefaultCommand() {
+    // Set the default command for a subsystem here.
+    // setDefaultCommand(new DriveIndexerWithJoystick());
+  }
