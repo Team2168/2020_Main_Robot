@@ -109,6 +109,7 @@ public class Robot extends TimedRobot {
   private static Shooter shooter;
   private static HoodAdjust hoodAdjust;
   private static Drivetrain drivetrain;
+  public static final boolean ENABLE_BUTTON_BOX = true;
 
   private static OI oi;
 
@@ -152,6 +153,7 @@ public class Robot extends TimedRobot {
     hoodAdjust = HoodAdjust.getInstance();
     drivetrain = Drivetrain.getInstance();
     oi = OI.getInstance();
+
 
     
     // pdp = new PowerDistribution(RobotMap.PDPThreadPeriod);
