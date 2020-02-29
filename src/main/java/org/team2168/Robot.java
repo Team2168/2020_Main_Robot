@@ -68,6 +68,7 @@ import org.team2168.commands.auto.DoNothing;
 import org.team2168.commands.auto.OppositeTrenchAuto;
 import org.team2168.commands.drivetrain.PIDCommands.DriveXDistance;
 import org.team2168.commands.drivetrain.PIDCommands.TurnXAngle;
+import org.team2168.commands.hood_adjust.MoveToFiringLocation;
 import org.team2168.subsystems.Balancer;
 import org.team2168.subsystems.Climber;
 import org.team2168.subsystems.ColorWheel;
@@ -108,7 +109,6 @@ public class Robot extends TimedRobot {
   private static Shooter shooter;
   private static HoodAdjust hoodAdjust;
   private static Drivetrain drivetrain;
-  public static final boolean ENABLE_BUTTON_BOX = true;
 
   private static OI oi;
 
@@ -117,6 +117,9 @@ public class Robot extends TimedRobot {
   private static PowerDistribution pdp;
 
   static boolean autoMode;
+  public static final boolean ENABLE_BUTTON_BOX = true;
+  private static boolean lastCallHoodButtonA = false;
+  private MoveToFiringLocation moveHood;
   // private static boolean matchStarted = false;
   // private static int gyroReinits;
   // private double lastAngle;
@@ -229,6 +232,17 @@ public class Robot extends TimedRobot {
     autoMode = false;
     Scheduler.getInstance().run();
     // System.out.println(shooter.getFiringLocation());
+    if(oi.buttonBox2.isPressedButtonA() && !lastCallHoodButtonA)
+    {
+      moveHood = new MoveToFiringLocation(shooter.getFiringLocation());
+      moveHood.start();
+    } 
+    else if (!oi.buttonBox2.isPressedButtonA() && lastCallHoodButtonA) {
+      moveHood = new MoveToFiringLocation(Shooter.FiringLocation.WALL);
+      moveHood.start();
+    }
+    lastCallHoodButtonA = oi.buttonBox2.isPressedButtonA();
+		System.out.println(oi.getClimberJoystickValue());
 
   }
 
@@ -247,6 +261,7 @@ public class Robot extends TimedRobot {
       //If we're not on a real field, let the robot be pushed around if it's disabled.
       drivetrain.setAllMotorsCoast();
     }
+    lastCallHoodButtonA = false;
   }
 
   @Override
