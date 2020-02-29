@@ -7,6 +7,8 @@
 
 package org.team2168.commands.climber;
 
+import org.team2168.commands.hood_adjust.MoveToWallNoShoot;
+
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
 public class PrepareToClimb extends CommandGroup {
@@ -30,6 +32,7 @@ public class PrepareToClimb extends CommandGroup {
     // e.g. if Command1 requires chassis, and Command2 requires arm,
     // a CommandGroup containing them would require both the chassis and the
     // arm.
+    addParallel(new MoveToWallNoShoot());
     addSequential(new DisengageRatchet());
     addSequential(new DriveClimberXPosition(48.0, 0.1));
     addSequential(new EngageRatchet());

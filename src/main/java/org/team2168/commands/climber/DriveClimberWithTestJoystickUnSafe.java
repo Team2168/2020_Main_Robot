@@ -7,63 +7,45 @@
 
 package org.team2168.commands.climber;
 
+import edu.wpi.first.wpilibj.command.Command;
+import org.team2168.OI;
+import org.team2168.Robot;
 import org.team2168.subsystems.Climber;
 
-import edu.wpi.first.wpilibj.command.Command;
 
-public class DriveClimberXPosition extends Command {
-
+public class DriveClimberWithTestJoystickUnSafe extends Command {
+  double _speed;
   private Climber climber;
-  /**target position */
-  private double _targetPos;
-  
-  private final static double DEFAULT_ERROR_TOLERANCE = 1.5;
-  private double _errorTolerance; //inches
-  private double _loopsToSettle = 5;
-  private int _withinThresholdLoops = 0;
-
-  public DriveClimberXPosition(double setPoint) {
-    this(setPoint, DEFAULT_ERROR_TOLERANCE);
-  }
-
-  public DriveClimberXPosition(double setPoint, double errorTolerance) {
+  private OI oi;
+  private final double MAX_SPEED = 0.8;
+  public DriveClimberWithTestJoystickUnSafe() {
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
     climber = Climber.getInstance();
     requires(climber);
-    _errorTolerance = errorTolerance;
-    _targetPos = setPoint;
   }
 
-  // public DriveClimberXPosition(double setPoint)
-  // {
-  //   this.DriveClimberXPosition(setPoint, DEFAULT_ERROR_TOLERANCE);
-  // }
-  
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
-    // climber.zeroEncoder(); //don't do this except for testing
-    climber.setGains(_targetPos);
+    oi = OI.getInstance();
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    climber.setSetPoint(_targetPos);
-    /* Check if closed loop error is within the threshld */
-    if (Math.abs(climber.getErrorPosition()) < _errorTolerance) {
-      ++_withinThresholdLoops;
-    } 
+    if(Math.abs(oi.getClimberTestJoystickValue()) < MAX_SPEED) {
+      climber.driveClimberMotors(oi.getClimberTestJoystickValue());
+    }
     else {
-      _withinThresholdLoops = 0;
+      climber.driveClimberMotors(MAX_SPEED);
     }
   }
 
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    return _withinThresholdLoops > _loopsToSettle;
+    return false;
   }
 
   // Called once after isFinished returns true
@@ -79,3 +61,4 @@ public class DriveClimberXPosition extends Command {
     end();
   }
 }
+

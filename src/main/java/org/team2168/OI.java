@@ -4,6 +4,7 @@ package org.team2168;
 import org.team2168.commands.auto.FinishFiring;
 import org.team2168.commands.auto.FireBalls;
 import org.team2168.commands.climber.DisengageRatchet;
+import org.team2168.commands.climber.DriveClimberWithTestJoystickUnSafe;
 import org.team2168.commands.climber.DriveClimberXPosition;
 import org.team2168.commands.climber.EngageRatchet;
 import org.team2168.commands.climber.PrepareToClimb;
@@ -13,7 +14,6 @@ import org.team2168.commands.color_wheel_pivot.DisengageColorWheel;
 import org.team2168.commands.color_wheel_pivot.EngageColorWheel;
 import org.team2168.commands.flashlight.RunFlashlight;
 import org.team2168.commands.hood_adjust.MoveToBackTrench;
-import org.team2168.commands.hood_adjust.MoveToFiringLocation;
 import org.team2168.commands.hood_adjust.MoveToFrontTrench;
 import org.team2168.commands.hood_adjust.MoveToWall;
 import org.team2168.commands.hood_adjust.MoveToWallNoShoot;
@@ -25,11 +25,9 @@ import org.team2168.commands.intakeMotor.IntakeBallStart;
 import org.team2168.commands.intakeMotor.IntakeBallStop;
 import org.team2168.commands.intakePivot.ExtendIntakePneumatic;
 import org.team2168.commands.intakePivot.RetractIntakePneumatic;
-import org.team2168.commands.shooter.DriveShooterSpeedHoodPosition;
 import org.team2168.commands.shooter.DriveShooterWithConstant;
 import org.team2168.commands.shooter.DriveToXSpeed;
 import org.team2168.subsystems.Shooter;
-import org.team2168.subsystems.Shooter.FiringLocation;
 import org.team2168.utils.F310;
 import org.team2168.utils.LinearInterpolator;
 
@@ -229,17 +227,12 @@ public class OI
 		pidTestJoystick.ButtonUpDPad().whenPressed(new EngageRatchet());
 		pidTestJoystick.ButtonDownDPad().whenPressed(new DisengageRatchet());
 
+		pidTestJoystick.ButtonRightStick().whenPressed(new DriveClimberWithTestJoystickUnSafe());
+
 		// pidTestJoystick.ButtonB().whenPressed(new FireBalls());
 		// pidTestJoystick.ButtonB().whenReleased(new FinishFiring());
 		// pidTestJoystick.ButtonDownDPad().whenPressed(new MoveToWall());
 		// pidTestJoystick.ButtonLeftBumper().whenPressed(new IntakeBallStop());
-		pidTestJoystick.ButtonUpDPad().whenPressed(new DriveToXSpeed(FiringLocation.BACK_TRENCH));
-		pidTestJoystick.ButtonLeftDPad().whenPressed(new DriveToXSpeed(FiringLocation.FRONT_TRENCH));
-		pidTestJoystick.ButtonRightDPad().whenPressed(new DriveToXSpeed(FiringLocation.WHITE_LINE));
-		pidTestJoystick.ButtonDownDPad().whenPressed(new DriveToXSpeed(FiringLocation.WALL));
-
-		pidTestJoystick.ButtonA().whenPressed(new MoveToFiringLocation(Shooter.getInstance().getFiringLocation()));
-		pidTestJoystick.ButtonA().whenReleased(new MoveToWallNoShoot());
 	}
 	
 	/**
@@ -317,7 +310,11 @@ public class OI
 	 */
 	public double getClimberJoystickValue()
 	{
-		return climberInterpolator.interpolate(buttonBox2.getLeftStickRaw_Y()); //pidTestJoystick.getRightStickRaw_Y();
+		return climberInterpolator.interpolate(buttonBox2.getLeftStickRaw_Y()); 
+	}
+
+	public double getClimberTestJoystickValue() {
+		return pidTestJoystick.getRightStickRaw_Y();
 	}
 
 	/**
@@ -336,7 +333,7 @@ public class OI
 	 */
 	public double getBalancerJoystickValue()
 	{
-		return  balancerInterpolator.interpolate(buttonBox2.getRightStickRaw_X()); //pidTestJoystick.getLeftStickRaw_Y();
+		return  balancerInterpolator.interpolate(buttonBox2.getLeftStickRaw_X()); //pidTestJoystick.getLeftStickRaw_Y();
 	}
 
 	/**

@@ -9,7 +9,7 @@ package org.team2168.commands.climber;
 
 import edu.wpi.first.wpilibj.command.Command;
 import org.team2168.OI;
-
+import org.team2168.Robot;
 import org.team2168.subsystems.Climber;
 
 
@@ -34,11 +34,16 @@ public class DriveClimberWithJoystick extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    if(Math.abs(oi.getClimberJoystickValue()) < MAX_SPEED) {
-      climber.driveClimberMotors(oi.getClimberJoystickValue());
+    if(climber.getPosition() > 9.0 && climber.getPosition() < 59.0) {
+      if(Math.abs(oi.getClimberJoystickValue()) < MAX_SPEED) {
+        climber.driveClimberMotors(oi.getClimberJoystickValue());
+      }
+      else {
+        climber.driveClimberMotors(MAX_SPEED);
+      }
     }
     else {
-      climber.driveClimberMotors(MAX_SPEED);
+      climber.driveClimberMotors(0.0);
     }
   }
 

@@ -71,8 +71,8 @@ public class Climber extends Subsystem {
 	 * Gains used in Motion Magic, to be adjusted accordingly
      * Gains(kp, ki, kd, kf, izone, peak output);
      */
-  static final Gains kGainsUp = new Gains(0.2, 0.0, 0.0, 0.0, 0, 1.0);
-  static final Gains kGainsDown = new Gains(0.2, 0.0, 0.0, 0.0, 0, 1.0);
+  static final Gains kGainsUp = new Gains(1.6, 0.0, 0.0, 0.0, 0, 1.0);
+  static final Gains kGainsDown = new Gains(1.6, 0.0, 0.0, 0.0, 0, 1.0);
   static final double ARB_FEEDFORWARD_UP = 0.2;
   static final double ARB_FEEDFORWARD_DOWN = 0.0;
 
