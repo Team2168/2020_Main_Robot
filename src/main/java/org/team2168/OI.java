@@ -100,22 +100,22 @@ public class OI
 
 	private double[][] colorWheelArray = {
 		{-1.0, -1.00},  
-		{-0.50, 0.00},  //set neutral deadband to 4%
-		{-0.50, 0.00},
+		{-0.05, 0.00},  //set neutral deadband to 4%
+		{+0.05, 0.00},
 		{+1.0,+1.00}  
 	};
 
 	private double[][] climberArray = {
 		{-1.0, -1.00},  
-		{-0.50, 0.00},  //set neutral deadband to 4%
-		{-0.50, 0.00},
+		{-0.05, 0.00},  //set neutral deadband to 4%
+		{+0.05, 0.00},
 		{+1.0,+1.00}  
 	};
 
 	private double[][] balancerArray = {
 		{-1.0, -1.00},  
-		{-0.50, 0.00},  //set neutral deadband to 4%
-		{-0.50, 0.00},
+		{-0.05, 0.00},  //set neutral deadband to 4%
+		{+0.05, 0.00},
 		{+1.0,+1.00}  
 	};
 
@@ -154,8 +154,8 @@ public class OI
 		buttonBox2.ButtonDownDPad().whenPressed(new DriveToXSpeed(Shooter.FiringLocation.WALL));
 		buttonBox2.ButtonLeftDPad().whenPressed(new DriveToXSpeed(Shooter.FiringLocation.FRONT_TRENCH));
 		buttonBox2.ButtonRightDPad().whenPressed(new DriveToXSpeed(Shooter.FiringLocation.WHITE_LINE));
-		buttonBox2.ButtonA().whenPressed(new MoveToFiringLocation(Shooter.getInstance().getFiringLocation()));
-		pidTestJoystick.ButtonA().whenReleased(new MoveToWallNoShoot());
+		// buttonBox2.ButtonA().whenPressed(new MoveToFiringLocation(Shooter.getInstance().getFiringLocation()));
+		// pidTestJoystick.ButtonA().whenReleased(new MoveToWallNoShoot());
 
 		buttonBox2.ButtonB().whenPressed(new FireBalls());
 
@@ -292,7 +292,7 @@ public class OI
 
 	public double getColorWheelJoystick()
 	{
-		return operatorJoystick.getRightStickRaw_Y(); //colorWheelInterpolator.interpolate(buttonBox1.getLeftStickRaw_X()); //pidTestJoystick.getRightStickRaw_Y();
+		return colorWheelInterpolator.interpolate(buttonBox1.getLeftStickRaw_X()); //operatorJoystick.getRightStickRaw_Y();
 	}
 
 	public double getIntakeMotorJoyStick()
@@ -317,7 +317,7 @@ public class OI
 	 */
 	public double getClimberJoystickValue()
 	{
-		return pidTestJoystick.getRightStickRaw_Y(); //climberInterpolator.interpolate(buttonBox2.getLeftStickRaw_Y());
+		return climberInterpolator.interpolate(buttonBox2.getLeftStickRaw_Y()); //pidTestJoystick.getRightStickRaw_Y();
 	}
 
 	/**
@@ -336,7 +336,7 @@ public class OI
 	 */
 	public double getBalancerJoystickValue()
 	{
-		return pidTestJoystick.getLeftStickRaw_Y();// balancerInterpolator.interpolate(buttonBox2.getRightStickRaw_X());
+		return  balancerInterpolator.interpolate(buttonBox2.getRightStickRaw_X()); //pidTestJoystick.getLeftStickRaw_Y();
 	}
 
 	/**
