@@ -228,6 +228,7 @@ public class Robot extends TimedRobot {
   public void teleopPeriodic() {
     autoMode = false;
     Scheduler.getInstance().run();
+    // System.out.println(shooter.getFiringLocation());
 
   }
 

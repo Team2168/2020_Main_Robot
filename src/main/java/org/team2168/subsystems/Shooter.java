@@ -173,7 +173,7 @@ public class Shooter extends Subsystem {
             _backTrenchVel = BACK_TRENCH_VEL;
         }
 
-
+        _firingLocation = FiringLocation.WALL;
 
 
         ConsolePrinter.putNumber("Shooter Velocity", () -> {return getVelocity();}, true, false);
