@@ -4,29 +4,25 @@ package org.team2168;
 import org.team2168.commands.auto.DefaultTrenchAuto;
 import org.team2168.commands.auto.FinishFiring;
 import org.team2168.commands.auto.FireBalls;
-import org.team2168.commands.balancer.DriveBalancerMotorWithJoystick;
-import org.team2168.commands.climber.DisengageRatchet;
-import org.team2168.commands.climber.DriveClimberWithJoystick;
-import org.team2168.commands.climber.EngageRatchet;
-import org.team2168.commands.color_wheel.DriveColorWheelWithJoystick;
+import org.team2168.commands.climber.DriveClimberXPosition;
+import org.team2168.commands.climber.PrepareToClimb;
 import org.team2168.commands.color_wheel.DriveColorWheelXRotations;
 import org.team2168.commands.color_wheel_pivot.DisengageColorWheel;
 import org.team2168.commands.color_wheel_pivot.EngageColorWheel;
 import org.team2168.commands.drivetrain.PIDCommands.DriveXDistance;
 import org.team2168.commands.flashlight.RunFlashlight;
 import org.team2168.commands.hood_adjust.MoveToBackTrench;
-import org.team2168.commands.hood_adjust.MoveToBenchNoShoot;
 import org.team2168.commands.hood_adjust.MoveToFiringLocation;
-import org.team2168.commands.hood_adjust.MoveToFrenchNoShoot;
 import org.team2168.commands.hood_adjust.MoveToFrontTrench;
-import org.team2168.commands.hood_adjust.MoveToWLNoShoot;
 import org.team2168.commands.hood_adjust.MoveToWall;
 import org.team2168.commands.hood_adjust.MoveToWallNoShoot;
 import org.team2168.commands.hood_adjust.MoveToWhiteLine;
 import org.team2168.commands.hopper.DriveHopperWithConstant;
+import org.team2168.commands.indexer.DriveIndexerWithConstant;
 import org.team2168.commands.intakeMotor.DriveIntakeWithConstant;
 import org.team2168.commands.intakeMotor.IntakeBallStart;
 import org.team2168.commands.intakeMotor.IntakeBallStop;
+import org.team2168.commands.intakePivot.ExtendIntakePneumatic;
 import org.team2168.commands.shooter.DriveShooterSpeedHoodPosition;
 import org.team2168.commands.shooter.DriveShooterWithConstant;
 import org.team2168.commands.shooter.DriveToXSpeed;
@@ -108,30 +104,32 @@ public class OI
 		//******************************************************************* */
 		buttonBox1.ButtonUpDPad().whenPressed(new EngageColorWheel());
 		buttonBox1.ButtonDownDPad().whenPressed(new DisengageColorWheel());
-		buttonBox1.ButtonLeftDPad().whileHeld(new DriveColorWheelXRotations(1.0));// Temporary value
+		buttonBox1.ButtonLeftDPad().whileHeld(new DriveColorWheelXRotations(4.0*8.0));
 		//Right D Pad, Position
 		// Button A, bump up = increment velocity adjustment of shooter
 		// Button B, bump down
 		// Button X, reset
-		buttonBox1.ButtonY().whenPressed(new MoveToBenchNoShoot());
+		buttonBox1.ButtonY().whenPressed(new DriveToXSpeed(Shooter.FiringLocation.BACK_TRENCH));
 		buttonBox1.ButtonLeftBumper().whenPressed(new DriveHopperWithConstant(-1.0));// Temporary value
+		buttonBox1.ButtonLeftBumper().whenPressed(new DriveIndexerWithConstant(-1.0));
 		buttonBox1.ButtonRightBumper().whenPressed(new MoveToWallNoShoot());
-		// Start button, Stop
+		buttonBox1.ButtonRightBumper().whenPressed(new DisengageColorWheel());
 
 		//******************************************************************** */
 		//*							Button Box II
 		//******************************************************************** */
-		buttonBox2.ButtonDownDPad().whenPressed(new MoveToWallNoShoot());
-		buttonBox2.ButtonLeftDPad().whenPressed(new MoveToFrenchNoShoot());
-		buttonBox2.ButtonRightDPad().whenPressed(new MoveToWLNoShoot());
-	//	buttonBox2.ButtonA().whenPressed(new MoveToFiringLocation());//I'm not sure what to do with fl
+		buttonBox2.ButtonDownDPad().whenPressed(new DriveToXSpeed(Shooter.FiringLocation.WALL));
+		buttonBox2.ButtonLeftDPad().whenPressed(new DriveToXSpeed(Shooter.FiringLocation.FRONT_TRENCH));
+		buttonBox2.ButtonRightDPad().whenPressed(new DriveToXSpeed(Shooter.FiringLocation.WHITE_LINE));
+		buttonBox2.ButtonA().whenPressed(new MoveToFiringLocation(Shooter.getInstance().getFiringLocation()));
 		buttonBox2.ButtonB().whenPressed(new DriveShooterSpeedHoodPosition());
-		buttonBox2.ButtonLeftBumper().whenPressed(new DriveIntakeWithConstant(-1.0));//Temporary value
-		buttonBox2.ButtonRightBumper().whenPressed(new DriveIntakeWithConstant(-1.0));// Temporary value
-		buttonBox2.ButtonRightBumper().whenReleased(new DriveIntakeWithConstant(1.0));// Temporary value
-		buttonBox2.ButtonBack().whenPressed(new DisengageRatchet());
-		buttonBox2.ButtonStart().whenPressed(new EngageRatchet());
-		//buttonBox2.ButtonRightStick().whenPressed(new )
+		buttonBox2.ButtonLeftBumper().whenPressed(new DriveIntakeWithConstant(-1.0));
+		buttonBox2.ButtonLeftBumper().whenPressed(new ExtendIntakePneumatic()); //DO WE WANT THIS
+		buttonBox2.ButtonRightBumper().whenPressed(new IntakeBallStart());
+		buttonBox2.ButtonRightBumper().whenReleased(new IntakeBallStop());
+		buttonBox2.ButtonBack().whenPressed(new PrepareToClimb());
+		buttonBox2.ButtonStart().whenPressed(new DriveClimberXPosition(7.0, 1.5));
+		//right stick--auto balance
 	}
 		/*************************************************************************
 		 * Driver Joystick *
