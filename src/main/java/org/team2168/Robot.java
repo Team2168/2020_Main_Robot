@@ -242,7 +242,6 @@ public class Robot extends TimedRobot {
       moveHood.start();
     }
     lastCallHoodButtonA = oi.buttonBox2.isPressedButtonA();
-		System.out.println(oi.getClimberJoystickValue());
 
   }
 
