@@ -1,15 +1,16 @@
 
 package org.team2168;
 
-import org.team2168.commands.auto.DefaultTrenchAuto;
 import org.team2168.commands.auto.FinishFiring;
 import org.team2168.commands.auto.FireBalls;
+import org.team2168.commands.climber.DisengageRatchet;
 import org.team2168.commands.climber.DriveClimberXPosition;
+import org.team2168.commands.climber.EngageRatchet;
 import org.team2168.commands.climber.PrepareToClimb;
+import org.team2168.commands.climber.ResetClimberPosition;
 import org.team2168.commands.color_wheel.DriveColorWheelXRotations;
 import org.team2168.commands.color_wheel_pivot.DisengageColorWheel;
 import org.team2168.commands.color_wheel_pivot.EngageColorWheel;
-import org.team2168.commands.drivetrain.PIDCommands.DriveXDistance;
 import org.team2168.commands.flashlight.RunFlashlight;
 import org.team2168.commands.hood_adjust.MoveToBackTrench;
 import org.team2168.commands.hood_adjust.MoveToFiringLocation;
@@ -122,7 +123,9 @@ public class OI
 		buttonBox2.ButtonLeftDPad().whenPressed(new DriveToXSpeed(Shooter.FiringLocation.FRONT_TRENCH));
 		buttonBox2.ButtonRightDPad().whenPressed(new DriveToXSpeed(Shooter.FiringLocation.WHITE_LINE));
 		buttonBox2.ButtonA().whenPressed(new MoveToFiringLocation(Shooter.getInstance().getFiringLocation()));
-		buttonBox2.ButtonB().whenPressed(new DriveShooterSpeedHoodPosition());
+		pidTestJoystick.ButtonA().whenReleased(new MoveToWallNoShoot());
+
+		buttonBox2.ButtonB().whenPressed(new FireBalls());
 		buttonBox2.ButtonLeftBumper().whenPressed(new DriveIntakeWithConstant(-1.0));
 		buttonBox2.ButtonLeftBumper().whenPressed(new ExtendIntakePneumatic()); //DO WE WANT THIS
 		buttonBox2.ButtonRightBumper().whenPressed(new IntakeBallStart());
@@ -172,21 +175,21 @@ public class OI
 		 * Commands Test Joystick
 		 ***********************************************************************/
 		// // //leds testing
-		pidTestJoystick.ButtonB().whenPressed(new DriveXDistance(60.0));
-		pidTestJoystick.ButtonX().whenPressed(new DriveXDistance(-60.0));
+		// pidTestJoystick.ButtonB().whenPressed(new DriveXDistance(60.0));
+		// pidTestJoystick.ButtonX().whenPressed(new DriveXDistance(-60.0));
 		// pidTestJoystick.ButtonRightDPad().whenPressed(new TurnXAngle(-9.0, 0.3));
 		// pidTestJoystick.ButtonLeftDPad().whenPressed(new TurnXAngle(+9.0,0.3));
 		// pidTestJoystick.ButtonUpDPad().whenPressed(new TurnXAngle(-90.0,0.3));
 		// pidTestJoystick.ButtonDownDPad().whenPressed(new TurnXAngle(+90.0, 0.3));
-		pidTestJoystick.ButtonStart().whenPressed(new DefaultTrenchAuto());
+		// pidTestJoystick.ButtonStart().whenPressed(new DefaultTrenchAuto());
 		// pidTestJoystick.ButtonBack().whenPressed(new OppositeTrenchAuto());
 
-		// pidTestJoystick.ButtonX().whenPressed(new ResetClimberPosition());
-		// pidTestJoystick.ButtonY().whenPressed(new PrepareToClimb()); 
-		// pidTestJoystick.ButtonA().whenPressed(new DriveClimberXPosition(7.0, 0.1));
+		pidTestJoystick.ButtonX().whenPressed(new ResetClimberPosition());
+		pidTestJoystick.ButtonY().whenPressed(new PrepareToClimb()); 
+		pidTestJoystick.ButtonA().whenPressed(new DriveClimberXPosition(7.0, 0.1));
 
-		// pidTestJoystick.ButtonUpDPad().whenPressed(new EngageRatchet());
-		// pidTestJoystick.ButtonDownDPad().whenPressed(new DisengageRatchet());
+		pidTestJoystick.ButtonUpDPad().whenPressed(new EngageRatchet());
+		pidTestJoystick.ButtonDownDPad().whenPressed(new DisengageRatchet());
 
 		// pidTestJoystick.ButtonB().whenPressed(new FireBalls());
 		// pidTestJoystick.ButtonB().whenReleased(new FinishFiring());

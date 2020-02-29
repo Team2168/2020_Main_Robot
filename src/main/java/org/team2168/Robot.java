@@ -66,8 +66,8 @@ package org.team2168;
 import org.team2168.commands.auto.DefaultTrenchAuto;
 import org.team2168.commands.auto.DoNothing;
 import org.team2168.commands.auto.OppositeTrenchAuto;
-import org.team2168.commands.drivetrain.FirstPath;
 import org.team2168.commands.drivetrain.PIDCommands.DriveXDistance;
+import org.team2168.commands.drivetrain.PIDCommands.TurnXAngle;
 import org.team2168.subsystems.Balancer;
 import org.team2168.subsystems.Climber;
 import org.team2168.subsystems.ColorWheel;
@@ -89,7 +89,6 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Robot extends TimedRobot {	
   private static final String kDefaultAuto = "Default";
@@ -265,10 +264,12 @@ public class Robot extends TimedRobot {
      */
     public void autoSelectInit() {
       autoChooser = new SendableChooser<Command>();
-      autoChooser.setDefaultOption("Drive Straight", new DriveXDistance(60.0));
+      autoChooser.setDefaultOption("Drive Straight", new DriveXDistance(-60.0));
       autoChooser.addOption("Do Nothing", new DoNothing());
       autoChooser.addOption("Opposite Trench Auto ", new OppositeTrenchAuto());
       autoChooser.addOption("Near Trench Auto", new DefaultTrenchAuto());
+      autoChooser.addOption("Turn 13.25", new TurnXAngle(13.25, 0.3));
+
     }
 
   /**

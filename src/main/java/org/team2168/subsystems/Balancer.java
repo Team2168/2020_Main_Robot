@@ -77,8 +77,8 @@ public class Balancer extends Subsystem {
     maxRPM = 8.0;
 
     // Smart Motion Coefficients
-    maxVel = 24.0; // rpm
-    maxAcc = 16.0;
+    maxVel = 48.0; // rpm
+    maxAcc = 32.0;
 
     // set PID coefficients
     m_pidController.setP(kP);
