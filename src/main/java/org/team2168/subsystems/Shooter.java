@@ -86,15 +86,15 @@ public class Shooter extends Subsystem {
     //in process--kP = 0.8, kF = 0.52*1023.0/10894.0
     private double setPointVelocity_sensorUnits;
 
-    private final double WALL_VEL =2540.0; //steady state: 25 over
+    private final double WALL_VEL =2540.0; //
     private final double WHITE_LINE_VEL = 3240.0; //untuned
     private final double FRONT_TRENCH_VEL = 3900.0; //steady state: 40 over
     private final double BACK_TRENCH_VEL = 4540.0; //4540.0; //steady state: 40 over 4500
 
-    private final double WALL_VEL_PBOT = 2540.0; //steady state: 25 over
-    private final double WHITE_LINE_VEL_PBOT = 3640.0; //untuned
-    private final double FRONT_TRENCH_VEL_PBOT = 4140.0; //
-    private final double BACK_TRENCH_VEL_PBOT = 4690.0; //
+    private final double WALL_VEL_PBOT = 2540.0; //new red balls
+    private final double WHITE_LINE_VEL_PBOT = 3300.0; //
+    private final double FRONT_TRENCH_VEL_PBOT = 3900.0; //
+    private final double BACK_TRENCH_VEL_PBOT = 4540.0; //
 
     private static double _wallVel;
     private static double _whiteLineVel;
