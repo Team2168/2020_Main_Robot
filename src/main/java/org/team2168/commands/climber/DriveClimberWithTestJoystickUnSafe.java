@@ -5,56 +5,41 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package org.team2168.commands.balancer;
-
-import org.team2168.OI;
-import org.team2168.subsystems.Balancer;
+package org.team2168.commands.climber;
 
 import edu.wpi.first.wpilibj.command.Command;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import org.team2168.OI;
+import org.team2168.Robot;
+import org.team2168.subsystems.Climber;
 
-public class DriveBalancerVelocityJoystick extends Command {
 
-  private static Balancer balancer;
-  private static OI oi;
-  private double _setPoint;
-  private boolean _readPIDFromDashboard = false;
-
-  public DriveBalancerVelocityJoystick() {
+public class DriveClimberWithTestJoystickUnSafe extends Command {
+  double _speed;
+  private Climber climber;
+  private OI oi;
+  private final double MAX_SPEED = 0.8;
+  public DriveClimberWithTestJoystickUnSafe() {
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
-    balancer = Balancer.getInstance();
-    requires(balancer);
+    climber = Climber.getInstance();
+    requires(climber);
   }
 
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
     oi = OI.getInstance();
-
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    if(_readPIDFromDashboard) {
-      balancer.updatePIDValues();
-    }
-    if(Math.abs(oi.getBalancerJoystickValue()) > 0.05) {
-      _setPoint = oi.getBalancerJoystickValue() * balancer.getMaxVelocity();
+    if(Math.abs(oi.getClimberTestJoystickValue()) < MAX_SPEED) {
+      climber.driveClimberMotors(oi.getClimberTestJoystickValue());
     }
     else {
-      _setPoint = 0.0;
+      climber.driveClimberMotors(MAX_SPEED);
     }
-    // System.out.println(_setPoint + " " + oi.getBalancerJoystickValue() + " " + balancer.getMaxVelocity());
-    balancer.setVelocitySetPoint(_setPoint);
-
-    SmartDashboard.putNumber("SetPoint", _setPoint);
-    SmartDashboard.putNumber("Position", balancer.getPosition());
-    SmartDashboard.putNumber("Velocity", balancer.getVelocity());
-    SmartDashboard.putNumber("Velocity Error", balancer.getVelocityError());
-    SmartDashboard.putNumber("Output", balancer.getMotorOutput());
-
   }
 
   // Make this return true when this Command no longer needs to run execute()
@@ -66,7 +51,7 @@ public class DriveBalancerVelocityJoystick extends Command {
   // Called once after isFinished returns true
   @Override
   protected void end() {
-
+    climber.driveClimberMotors(0.0);
   }
 
   // Called when another command which requires one or more of the same
@@ -76,3 +61,4 @@ public class DriveBalancerVelocityJoystick extends Command {
     end();
   }
 }
+
