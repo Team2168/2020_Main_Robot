@@ -155,21 +155,19 @@ public class Robot extends TimedRobot {
     hoodAdjust = HoodAdjust.getInstance();
     drivetrain = Drivetrain.getInstance();
     oi = OI.getInstance();
-
-
     
     // pdp = new PowerDistribution(RobotMap.PDPThreadPeriod);
     // pdp.startThread();
     ConsolePrinter.init();
     ConsolePrinter.startThread();
 
-    // drivetrain.setDefaultBrakeMode();
-
     //Initialize Autonomous Selector Choices
     autoSelectInit();
 
     ConsolePrinter.putBoolean("isPracticeBot", ()->{return isPracticeBot();}, true, false);
     ConsolePrinter.putSendable("Autonomous Mode Chooser", () -> {return Robot.autoChooser;}, true, false);
+
+    drivetrain.setDefaultBrakeMode();
   }
 
   @Override
@@ -199,7 +197,7 @@ public class Robot extends TimedRobot {
     // schedule the autonomous command
     if (autonomousCommand != null) 
       autonomousCommand.start();
-}
+  }
 
   /**
    * This function is called periodically during autonomous.
@@ -210,9 +208,9 @@ public class Robot extends TimedRobot {
     Scheduler.getInstance().run();
   }
 
-      /**
-     * This function called prior to robot entering Teleop Mode
-     */
+  /**
+   * This function called prior to robot entering Teleop Mode
+   */
 	public void teleopInit() {
     autoMode = false;
     drivetrain.setDefaultBrakeMode();
@@ -262,10 +260,12 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledInit() {
     autoMode = false;
+
     if(!DriverStation.getInstance().isFMSAttached()) {
       //If we're not on a real field, let the robot be pushed around if it's disabled.
       drivetrain.setAllMotorsCoast();
     }
+
     lastCallHoodButtonA = false;
   }
 
