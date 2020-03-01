@@ -35,12 +35,10 @@ public class RobotMap {
 
 	// Digital IO Channels//////////////////////////////////////////////////////
 	// Channels 0-9 on RoboRio
-
-
-	//Channels 10-25 on MXP (PWM and DIO)
 	public static final int ENTRANCE_LINE_BREAK = 5; //TODO SET
 	public static final int EXIT_LINE_BREAK = 6;
 
+	//Channels 10-25 on MXP (PWM and DIO)
 	public static final int PRACTICE_BOT_JUMPER = 24;
 
 	//Analog Input Channels////////////////////////////////////////////////////

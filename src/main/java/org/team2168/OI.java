@@ -14,7 +14,9 @@ import org.team2168.commands.color_wheel_pivot.DisengageColorWheel;
 import org.team2168.commands.color_wheel_pivot.EngageColorWheel;
 import org.team2168.commands.flashlight.RunFlashlight;
 import org.team2168.commands.hood_adjust.MoveToBackTrench;
+import org.team2168.commands.hood_adjust.MoveToFiringLocation;
 import org.team2168.commands.hood_adjust.MoveToFrontTrench;
+import org.team2168.commands.hood_adjust.MoveToWLNoShoot;
 import org.team2168.commands.hood_adjust.MoveToWall;
 import org.team2168.commands.hood_adjust.MoveToWallNoShoot;
 import org.team2168.commands.hood_adjust.MoveToWhiteLine;
@@ -82,6 +84,7 @@ public class OI
 	private LinearInterpolator colorWheelInterpolator;
 	private LinearInterpolator climberInterpolator;
 	private LinearInterpolator balancerInterpolator;
+	private LinearInterpolator climberResetInterpolator;
 
 	private double[][] gunStyleYArray = {
 		{-1.0, -1.00}, //can limit speed by changing second number
@@ -100,21 +103,28 @@ public class OI
 		{-1.0, -1.00},  
 		{-0.05, 0.00},  //set neutral deadband to 4%
 		{+0.05, 0.00},
-		{+1.0,+1.00}  
+		{+1.0, +1.00}  
 	};
 
 	private double[][] climberArray = {
 		{-1.0, -1.00},  
 		{-0.05, 0.00},  //set neutral deadband to 4%
 		{+0.05, 0.00},
-		{+1.0,+1.00}  
+		{+1.0, +1.00}  
 	};
 
 	private double[][] balancerArray = {
 		{-1.0, -1.00},  
 		{-0.05, 0.00},  //set neutral deadband to 4%
 		{+0.05, 0.00},
-		{+1.0,+1.00}  
+		{+1.0, +1.00}  
+	};
+
+	private double[][] climberResetArray = {
+		{-1.0, -0.15},  
+		{-0.05, 0.00},
+		{+0.05, 0.00},
+		{+1.0, +0.15}  
 	};
 
 	/**
@@ -170,6 +180,8 @@ public class OI
 		buttonBox2.ButtonRightBumper().whenReleased(new IntakeBallStop());
 
 		buttonBox2.ButtonBack().whenPressed(new PrepareToClimb());
+		buttonBox2.ButtonBack().whenPressed(new DriveToXSpeed(0.0)); //Stop shooter and lower hood
+		buttonBox2.ButtonBack().whenPressed(new MoveToWLNoShoot());
 		buttonBox2.ButtonStart().whenPressed(new DriveClimberXPosition(7.0, 1.5));
 		//right stick--auto balance
 	}
@@ -180,8 +192,11 @@ public class OI
 		gunStyleXInterpolator = new LinearInterpolator(gunStyleXArray);
 
 		driverJoystick.ButtonLeftStick().whenPressed(new RunFlashlight(1.0));
-		driverJoystick.ButtonLeftStick().whenReleased(new RunFlashlight(-1.0));
+		driverJoystick.ButtonLeftStick().whenReleased(new RunFlashlight(0.0));
 
+		//When the red button on the handle of the controller is pressed get ready to go under the trechn. Lower everything.
+		driverJoystick.ButtonLeftBumper().whileHeld(new DisengageColorWheel());
+		driverJoystick.ButtonLeftBumper().whenPressed(new MoveToFiringLocation(Shooter.FiringLocation.WALL));
 		
 		/*************************************************************************
 		 * Operator Joystick *
@@ -230,6 +245,7 @@ public class OI
 		pidTestJoystick.ButtonUpDPad().whenPressed(new EngageRatchet());
 		pidTestJoystick.ButtonDownDPad().whenPressed(new DisengageRatchet());
 
+		climberResetInterpolator = new LinearInterpolator(climberResetArray);
 		pidTestJoystick.ButtonRightStick().whenPressed(new DriveClimberWithTestJoystickUnSafe());
 
 		// pidTestJoystick.ButtonB().whenPressed(new FireBalls());
@@ -317,7 +333,7 @@ public class OI
 	}
 
 	public double getClimberTestJoystickValue() {
-		return pidTestJoystick.getRightStickRaw_Y();
+		return climberResetInterpolator.interpolate(pidTestJoystick.getRightStickRaw_Y());
 	}
 
 	/**
