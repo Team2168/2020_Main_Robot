@@ -40,15 +40,13 @@ public class Limelight extends Subsystem {
     limelight.setCamMode(0);
     limelight.setPipeline(PIPELINE_DRIVER_VIEW);
     isLimelightEnabled = false;
-
   }
 
   /**
    * @return an instance of the Intake Subsystem
    */
   public static Limelight getInstance() {
-    if (_instance == null)
-    {
+    if (_instance == null) {
       _instance = new Limelight();
     }
     return _instance;
@@ -58,8 +56,7 @@ public class Limelight extends Subsystem {
     return limelight.getPos();
   }
 
-  public void enableLimelight(HoodPosition hoodPos)
-  {
+  public void enableLimelight(HoodPosition hoodPos) {
     limelight.setCamMode(0);
     limelight.setLedMode(0);
     // if(Robot.driverstation.isFMSAttached())
@@ -133,6 +130,19 @@ public class Limelight extends Subsystem {
 
   public boolean isLimelightEnabled() {
     return isLimelightEnabled;
+  }
+
+
+  /**
+   * Sets the LED mode
+   * @param ledNumber is an int from 0 to 3
+   *                  0 - use the LED Mode set in the current pipeline
+   *                  1 - force off
+   *                  2 - force blink
+   *                  3 - force on
+   */
+  public void setLedMode(int ledNumber) {
+    limelight.setLedMode(ledNumber);
   }
 
   @Override

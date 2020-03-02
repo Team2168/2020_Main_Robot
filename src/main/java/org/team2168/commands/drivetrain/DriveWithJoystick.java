@@ -30,7 +30,7 @@ public class DriveWithJoystick extends Command
   @Override
   protected void initialize() {
     oi = OI.getInstance();
-    lime.pauseLimelight();
+    lime.setLedMode(1);
 	}
 
 	/**

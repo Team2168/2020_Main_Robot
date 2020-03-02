@@ -59,7 +59,10 @@ public class LimelightTurnTeleop extends Command {
     dt.switchGains(false);
 
     _targetAngle = 0.0;
-    lime.enableLimelight(HoodAdjust.getInstance().getHoodPosition());
+    if(!lime.isLimelightEnabled()) {
+      lime.enableLimelight(HoodAdjust.getInstance().getHoodPosition());
+    }
+    lime.setLedMode(3);
   }
 
   // Called repeatedly when this Command is scheduled to run
