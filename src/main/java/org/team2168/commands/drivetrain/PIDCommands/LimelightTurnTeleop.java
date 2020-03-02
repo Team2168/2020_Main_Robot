@@ -9,6 +9,7 @@ package org.team2168.commands.drivetrain.PIDCommands;
 
 import org.team2168.subsystems.Drivetrain;
 import org.team2168.subsystems.Limelight;
+import org.team2168.subsystems.HoodAdjust;
 
 import edu.wpi.first.wpilibj.command.Command;
 
@@ -23,6 +24,8 @@ public class LimelightTurnTeleop extends Command {
   private double _errorToleranceAngle; //1.0 degree of tolerance 
   private double _loopsToSettle = 5;
   private int _withinThresholdLoops = 0;
+  
+  private Limelight lime;
 
   /**
    * Rotate the chassis at the target. Terminates when within default (1.0 deg) of tolerance
@@ -44,6 +47,7 @@ public class LimelightTurnTeleop extends Command {
     dt = Drivetrain.getInstance();
     requires(dt);
 
+    lime = Limelight.getInstance();
     _errorToleranceAngle = errorToleranceAngle;
   }
 
@@ -54,12 +58,23 @@ public class LimelightTurnTeleop extends Command {
     dt.zeroSensors();
     dt.switchGains(false);
 
-    _targetAngle = -Limelight.getInstance().getPosition();
+    _targetAngle = 0.0;
+    lime.enableLimelight(HoodAdjust.getInstance().getHoodPosition());
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
+    double limeAngle = -lime.getPosition();
+
+    if ((_targetAngle == 0.0) && (limeAngle != 0.0) ) {
+      //Only update our target heading once per execution, but...
+      //  wait until you get a non-zero value from the limelight,
+      //  it takes a while to supply heading valuesafter switching pipelines
+
+      _targetAngle = limeAngle;
+    }
+
     dt.setSetPointPosition(_targetPos, _targetAngle);
     /* Check if closed loop error is within the threshld */
     if (Math.abs(dt.getErrorHeading()) < _errorToleranceAngle)

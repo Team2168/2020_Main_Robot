@@ -9,6 +9,7 @@ package org.team2168.commands.drivetrain;
 
 import org.team2168.OI;
 import org.team2168.subsystems.Drivetrain;
+import org.team2168.subsystems.Limelight;
 
 import edu.wpi.first.wpilibj.command.Command;
 
@@ -16,10 +17,12 @@ public class DriveWithJoystick extends Command
 {
   private Drivetrain dt;
   private OI oi;
+  private Limelight lime;
   
   public DriveWithJoystick() 
   {
     dt = Drivetrain.getInstance();
+    lime = Limelight.getInstance();
     requires(dt);
   }
 
@@ -27,6 +30,7 @@ public class DriveWithJoystick extends Command
   @Override
   protected void initialize() {
     oi = OI.getInstance();
+    lime.pauseLimelight();
 	}
 
 	/**
