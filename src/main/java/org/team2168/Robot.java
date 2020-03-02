@@ -87,6 +87,7 @@ import org.team2168.utils.consoleprinter.ConsolePrinter;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -303,5 +304,9 @@ public class Robot extends TimedRobot {
 
   public static boolean isAutoMode() {
     return autoMode;
+  }
+
+  public static boolean onBlueAlliance() {
+    return DriverStation.getInstance().getAlliance() == Alliance.Blue;
   }
 }

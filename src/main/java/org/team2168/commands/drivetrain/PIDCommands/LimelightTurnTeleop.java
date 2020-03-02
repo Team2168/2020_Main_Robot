@@ -8,17 +8,18 @@
 package org.team2168.commands.drivetrain.PIDCommands;
 
 import org.team2168.subsystems.Drivetrain;
+import org.team2168.subsystems.Limelight;
 
 import edu.wpi.first.wpilibj.command.Command;
 
 public class LimelightTurnTeleop extends Command {
   private Drivetrain dt;
-  /**target position */
+
   private double _targetPos = 0.0;
+  private double _targetAngle = 0.0;
 
   private static final double DEFAULT_ERROR_TOLERANCE = 1.0;
 
-  private double _errorTolerancePosition = 0.5; //0.5 inches 
   private double _errorToleranceAngle; //1.0 degree of tolerance 
   private double _loopsToSettle = 5;
   private int _withinThresholdLoops = 0;
@@ -53,15 +54,15 @@ public class LimelightTurnTeleop extends Command {
     dt.zeroSensors();
     dt.switchGains(false);
 
+    _targetAngle = -Limelight.getInstance().getPosition();
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    dt.
     dt.setSetPointPosition(_targetPos, _targetAngle);
     /* Check if closed loop error is within the threshld */
-    if ((Math.abs(dt.getErrorPosition()) < _errorTolerancePosition) && (Math.abs(dt.getErrorHeading()) < _errorToleranceAngle)) 
+    if (Math.abs(dt.getErrorHeading()) < _errorToleranceAngle)
     {
       ++_withinThresholdLoops;
     } 
@@ -73,8 +74,7 @@ public class LimelightTurnTeleop extends Command {
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    //return _withinThresholdLoops > _loopsToSettle;
-    return false;
+    return _withinThresholdLoops > _loopsToSettle;
   }
 
   // Called once after isFinished returns true

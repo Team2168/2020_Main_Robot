@@ -6,7 +6,7 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-public class Limelight implements PIDSensorInterface
+public class LimelightSensor implements PIDSensorInterface
 {
 
     // Target position and camera settings
@@ -33,7 +33,7 @@ public class Limelight implements PIDSensorInterface
     /**
      * Default constructor
      */
-    public Limelight()
+    public LimelightSensor()
     {
         currentPosition = 0.0;
         previousPosition = 0.0;
