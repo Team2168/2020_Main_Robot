@@ -10,6 +10,7 @@ package org.team2168.subsystems;
 import org.team2168.Robot;
 import org.team2168.PID.sensors.LimelightSensor;
 import org.team2168.subsystems.HoodAdjust.HoodPosition;
+import org.team2168.subsystems.Shooter.FiringLocation;
 
 import edu.wpi.first.wpilibj.command.Subsystem;
 
@@ -56,7 +57,7 @@ public class Limelight extends Subsystem {
     return limelight.getPos();
   }
 
-  public void enableLimelight(HoodPosition hoodPos) {
+  public void enableLimelight(FiringLocation firingLocation) {
     limelight.setCamMode(0);
     limelight.setLedMode(0);
     // if(Robot.driverstation.isFMSAttached())
@@ -69,7 +70,7 @@ public class Limelight extends Subsystem {
       // {
       //   limelight.setPipeline(2);
       // }
-      switch (hoodPos) {
+      switch (firingLocation) {
         case WALL : 
           if(Robot.onBlueAlliance())
           {

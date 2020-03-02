@@ -9,6 +9,7 @@ package org.team2168.commands.drivetrain.PIDCommands;
 
 import org.team2168.subsystems.Drivetrain;
 import org.team2168.subsystems.Limelight;
+import org.team2168.subsystems.Shooter;
 import org.team2168.subsystems.HoodAdjust;
 
 import edu.wpi.first.wpilibj.command.Command;
@@ -60,7 +61,7 @@ public class LimelightTurnTeleop extends Command {
 
     _targetAngle = 0.0;
     if(!lime.isLimelightEnabled()) {
-      lime.enableLimelight(HoodAdjust.getInstance().getHoodPosition());
+      lime.enableLimelight(Shooter.getInstance().getFiringLocation());
     }
     lime.setLedMode(3);
   }
