@@ -34,7 +34,7 @@ public class DriveClimberWithJoystick extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    if(climber.getPosition() > 9.0 && climber.getPosition() < 59.0) {
+    if(climber.getPosition() > 9.0) { // && climber.getPosition() < 59.0) broke it???
       if(Math.abs(oi.getClimberJoystickValue()) < MAX_SPEED) {
         climber.driveClimberMotors(oi.getClimberJoystickValue());
       }
