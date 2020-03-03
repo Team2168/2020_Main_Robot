@@ -23,7 +23,7 @@ public class DriveXDistance extends Command {
     private double _errorTolerancePosition; //0.5 inches
     private double _errorToleranceAngle = 1.0; //1.0 degree of tolerance 
     private double _maxVel;
-    private double _loopsToSettle = 10;
+    private double _loopsToSettle = 5;
     private int _withinThresholdLoops = 0;
 
   public DriveXDistance(double setPoint) {
@@ -52,6 +52,7 @@ public class DriveXDistance extends Command {
     dt.zeroSensors(); //heading and position
     dt.switchGains(true);
     dt.setCruiseVelocity(_maxVel);
+    _withinThresholdLoops = 0;
   }
 
   // Called repeatedly when this Command is scheduled to run

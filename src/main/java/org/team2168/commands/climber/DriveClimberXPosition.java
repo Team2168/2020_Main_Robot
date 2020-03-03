@@ -17,10 +17,14 @@ public class DriveClimberXPosition extends Command {
   /**target position */
   private double _targetPos;
   
-  private final double DEFAULT_ERROR_TOLERANCE = 0.5;
+  private final static double DEFAULT_ERROR_TOLERANCE = 1.5;
   private double _errorTolerance; //inches
-  private double _loopsToSettle = 10;
+  private double _loopsToSettle = 5;
   private int _withinThresholdLoops = 0;
+
+  public DriveClimberXPosition(double setPoint) {
+    this(setPoint, DEFAULT_ERROR_TOLERANCE);
+  }
 
   public DriveClimberXPosition(double setPoint, double errorTolerance) {
     // Use requires() here to declare subsystem dependencies

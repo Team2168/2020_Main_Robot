@@ -11,13 +11,15 @@ import org.team2168.subsystems.Indexer;
 
 import edu.wpi.first.wpilibj.command.Command;
 
-public class DriveIndexerWithConstant extends Command { 
+public class DriveUntilBall extends Command {
+  private Indexer indexer;
   private double _speed;
-  private Indexer _indexer;
-  public DriveIndexerWithConstant(double speed) {
-    _indexer = Indexer.getInstance();
-    _speed = speed;
-    requires(_indexer);
+  public DriveUntilBall(double speed) {
+    // Use requires() here to declare subsystem dependencies
+    // eg. requires(chassis);
+    indexer = Indexer.getInstance();
+    requires(indexer);
+    this._speed = speed;
   }
 
   // Called just before this Command runs the first time
@@ -28,26 +30,23 @@ public class DriveIndexerWithConstant extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    _indexer.drive(_speed);
+    indexer.drive(_speed);
   }
 
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    return false;
+    return indexer.isBallExiting(); // || indexer.isBallExiting();
   }
 
   // Called once after isFinished returns true
   @Override
   protected void end() {
-    _indexer.drive(0.0);
-
   }
 
   // Called when another command which requires one or more of the same
   // subsystems is scheduled to run
   @Override
   protected void interrupted() {
-    end();
   }
 }

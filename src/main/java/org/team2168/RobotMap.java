@@ -19,8 +19,11 @@ public class RobotMap {
 	// Joysticks///////////////////////////////////////////////////////////////
 	public static final int DRIVER_JOYSTICK = 0;
 	public static final int OPERATOR_JOYSTICK = 1;
+	public static final int BUTTON_BOX_1 = 2;
+	public static final int BUTTON_BOX_2 = 3;
 	public static final int DRIVER_OPERATOR_E_BACKUP = 4;
 	public static final int PID_TEST_JOYSTICK = 5;
+
 
 	// Joystick Control Styles/////////////////////////////////////////////////
 	public static final int TANK_DRIVE_STYLE_ENUM = 0;
@@ -30,14 +33,15 @@ public class RobotMap {
 	public static final int NEW_GUN_STYLE_ENUM = 4;
 
 	// PWM (0 to 9) on RoboRio/////////////////////////////////////////////////
+	public static final int PWM_LIGHTS = 9;
 
 	// Digital IO Channels//////////////////////////////////////////////////////
 	// Channels 0-9 on RoboRio
-
-
-	//Channels 10-25 on MXP (PWM and DIO)
 	public static final int ENTRANCE_LINE_BREAK = 5; //TODO SET
 	public static final int EXIT_LINE_BREAK = 6;
+
+	//Channels 10-25 on MXP (PWM and DIO)
+	public static final int PRACTICE_BOT_JUMPER = 24;
 
 	//Analog Input Channels////////////////////////////////////////////////////
 	//Channels 0-3 on Roborio

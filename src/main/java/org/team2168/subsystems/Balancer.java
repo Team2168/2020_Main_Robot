@@ -17,6 +17,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.CANSparkMaxLowLevel.PeriodicFrame;
 import com.revrobotics.ControlType;
 
+import org.team2168.RobotMap;
 import org.team2168.commands.balancer.DriveBalancerVelocityJoystick;
 import org.team2168.utils.consoleprinter.ConsolePrinter;
 
@@ -43,7 +44,13 @@ public class Balancer extends Subsystem {
 
   private Balancer()
   {
-    _balancerMotor = new CANSparkMax(2, MotorType.kBrushless); //RobotMap.BALANCER_MOTOR_PDP
+    _balancerMotor = new CANSparkMax(RobotMap.BALANCER_MOTOR_PDP, MotorType.kBrushless); //RobotMap.BALANCER_MOTOR_PDP
+            /**
+     * The RestoreFactoryDefaults method can be used to reset the configuration parameters
+     * in the SPARK MAX to their factory default state. If no argument is passed, these
+     * parameters will not persist between power cycles
+     */
+    _balancerMotor.restoreFactoryDefaults();
     _balancerMotor.setIdleMode(IdleMode.kBrake);
 
     //speed limit 60
@@ -55,21 +62,14 @@ public class Balancer extends Subsystem {
     //status frame every 500ms
     _balancerMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 500);
 
-        /**
-     * The RestoreFactoryDefaults method can be used to reset the configuration parameters
-     * in the SPARK MAX to their factory default state. If no argument is passed, these
-     * parameters will not persist between power cycles
-     */
-    _balancerMotor.restoreFactoryDefaults();
-
     // initialze PID controller and encoder objects
     m_pidController = _balancerMotor.getPIDController();
     m_encoder = _balancerMotor.getEncoder();
 
     // PID coefficients
-    kP = 0.0003; //5e-5
+    kP = 0.0001; //5e-5
     kI = 0.0; //1e-6 
-    kD = 0.0000; //0
+    kD = 0.0001; //0
     kIz = 20.0;
     kFF = 0.000156; 
     kMaxOutput = 1.0;
@@ -77,8 +77,8 @@ public class Balancer extends Subsystem {
     maxRPM = 8.0;
 
     // Smart Motion Coefficients
-    maxVel = 16.0; // rpm
-    maxAcc = 16.0;
+    maxVel = 100.0; // rpm
+    maxAcc = 100.0;
 
     // set PID coefficients
     m_pidController.setP(kP);
@@ -106,20 +106,20 @@ public class Balancer extends Subsystem {
     m_pidController.setSmartMotionMaxAccel(revs_to_motor_rotations(maxAcc), smartMotionSlot);
     m_pidController.setSmartMotionAllowedClosedLoopError(revs_to_motor_rotations(allowedErr), smartMotionSlot);
 
-    // display PID coefficients on SmartDashboard
-    SmartDashboard.putNumber("P Gain", kP);
-    SmartDashboard.putNumber("I Gain", kI);
-    SmartDashboard.putNumber("D Gain", kD);
-    SmartDashboard.putNumber("I Zone", kIz);
-    SmartDashboard.putNumber("Feed Forward", kFF);
-    SmartDashboard.putNumber("Max Output", kMaxOutput);
-    SmartDashboard.putNumber("Min Output", kMinOutput);
+    // // display PID coefficients on SmartDashboard
+    // SmartDashboard.putNumber("P Gain", kP);
+    // SmartDashboard.putNumber("I Gain", kI);
+    // SmartDashboard.putNumber("D Gain", kD);
+    // SmartDashboard.putNumber("I Zone", kIz);
+    // SmartDashboard.putNumber("Feed Forward", kFF);
+    // SmartDashboard.putNumber("Max Output", kMaxOutput);
+    // SmartDashboard.putNumber("Min Output", kMinOutput);
 
-    // display Smart Motion coefficients
-    SmartDashboard.putNumber("Max Velocity", maxVel);
-    SmartDashboard.putNumber("Min Velocity", minVel);
-    SmartDashboard.putNumber("Max Acceleration", maxAcc);
-    SmartDashboard.putNumber("Allowed Closed Loop Error", allowedErr);   
+    // // display Smart Motion coefficients
+    // SmartDashboard.putNumber("Max Velocity", maxVel);
+    // SmartDashboard.putNumber("Min Velocity", minVel);
+    // SmartDashboard.putNumber("Max Acceleration", maxAcc);
+    // SmartDashboard.putNumber("Allowed Closed Loop Error", allowedErr);   
     
     
 
@@ -278,7 +278,7 @@ public class Balancer extends Subsystem {
   public void initDefaultCommand() {
     // Set the default command for a subsystem here.
     //setDefaultCommand(new DriveBalancerMotorWithJoystick());
-    // setDefaultCommand(new DriveBalancerVelocityJoystick());
+    setDefaultCommand(new DriveBalancerVelocityJoystick());
     // setDefaultCommand(new DriveBalancerUpdatingPosition());
 
   }
