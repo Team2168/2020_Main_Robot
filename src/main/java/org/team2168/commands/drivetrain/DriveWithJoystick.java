@@ -16,13 +16,12 @@ import edu.wpi.first.wpilibj.command.Command;
 public class DriveWithJoystick extends Command 
 {
   private Drivetrain dt;
-  private OI oi;
   private Limelight lime;
+  private OI oi;
   
   public DriveWithJoystick() 
   {
     dt = Drivetrain.getInstance();
-    lime = Limelight.getInstance();
     requires(dt);
   }
 
@@ -30,6 +29,7 @@ public class DriveWithJoystick extends Command
   @Override
   protected void initialize() {
     oi = OI.getInstance();
+    lime = Limelight.getInstance();
     lime.setLedMode(1);
 	}
 

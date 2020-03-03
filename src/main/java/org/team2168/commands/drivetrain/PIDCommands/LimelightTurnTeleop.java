@@ -46,7 +46,6 @@ public class LimelightTurnTeleop extends Command {
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
     dt = Drivetrain.getInstance();
-    oi = OI.getInstance();
     requires(dt);
 
     lime = Limelight.getInstance();
@@ -57,6 +56,7 @@ public class LimelightTurnTeleop extends Command {
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
+    oi = OI.getInstance();
     _withinThresholdLoops = 0;
     dt.zeroSensors();
     dt.switchGains(false);
