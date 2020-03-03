@@ -9,7 +9,7 @@ package org.team2168.subsystems;
 
 import org.team2168.Robot;
 import org.team2168.PID.sensors.LimelightSensor;
-import org.team2168.subsystems.HoodAdjust.HoodPosition;
+import org.team2168.commands.limelight.UpdatePipeline;
 import org.team2168.subsystems.Shooter.FiringLocation;
 
 import edu.wpi.first.wpilibj.command.Subsystem;
@@ -150,5 +150,6 @@ public class Limelight extends Subsystem {
   public void initDefaultCommand() {
     // Set the default command for a subsystem here.
     // setDefaultCommand(new MySpecialCommand());
+    setDefaultCommand(new UpdatePipeline());
   }
 }
