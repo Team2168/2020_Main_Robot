@@ -74,6 +74,7 @@ import org.team2168.subsystems.HoodAdjust;
 import org.team2168.subsystems.IntakeMotor;
 import org.team2168.subsystems.IntakePivot;
 import org.team2168.subsystems.Shooter;
+import org.team2168.subsystems.LEDs;
 //import org.team2168.utils.Debouncer;
 import org.team2168.utils.PowerDistribution;
 import org.team2168.utils.consoleprinter.ConsolePrinter;
@@ -103,6 +104,7 @@ public class Robot extends TimedRobot {
   private static Shooter shooter;
   private static HoodAdjust hoodAdjust;
   private static Drivetrain drivetrain;
+  private static LEDs leds;
 
   private static OI oi;
 

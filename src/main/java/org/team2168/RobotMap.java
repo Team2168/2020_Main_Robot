@@ -1,5 +1,7 @@
 package org.team2168;
 
+import edu.wpi.first.wpilibj.I2C;
+
 /**
  * The RobotMap is a mapping from the ports sensors and actuators are wired into
  * to a variable name. This provides flexibility changing wiring, makes checking
@@ -91,10 +93,10 @@ public class RobotMap {
 	/******************************************************************
 	 *                         Lights I2C                             *
 	 ******************************************************************/
-	// public static final I2C.Port I2C_PORT = I2C.Port.kOnboard;
-	// public static final int I2C_ADDRESS = 8;
-	// public static final boolean LEDS_REVERSE = true; //true if 0 is at the top
-	// public static final boolean LEDS_VERTICAL = true;
+	public static final I2C.Port I2C_PORT = I2C.Port.kOnboard;
+	public static final int I2C_ADDRESS = 8;
+	public static final boolean LEDS_REVERSE = true; //true if 0 is at the top
+	public static final boolean LEDS_VERTICAL = true;
 
     /*************************************************************************
 	 *                         SPI DEVICES                                   *
