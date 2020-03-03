@@ -8,12 +8,15 @@
 package org.team2168.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMax.IdleMode;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.CANSparkMaxLowLevel.PeriodicFrame;
 
+import org.team2168.Robot;
 import org.team2168.RobotMap;
 import org.team2168.utils.consoleprinter.ConsolePrinter;
 
@@ -26,8 +29,9 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 public class Indexer extends Subsystem {
   // Puts methods for controlling this subsystem
   // here. Call these from Commands.
-  private final boolean INDEXER_MOTOR_INVERTED = false;
-  private TalonSRX _motor;
+  private final boolean _INDEXER_MOTOR_REVERSED = false;
+  private CANSparkMax _motor;
+  private TalonSRX _srx_motor;
   private static DigitalInput entranceLineBreak;
   private static DigitalInput exitLineBreak;
   private static Indexer _instance = null;
@@ -36,23 +40,35 @@ public class Indexer extends Subsystem {
   private final boolean ENABLE_CURRENT_LIMIT = true;
   private final double CONTINUOUS_CURRENT_LIMIT = 20; //amps
   private final double TRIGGER_THRESHOLD_LIMIT = 30; //amp
-  private final double TRIGGER_THRESHOLD_TIME = 0.2; //s
+  private final double TRIGGER_THRESHOLD_TIME = 0.02; //s
 
   private Indexer(){
-    _motor = new TalonSRX(RobotMap.INDEXER_MOTOR_PDP);
     entranceLineBreak = new DigitalInput(RobotMap.ENTRANCE_LINE_BREAK);
     exitLineBreak = new DigitalInput(RobotMap.EXIT_LINE_BREAK);
-    _motor.setNeutralMode(NeutralMode.Brake);
 
-    talonCurrentLimit = new SupplyCurrentLimitConfiguration(ENABLE_CURRENT_LIMIT,
-    CONTINUOUS_CURRENT_LIMIT, TRIGGER_THRESHOLD_LIMIT, TRIGGER_THRESHOLD_TIME);
+    //The practice bot currently has a SPARK MAX on the indexer, the comp bot has a Talon SRX
+    if(Robot.isPracticeBot()) {
+      _motor = new CANSparkMax(RobotMap.INDEXER_MOTOR_PDP, MotorType.kBrushed);
+      _motor.setIdleMode(IdleMode.kBrake);
 
-    _motor.configSupplyCurrentLimit(talonCurrentLimit);
+      _motor.setSmartCurrentLimit((int)TRIGGER_THRESHOLD_LIMIT);
+      _motor.setControlFramePeriodMs((int)(1000 * TRIGGER_THRESHOLD_TIME));
+      _motor.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 500);
+      _motor.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 500);
+      _motor.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 500);
+    } else {
+      _srx_motor = new TalonSRX(RobotMap.INDEXER_MOTOR_PDP);
 
-    _motor.setNeutralMode(NeutralMode.Brake);
-    _motor.setInverted(INDEXER_MOTOR_INVERTED);
-    _motor.configNeutralDeadband(0.05);
-
+      talonCurrentLimit = new SupplyCurrentLimitConfiguration(ENABLE_CURRENT_LIMIT,
+      CONTINUOUS_CURRENT_LIMIT, TRIGGER_THRESHOLD_LIMIT, TRIGGER_THRESHOLD_TIME);
+  
+      _srx_motor.configFactoryDefault();
+      _srx_motor.configSupplyCurrentLimit(talonCurrentLimit);
+  
+      _srx_motor.setNeutralMode(NeutralMode.Brake);
+      _srx_motor.setInverted(true); //output polarity is apparently reversed between SRX and SPARK MAX?
+      _srx_motor.configNeutralDeadband(0.05);
+    }
     // ConsolePrinter.putBoolean("isBallEntering", ()->{return isBallEntering();}, true, false);
     // ConsolePrinter.putBoolean("isBallExiting", ()->{return isBallExiting();}, true, false);
     ConsolePrinter.putNumber("isBallEntering", ()->{return isBallEnteringDashboard();}, true, false);
@@ -72,10 +88,15 @@ public class Indexer extends Subsystem {
     * @param speed 1.0 to -1.0,  positive is toward the shooter, negative is away from the shooter
     */
   public void drive(double speed) {
-    // if(_INDEXER_MOTOR_REVERSED) {
-    //   speed = speed * -1;
-    // }
-    _motor.set(ControlMode.PercentOutput, speed);
+    if(_INDEXER_MOTOR_REVERSED) {
+      speed = speed * -1;
+    }
+
+    if(Robot.isPracticeBot()) {
+      _motor.set(speed);
+    } else {
+      _srx_motor.set(ControlMode.PercentOutput, speed);
+    }
   }
 
   public double isBallEnteringDashboard() {
