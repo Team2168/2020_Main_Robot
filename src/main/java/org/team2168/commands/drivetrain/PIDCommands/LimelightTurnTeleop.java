@@ -59,7 +59,8 @@ public class LimelightTurnTeleop extends Command {
     oi = OI.getInstance();
     _withinThresholdLoops = 0;
     dt.zeroSensors();
-    dt.switchGains(false);
+    // dt.switchGains(false);
+    dt.setLimelightGains();
 
     _targetAngle = 0.0;
     if(!lime.isLimelightEnabled()) {

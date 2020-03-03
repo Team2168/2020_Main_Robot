@@ -408,8 +408,7 @@ public class Drivetrain extends Subsystem {
       _leftMotor1.configNominalOutputReverse(-0.045, Constants.kTimeoutMs);
       _leftMotor1.configPeakOutputForward(1.0, Constants.kTimeoutMs);
       _leftMotor1.configPeakOutputReverse(-1.0, Constants.kTimeoutMs);
-    }
-    else {
+    } else {
       /* Motion Magic Configs */
       _rightMotor1.configMotionAcceleration((int) (inches_per_sec_to_ticks_per_100ms(8.0*12.0))); //(distance units per 100 ms) per second 
       _rightMotor1.configMotionCruiseVelocity((int) (inches_per_sec_to_ticks_per_100ms(5.0*12.0))); //distance units per 100 ms
@@ -429,6 +428,28 @@ public class Drivetrain extends Subsystem {
       _leftMotor1.configPeakOutputForward(1.0, Constants.kTimeoutMs);
       _leftMotor1.configPeakOutputReverse(-1.0, Constants.kTimeoutMs);
     }
+  }
+
+  /**
+   * Load the closed loop parameters used for turning w/ the limelight.
+   */
+  public void setLimelightGains() {
+    /* Motion Magic Configs */
+    _rightMotor1.config_kF(Constants.SLOT_1, Constants.kGains_Limelight.kF,Constants.kTimeoutMs);
+    _rightMotor1.config_kP(Constants.SLOT_1, Constants.kGains_Limelight.kP,Constants.kTimeoutMs);
+    _rightMotor1.config_kI(Constants.SLOT_1, Constants.kGains_Limelight.kI,Constants.kTimeoutMs);
+    _rightMotor1.config_kD(Constants.SLOT_1, Constants.kGains_Limelight.kD,Constants.kTimeoutMs);
+    _rightMotor1.config_IntegralZone(Constants.SLOT_1, Constants.kGains_Limelight.kIzone, Constants.kTimeoutMs);
+    _rightMotor1.configClosedLoopPeakOutput(Constants.SLOT_1, Constants.kGains_Limelight.kPeakOutput, Constants.kTimeoutMs);
+
+    _rightMotor1.configNominalOutputForward(0.03, Constants.kTimeoutMs);
+    _rightMotor1.configNominalOutputReverse(-0.03, Constants.kTimeoutMs);
+    _rightMotor1.configPeakOutputForward(1.0, Constants.kTimeoutMs);
+    _rightMotor1.configPeakOutputReverse(-1.0, Constants.kTimeoutMs);
+    _leftMotor1.configNominalOutputForward(0.03, Constants.kTimeoutMs);
+    _leftMotor1.configNominalOutputReverse(-0.03, Constants.kTimeoutMs);
+    _leftMotor1.configPeakOutputForward(1.0, Constants.kTimeoutMs);
+    _leftMotor1.configPeakOutputReverse(-1.0, Constants.kTimeoutMs);
   }
 
   public void setCruiseVelocity(double vel) {
