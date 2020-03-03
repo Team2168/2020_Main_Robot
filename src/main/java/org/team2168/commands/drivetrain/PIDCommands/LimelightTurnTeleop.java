@@ -7,17 +7,17 @@
 
 package org.team2168.commands.drivetrain.PIDCommands;
 
+import org.team2168.OI;
 import org.team2168.subsystems.Drivetrain;
 import org.team2168.subsystems.Limelight;
 import org.team2168.subsystems.Shooter;
-import org.team2168.subsystems.HoodAdjust;
 
 import edu.wpi.first.wpilibj.command.Command;
 
 public class LimelightTurnTeleop extends Command {
   private Drivetrain dt;
+  private OI oi;
 
-  private double _targetPos = 0.0;
   private double _targetAngle = 0.0;
 
   private static final double DEFAULT_ERROR_TOLERANCE = 1.0;
@@ -46,9 +46,11 @@ public class LimelightTurnTeleop extends Command {
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
     dt = Drivetrain.getInstance();
+    oi = OI.getInstance();
     requires(dt);
 
     lime = Limelight.getInstance();
+    requires(lime);
     _errorToleranceAngle = errorToleranceAngle;
   }
 
@@ -79,7 +81,7 @@ public class LimelightTurnTeleop extends Command {
       _targetAngle = limeAngle;
     }
 
-    dt.setSetPointPosition(_targetPos, _targetAngle);
+    dt.setSetPointHeadingTeleop(oi.getGunStyleYValue(), _targetAngle);
     /* Check if closed loop error is within the threshld */
     if (Math.abs(dt.getErrorHeading()) < _errorToleranceAngle)
     {

@@ -375,6 +375,17 @@ public class Drivetrain extends Subsystem {
     _leftMotor3.follow(_rightMotor1, FollowerType.AuxOutput1);
   }
 
+  public void setSetPointHeadingTeleop(double speed, double setAngle) {
+    setPointHeading_sensorUnits = degrees_to_ticks(setAngle);
+
+    _rightMotor1.set(ControlMode.PercentOutput, speed, DemandType.AuxPID, setPointHeading_sensorUnits);
+    _rightMotor2.follow(_rightMotor1, FollowerType.PercentOutput);
+    _rightMotor3.follow(_rightMotor1, FollowerType.PercentOutput);
+    _leftMotor1.follow(_rightMotor1, FollowerType.AuxOutput1);
+    _leftMotor2.follow(_rightMotor1, FollowerType.AuxOutput1);
+    _leftMotor3.follow(_rightMotor1, FollowerType.AuxOutput1);
+  }
+
   public void switchGains(boolean straightmode)
   {
     if(straightmode) {
