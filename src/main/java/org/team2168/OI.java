@@ -144,7 +144,7 @@ public class OI
 
 		buttonBox1.ButtonUpDPad().whenPressed(new EngageColorWheel());
 		buttonBox1.ButtonDownDPad().whenPressed(new DisengageColorWheel());
-		buttonBox1.ButtonLeftDPad().whenPressed(new DriveColorWheelXRotations(4.0*8.0));
+		buttonBox1.ButtonLeftDPad().whenPressed(new DriveColorWheelXRotations(-4.0*8.0)); 	//go opposite direction to protect limelight
 		//Right D Pad, Position
 		// Button A, bump up = increment velocity adjustment of shooter
 		// Button B, bump down
@@ -216,7 +216,8 @@ public class OI
 		operatorJoystick.ButtonA().whenPressed(new DisengageColorWheel());
 		// operatorJoystick.ButtonA().whenPressed(new MoveToWall());
 
-		operatorJoystick.ButtonStart().whenPressed(new DriveColorWheelXRotations(4.0*8.0));
+		operatorJoystick.ButtonStart().whenPressed(new DriveColorWheelXRotations(-4.0*8.0)); 	//go opposite direction to protect limelight 
+
 
 		// operatorJoystick.ButtonX().whenPressed(new DriveToXSpeed(Shooter.getInstance().WALL_VEL));
 		operatorJoystick.ButtonX().whenPressed(new DriveShooterWithConstant(0.52));
