@@ -79,6 +79,7 @@ import org.team2168.subsystems.Hopper;
 import org.team2168.subsystems.Indexer;
 import org.team2168.subsystems.IntakeMotor;
 import org.team2168.subsystems.IntakePivot;
+import org.team2168.subsystems.Limelight;
 import org.team2168.subsystems.Shooter;
 //import org.team2168.utils.Debouncer;
 import org.team2168.utils.PowerDistribution;
@@ -110,6 +111,7 @@ public class Robot extends TimedRobot {
   private static Shooter shooter;
   private static HoodAdjust hoodAdjust;
   private static Drivetrain drivetrain;
+  private static Limelight limelight;
 
   private static OI oi;
 
@@ -155,8 +157,9 @@ public class Robot extends TimedRobot {
     shooter = Shooter.getInstance();
     hoodAdjust = HoodAdjust.getInstance();
     drivetrain = Drivetrain.getInstance();
-    oi = OI.getInstance();
-    
+    limelight = Limelight.getInstance();
+    oi = OI.getInstance();  
+
     // pdp = new PowerDistribution(RobotMap.PDPThreadPeriod);
     // pdp.startThread();
     ConsolePrinter.init();
@@ -268,6 +271,7 @@ public class Robot extends TimedRobot {
     }
 
     lastCallHoodButtonA = false;
+    limelight.setLedMode(1);
   }
 
   @Override
