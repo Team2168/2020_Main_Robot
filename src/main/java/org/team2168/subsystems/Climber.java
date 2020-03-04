@@ -10,6 +10,7 @@ package org.team2168.subsystems;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.DemandType;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.FollowerType;
 import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
 import com.ctre.phoenix.motorcontrol.LimitSwitchSource;
 import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
@@ -36,7 +37,7 @@ public class Climber extends Subsystem {
   public DoubleSolenoid climberSolenoid;
   private CanDigitalInput hallEffectSensor;
 
-  private final boolean CLIMBER_MOTOR_1_REVERSE = false;
+  private final boolean CLIMBER_MOTOR_1_REVERSE = true;
   private final boolean CLIMBER_MOTOR_2_REVERSE = false;
   public static final boolean CLIMBER_ENABLE_HIGHT_HOLD = true;
 
@@ -44,7 +45,7 @@ public class Climber extends Subsystem {
   private final boolean ENABLE_CURRENT_LIMIT = true;
   private final double CONTINUOUS_CURRENT_LIMIT = 20; //amps
   private final double TRIGGER_THRESHOLD_LIMIT = 30; //amp
-  private final double TRIGGER_THRESHOLD_TIME = 200; //ms
+  private final double TRIGGER_THRESHOLD_TIME = 0.2; //s
 
   private boolean lastCall;
 
@@ -71,8 +72,8 @@ public class Climber extends Subsystem {
 	 * Gains used in Motion Magic, to be adjusted accordingly
      * Gains(kp, ki, kd, kf, izone, peak output);
      */
-  static final Gains kGainsUp = new Gains(0.2, 0.0, 0.0, 0.0, 0, 1.0);
-  static final Gains kGainsDown = new Gains(0.2, 0.0, 0.0, 0.0, 0, 1.0);
+  static final Gains kGainsUp = new Gains(1.6, 0.0, 0.0, 0.0, 0, 1.0);
+  static final Gains kGainsDown = new Gains(1.6, 0.0, 0.0, 0.0, 0, 1.0);
   static final double ARB_FEEDFORWARD_UP = 0.2;
   static final double ARB_FEEDFORWARD_DOWN = 0.0;
 
@@ -83,10 +84,10 @@ public class Climber extends Subsystem {
    */
   final double TICKS_PER_REV = 8192; //one event per edge on each quadrature channel
   final double TICKS_PER_100MS = TICKS_PER_REV / 10.0;
-  final double GEAR_RATIO = 21.0; //TODO SET
-  final double SPOOL_CIRCUMFERENCE = 4.375;
-  final double TICKS_PER_INCH = TICKS_PER_REV * GEAR_RATIO / SPOOL_CIRCUMFERENCE;
-  final double TICKS_PER_INCH_PER_100MS = TICKS_PER_100MS * GEAR_RATIO / SPOOL_CIRCUMFERENCE;
+  final double GEAR_RATIO = 42.0; 
+  final double SPOOL_CIRCUMFERENCE = 3.625; //TODO CHECK
+  final double TICKS_PER_INCH = 2245.0; //TICKS_PER_REV * GEAR_RATIO / SPOOL_CIRCUMFERENCE;
+  final double TICKS_PER_INCH_PER_100MS = 2245.0 / 10.0; //TICKS_PER_100MS * GEAR_RATIO / SPOOL_CIRCUMFERENCE;
 
   private double setPoint_sensorunits;
 
@@ -96,7 +97,7 @@ public class Climber extends Subsystem {
 
   private Climber() {
     climberMotor1 = new TalonSRX(RobotMap.CLIMBER_MOTOR_1_PDP);
-    // climberMotor2 = new TalonSRX(RobotMap.CLIMBER_MOTOR_2);
+    climberMotor2 = new TalonSRX(RobotMap.CLIMBER_MOTOR_2_PDP);
     climberSolenoid = new DoubleSolenoid(RobotMap.CLIMBER_RATCHET_ENGAGE_PCM,RobotMap.CLIMBER_RATCHET_DISENGAGE_PCM);
     climberMotor1.configForwardLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen);
     hallEffectSensor = new CanDigitalInput(climberMotor1);
@@ -119,7 +120,7 @@ public class Climber extends Subsystem {
      * invert motors if necessary
      */
     climberMotor1.setInverted(CLIMBER_MOTOR_1_REVERSE);
-    // climberMotor2.setInverted(CLIMBER_MOTOR_2_REVERSE);
+    climberMotor2.setInverted(CLIMBER_MOTOR_2_REVERSE);
 
         /* Set relevant frame periods to be at least as fast as periodic rate */
     climberMotor1.setStatusFramePeriod(StatusFrameEnhanced.Status_13_Base_PIDF0, 10, kTimeoutMs);
@@ -149,7 +150,7 @@ public class Climber extends Subsystem {
     CONTINUOUS_CURRENT_LIMIT, TRIGGER_THRESHOLD_LIMIT, TRIGGER_THRESHOLD_TIME);
 
     climberMotor1.configSupplyCurrentLimit(talonCurrentLimit);
-    // climberMotor2.configSupplyCurrentLimit(talonCurrentLimit);
+    climberMotor2.configSupplyCurrentLimit(talonCurrentLimit);
 
     /* Zero the sensor */
     climberMotor1.setSelectedSensorPosition(0, kPIDLoopIdx, kTimeoutMs);
@@ -190,7 +191,7 @@ public class Climber extends Subsystem {
   
   public void driveClimberMotors(double speed){
     driveClimberMotor1(speed);
-    // driveClimberMotor2(speed);
+    driveClimberMotor2(speed);
   }
 
   /**
@@ -249,12 +250,12 @@ public class Climber extends Subsystem {
 
   public double getPosition()
   {
-    return climberMotor1.getSelectedSensorPosition(kPIDLoopIdx)/(TICKS_PER_INCH);
+    return climberMotor1.getSelectedSensorPosition(kPIDLoopIdx) /(TICKS_PER_INCH);
   }
 
   public double getVelocity()
   {
-    return climberMotor1.getSelectedSensorVelocity(kPIDLoopIdx)/(TICKS_PER_INCH_PER_100MS);
+    return climberMotor1.getSelectedSensorVelocity(kPIDLoopIdx) /(TICKS_PER_INCH_PER_100MS);
   }
 
   public void setGains(double setPoint)
@@ -289,14 +290,14 @@ public class Climber extends Subsystem {
     {
       arbFeedForward = ARB_FEEDFORWARD_DOWN;
     }
-    setPoint_sensorunits = setPoint*TICKS_PER_INCH;
+    setPoint_sensorunits = setPoint *TICKS_PER_INCH;
     climberMotor1.set(ControlMode.MotionMagic, setPoint_sensorunits, DemandType.ArbitraryFeedForward, arbFeedForward);
-    // climberMotor2.follow(climberMotor1, FollowerType.PercentOutput);
+    climberMotor2.follow(climberMotor1, FollowerType.PercentOutput);
   }
 
   public double getErrorPosition()
   {
-    return (setPoint_sensorunits-climberMotor1.getSelectedSensorPosition(kPIDLoopIdx))/(TICKS_PER_INCH);
+    return (setPoint_sensorunits-climberMotor1.getSelectedSensorPosition(kPIDLoopIdx)) / (TICKS_PER_INCH);
     //return climberMotor1.getClosedLoopError(kPIDLoopIdx)/TICKS_PER_REV;--only for nonMotionMagic or nonMotion Profile
   }
 
@@ -344,7 +345,7 @@ public class Climber extends Subsystem {
    * This sets the default command to drive via a joystick.
    */
   public void initDefaultCommand() {
-    // setDefaultCommand(new DriveClimberWithJoystick());
+    setDefaultCommand(new DriveClimberWithJoystick());
   }
 
 }

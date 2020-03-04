@@ -231,7 +231,6 @@ public class ColorWheel extends Subsystem {
     positionSetPoint_sensorUnits = revs_to_motor_rotations(setPoint);
 
     m_pidController.setReference(positionSetPoint_sensorUnits, ControlType.kSmartMotion);
-    System.out.println("setting inside method");
   }
 
   public void setSetpoint(double setPoint, boolean velocityMode)
@@ -282,6 +281,6 @@ public class ColorWheel extends Subsystem {
   public void initDefaultCommand() {
     // Set the default command for a subsystem here.
     // setDefaultCommand(new MySpecialCommand());
-    // setDefaultCommand(new DriveColorWheelWithJoystick());
+    setDefaultCommand(new DriveColorWheelWithJoystick());
   }
 }

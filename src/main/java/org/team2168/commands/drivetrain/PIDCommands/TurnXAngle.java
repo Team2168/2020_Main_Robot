@@ -21,7 +21,7 @@ public class TurnXAngle extends Command {
 
   private double _errorTolerancePosition = 0.5; //0.5 inches 
   private double _errorToleranceAngle; //1.0 degree of tolerance 
-  private double _loopsToSettle = 10;
+  private double _loopsToSettle = 5;
   private int _withinThresholdLoops = 0;
 
   /**
@@ -46,6 +46,7 @@ public class TurnXAngle extends Command {
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
+    _withinThresholdLoops = 0;
     dt.zeroSensors();
     dt.switchGains(false);
 

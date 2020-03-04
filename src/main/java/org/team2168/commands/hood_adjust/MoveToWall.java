@@ -7,10 +7,13 @@
 
 package org.team2168.commands.hood_adjust;
 
+import org.team2168.Robot;
 import org.team2168.commands.auto.Sleep;
 import org.team2168.commands.shooter.DriveToXSpeed;
 import org.team2168.subsystems.HoodAdjust;
 import org.team2168.subsystems.Shooter;
+import org.team2168.subsystems.HoodAdjust.HoodPosition;
+import org.team2168.subsystems.Shooter.FiringLocation;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
@@ -42,12 +45,11 @@ public class MoveToWall extends CommandGroup {
     // }
 
     // updated---allows for any possible position, allows retract pancake under load;
-    addParallel(new DriveToXSpeed(Shooter.getInstance().WALL_VEL));
+    addParallel(new DriveToXSpeed(FiringLocation.WALL));
+
     addSequential(new RetractShooterHardstop());
     addSequential(new Sleep(), 0.1);
     addSequential(new ExtendShooterHood());
     addSequential(new Sleep(), 0.1);
-
-    pos.setHoodPosition(HoodAdjust.HoodPosition.WALL);
   }
 }

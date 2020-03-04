@@ -74,12 +74,31 @@ public class Indexer extends Subsystem {
     indexerMotorVoltage = Robot.pdp.getBatteryVoltage() * speed;
   }
 
+  public double isBallEnteringDashboard() {
+    if(!entranceLineBreak.get()) {
+      return 1.0;
+    }
+    else {
+      return 0.0;
+    }
+    //return !entranceLineBreak.get();
+  }
+
   public boolean isBallEntering() {
-    return entranceLineBreak.get();
+    return !entranceLineBreak.get();
+  }
+
+  public double isBallExitingDashboard() {
+    if(!exitLineBreak.get()) {
+      return 1.0;
+    }
+    else {
+      return 0.0;
+    }
   }
 
   public boolean isBallExiting() {
-    return exitLineBreak.get();
+    return !exitLineBreak.get();
   }
 
   public double getIndexerMotorVoltage(){

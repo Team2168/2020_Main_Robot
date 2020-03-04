@@ -5,22 +5,20 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package org.team2168.commands.auto;
+package org.team2168.commands.hood_adjust;
 
-import org.team2168.commands.hopper.DriveHopperWithConstant;
-import org.team2168.commands.indexer.DriveIndexerWithConstant;
-import org.team2168.commands.indexer.DriveUntilBall;
-import org.team2168.commands.indexer.DriveUntilNoBall;
-import org.team2168.commands.intakeMotor.DriveIntakeWithConstant;
-import org.team2168.commands.shooter.WaitForShooterAtSpeed;
+import org.team2168.commands.auto.Sleep;
+import org.team2168.subsystems.HoodAdjust;
+import org.team2168.subsystems.HoodAdjust.HoodPosition;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
-public class FireBallsAuto extends CommandGroup {
+public class MoveToWallNoShoot extends CommandGroup {
+  HoodAdjust pos = HoodAdjust.getInstance();
   /**
    * Add your docs here.
    */
-  public FireBallsAuto(int numBalls) {
+  public MoveToWallNoShoot() {
     // Add Commands here:
     // e.g. addSequential(new Command1());
     // addSequential(new Command2());
@@ -37,15 +35,9 @@ public class FireBallsAuto extends CommandGroup {
     // e.g. if Command1 requires chassis, and Command2 requires arm,
     // a CommandGroup containing them would require both the chassis and the
     // arm.
-    addSequential(new WaitForShooterAtSpeed());
-    addParallel(new FiringRunHopperIntake());
-    // addSequential(new WaitForLineBreaks(1.0, numBalls));
-    for (int i = 0; i<numBalls; i++) {
-      addSequential(new DriveUntilBall(1.0));
-      addSequential(new DriveUntilNoBall(1.0));
-    }
-    addParallel(new DriveIndexerWithConstant(0.0), 0.0);
-    addParallel(new DriveHopperWithConstant(0.0), 0.0);
-    addParallel(new DriveIntakeWithConstant(0.0), 0.0);
+    addSequential(new RetractShooterHardstop());
+    addSequential(new Sleep(), 0.1);
+    addSequential(new ExtendShooterHood());
+    addSequential(new Sleep(), 0.1);
   }
 }

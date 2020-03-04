@@ -63,14 +63,20 @@
 
 package org.team2168;
 
+import org.team2168.commands.auto.DefaultTrenchAuto;
+import org.team2168.commands.auto.DoNothing;
+import org.team2168.commands.auto.OppositeTrenchAuto;
+import org.team2168.commands.drivetrain.PIDCommands.DriveXDistance;
+import org.team2168.commands.drivetrain.PIDCommands.TurnXAngle;
+import org.team2168.commands.hood_adjust.MoveToFiringLocation;
 import org.team2168.subsystems.Balancer;
 import org.team2168.subsystems.Climber;
-import org.team2168.subsystems.Indexer;
-import org.team2168.subsystems.Hopper;
 import org.team2168.subsystems.ColorWheel;
 import org.team2168.subsystems.ColorWheelPivot;
 import org.team2168.subsystems.Drivetrain;
 import org.team2168.subsystems.HoodAdjust;
+import org.team2168.subsystems.Hopper;
+import org.team2168.subsystems.Indexer;
 import org.team2168.subsystems.IntakeMotor;
 import org.team2168.subsystems.IntakePivot;
 import org.team2168.subsystems.Shooter;
@@ -78,18 +84,18 @@ import org.team2168.subsystems.Shooter;
 import org.team2168.utils.PowerDistribution;
 import org.team2168.utils.consoleprinter.ConsolePrinter;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import org.team2168.utils.consoleprinter.*;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Robot extends TimedRobot {	
   private static final String kDefaultAuto = "Default";
   private static final String kCustomAuto = "My Auto";
-  private String m_autoSelected;
-  private final SendableChooser<String> m_chooser = new SendableChooser<>();
+  static Command autonomousCommand;
+  public static SendableChooser<Command> autoChooser;
 
   // Subsystems
   private static Climber climber;
@@ -106,9 +112,14 @@ public class Robot extends TimedRobot {
 
   private static OI oi;
 
-  public static PowerDistribution pdp;
+  private static DigitalInput practiceBot;
+
+  private static PowerDistribution pdp;
 
   static boolean autoMode;
+  public static final boolean ENABLE_BUTTON_BOX = true;
+  private static boolean lastCallHoodButtonA = false;
+  private MoveToFiringLocation moveHood;
   // private static boolean matchStarted = false;
   // private static int gyroReinits;
   // private double lastAngle;
@@ -128,10 +139,9 @@ public class Robot extends TimedRobot {
   	ConsolePrinter.init();
 
     // colorWheel = ColorWheel.getInstance();
-    m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
-    m_chooser.addOption("My Auto", kCustomAuto);
-	  SmartDashboard.putData("Auto choices", m_chooser);
-	
+  
+    practiceBot = new DigitalInput(RobotMap.PRACTICE_BOT_JUMPER);
+
     //Init Subsystems
     climber = Climber.getInstance();
     intakeMotor = IntakeMotor.getInstance();
@@ -150,6 +160,12 @@ public class Robot extends TimedRobot {
     // pdp.startThread();
     ConsolePrinter.init();
     ConsolePrinter.startThread();
+
+    //Initialize Autonomous Selector Choices
+    autoSelectInit();
+
+    ConsolePrinter.putBoolean("isPracticeBot", ()->{return isPracticeBot();}, true, false);
+    ConsolePrinter.putSendable("Autonomous Mode Chooser", () -> {return Robot.autoChooser;}, true, false);
 
     drivetrain.setDefaultBrakeMode();
   }
@@ -173,13 +189,14 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
+    autoMode = true;
     drivetrain.setDefaultBrakeMode();
 
-    m_autoSelected = m_chooser.getSelected();
-    // m_autoSelected = SmartDashboard.getString("Auto Selector", kDefaultAuto);
-    System.out.println("Auto selected: " + m_autoSelected);
-
-    shooter.playChirp();
+		autonomousCommand = (Command) autoChooser.getSelected();
+    	
+    // schedule the autonomous command
+    if (autonomousCommand != null) 
+      autonomousCommand.start();
   }
 
   /**
@@ -187,21 +204,22 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousPeriodic() {
-    switch (m_autoSelected) {
-    case kCustomAuto:
-      // Put custom auto code here
-      break;
-    case kDefaultAuto:
-    default:
-      // Put default auto code here
-      break;
-
-    }
+    autoMode = true;
+    Scheduler.getInstance().run();
   }
 
-  @Override
-  public void teleopInit() {
+  /**
+   * This function called prior to robot entering Teleop Mode
+   */
+	public void teleopInit() {
+    autoMode = false;
     drivetrain.setDefaultBrakeMode();
+
+    // This makes sure that the autonomous stops running when
+    // teleop starts running. If you want the autonomous to 
+    // continue until interrupted by another command, remove
+    // this line or comment it out.
+    if (autonomousCommand != null) autonomousCommand.cancel();
   }
 
   /**
@@ -209,8 +227,26 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
-    Scheduler.getInstance().run();
+    boolean buttonBox2_buttonA = oi.buttonBox2.isPressedButtonA();
+    autoMode = false;
 
+    if(!oi.driverJoystick.isPressedButtonLeftBumper()
+        && (buttonBox2_buttonA && !lastCallHoodButtonA)) {
+      //The driver isn't going under the trench
+      //the operator pressed hood raise button
+      //raise the hood to the firing position
+      moveHood = new MoveToFiringLocation(shooter.getFiringLocation());
+      moveHood.start();
+    } else if (!buttonBox2_buttonA && lastCallHoodButtonA) {
+      // or the operator isn't pressing hood raise button
+      //lower the hood
+      moveHood = new MoveToFiringLocation(Shooter.FiringLocation.WALL);
+      moveHood.start();
+    }
+
+    lastCallHoodButtonA = buttonBox2_buttonA;
+
+    Scheduler.getInstance().run();
   }
 
   /**
@@ -218,20 +254,54 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void testPeriodic() {
+    autoMode = false;
   }
 
   @Override
   public void disabledInit() {
+    autoMode = false;
+
     if(!DriverStation.getInstance().isFMSAttached()) {
       //If we're not on a real field, let the robot be pushed around if it's disabled.
       drivetrain.setAllMotorsCoast();
     }
+
+    lastCallHoodButtonA = false;
   }
 
   @Override
   public void disabledPeriodic() {
+    autoMode = false;
     //getControlStyleInt();
     //controlStyle = (int) controlStyleChooser.getSelected();
     Scheduler.getInstance().run();
+    autonomousCommand = (Command) autoChooser.getSelected();
+
+  }
+
+      
+    /**
+     * Adds the autos to the selector
+     */
+    public void autoSelectInit() {
+      autoChooser = new SendableChooser<Command>();
+      autoChooser.setDefaultOption("Drive Straight", new DriveXDistance(-60.0));
+      autoChooser.addOption("Do Nothing", new DoNothing());
+      autoChooser.addOption("Opposite Trench Auto ", new OppositeTrenchAuto());
+      autoChooser.addOption("Near Trench Auto", new DefaultTrenchAuto());
+      autoChooser.addOption("Turn 13.25", new TurnXAngle(13.25, 0.3));
+
+    }
+
+  /**
+   * TODO return jumper value from DIO 24
+   */
+  public static boolean isPracticeBot() {
+    // return true;
+    return !practiceBot.get();
+  }
+
+  public static boolean isAutoMode() {
+    return autoMode;
   }
 }
