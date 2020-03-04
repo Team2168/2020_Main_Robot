@@ -35,7 +35,16 @@ public class MoveToWallNoShoot extends CommandGroup {
     // e.g. if Command1 requires chassis, and Command2 requires arm,
     // a CommandGroup containing them would require both the chassis and the
     // arm.
+
+    //band aid
+    addSequential(new RetractShooterHood());
     addSequential(new RetractShooterHardstop());
+    addSequential(new ExtendShooterHood());
+    addSequential(new ExtendShooterHardstop());
+    addSequential(new RetractShooterHardstop());
+    addSequential(new RetractShooterHood());
+
+    // addSequential(new RetractShooterHardstop());
     addSequential(new Sleep(), 0.1);
     addSequential(new ExtendShooterHood());
     addSequential(new Sleep(), 0.1);
