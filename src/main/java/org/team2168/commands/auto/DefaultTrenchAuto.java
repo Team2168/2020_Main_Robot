@@ -49,7 +49,7 @@ public class DefaultTrenchAuto extends CommandGroup {
     addSequential(new DriveXDistance(-115.0, 0.5), 4.0); 
     addParallel(new DriveIntakeWithConstant(0.3));
     addSequential(new RetractIntakePneumatic());  //want to run the intake constantly during firing... TODO: cleanup
-    addSequential(new TurnXAngle(13.25, 0.4), 2.0); //12.25), 2.0);
+    addSequential(new TurnXAngle(12.25, 0.4), 2.0); //12.25), 2.0);
     // addSequential(new FireBallsAutoNoLineBreak(), 2.0);
     addSequential(new FireBallsAuto(5), 2.0);
 
@@ -65,7 +65,7 @@ public class DefaultTrenchAuto extends CommandGroup {
     // addParallel(new DriveToXSpeed(Shooter.getInstance().BACK_TRENCH_VEL));
 
     // //turn straight again
-    addSequential(new TurnXAngle(-12.75, 0.4), 2.0);
+    addSequential(new TurnXAngle(-12.0, 0.4), 2.0);
     addParallel(new DriveIntakeWithConstant(1.0));//TODO set
     addSequential(new ExtendIntakePneumatic());
     addSequential(new DriveXDistance(-103.0, 0.5, 10.0*12.0), 4.0);
@@ -75,7 +75,7 @@ public class DefaultTrenchAuto extends CommandGroup {
     addSequential(new RetractIntakePneumatic()); 
 
     addParallel(new MoveToFrontTrench());
-    addSequential(new TurnXAngle(+12.75, 0.4), 2.0);
+    addSequential(new TurnXAngle(+12.0, 0.4), 2.0);
     addSequential(new FireBallsAuto(3), 2.0);
     // addParallel(new MoveToBackTrench());
     // addParallel(new DriveIntakeWithConstant(0.3));
