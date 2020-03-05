@@ -5,22 +5,21 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package org.team2168.commands.auto;
+package org.team2168.commands.auto.robotFunctions;
 
 import org.team2168.commands.hopper.DriveHopperWithConstant;
 import org.team2168.commands.indexer.DriveIndexerWithConstant;
-import org.team2168.commands.indexer.DriveUntilBall;
-import org.team2168.commands.indexer.DriveUntilNoBall;
+import org.team2168.commands.indexer.DriveIndexerWithConstantNoStop;
 import org.team2168.commands.intakeMotor.DriveIntakeWithConstant;
 import org.team2168.commands.shooter.WaitForShooterAtSpeed;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
-public class FireBallsAuto extends CommandGroup {
+public class FireBalls extends CommandGroup {
   /**
    * Add your docs here.
    */
-  public FireBallsAuto(int numBalls) {
+  public FireBalls() {
     // Add Commands here:
     // e.g. addSequential(new Command1());
     // addSequential(new Command2());
@@ -37,15 +36,12 @@ public class FireBallsAuto extends CommandGroup {
     // e.g. if Command1 requires chassis, and Command2 requires arm,
     // a CommandGroup containing them would require both the chassis and the
     // arm.
+
     addSequential(new WaitForShooterAtSpeed());
-    addParallel(new FiringRunHopperIntake());
-    // addSequential(new WaitForLineBreaks(1.0, numBalls));
-    for (int i = 0; i<numBalls; i++) {
-      addSequential(new DriveUntilBall(1.0));
-      addSequential(new DriveUntilNoBall(1.0));
-    }
-    addParallel(new DriveIndexerWithConstant(0.0), 0.0);
-    addParallel(new DriveHopperWithConstant(0.0), 0.0);
-    addParallel(new DriveIntakeWithConstant(0.0), 0.0);
+    addSequential(new DriveIndexerWithConstantNoStop(1.0), 0.5); 
+    addParallel(new DriveIndexerWithConstant(1.0));
+    addParallel(new DriveHopperWithConstant(0.8));
+    addParallel(new DriveIntakeWithConstant(0.2));
   }
 }
+
