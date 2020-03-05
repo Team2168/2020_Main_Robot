@@ -45,6 +45,7 @@ public class DriveClimberXPosition extends Command {
   protected void initialize() {
     // climber.zeroEncoder(); //don't do this except for testing
     climber.setGains(_targetPos);
+    _withinThresholdLoops = 0;
   }
 
   // Called repeatedly when this Command is scheduled to run

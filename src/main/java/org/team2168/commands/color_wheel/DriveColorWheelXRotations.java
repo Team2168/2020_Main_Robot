@@ -35,6 +35,7 @@ public class DriveColorWheelXRotations extends Command {
       colorWheel.updatePIDValues();
     }
     colorWheel.zeroEncoders();
+    _withinThresholdLoops = 0;
   }
 
   // Called repeatedly when this Command is scheduled to run

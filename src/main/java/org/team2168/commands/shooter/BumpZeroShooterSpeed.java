@@ -11,45 +11,27 @@ import org.team2168.subsystems.Shooter;
 
 import edu.wpi.first.wpilibj.command.Command;
 
-public class WaitForShooterAtSpeed extends Command {
-  
+public class BumpZeroShooterSpeed extends Command {
   private Shooter shooter;
-  private double _errorTolerance;
-  private double _loopsToSettle = 10;
-  private int _withinThresholdLoops = 0;
-  private static final double DEFAULT_ERROR_TOLERANCE = 50.0;
-
-  public WaitForShooterAtSpeed(double errorTolerance) {
-    // this can't require the shooter because we want shooter to keep running independently
+  public BumpZeroShooterSpeed() {
     shooter = Shooter.getInstance();
-    this._errorTolerance = errorTolerance;
   }
 
-  public WaitForShooterAtSpeed() {
-    this(DEFAULT_ERROR_TOLERANCE);
-  }
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
-    _withinThresholdLoops = 0;
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    /* Check if closed loop error is within the threshld */
-    if (Math.abs(shooter.getError()) < _errorTolerance) {
-      ++_withinThresholdLoops;
-    } 
-    else {
-      _withinThresholdLoops = 0;
-    }
+    shooter.zeroSpeed();
   }
 
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    return _withinThresholdLoops > _loopsToSettle;
+    return true;
   }
 
   // Called once after isFinished returns true

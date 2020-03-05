@@ -38,6 +38,7 @@ public class DriveBalancerXRevs extends Command {
     if(_readPIDFromDashboard) {
       balancer.updatePIDValues();
     }
+    _withinThresholdLoops = 0;
   }
 
   // Called repeatedly when this Command is scheduled to run
