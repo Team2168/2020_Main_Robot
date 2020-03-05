@@ -1,8 +1,8 @@
 
 package org.team2168;
 
-import org.team2168.commands.auto.robotFunctions.FinishFiring;
-import org.team2168.commands.auto.robotFunctions.FireBalls;
+import org.team2168.commands.auto.FinishFiring;
+import org.team2168.commands.auto.FireBalls;
 import org.team2168.commands.climber.DisengageRatchet;
 import org.team2168.commands.climber.DriveClimberWithTestJoystickUnSafe;
 import org.team2168.commands.climber.DriveClimberXPosition;
@@ -14,6 +14,7 @@ import org.team2168.commands.color_wheel_pivot.DisengageColorWheel;
 import org.team2168.commands.color_wheel_pivot.EngageColorWheel;
 import org.team2168.commands.drivetrain.DriveWithJoystick;
 import org.team2168.commands.drivetrain.PIDCommands.LimelightTurnTeleop;
+import org.team2168.commands.flashlight.RunFlashlight;
 import org.team2168.commands.hood_adjust.MoveToBackTrench;
 import org.team2168.commands.hood_adjust.MoveToFiringLocation;
 import org.team2168.commands.hood_adjust.MoveToFrontTrench;

@@ -19,27 +19,22 @@ public class DriveXDistance extends Command {
 
     private static final double DEFAULT_ERROR_TOLERANCE = 0.5;
     private static final double DEFAULT_MAX_VEL = 10.0*12.0;
-    private static final double DEFAULT_LOOPS_TO_SETTLE = 5;
 
     private double _errorTolerancePosition; //0.5 inches
     private double _errorToleranceAngle = 1.0; //1.0 degree of tolerance 
     private double _maxVel;
-    private double _loopsToSettle;
+    private double _loopsToSettle = 5;
     private int _withinThresholdLoops = 0;
 
   public DriveXDistance(double setPoint) {
-    this(setPoint, DEFAULT_ERROR_TOLERANCE, DEFAULT_MAX_VEL, DEFAULT_LOOPS_TO_SETTLE);
+    this(setPoint, DEFAULT_ERROR_TOLERANCE, DEFAULT_MAX_VEL);
   }
 
   public DriveXDistance(double setPoint, double errorTolerancePosition) {
-    this(setPoint, errorTolerancePosition, DEFAULT_MAX_VEL, DEFAULT_LOOPS_TO_SETTLE);
+    this(setPoint, errorTolerancePosition, DEFAULT_MAX_VEL);
   }
 
   public DriveXDistance(double setPoint, double errorTolerancePosition, double maxVelocity) {
-    this(setPoint, errorTolerancePosition, maxVelocity, DEFAULT_LOOPS_TO_SETTLE);
-  }
-
-  public DriveXDistance(double setPoint, double errorTolerancePosition, double maxVelocity, double loopsToSettle) {
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
     dt = Drivetrain.getInstance();
@@ -48,7 +43,6 @@ public class DriveXDistance extends Command {
     _errorTolerancePosition = errorTolerancePosition;
     _targetPos = setPoint;
     _maxVel = maxVelocity;
-    _loopsToSettle = loopsToSettle;
   }
 
 

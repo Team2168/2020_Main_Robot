@@ -7,7 +7,6 @@
 
 package org.team2168.commands.auto;
 
-import org.team2168.commands.auto.robotFunctions.FireBallsAuto;
 import org.team2168.commands.drivetrain.PIDCommands.DriveXDistance;
 import org.team2168.commands.drivetrain.PIDCommands.TurnXAngle;
 import org.team2168.commands.hood_adjust.MoveToWLNoShoot;
@@ -20,11 +19,11 @@ import org.team2168.commands.shooter.DriveToXSpeed;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
-public class OppositeTrenchAutoNoPush extends CommandGroup {
+public class OppositeTrenchAuto extends CommandGroup {
   /**
    * Add your docs here.
    */
-  public OppositeTrenchAutoNoPush() {
+  public OppositeTrenchAuto() {
     // Add Commands here:
     // e.g. addSequential(new Command1());
     // addSequential(new Command2());

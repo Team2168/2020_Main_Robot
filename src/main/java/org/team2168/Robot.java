@@ -63,9 +63,9 @@
 
 package org.team2168;
 
+import org.team2168.commands.auto.DefaultTrenchAuto;
 import org.team2168.commands.auto.DoNothing;
-import org.team2168.commands.auto.selector.NearTrenchAuto;
-import org.team2168.commands.auto.selector.OppositeTrenchAuto;
+import org.team2168.commands.auto.OppositeTrenchAuto;
 import org.team2168.commands.drivetrain.PIDCommands.DriveXDistance;
 import org.team2168.commands.drivetrain.PIDCommands.TurnXAngle;
 import org.team2168.commands.hood_adjust.MoveToFiringLocation;
@@ -87,8 +87,8 @@ import org.team2168.utils.consoleprinter.ConsolePrinter;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -98,8 +98,6 @@ public class Robot extends TimedRobot {
   private static final String kCustomAuto = "My Auto";
   static Command autonomousCommand;
   public static SendableChooser<Command> autoChooser;
-  public static int pushRobot;
-  public static SendableChooser<Number> pushRobotChooser;
 
   // Subsystems
   private static Climber climber;
@@ -167,8 +165,6 @@ public class Robot extends TimedRobot {
     ConsolePrinter.init();
     ConsolePrinter.startThread();
 
-    //pick whether or not we want to push a robot off of the line
-    pushRobotSelectInit();
     //Initialize Autonomous Selector Choices
     autoSelectInit();
 
@@ -201,7 +197,6 @@ public class Robot extends TimedRobot {
     autoMode = true;
     drivetrain.setDefaultBrakeMode();
 
-    pushRobot = (int) pushRobotChooser.getSelected();
 		autonomousCommand = (Command) autoChooser.getSelected();
     	
     // schedule the autonomous command
@@ -297,39 +292,12 @@ public class Robot extends TimedRobot {
      */
     public void autoSelectInit() {
       autoChooser = new SendableChooser<Command>();
-      autoChooser.setDefaultOption("Drive Straight", new DriveXDistance(60.0));
+      autoChooser.setDefaultOption("Drive Straight", new DriveXDistance(-60.0));
       autoChooser.addOption("Do Nothing", new DoNothing());
-      autoChooser.addOption("Opposite Trench Auto ", new NearTrenchAuto());
-      autoChooser.addOption("Near Trench Auto", new OppositeTrenchAuto());
+      autoChooser.addOption("Opposite Trench Auto ", new OppositeTrenchAuto());
+      autoChooser.addOption("Near Trench Auto", new DefaultTrenchAuto());
       autoChooser.addOption("Turn 13.25", new TurnXAngle(13.25, 0.3));
 
-    }
-
-    /**
-     * Adds boolean choice of whether or not to push another robot off the line
-     */
-    public void pushRobotSelectInit() {
-      pushRobotChooser = new SendableChooser<Number>();
-      pushRobotChooser.setDefaultOption("DO NOT push robot", 0);
-      pushRobotChooser.addOption("DO push robot", 1);
-    }
-
-    /**
-     * Returns boolean for whether or not we want to push another robot off the line
-     */
-    public static boolean getPushRobot() {
-      boolean retVal;
-			switch (pushRobot) {
-			case 0:
-				retVal = false;
-				break;
-			case 1:
-				retVal = true;
-				break;
-			default:
-				retVal = false;
-			}
-      return retVal;
     }
 
   /**
