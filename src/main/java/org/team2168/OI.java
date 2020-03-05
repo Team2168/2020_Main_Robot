@@ -12,6 +12,8 @@ import org.team2168.commands.climber.ResetClimberPosition;
 import org.team2168.commands.color_wheel.DriveColorWheelXRotations;
 import org.team2168.commands.color_wheel_pivot.DisengageColorWheel;
 import org.team2168.commands.color_wheel_pivot.EngageColorWheel;
+import org.team2168.commands.drivetrain.DriveWithJoystick;
+import org.team2168.commands.drivetrain.PIDCommands.LimelightTurnTeleop;
 import org.team2168.commands.flashlight.RunFlashlight;
 import org.team2168.commands.hood_adjust.MoveToBackTrench;
 import org.team2168.commands.hood_adjust.MoveToFiringLocation;
@@ -167,8 +169,11 @@ public class OI {
 		gunStyleYInterpolator = new LinearInterpolator(gunStyleYArray);
 		gunStyleXInterpolator = new LinearInterpolator(gunStyleXArray);
 
-		driverJoystick.ButtonLeftStick().whenPressed(new RunFlashlight(1.0));
-		driverJoystick.ButtonLeftStick().whenReleased(new RunFlashlight(0.0));
+		driverJoystick.ButtonLeftStick().whileHeld(new LimelightTurnTeleop(1.50));
+		driverJoystick.ButtonLeftStick().whenReleased(new DriveWithJoystick());
+
+		// driverJoystick.ButtonLeftStick().whenPressed(new RunFlashlight(1.0));
+		// driverJoystick.ButtonLeftStick().whenReleased(new RunFlashlight(0.0));
 
 		//When the red button on the handle of the controller is pressed get ready to go under the trechn. Lower everything.
 		driverJoystick.ButtonLeftBumper().whileHeld(new DisengageColorWheel());
@@ -187,7 +192,8 @@ public class OI {
 		operatorJoystick.ButtonA().whenPressed(new DisengageColorWheel());
 		// operatorJoystick.ButtonA().whenPressed(new MoveToWall());
 
-		operatorJoystick.ButtonStart().whenPressed(new DriveColorWheelXRotations(4.0*8.0));
+		operatorJoystick.ButtonStart().whenPressed(new DriveColorWheelXRotations(-4.0*8.0)); 	//go opposite direction to protect limelight 
+
 
 		// operatorJoystick.ButtonX().whenPressed(new DriveToXSpeed(Shooter.getInstance().WALL_VEL));
 		operatorJoystick.ButtonX().whenPressed(new DriveShooterWithConstant(0.52));

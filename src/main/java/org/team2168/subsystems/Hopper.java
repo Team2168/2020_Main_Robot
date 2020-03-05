@@ -43,6 +43,7 @@ public class Hopper extends Subsystem {
     talonCurrentLimit = new SupplyCurrentLimitConfiguration(ENABLE_CURRENT_LIMIT,
     CONTINUOUS_CURRENT_LIMIT, TRIGGER_THRESHOLD_LIMIT, TRIGGER_THRESHOLD_TIME);
 
+    hopperMotor.configFactoryDefault();
     hopperMotor.configSupplyCurrentLimit(talonCurrentLimit);
 
     hopperMotor.setNeutralMode(NeutralMode.Brake);
