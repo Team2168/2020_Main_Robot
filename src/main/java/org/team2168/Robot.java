@@ -98,8 +98,8 @@ public class Robot extends TimedRobot {
   private static final String kCustomAuto = "My Auto";
   static Command autonomousCommand;
   public static SendableChooser<Command> autoChooser;
-  public static boolean pushRobot;
-  public static SendableChooser<Boolean> pushRobotChooser;
+  public static int pushRobot;
+  public static SendableChooser<Number> pushRobotChooser;
 
   // Subsystems
   private static Climber climber;
@@ -174,6 +174,7 @@ public class Robot extends TimedRobot {
 
     ConsolePrinter.putBoolean("isPracticeBot", ()->{return isPracticeBot();}, true, false);
     ConsolePrinter.putSendable("Autonomous Mode Chooser", () -> {return Robot.autoChooser;}, true, false);
+    ConsolePrinter.putSendable("Push Robot Chooser", () -> {return Robot.pushRobotChooser;}, true, false);
 
     drivetrain.setDefaultBrakeMode();
   }
@@ -200,7 +201,7 @@ public class Robot extends TimedRobot {
     autoMode = true;
     drivetrain.setDefaultBrakeMode();
 
-    pushRobot = (boolean) pushRobotChooser.getSelected();
+    pushRobot = (int) pushRobotChooser.getSelected();
 		autonomousCommand = (Command) autoChooser.getSelected();
     	
     // schedule the autonomous command
@@ -308,16 +309,27 @@ public class Robot extends TimedRobot {
      * Adds boolean choice of whether or not to push another robot off the line
      */
     public void pushRobotSelectInit() {
-      pushRobotChooser = new SendableChooser<Boolean>();
-      pushRobotChooser.setDefaultOption("DO NOT push robot", false);
-      pushRobotChooser.addOption("DO push robot", true);
+      pushRobotChooser = new SendableChooser<Number>();
+      pushRobotChooser.setDefaultOption("DO NOT push robot", 0);
+      pushRobotChooser.addOption("DO push robot", 1);
     }
 
     /**
      * Returns boolean for whether or not we want to push another robot off the line
      */
     public static boolean getPushRobot() {
-      return pushRobot;
+      boolean retVal;
+			switch (pushRobot) {
+			case 0:
+				retVal = false;
+				break;
+			case 1:
+				retVal = true;
+				break;
+			default:
+				retVal = false;
+			}
+      return retVal;
     }
 
   /**
