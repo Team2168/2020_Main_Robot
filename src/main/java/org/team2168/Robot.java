@@ -306,6 +306,7 @@ public class Robot extends TimedRobot {
     }
 
     /**
+<<<<<<< HEAD
      * Get the name of an autonomous mode command.
      * 
      * @return the name of the auto command.
@@ -319,6 +320,8 @@ public class Robot extends TimedRobot {
     }
 
     /**
+=======
+>>>>>>> bffabef... added option to push other robot off the line
      * Adds boolean choice of whether or not to push another robot off the line
      */
     public void pushRobotSelectInit() {
