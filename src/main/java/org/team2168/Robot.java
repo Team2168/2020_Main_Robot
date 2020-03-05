@@ -170,7 +170,6 @@ public class Robot extends TimedRobot {
 
     ConsolePrinter.putBoolean("isPracticeBot", ()->{return isPracticeBot();}, true, false);
     ConsolePrinter.putSendable("Autonomous Mode Chooser", () -> {return Robot.autoChooser;}, true, false);
-    ConsolePrinter.putSendable("Push Robot Chooser", () -> {return Robot.pushRobotChooser;}, true, false);
 
     drivetrain.setDefaultBrakeMode();
   }
