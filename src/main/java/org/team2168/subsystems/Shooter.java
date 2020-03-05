@@ -236,6 +236,10 @@ public class Shooter extends Subsystem {
         velocityAdjustment -= 50.0;
     }
 
+    public void zeroSpeed() {
+        velocityAdjustment = 0;
+    }
+
     public double getError()
     {
         return ticks_per_100ms_to_revs_per_minute(_motorOne.getClosedLoopError(kPIDLoopIdx)) ;

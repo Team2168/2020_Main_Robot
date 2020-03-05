@@ -102,6 +102,7 @@ public class Indexer extends Subsystem {
     } else {
       _srx_motor.set(ControlMode.PercentOutput, speed);
     }
+    //indexerMotorVoltage = Robot.pdp.getBatteryVoltage() * speed;
   }
 
   public double isBallEnteringDashboard() {

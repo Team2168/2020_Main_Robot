@@ -31,6 +31,7 @@ import org.team2168.commands.intakePivot.ExtendIntakePneumatic;
 import org.team2168.commands.intakePivot.RetractIntakePneumatic;
 import org.team2168.commands.shooter.BumpDownShooterSpeed;
 import org.team2168.commands.shooter.BumpUpShooterSpeed;
+import org.team2168.commands.shooter.BumpZeroShooterSpeed;
 import org.team2168.commands.shooter.DriveShooterWithConstant;
 import org.team2168.commands.shooter.DriveToXSpeed;
 import org.team2168.subsystems.Shooter;
@@ -121,6 +122,7 @@ public class OI {
 			buttonBox1.ButtonLeftDPad().whenPressed(new DriveColorWheelXRotations(4.0 * 8.0));
 			buttonBox1.ButtonA().whenPressed(new BumpUpShooterSpeed());
 			buttonBox1.ButtonB().whenPressed(new BumpDownShooterSpeed());
+			buttonBox1.ButtonX().whenPressed(new BumpZeroShooterSpeed());
 		//Right D Pad, Position
 		// Button A, bump up = increment velocity adjustment of shooter
 		// Button B, bump down
