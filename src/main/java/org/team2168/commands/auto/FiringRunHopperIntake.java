@@ -5,9 +5,8 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package org.team2168.commands.auto.robotFunctions;
+package org.team2168.commands.auto;
 
-import org.team2168.commands.auto.Sleep;
 import org.team2168.commands.hopper.DriveHopperWithConstant;
 import org.team2168.commands.intakeMotor.DriveIntakeWithConstant;
 

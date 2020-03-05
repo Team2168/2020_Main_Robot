@@ -5,7 +5,7 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package org.team2168.commands.auto.robotFunctions;
+package org.team2168.commands.auto;
 
 import org.team2168.subsystems.Climber;
 import org.team2168.subsystems.Indexer;
