@@ -27,19 +27,19 @@ import org.team2168.commands.intakeMotor.IntakeBallStart;
 import org.team2168.commands.intakeMotor.IntakeBallStop;
 import org.team2168.commands.intakePivot.ExtendIntakePneumatic;
 import org.team2168.commands.intakePivot.RetractIntakePneumatic;
+import org.team2168.commands.shooter.BumpDownShooterSpeed;
+import org.team2168.commands.shooter.BumpUpShooterSpeed;
 import org.team2168.commands.shooter.DriveShooterWithConstant;
 import org.team2168.commands.shooter.DriveToXSpeed;
 import org.team2168.subsystems.Shooter;
 import org.team2168.utils.F310;
 import org.team2168.utils.LinearInterpolator;
 
-
 /**
  * This class is the glue that binds the controls on the physical operator
  * interface to the commands and command groups that allow control of the robot.
  */
-public class OI
-{
+public class OI {
 	//// CREATING BUTTONS
 	// One type of button is a joystick button which is any button on a joystick.
 	// You create one by telling it which joystick it's on and which button
@@ -78,7 +78,7 @@ public class OI
 	// F310(RobotMap.DRIVER_OPERATOR_E_BACKUP);
 
 	// public F310 testJoystick = new F310(RobotMap.COMMANDS_TEST_JOYSTICK);
-	//public F310 pidTestJoystick = new F310(RobotMap.PID_TEST_JOYSTICK);
+	// public F310 pidTestJoystick = new F310(RobotMap.PID_TEST_JOYSTICK);
 	private LinearInterpolator gunStyleYInterpolator;
 	private LinearInterpolator gunStyleXInterpolator;
 	private LinearInterpolator colorWheelInterpolator;
@@ -86,63 +86,39 @@ public class OI
 	private LinearInterpolator balancerInterpolator;
 	private LinearInterpolator climberResetInterpolator;
 
-	private double[][] gunStyleYArray = {
-		{-1.0, -1.00}, //can limit speed by changing second number
-		{-0.15, 0.00},
-		{+0.15, 0.00},
-		{+1.00, +1.00}
-	};
-	private double[][] gunStyleXArray = {
-		{-1.0, -0.70},  //scale down turning to max 70%
-		{-0.05, 0.00},  //set neutral deadband to 5%
-		{+0.05, 0.00},
-		{+1.00,+0.70}  
-	};
+	private double[][] gunStyleYArray = { { -1.0, -1.00 }, // can limit speed by changing second number
+			{ -0.15, 0.00 }, { +0.15, 0.00 }, { +1.00, +1.00 } };
+	private double[][] gunStyleXArray = { { -1.0, -0.70 }, // scale down turning to max 70%
+			{ -0.05, 0.00 }, // set neutral deadband to 5%
+			{ +0.05, 0.00 }, { +1.00, +0.70 } };
 
-	private double[][] colorWheelArray = {
-		{-1.0, -1.00},  
-		{-0.05, 0.00},  //set neutral deadband to 4%
-		{+0.05, 0.00},
-		{+1.0, +1.00}  
-	};
+	private double[][] colorWheelArray = { { -1.0, -1.00 }, { -0.05, 0.00 }, // set neutral deadband to 4%
+			{ +0.05, 0.00 }, { +1.0, +1.00 } };
 
-	private double[][] climberArray = {
-		{-1.0, -1.00},  
-		{-0.05, 0.00},  //set neutral deadband to 4%
-		{+0.05, 0.00},
-		{+1.0, +1.00}  
-	};
+	private double[][] climberArray = { { -1.0, -1.00 }, { -0.05, 0.00 }, // set neutral deadband to 4%
+			{ +0.05, 0.00 }, { +1.0, +1.00 } };
 
-	private double[][] balancerArray = {
-		{-1.0, -1.00},  
-		{-0.05, 0.00},  //set neutral deadband to 4%
-		{+0.05, 0.00},
-		{+1.0, +1.00}  
-	};
+	private double[][] balancerArray = { { -1.0, -1.00 }, { -0.05, 0.00 }, // set neutral deadband to 4%
+			{ +0.05, 0.00 }, { +1.0, +1.00 } };
 
-	private double[][] climberResetArray = {
-		{-1.0, -0.15},  
-		{-0.05, 0.00},
-		{+0.05, 0.00},
-		{+1.0, +0.15}  
-	};
+	private double[][] climberResetArray = { { -1.0, -0.15 }, { -0.05, 0.00 }, { +0.05, 0.00 }, { +1.0, +0.15 } };
 
 	/**
 	 * Private constructor for singleton class which instantiates the OI object
 	 */
 	private OI() {
 
-		if (Robot.ENABLE_BUTTON_BOX)
-	{
-		//******************************************************************* */
-		//*							Button Box I
-		//******************************************************************* */
-		colorWheelInterpolator = new LinearInterpolator(colorWheelArray);
+		if (Robot.ENABLE_BUTTON_BOX) {
+			// ******************************************************************* */
+			// * Button Box I
+			// ******************************************************************* */
+			colorWheelInterpolator = new LinearInterpolator(colorWheelArray);
 
-
-		buttonBox1.ButtonUpDPad().whenPressed(new EngageColorWheel());
-		buttonBox1.ButtonDownDPad().whenPressed(new DisengageColorWheel());
-		buttonBox1.ButtonLeftDPad().whenPressed(new DriveColorWheelXRotations(4.0*8.0));
+			buttonBox1.ButtonUpDPad().whenPressed(new EngageColorWheel());
+			buttonBox1.ButtonDownDPad().whenPressed(new DisengageColorWheel());
+			buttonBox1.ButtonLeftDPad().whenPressed(new DriveColorWheelXRotations(4.0 * 8.0));
+			buttonBox1.ButtonA().whenPressed(new BumpUpShooterSpeed());
+			buttonBox1.ButtonB().whenPressed(new BumpDownShooterSpeed());
 		//Right D Pad, Position
 		// Button A, bump up = increment velocity adjustment of shooter
 		// Button B, bump down
