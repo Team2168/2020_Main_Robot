@@ -232,7 +232,7 @@ public class Shooter extends Subsystem {
     }
 
     public void zeroSpeed() {
-        velocityAdjustment = 0;
+        velocityAdjustment = 0.0;
     }
 
     public double getError()
