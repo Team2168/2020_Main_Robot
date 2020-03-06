@@ -126,10 +126,10 @@ public class OI
 	};
 
 	private double[][] climberResetArray = {
-		{-1.0, -0.15},  
+		{-1.0, -0.22},
 		{-0.05, 0.00},
 		{+0.05, 0.00},
-		{+1.0, +0.15}  
+		{+1.0, +0.22}
 	};
 
 	/**
@@ -314,7 +314,7 @@ public class OI
 
 	public double getColorWheelJoystick()
 	{
-		return colorWheelInterpolator.interpolate(buttonBox1.getLeftStickRaw_X()); //operatorJoystick.getRightStickRaw_Y();
+		return colorWheelInterpolator.interpolate(buttonBox1.getRightStickRaw_X()); //operatorJoystick.getRightStickRaw_Y();
 	}
 
 	public double getIntakeMotorJoyStick()
@@ -374,6 +374,4 @@ public class OI
 	{
 		return  0.0; //pidTestJoystick.getRightStickRaw_Y();
 	}
-
-	
 }
