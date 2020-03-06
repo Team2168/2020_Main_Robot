@@ -35,7 +35,7 @@ public class DriveClimberWithTestJoystickUnSafe extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    System.out.println(oi.getClimberTestJoystickValue());
+    //System.out.println(oi.getClimberTestJoystickValue());
     if(Math.abs(oi.getClimberTestJoystickValue()) < MAX_SPEED) {
       climber.driveClimberMotors(oi.getClimberTestJoystickValue());
     }
