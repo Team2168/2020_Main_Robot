@@ -4,6 +4,7 @@ package org.team2168;
 import org.team2168.commands.auto.FinishFiring;
 import org.team2168.commands.auto.FireBalls;
 import org.team2168.commands.climber.DisengageRatchet;
+import org.team2168.commands.climber.DriveClimberWithConstant;
 import org.team2168.commands.climber.DriveClimberWithTestJoystickUnSafe;
 import org.team2168.commands.climber.DriveClimberXPosition;
 import org.team2168.commands.climber.EngageRatchet;
@@ -156,6 +157,8 @@ public class OI
 		buttonBox1.ButtonLeftBumper().whenReleased(new DriveIndexerWithConstant(0.0));
 		buttonBox1.ButtonRightBumper().whenPressed(new MoveToWallNoShoot());
 		buttonBox1.ButtonRightBumper().whenPressed(new DisengageColorWheel());
+
+		buttonBox1.ButtonLeftStick().whileHeld(new DriveClimberWithConstant(0.0));
 
 		//******************************************************************** */
 		//*							Button Box II
