@@ -75,6 +75,8 @@ public class Climber extends Subsystem {
   static final Gains kGainsDown = new Gains(1.6, 0.0, 0.0, 0.0, 0, 1.0);
   static final double ARB_FEEDFORWARD_UP = 0.2;
   static final double ARB_FEEDFORWARD_DOWN = 0.0;
+  private static final double MIN_UPWARDS_SPEED = 0.05;
+
 
   /**
    * Convert target RPM to ticks / 100ms.
@@ -178,6 +180,11 @@ public class Climber extends Subsystem {
    */
   
   public void driveClimberMotors(double speed){
+    if(speed > MIN_UPWARDS_SPEED) {
+    disengageRatchet();
+    } else {
+     engageRatchet();
+    }
     driveClimberMotor1(speed);
     driveClimberMotor2(speed);
   }

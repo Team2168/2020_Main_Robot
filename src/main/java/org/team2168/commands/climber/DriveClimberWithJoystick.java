@@ -36,12 +36,7 @@ public class DriveClimberWithJoystick extends Command {
   @Override
   protected void execute() {
     // if(climber.getPosition() > 9.0) { // && climber.getPosition() < 59.0) broke it???
-      if(oi.getClimberJoystickValue() > MIN_UPWARDS_SPEED) {
-        climber.disengageRatchet();
-      }
-      else {
-        climber.engageRatchet();
-      }
+
 
       if(Math.abs(oi.getClimberJoystickValue()) < MAX_SPEED) {
         climber.driveClimberMotors(oi.getClimberJoystickValue());
