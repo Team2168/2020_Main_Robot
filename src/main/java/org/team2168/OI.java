@@ -3,6 +3,7 @@ package org.team2168;
 
 import org.team2168.commands.auto.FinishFiring;
 import org.team2168.commands.auto.FireBalls;
+import org.team2168.commands.climber.Climb;
 import org.team2168.commands.climber.DisengageRatchet;
 import org.team2168.commands.climber.DriveClimberWithTestJoystickUnSafe;
 import org.team2168.commands.climber.DriveClimberXPosition;
@@ -14,7 +15,6 @@ import org.team2168.commands.color_wheel_pivot.DisengageColorWheel;
 import org.team2168.commands.color_wheel_pivot.EngageColorWheel;
 import org.team2168.commands.drivetrain.DriveWithJoystick;
 import org.team2168.commands.drivetrain.PIDCommands.LimelightTurnTeleop;
-import org.team2168.commands.flashlight.RunFlashlight;
 import org.team2168.commands.hood_adjust.MoveToBackTrench;
 import org.team2168.commands.hood_adjust.MoveToFiringLocation;
 import org.team2168.commands.hood_adjust.MoveToFrontTrench;
@@ -184,7 +184,7 @@ public class OI
 		buttonBox2.ButtonBack().whenPressed(new PrepareToClimb());
 		buttonBox2.ButtonBack().whenPressed(new DriveToXSpeed(0.0)); //Stop shooter and lower hood
 		buttonBox2.ButtonBack().whenPressed(new MoveToWLNoShoot());
-		buttonBox2.ButtonStart().whenPressed(new DriveClimberXPosition(7.0, 1.5));
+		buttonBox2.ButtonStart().whenPressed(new Climb());
 		//right stick--auto balance
 	}
 		/*************************************************************************
@@ -246,7 +246,7 @@ public class OI
 
 		pidTestJoystick.ButtonX().whenPressed(new ResetClimberPosition());
 		pidTestJoystick.ButtonY().whenPressed(new PrepareToClimb()); 
-		pidTestJoystick.ButtonA().whenPressed(new DriveClimberXPosition(7.0, 0.1));
+		pidTestJoystick.ButtonA().whenPressed(new Climb());
 
 		pidTestJoystick.ButtonUpDPad().whenPressed(new EngageRatchet());
 		pidTestJoystick.ButtonDownDPad().whenPressed(new DisengageRatchet());
