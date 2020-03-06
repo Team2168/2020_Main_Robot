@@ -92,6 +92,7 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Robot extends TimedRobot {	
   private static final String kDefaultAuto = "Default";
@@ -173,9 +174,9 @@ public class Robot extends TimedRobot {
     autoSelectInit();
 
     ConsolePrinter.putBoolean("isPracticeBot", ()->{return isPracticeBot();}, true, false);
-    ConsolePrinter.putSendable("Autonomous Mode Chooser", () -> {return Robot.autoChooser;}, true, false);
-    ConsolePrinter.putSendable("Push Robot Chooser", () -> {return Robot.pushRobotChooser;}, true, false);
 
+    SmartDashboard.putData("Autonomous Mode Chooser", autoChooser);
+    SmartDashboard.putData("Push Robot Chooser", pushRobotChooser);
     drivetrain.setDefaultBrakeMode();
   }
 
@@ -287,6 +288,10 @@ public class Robot extends TimedRobot {
     //getControlStyleInt();
     //controlStyle = (int) controlStyleChooser.getSelected();
     Scheduler.getInstance().run();
+
+    SmartDashboard.putData("Autonomous Mode Chooser", autoChooser);
+    SmartDashboard.putData("Push Robot Chooser", pushRobotChooser);
+
     autonomousCommand = (Command) autoChooser.getSelected();
 
   }
@@ -299,10 +304,9 @@ public class Robot extends TimedRobot {
       autoChooser = new SendableChooser<Command>();
       autoChooser.setDefaultOption("Drive Straight", new DriveXDistance(60.0));
       autoChooser.addOption("Do Nothing", new DoNothing());
-      autoChooser.addOption("Opposite Trench Auto ", new NearTrenchAuto());
-      autoChooser.addOption("Near Trench Auto", new OppositeTrenchAuto());
+      autoChooser.addOption("Opposite Trench Auto ", new OppositeTrenchAuto());
+      autoChooser.addOption("Near Trench Auto", new NearTrenchAuto());
       autoChooser.addOption("Turn 13.25", new TurnXAngle(13.25, 0.3));
-
     }
 
     /**
