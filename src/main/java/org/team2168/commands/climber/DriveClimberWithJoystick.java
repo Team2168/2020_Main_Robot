@@ -18,6 +18,7 @@ public class DriveClimberWithJoystick extends Command {
   private Climber climber;
   private OI oi;
   private final double MAX_SPEED = 0.8;
+  private final double MIN_UPWARDS_SPEED = 0.05;
   public DriveClimberWithJoystick() {
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
@@ -34,17 +35,24 @@ public class DriveClimberWithJoystick extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    if(climber.getPosition() > 9.0) { // && climber.getPosition() < 59.0) broke it???
+    // if(climber.getPosition() > 9.0) { // && climber.getPosition() < 59.0) broke it???
+      if(oi.getClimberJoystickValue() > MIN_UPWARDS_SPEED) {
+        climber.disengageRatchet();
+      }
+      else {
+        climber.engageRatchet();
+      }
+
       if(Math.abs(oi.getClimberJoystickValue()) < MAX_SPEED) {
         climber.driveClimberMotors(oi.getClimberJoystickValue());
       }
       else {
         climber.driveClimberMotors(MAX_SPEED);
       }
-    }
-    else {
-      climber.driveClimberMotors(0.0);
-    }
+    // }
+    // else {
+    //   climber.driveClimberMotors(0.0);
+    // }
   }
 
   // Make this return true when this Command no longer needs to run execute()
