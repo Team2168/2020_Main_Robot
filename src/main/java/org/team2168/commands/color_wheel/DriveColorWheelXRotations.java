@@ -40,7 +40,7 @@ public class DriveColorWheelXRotations extends Command {
     }
     _withinThresholdLoops = 0;
     _targetPosition = _setPoint + colorWheel.getPosition();
-    System.out.println(_setPoint + " " + colorWheel.getPosition());
+    //System.out.println(_setPoint + " " + colorWheel.getPosition());
   }
 
   // Called repeatedly when this Command is scheduled to run
@@ -61,7 +61,7 @@ public class DriveColorWheelXRotations extends Command {
     else {
       _withinThresholdLoops = 0;
     }
-    System.out.println(colorWheel.getPositionError() + " " + counter);
+    // System.out.println(colorWheel.getPositionError() + " " + counter);
   }
 
   // Make this return true when this Command no longer needs to run execute()
