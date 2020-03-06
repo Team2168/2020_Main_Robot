@@ -63,9 +63,9 @@
 
 package org.team2168;
 
-import org.team2168.commands.auto.DefaultTrenchAuto;
 import org.team2168.commands.auto.DoNothing;
 import org.team2168.commands.auto.OppositeTrenchAuto;
+import org.team2168.commands.auto.selector.NearTrenchAuto;
 import org.team2168.commands.drivetrain.PIDCommands.DriveXDistance;
 import org.team2168.commands.drivetrain.PIDCommands.TurnXAngle;
 import org.team2168.commands.hood_adjust.MoveToFiringLocation;
@@ -92,12 +92,15 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Robot extends TimedRobot {	
   private static final String kDefaultAuto = "Default";
   private static final String kCustomAuto = "My Auto";
   static Command autonomousCommand;
   public static SendableChooser<Command> autoChooser;
+  public static int pushRobot;
+  public static SendableChooser<Number> pushRobotChooser;
 
   // Subsystems
   private static Climber climber;
@@ -169,9 +172,9 @@ public class Robot extends TimedRobot {
     autoSelectInit();
 
     ConsolePrinter.putBoolean("isPracticeBot", ()->{return isPracticeBot();}, true, false);
-    ConsolePrinter.putSendable("Autonomous Mode Chooser", () -> {return Robot.autoChooser;}, true, false);
-		ConsolePrinter.putString("AutoName", () -> {return Robot.getAutoName();}, true, false);
-
+   	ConsolePrinter.putString("AutoName", () -> {return Robot.getAutoName();}, true, false);
+    SmartDashboard.putData("Autonomous Mode Chooser", autoChooser);
+    SmartDashboard.putData("Push Robot Chooser", pushRobotChooser);
     drivetrain.setDefaultBrakeMode();
   }
 
@@ -282,6 +285,10 @@ public class Robot extends TimedRobot {
     //getControlStyleInt();
     //controlStyle = (int) controlStyleChooser.getSelected();
     Scheduler.getInstance().run();
+
+    SmartDashboard.putData("Autonomous Mode Chooser", autoChooser);
+    SmartDashboard.putData("Push Robot Chooser", pushRobotChooser);
+
     autonomousCommand = (Command) autoChooser.getSelected();
 
   }
@@ -295,9 +302,8 @@ public class Robot extends TimedRobot {
       autoChooser.setDefaultOption("Drive Straight", new DriveXDistance(-60.0));
       autoChooser.addOption("Do Nothing", new DoNothing());
       autoChooser.addOption("Opposite Trench Auto ", new OppositeTrenchAuto());
-      autoChooser.addOption("Near Trench Auto", new DefaultTrenchAuto());
-      autoChooser.addOption("Turn 13.25", new TurnXAngle(13.25, 0.3));
-
+      autoChooser.addOption("Near Trench Auto", new NearTrenchAuto());
+//      autoChooser.addOption("Turn 13.25", new TurnXAngle(13.25, 0.3));
     }
 
       /**
@@ -311,6 +317,24 @@ public class Robot extends TimedRobot {
       } else {
         return "None";
       }
+    }
+
+/**
+     * Returns boolean for whether or not we want to push another robot off the line
+     */
+    public static boolean getPushRobot() {
+      boolean retVal;
+			switch (pushRobot) {
+			case 0:
+				retVal = false;
+				break;
+			case 1:
+				retVal = true;
+				break;
+			default:
+				retVal = false;
+			}
+      return retVal;
     }
 
   /**

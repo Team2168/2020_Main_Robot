@@ -57,8 +57,7 @@ public class DriveColorWheelXRotations extends Command {
     /* Check if closed loop error is within the threshld */
     if (Math.abs(colorWheel.getPositionError()) < colorWheel.getAllowedClosedLoopError()) {
       ++_withinThresholdLoops;
-    } 
-    else {
+    } else {
       _withinThresholdLoops = 0;
     }
     // System.out.println(colorWheel.getPositionError() + " " + counter);
