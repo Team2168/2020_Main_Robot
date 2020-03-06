@@ -14,7 +14,6 @@ import org.team2168.commands.color_wheel_pivot.DisengageColorWheel;
 import org.team2168.commands.color_wheel_pivot.EngageColorWheel;
 import org.team2168.commands.drivetrain.DriveWithJoystick;
 import org.team2168.commands.drivetrain.PIDCommands.LimelightTurnTeleop;
-import org.team2168.commands.flashlight.RunFlashlight;
 import org.team2168.commands.hood_adjust.MoveToBackTrench;
 import org.team2168.commands.hood_adjust.MoveToFiringLocation;
 import org.team2168.commands.hood_adjust.MoveToFrontTrench;
@@ -29,6 +28,9 @@ import org.team2168.commands.intakeMotor.IntakeBallStart;
 import org.team2168.commands.intakeMotor.IntakeBallStop;
 import org.team2168.commands.intakePivot.ExtendIntakePneumatic;
 import org.team2168.commands.intakePivot.RetractIntakePneumatic;
+import org.team2168.commands.shooter.BumpDownShooterSpeed;
+import org.team2168.commands.shooter.BumpUpShooterSpeed;
+import org.team2168.commands.shooter.BumpZeroShooterSpeed;
 import org.team2168.commands.shooter.DriveShooterWithConstant;
 import org.team2168.commands.shooter.DriveToXSpeed;
 import org.team2168.subsystems.Shooter;
@@ -146,9 +148,10 @@ public class OI
 		buttonBox1.ButtonDownDPad().whenPressed(new DisengageColorWheel());
 		buttonBox1.ButtonLeftDPad().whenPressed(new DriveColorWheelXRotations(-4.0*8.0)); 	//go opposite direction to protect limelight
 		//Right D Pad, Position
-		// Button A, bump up = increment velocity adjustment of shooter
-		// Button B, bump down
-		// Button X, reset
+		buttonBox1.ButtonA().whenPressed(new BumpUpShooterSpeed());
+		buttonBox1.ButtonB().whenPressed(new BumpDownShooterSpeed());
+		buttonBox1.ButtonX().whenPressed(new BumpZeroShooterSpeed());
+
 		buttonBox1.ButtonY().whenPressed(new DriveToXSpeed(Shooter.FiringLocation.BACK_TRENCH));
 		buttonBox1.ButtonLeftBumper().whenPressed(new DriveHopperWithConstant(-1.0));// Temporary value
 		buttonBox1.ButtonLeftBumper().whenPressed(new DriveIndexerWithConstant(-1.0));
