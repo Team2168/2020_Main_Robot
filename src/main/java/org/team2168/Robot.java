@@ -170,6 +170,7 @@ public class Robot extends TimedRobot {
 
     ConsolePrinter.putBoolean("isPracticeBot", ()->{return isPracticeBot();}, true, false);
     ConsolePrinter.putSendable("Autonomous Mode Chooser", () -> {return Robot.autoChooser;}, true, false);
+		ConsolePrinter.putString("AutoName", () -> {return Robot.getAutoName();}, true, false);
 
     drivetrain.setDefaultBrakeMode();
   }
@@ -297,6 +298,19 @@ public class Robot extends TimedRobot {
       autoChooser.addOption("Near Trench Auto", new DefaultTrenchAuto());
       autoChooser.addOption("Turn 13.25", new TurnXAngle(13.25, 0.3));
 
+    }
+
+      /**
+     * Get the name of an autonomous mode command.
+     * 
+     * @return the name of the auto command.
+     */
+    public static String getAutoName() {
+      if (autonomousCommand != null) {
+        return autonomousCommand.getName();
+      } else {
+        return "None";
+      }
     }
 
   /**
