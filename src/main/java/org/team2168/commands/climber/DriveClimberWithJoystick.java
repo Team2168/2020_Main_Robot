@@ -17,8 +17,6 @@ public class DriveClimberWithJoystick extends Command {
   double _speed;
   private Climber climber;
   private OI oi;
-  private final double MAX_SPEED = 0.8;
-  private final double MIN_UPWARDS_SPEED = 0.05;
   public DriveClimberWithJoystick() {
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
@@ -38,12 +36,7 @@ public class DriveClimberWithJoystick extends Command {
     // if(climber.getPosition() > 9.0) { // && climber.getPosition() < 59.0) broke it???
 
 
-      if(Math.abs(oi.getClimberJoystickValue()) < MAX_SPEED) {
-        climber.driveClimberMotors(oi.getClimberJoystickValue());
-      }
-      else {
-        climber.driveClimberMotors(MAX_SPEED);
-      }
+      climber.driveClimberMotors(oi.getClimberJoystickValue());
     // }
     // else {
     //   climber.driveClimberMotors(0.0);

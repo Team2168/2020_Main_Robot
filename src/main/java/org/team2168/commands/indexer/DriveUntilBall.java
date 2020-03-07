@@ -7,6 +7,7 @@
 
 package org.team2168.commands.indexer;
 
+import org.team2168.Robot;
 import org.team2168.subsystems.Indexer;
 
 import edu.wpi.first.wpilibj.command.Command;
@@ -30,6 +31,7 @@ public class DriveUntilBall extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
+    Robot.setCompressorOn(false);
     indexer.drive(_speed);
   }
 
@@ -42,11 +44,13 @@ public class DriveUntilBall extends Command {
   // Called once after isFinished returns true
   @Override
   protected void end() {
+    Robot.setCompressorOn(true);
   }
 
   // Called when another command which requires one or more of the same
   // subsystems is scheduled to run
   @Override
   protected void interrupted() {
+    end();
   }
 }

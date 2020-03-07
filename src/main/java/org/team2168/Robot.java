@@ -67,7 +67,6 @@ import org.team2168.commands.auto.DoNothing;
 import org.team2168.commands.auto.selector.NearTrenchAuto;
 import org.team2168.commands.auto.selector.OppositeTrenchAuto;
 import org.team2168.commands.drivetrain.PIDCommands.DriveXDistance;
-import org.team2168.commands.drivetrain.PIDCommands.TurnXAngle;
 import org.team2168.commands.hood_adjust.MoveToFiringLocation;
 import org.team2168.subsystems.Balancer;
 import org.team2168.subsystems.Climber;
@@ -85,6 +84,7 @@ import org.team2168.subsystems.Shooter;
 import org.team2168.utils.PowerDistribution;
 import org.team2168.utils.consoleprinter.ConsolePrinter;
 
+import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -92,14 +92,15 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Robot extends TimedRobot {	
   private static final String kDefaultAuto = "Default";
   private static final String kCustomAuto = "My Auto";
   static Command autonomousCommand;
   public static SendableChooser<Command> autoChooser;
-  public static boolean pushRobot;
-  public static SendableChooser<Boolean> pushRobotChooser;
+  public static int pushRobot;
+  public static SendableChooser<Number> pushRobotChooser;
 
   // Subsystems
   private static Climber climber;
@@ -114,6 +115,7 @@ public class Robot extends TimedRobot {
   private static HoodAdjust hoodAdjust;
   private static Drivetrain drivetrain;
   private static Limelight limelight;
+  private static Compressor compressor;
 
   private static OI oi;
 
@@ -160,6 +162,7 @@ public class Robot extends TimedRobot {
     hoodAdjust = HoodAdjust.getInstance();
     drivetrain = Drivetrain.getInstance();
     limelight = Limelight.getInstance();
+    compressor = new Compressor();
     oi = OI.getInstance();  
 
     // pdp = new PowerDistribution(RobotMap.PDPThreadPeriod);
@@ -173,8 +176,9 @@ public class Robot extends TimedRobot {
     autoSelectInit();
 
     ConsolePrinter.putBoolean("isPracticeBot", ()->{return isPracticeBot();}, true, false);
-    ConsolePrinter.putSendable("Autonomous Mode Chooser", () -> {return Robot.autoChooser;}, true, false);
-		ConsolePrinter.putString("AutoName", () -> {return Robot.getAutoName();}, true, false);
+    SmartDashboard.putData("Autonomous Mode Chooser", autoChooser); 
+    SmartDashboard.putData("Push Robot Chooser", pushRobotChooser);
+    ConsolePrinter.putString("AutoName", () -> {return Robot.getAutoName();}, true, false);
 
     drivetrain.setDefaultBrakeMode();
   }
@@ -201,7 +205,7 @@ public class Robot extends TimedRobot {
     autoMode = true;
     drivetrain.setDefaultBrakeMode();
 
-    pushRobot = (boolean) pushRobotChooser.getSelected();
+    pushRobot = (int) pushRobotChooser.getSelected();
 		autonomousCommand = (Command) autoChooser.getSelected();
     	
     // schedule the autonomous command
@@ -287,7 +291,11 @@ public class Robot extends TimedRobot {
     //getControlStyleInt();
     //controlStyle = (int) controlStyleChooser.getSelected();
     Scheduler.getInstance().run();
+
+    SmartDashboard.putData("Autonomous Mode Chooser", autoChooser); 
+    SmartDashboard.putData("Push Robot Chooser", pushRobotChooser);
     autonomousCommand = (Command) autoChooser.getSelected();
+    pushRobot = (int) pushRobotChooser.getSelected();
 
   }
 
@@ -299,9 +307,8 @@ public class Robot extends TimedRobot {
       autoChooser = new SendableChooser<Command>();
       autoChooser.setDefaultOption("Drive Straight", new DriveXDistance(60.0));
       autoChooser.addOption("Do Nothing", new DoNothing());
-      autoChooser.addOption("Opposite Trench Auto ", new NearTrenchAuto());
-      autoChooser.addOption("Near Trench Auto", new OppositeTrenchAuto());
-      autoChooser.addOption("Turn 13.25", new TurnXAngle(13.25, 0.3));
+      autoChooser.addOption("Near Trench Auto ", new NearTrenchAuto());
+      autoChooser.addOption("Opposite Trench Auto", new OppositeTrenchAuto());
 
     }
 
@@ -322,16 +329,28 @@ public class Robot extends TimedRobot {
      * Adds boolean choice of whether or not to push another robot off the line
      */
     public void pushRobotSelectInit() {
-      pushRobotChooser = new SendableChooser<Boolean>();
-      pushRobotChooser.setDefaultOption("DO NOT push robot", false);
-      pushRobotChooser.addOption("DO push robot", true);
+      pushRobotChooser = new SendableChooser<Number>();
+      pushRobotChooser.setDefaultOption("DO NOT push robot", 0);
+      pushRobotChooser.addOption("DO push robot", 1);
     }
 
     /**
      * Returns boolean for whether or not we want to push another robot off the line
      */
     public static boolean getPushRobot() {
-      return pushRobot;
+      boolean retVal;
+      switch(pushRobot) {
+        case 0 :
+          retVal = false;
+          break;
+        case 1 : 
+          retVal = true;
+          break;
+        default : 
+          retVal = false; 
+          break;
+      }
+      return retVal;
     }
 
   /**
@@ -348,5 +367,14 @@ public class Robot extends TimedRobot {
 
   public static boolean onBlueAlliance() {
     return DriverStation.getInstance().getAlliance() == Alliance.Blue;
+  }
+
+  public static void setCompressorOn(boolean on) {
+    if(on) {
+      compressor.start();
+    }
+    else {
+      compressor.stop();
+    }
   }
 }
