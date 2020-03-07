@@ -92,14 +92,15 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Robot extends TimedRobot {	
   private static final String kDefaultAuto = "Default";
   private static final String kCustomAuto = "My Auto";
   static Command autonomousCommand;
   public static SendableChooser<Command> autoChooser;
-  public static boolean pushRobot;
-  public static SendableChooser<Boolean> pushRobotChooser;
+  public static int pushRobot;
+  public static SendableChooser<Number> pushRobotChooser;
 
   // Subsystems
   private static Climber climber;
@@ -173,8 +174,9 @@ public class Robot extends TimedRobot {
     autoSelectInit();
 
     ConsolePrinter.putBoolean("isPracticeBot", ()->{return isPracticeBot();}, true, false);
-    ConsolePrinter.putSendable("Autonomous Mode Chooser", () -> {return Robot.autoChooser;}, true, false);
-		ConsolePrinter.putString("AutoName", () -> {return Robot.getAutoName();}, true, false);
+    SmartDashboard.putData("Autonomous Mode Chooser", autoChooser); 
+    SmartDashboard.putData("Push Robot Chooser", pushRobotChooser);
+    ConsolePrinter.putString("AutoName", () -> {return Robot.getAutoName();}, true, false);
 
     drivetrain.setDefaultBrakeMode();
   }
@@ -201,7 +203,7 @@ public class Robot extends TimedRobot {
     autoMode = true;
     drivetrain.setDefaultBrakeMode();
 
-    pushRobot = (boolean) pushRobotChooser.getSelected();
+    pushRobot = (int) pushRobotChooser.getSelected();
 		autonomousCommand = (Command) autoChooser.getSelected();
     	
     // schedule the autonomous command
@@ -287,7 +289,11 @@ public class Robot extends TimedRobot {
     //getControlStyleInt();
     //controlStyle = (int) controlStyleChooser.getSelected();
     Scheduler.getInstance().run();
+
+    SmartDashboard.putData("Autonomous Mode Chooser", autoChooser); 
+    SmartDashboard.putData("Push Robot Chooser", pushRobotChooser);
     autonomousCommand = (Command) autoChooser.getSelected();
+    pushRobot = (int) pushRobotChooser.getSelected();
 
   }
 
@@ -299,14 +305,12 @@ public class Robot extends TimedRobot {
       autoChooser = new SendableChooser<Command>();
       autoChooser.setDefaultOption("Drive Straight", new DriveXDistance(60.0));
       autoChooser.addOption("Do Nothing", new DoNothing());
-      autoChooser.addOption("Opposite Trench Auto ", new NearTrenchAuto());
-      autoChooser.addOption("Near Trench Auto", new OppositeTrenchAuto());
-      autoChooser.addOption("Turn 13.25", new TurnXAngle(13.25, 0.3));
+      autoChooser.addOption("Near Trench Auto ", new NearTrenchAuto());
+      autoChooser.addOption("Opposite Trench Auto", new OppositeTrenchAuto());
 
     }
 
     /**
-<<<<<<< HEAD
      * Get the name of an autonomous mode command.
      * 
      * @return the name of the auto command.
@@ -320,21 +324,31 @@ public class Robot extends TimedRobot {
     }
 
     /**
-=======
->>>>>>> bffabef... added option to push other robot off the line
      * Adds boolean choice of whether or not to push another robot off the line
      */
     public void pushRobotSelectInit() {
-      pushRobotChooser = new SendableChooser<Boolean>();
-      pushRobotChooser.setDefaultOption("DO NOT push robot", false);
-      pushRobotChooser.addOption("DO push robot", true);
+      pushRobotChooser = new SendableChooser<Number>();
+      pushRobotChooser.setDefaultOption("DO NOT push robot", 0);
+      pushRobotChooser.addOption("DO push robot", 1);
     }
 
     /**
      * Returns boolean for whether or not we want to push another robot off the line
      */
     public static boolean getPushRobot() {
-      return pushRobot;
+      boolean retVal;
+      switch(pushRobot) {
+        case 0 :
+          retVal = false;
+          break;
+        case 1 : 
+          retVal = true;
+          break;
+        default : 
+          retVal = false; 
+          break;
+      }
+      return retVal;
     }
 
   /**
