@@ -56,7 +56,7 @@ public class OppositeTrenchAutoNoPush extends CommandGroup {
     //turn and drive to firing location 
     addSequential(new TurnXAngle(-63.0, 0.5), 2.0); //68
     addSequential(new DriveXDistance(167.0, 0.5), 4.0);  
-    addSequential(new TurnXAngle(45.5, 0.4), 2.0); //45.8--four inner port, not in line for next pickup
+    addSequential(new TurnXAngle(45.0, 0.4), 2.0); //45.8--four inner port, not in line for next pickup
     
     //Fire 
     // addSequential(new FireBallsAutoNoLineBreak(), 2.0);
