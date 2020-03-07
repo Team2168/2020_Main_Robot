@@ -15,8 +15,8 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
 public class IntakeBallStart extends CommandGroup {
   
   public IntakeBallStart() {
-    addParallel(new DriveIntakeWithConstant(1.0));//TODO set
+    addParallel(new DriveIntakeWithConstant(0.95));//TODO set
     addSequential(new ExtendIntakePneumatic());
-    addSequential(new Sleep(), 0.0);// TO-DO: Figure out if we need a sleep command, and if so, for how long.
+    addSequential(new Sleep(), 0.0);
   }
 }
