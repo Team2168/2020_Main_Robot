@@ -1,9 +1,9 @@
 
 package org.team2168;
 
-import org.team2168.commands.auto.FinishFiring;
-import org.team2168.commands.auto.FireBalls;
 import org.team2168.commands.climber.Climb;
+import org.team2168.commands.auto.robotFunctions.FinishFiring;
+import org.team2168.commands.auto.robotFunctions.FireBalls;
 import org.team2168.commands.climber.DisengageRatchet;
 import org.team2168.commands.climber.DriveClimberWithTestJoystickUnSafe;
 import org.team2168.commands.climber.DriveClimberXPosition;
