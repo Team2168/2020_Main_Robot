@@ -67,7 +67,6 @@ import org.team2168.commands.auto.DoNothing;
 import org.team2168.commands.auto.selector.NearTrenchAuto;
 import org.team2168.commands.auto.selector.OppositeTrenchAuto;
 import org.team2168.commands.drivetrain.PIDCommands.DriveXDistance;
-import org.team2168.commands.drivetrain.PIDCommands.TurnXAngle;
 import org.team2168.commands.hood_adjust.MoveToFiringLocation;
 import org.team2168.subsystems.Balancer;
 import org.team2168.subsystems.Climber;
@@ -85,6 +84,7 @@ import org.team2168.subsystems.Shooter;
 import org.team2168.utils.PowerDistribution;
 import org.team2168.utils.consoleprinter.ConsolePrinter;
 
+import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -115,6 +115,7 @@ public class Robot extends TimedRobot {
   private static HoodAdjust hoodAdjust;
   private static Drivetrain drivetrain;
   private static Limelight limelight;
+  private static Compressor compressor;
 
   private static OI oi;
 
@@ -161,6 +162,7 @@ public class Robot extends TimedRobot {
     hoodAdjust = HoodAdjust.getInstance();
     drivetrain = Drivetrain.getInstance();
     limelight = Limelight.getInstance();
+    compressor = new Compressor();
     oi = OI.getInstance();  
 
     // pdp = new PowerDistribution(RobotMap.PDPThreadPeriod);
@@ -365,5 +367,14 @@ public class Robot extends TimedRobot {
 
   public static boolean onBlueAlliance() {
     return DriverStation.getInstance().getAlliance() == Alliance.Blue;
+  }
+
+  public static void setCompressorOn(boolean on) {
+    if(on) {
+      compressor.start();
+    }
+    else {
+      compressor.stop();
+    }
   }
 }
