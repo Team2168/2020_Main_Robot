@@ -12,13 +12,12 @@ import org.team2168.commands.auto.robotFunctions.FireBallsAuto;
 import org.team2168.commands.auto.robotFunctions.FireBallsAutoNoLineBreak;
 import org.team2168.commands.drivetrain.PIDCommands.DriveXDistance;
 import org.team2168.commands.drivetrain.PIDCommands.TurnXAngle;
-import org.team2168.commands.hood_adjust.MoveToWLNoShoot;
+import org.team2168.commands.hood_adjust.MoveToWhiteLine;
 import org.team2168.commands.hopper.DriveHopperWithConstant;
 import org.team2168.commands.indexer.DriveIndexerWithConstant;
 import org.team2168.commands.intakeMotor.DriveIntakeWithConstant;
 import org.team2168.commands.intakePivot.ExtendIntakePneumatic;
 import org.team2168.commands.intakePivot.RetractIntakePneumatic;
-import org.team2168.commands.shooter.DriveToXSpeed;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
@@ -45,8 +44,9 @@ public class OppositeTrenchAutoPush extends CommandGroup {
     // arm.
 
     //start shooter
-    addParallel(new MoveToWLNoShoot());
-    addParallel(new DriveToXSpeed(3250.0));
+    // addParallel(new MoveToWLNoShoot());
+    // addParallel(new DriveToXSpeed(3250.0));
+    addParallel(new MoveToWhiteLine());
     
     //drive and intake
     addParallel(new DriveIntakeWithConstant(0.95));//TODO set
