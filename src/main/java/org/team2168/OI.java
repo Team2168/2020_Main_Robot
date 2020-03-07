@@ -112,10 +112,10 @@ public class OI
 	};
 
 	private double[][] climberArray = {
-		{-1.0, -1.00},  
+		{-1.0, -0.80},  
 		{-0.50, 0.00},  //set neutral deadband to 4%
 		{+0.50, 0.00},
-		{+1.0, +1.00}  
+		{+1.0, +0.80}  
 	};
 
 	private double[][] balancerArray = {
