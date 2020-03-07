@@ -1,12 +1,11 @@
 
 package org.team2168;
 
-import org.team2168.commands.climber.Climb;
 import org.team2168.commands.auto.robotFunctions.FinishFiring;
 import org.team2168.commands.auto.robotFunctions.FireBalls;
+import org.team2168.commands.climber.Climb;
 import org.team2168.commands.climber.DisengageRatchet;
 import org.team2168.commands.climber.DriveClimberWithTestJoystickUnSafe;
-import org.team2168.commands.climber.DriveClimberXPosition;
 import org.team2168.commands.climber.EngageRatchet;
 import org.team2168.commands.climber.PrepareToClimb;
 import org.team2168.commands.climber.ResetClimberPosition;
@@ -15,6 +14,7 @@ import org.team2168.commands.color_wheel_pivot.DisengageColorWheel;
 import org.team2168.commands.color_wheel_pivot.EngageColorWheel;
 import org.team2168.commands.drivetrain.DriveWithJoystick;
 import org.team2168.commands.drivetrain.PIDCommands.LimelightTurnTeleop;
+import org.team2168.commands.flashlight.RunFlashlight;
 import org.team2168.commands.hood_adjust.MoveToBackTrench;
 import org.team2168.commands.hood_adjust.MoveToFiringLocation;
 import org.team2168.commands.hood_adjust.MoveToFrontTrench;
@@ -200,8 +200,8 @@ public class OI
 		driverJoystick.ButtonLeftStick().whileHeld(new LimelightTurnTeleop(1.50));
 		driverJoystick.ButtonLeftStick().whenReleased(new DriveWithJoystick());
 
-		// driverJoystick.ButtonLeftStick().whenPressed(new RunFlashlight(1.0));
-		// driverJoystick.ButtonLeftStick().whenReleased(new RunFlashlight(0.0));
+		driverJoystick.ButtonA().whenPressed(new RunFlashlight(1.0));
+		driverJoystick.ButtonA().whenReleased(new RunFlashlight(-0.5));
 
 		//When the red button on the handle of the controller is pressed get ready to go under the trechn. Lower everything.
 		driverJoystick.ButtonLeftBumper().whileHeld(new DisengageColorWheel());
