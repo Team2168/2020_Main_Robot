@@ -6,6 +6,7 @@ import org.team2168.commands.auto.robotFunctions.FireBalls;
 import org.team2168.commands.climber.Climb;
 import org.team2168.commands.climber.DisengageRatchet;
 import org.team2168.commands.climber.DriveClimberWithConstant;
+import org.team2168.commands.climber.DriveClimberWithJoystick;
 import org.team2168.commands.climber.DriveClimberWithTestJoystickUnSafe;
 import org.team2168.commands.climber.EngageRatchet;
 import org.team2168.commands.climber.PrepareToClimb;
@@ -162,7 +163,8 @@ public class OI
 		buttonBox1.ButtonRightBumper().whenPressed(new MoveToWallNoShoot());
 		buttonBox1.ButtonRightBumper().whenPressed(new DisengageColorWheel());
 
-		// buttonBox1.ButtonLeftStick().whileHeld(new DriveClimberWithConstant(0.0));
+		// buttonBox1.ButtonLeftStick().whenPressed(new DriveClimberWithConstant(0.0));
+		// buttonBox1.ButtonLeftStick().whenReleased(new DriveClimberWithJoystick());
 
 		//******************************************************************** */
 		//*							Button Box II
