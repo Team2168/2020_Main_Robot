@@ -100,7 +100,7 @@ public class Shooter extends Subsystem {
     private static double _whiteLineVel;
     private static double _frontTrenchVel;
     private static double _backTrenchVel;
-    private static double velocityAdjustment = 0.0;
+    private static double velocityAdjustment = -100.0;
 
     private Shooter() {
         _motorOne = new TalonFX(RobotMap.SHOOTER_MOTOR_ONE_PDP);
