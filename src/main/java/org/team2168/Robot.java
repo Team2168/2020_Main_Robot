@@ -66,6 +66,8 @@ package org.team2168;
 import org.team2168.commands.auto.DoNothing;
 import org.team2168.commands.auto.selector.NearTrenchAuto;
 import org.team2168.commands.auto.selector.OppositeTrenchAuto;
+import org.team2168.commands.auto.selector.SitStillShoot;
+import org.team2168.commands.auto.selector.SitStillShootDriveOffLine;
 import org.team2168.commands.drivetrain.PIDCommands.DriveXDistance;
 import org.team2168.commands.hood_adjust.MoveToFiringLocation;
 import org.team2168.subsystems.Balancer;
@@ -309,6 +311,8 @@ public class Robot extends TimedRobot {
       autoChooser.addOption("Do Nothing", new DoNothing());
       autoChooser.addOption("Near Trench Auto ", new NearTrenchAuto());
       autoChooser.addOption("Opposite Trench Auto", new OppositeTrenchAuto());
+      autoChooser.addOption("Sit Still Shoot Auto", new SitStillShoot());
+      autoChooser.addOption("Sit Still Shoot Drive Off Line", new SitStillShootDriveOffLine());
 
     }
 
