@@ -65,12 +65,8 @@ public class OppositeTrenchAutoPush extends CommandGroup {
     addSequential(new TurnXAngle(45.0, 0.4), 2.0); //45.8--four inner port, not in line for next pickup
     
     //Fire 
-    if(Robot.isPracticeBot()) {
-      addSequential(new FireBallsAutoNoLineBreak(), 2.0);
-      }
-      else {
-        addSequential(new FireBallsAuto(5), 2.0);
-    }
+    addSequential(new FireBallsAuto(5), 2.0);
+
     addParallel(new DriveHopperWithConstant(0.0), 0.1);
     addParallel(new DriveIndexerWithConstant(0.0), 0.0);
     // addSequential(new TurnXAngle(-30.0, 0.3), 2.0); //45.8--four inner port, not in line for next pickup
@@ -87,12 +83,8 @@ public class OppositeTrenchAutoPush extends CommandGroup {
     addSequential(new DriveXDistance(+68.0, 0.5));
     
     
-    if(Robot.isPracticeBot()) {
-      addSequential(new FireBallsAutoNoLineBreak(), 2.0);
-    }
-    else {
-      addSequential(new FireBallsAuto(2), 2.0);
-    }
+    addSequential(new FireBallsAuto(2), 2.0);
+
 
   }
 }

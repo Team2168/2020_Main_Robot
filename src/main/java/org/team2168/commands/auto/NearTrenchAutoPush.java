@@ -55,12 +55,8 @@ public class NearTrenchAutoPush extends CommandGroup {
     addParallel(new DriveIntakeWithConstant(0.3));
     addSequential(new RetractIntakePneumatic());  //want to run the intake constantly during firing... TODO: cleanup
     addSequential(new TurnXAngle(12.25, 0.4), 2.0); //12.25), 2.0);
-    if(Robot.isPracticeBot()) {
-    addSequential(new FireBallsAutoNoLineBreak(), 2.0);
-    }
-    else {
-      addSequential(new FireBallsAuto(5), 2.0);
-    }
+    addSequential(new FireBallsAuto(5), 2.0);
+
     addParallel(new MoveToWallNoShoot());
 
     // //turn straight again
@@ -75,12 +71,8 @@ public class NearTrenchAutoPush extends CommandGroup {
 
     addParallel(new MoveToFrontTrench());
     addSequential(new TurnXAngle(+12.0, 0.4), 2.0);
-    if(Robot.isPracticeBot()) {
-      addSequential(new FireBallsAutoNoLineBreak(), 4.0);
-      }
-      else {
-        addSequential(new FireBallsAuto(3), 2.0);
-      }
+    addSequential(new FireBallsAuto(3), 2.0);
+
     addParallel(new DriveIndexerWithConstant(0.0), 0.0);
     addParallel(new DriveHopperWithConstant(0.0), 0.0);
     addParallel(new DriveIntakeWithConstant(0.0), 0.0);
