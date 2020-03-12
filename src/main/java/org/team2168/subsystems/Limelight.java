@@ -25,11 +25,13 @@ public class Limelight extends Subsystem {
   private static LimelightSensor limelight;
   private static Limelight _instance = null;
 
-  private static final int PIPELINE_FORWARD_BLUE = 0;
-  private static final int PIPELINE_FORWARD_RED = 2;
+  private static final int PIPELINE_FT_BLUE = 0;
+  private static final int PIPELINE_FT_RED = 2;
   private static final int PIPELINE_BACK_TRENCH_BLUE = 1;
   private static final int PIPELINE_BACK_TRENCH_RED = 3;
   private static final int PIPELINE_DRIVER_VIEW = 4;
+  private static final int PIPELINE_WL_BLUE = 5;
+  private static final int PIPELINE_WL_RED = 6;
 
 
 
@@ -74,31 +76,31 @@ public class Limelight extends Subsystem {
         case WALL : 
           if(Robot.onBlueAlliance())
           {
-            limelight.setPipeline(PIPELINE_FORWARD_BLUE); //TODO deal with this--we can't see from wall??
+            limelight.setPipeline(PIPELINE_WL_BLUE); //TODO deal with this--we can't see from wall??
           }
           else
           {
-            limelight.setPipeline(PIPELINE_FORWARD_RED);
+            limelight.setPipeline(PIPELINE_WL_RED);
           }
           break;
         case WHITE_LINE :
           if(Robot.onBlueAlliance())
           {
-            limelight.setPipeline(PIPELINE_FORWARD_BLUE);
+            limelight.setPipeline(PIPELINE_WL_BLUE);
           }
           else
           {
-            limelight.setPipeline(PIPELINE_FORWARD_RED);
+            limelight.setPipeline(PIPELINE_WL_RED);
           }
           break;
         case FRONT_TRENCH : 
           if(Robot.onBlueAlliance())
           {
-            limelight.setPipeline(PIPELINE_FORWARD_BLUE);
+            limelight.setPipeline(PIPELINE_FT_BLUE);
           }
           else
           {
-            limelight.setPipeline(PIPELINE_FORWARD_RED);
+            limelight.setPipeline(PIPELINE_FT_RED);
           }
           break;
         case BACK_TRENCH: 
