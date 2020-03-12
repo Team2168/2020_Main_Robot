@@ -21,6 +21,7 @@ public class LimelightTurnTeleop extends Command {
   private double _targetAngle = 0.0;
 
   private static final double DEFAULT_ERROR_TOLERANCE = 1.0;
+  private static final double ALLOWED_ERROR = 0.5;
 
   private double _errorToleranceAngle; //1.0 degree of tolerance 
   private double _loopsToSettle = 5;
@@ -81,8 +82,15 @@ public class LimelightTurnTeleop extends Command {
 
       _targetAngle = limeAngle;
     }
+    if(Math.abs(_targetAngle) < ALLOWED_ERROR) {
+      dt.tankDrive(oi.getGunStyleYValue(), oi.getGunStyleYValue());
+    }
+    else {
+      dt.setSetPointHeadingTeleop(oi.getGunStyleYValue(), _targetAngle);
+    }
+    // dt.setSetPointHeadingTeleop(oi.getGunStyleYValue(), _targetAngle);
 
-    dt.setSetPointHeadingTeleop(oi.getGunStyleYValue(), _targetAngle);
+
     /* Check if closed loop error is within the threshld */
     if (Math.abs(dt.getErrorHeading()) < _errorToleranceAngle)
     {
@@ -91,6 +99,7 @@ public class LimelightTurnTeleop extends Command {
     else {
       _withinThresholdLoops = 0;
     }
+    System.out.println(_targetAngle + " " +  dt.getMotorOutput());
   }
 
   // Make this return true when this Command no longer needs to run execute()

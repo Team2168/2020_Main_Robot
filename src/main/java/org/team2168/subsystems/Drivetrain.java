@@ -442,12 +442,12 @@ public class Drivetrain extends Subsystem {
     _rightMotor1.config_IntegralZone(Constants.SLOT_1, Constants.kGains_Limelight.kIzone, Constants.kTimeoutMs);
     _rightMotor1.configClosedLoopPeakOutput(Constants.SLOT_1, Constants.kGains_Limelight.kPeakOutput, Constants.kTimeoutMs);
 
-    _rightMotor1.configNominalOutputForward(0.03, Constants.kTimeoutMs);
-    _rightMotor1.configNominalOutputReverse(-0.03, Constants.kTimeoutMs);
+    _rightMotor1.configNominalOutputForward(0.06, Constants.kTimeoutMs); //0.03
+    _rightMotor1.configNominalOutputReverse(-0.06, Constants.kTimeoutMs);
     _rightMotor1.configPeakOutputForward(1.0, Constants.kTimeoutMs);
     _rightMotor1.configPeakOutputReverse(-1.0, Constants.kTimeoutMs);
-    _leftMotor1.configNominalOutputForward(0.03, Constants.kTimeoutMs);
-    _leftMotor1.configNominalOutputReverse(-0.03, Constants.kTimeoutMs);
+    _leftMotor1.configNominalOutputForward(0.06, Constants.kTimeoutMs);
+    _leftMotor1.configNominalOutputReverse(-0.06, Constants.kTimeoutMs);
     _leftMotor1.configPeakOutputForward(1.0, Constants.kTimeoutMs);
     _leftMotor1.configPeakOutputReverse(-1.0, Constants.kTimeoutMs);
   }
@@ -473,6 +473,10 @@ public class Drivetrain extends Subsystem {
   public double getSetPointHeading()
   {
     return this.setPointHeading_sensorUnits;
+  }
+
+  public double getMotorOutput(){
+    return _rightMotor1.getMotorOutputPercent();
   }
 
     /** Zero all sensors, both Talons and Pigeon */

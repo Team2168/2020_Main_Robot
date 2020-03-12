@@ -202,7 +202,7 @@ public class OI
 		gunStyleYInterpolator = new LinearInterpolator(gunStyleYArray);
 		gunStyleXInterpolator = new LinearInterpolator(gunStyleXArray);
 
-		driverJoystick.ButtonLeftStick().whileHeld(new LimelightTurnTeleop(1.50));
+		driverJoystick.ButtonLeftStick().whileHeld(new LimelightTurnTeleop(1.0));
 		driverJoystick.ButtonLeftStick().whenReleased(new DriveWithJoystick());
 
 		driverJoystick.ButtonA().whenPressed(new RunFlashlight(1.0));
