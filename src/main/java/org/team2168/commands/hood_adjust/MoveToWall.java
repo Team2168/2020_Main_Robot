@@ -47,7 +47,17 @@ public class MoveToWall extends CommandGroup {
     // updated---allows for any possible position, allows retract pancake under load;
     addParallel(new DriveToXSpeed(FiringLocation.WALL));
 
+    //band aid
+    addSequential(new RetractShooterHood());
     addSequential(new RetractShooterHardstop());
+    addSequential(new ExtendShooterHood());
+    addSequential(new ExtendShooterHardstop());
+    addSequential(new RetractShooterHardstop());
+    addSequential(new RetractShooterHood());
+
+
+
+    // addSequential(new RetractShooterHardstop());
     addSequential(new Sleep(), 0.1);
     addSequential(new ExtendShooterHood());
     addSequential(new Sleep(), 0.1);

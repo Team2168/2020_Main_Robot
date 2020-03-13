@@ -1,17 +1,21 @@
 
 package org.team2168;
 
-import org.team2168.commands.auto.FinishFiring;
-import org.team2168.commands.auto.FireBalls;
+import org.team2168.commands.auto.robotFunctions.FinishFiring;
+import org.team2168.commands.auto.robotFunctions.FireBalls;
+import org.team2168.commands.climber.Climb;
 import org.team2168.commands.climber.DisengageRatchet;
+import org.team2168.commands.climber.DriveClimberWithConstant;
+import org.team2168.commands.climber.DriveClimberWithJoystick;
 import org.team2168.commands.climber.DriveClimberWithTestJoystickUnSafe;
-import org.team2168.commands.climber.DriveClimberXPosition;
 import org.team2168.commands.climber.EngageRatchet;
 import org.team2168.commands.climber.PrepareToClimb;
 import org.team2168.commands.climber.ResetClimberPosition;
 import org.team2168.commands.color_wheel.DriveColorWheelXRotations;
 import org.team2168.commands.color_wheel_pivot.DisengageColorWheel;
 import org.team2168.commands.color_wheel_pivot.EngageColorWheel;
+import org.team2168.commands.drivetrain.DriveWithJoystick;
+import org.team2168.commands.drivetrain.PIDCommands.LimelightTurnTeleop;
 import org.team2168.commands.flashlight.RunFlashlight;
 import org.team2168.commands.hood_adjust.MoveToBackTrench;
 import org.team2168.commands.hood_adjust.MoveToFiringLocation;
@@ -27,6 +31,9 @@ import org.team2168.commands.intakeMotor.IntakeBallStart;
 import org.team2168.commands.intakeMotor.IntakeBallStop;
 import org.team2168.commands.intakePivot.ExtendIntakePneumatic;
 import org.team2168.commands.intakePivot.RetractIntakePneumatic;
+import org.team2168.commands.shooter.BumpDownShooterSpeed;
+import org.team2168.commands.shooter.BumpUpShooterSpeed;
+import org.team2168.commands.shooter.BumpZeroShooterSpeed;
 import org.team2168.commands.shooter.DriveShooterWithConstant;
 import org.team2168.commands.shooter.DriveToXSpeed;
 import org.team2168.subsystems.Shooter;
@@ -107,10 +114,10 @@ public class OI
 	};
 
 	private double[][] climberArray = {
-		{-1.0, -1.00},  
-		{-0.05, 0.00},  //set neutral deadband to 4%
-		{+0.05, 0.00},
-		{+1.0, +1.00}  
+		{-1.0, -0.80},  
+		{-0.50, 0.00},  //set neutral deadband to 4%
+		{+0.50, 0.00},
+		{+1.0, +0.80}  
 	};
 
 	private double[][] balancerArray = {
@@ -121,10 +128,10 @@ public class OI
 	};
 
 	private double[][] climberResetArray = {
-		{-1.0, -0.15},  
+		{-1.0, -0.22},
 		{-0.05, 0.00},
 		{+0.05, 0.00},
-		{+1.0, +0.15}  
+		{+1.0, +0.22}
 	};
 
 	/**
@@ -142,11 +149,12 @@ public class OI
 
 		buttonBox1.ButtonUpDPad().whenPressed(new EngageColorWheel());
 		buttonBox1.ButtonDownDPad().whenPressed(new DisengageColorWheel());
-		buttonBox1.ButtonLeftDPad().whenPressed(new DriveColorWheelXRotations(4.0*8.0));
+		buttonBox1.ButtonLeftDPad().whenPressed(new DriveColorWheelXRotations(-4.0*8.0)); 	//go opposite direction to protect limelight
 		//Right D Pad, Position
-		// Button A, bump up = increment velocity adjustment of shooter
-		// Button B, bump down
-		// Button X, reset
+		buttonBox1.ButtonA().whenPressed(new BumpUpShooterSpeed());
+		buttonBox1.ButtonB().whenPressed(new BumpDownShooterSpeed());
+		buttonBox1.ButtonX().whenPressed(new BumpZeroShooterSpeed());
+
 		buttonBox1.ButtonY().whenPressed(new DriveToXSpeed(Shooter.FiringLocation.BACK_TRENCH));
 		buttonBox1.ButtonLeftBumper().whenPressed(new DriveHopperWithConstant(-1.0));// Temporary value
 		buttonBox1.ButtonLeftBumper().whenPressed(new DriveIndexerWithConstant(-1.0));
@@ -154,6 +162,9 @@ public class OI
 		buttonBox1.ButtonLeftBumper().whenReleased(new DriveIndexerWithConstant(0.0));
 		buttonBox1.ButtonRightBumper().whenPressed(new MoveToWallNoShoot());
 		buttonBox1.ButtonRightBumper().whenPressed(new DisengageColorWheel());
+
+		// buttonBox1.ButtonLeftStick().whenPressed(new DriveClimberWithConstant(0.0));
+		// buttonBox1.ButtonLeftStick().whenReleased(new DriveClimberWithJoystick());
 
 		//******************************************************************** */
 		//*							Button Box II
@@ -182,7 +193,7 @@ public class OI
 		buttonBox2.ButtonBack().whenPressed(new PrepareToClimb());
 		buttonBox2.ButtonBack().whenPressed(new DriveToXSpeed(0.0)); //Stop shooter and lower hood
 		buttonBox2.ButtonBack().whenPressed(new MoveToWLNoShoot());
-		buttonBox2.ButtonStart().whenPressed(new DriveClimberXPosition(7.0, 1.5));
+		buttonBox2.ButtonStart().whenPressed(new Climb());
 		//right stick--auto balance
 	}
 		/*************************************************************************
@@ -191,8 +202,11 @@ public class OI
 		gunStyleYInterpolator = new LinearInterpolator(gunStyleYArray);
 		gunStyleXInterpolator = new LinearInterpolator(gunStyleXArray);
 
-		driverJoystick.ButtonLeftStick().whenPressed(new RunFlashlight(1.0));
-		driverJoystick.ButtonLeftStick().whenReleased(new RunFlashlight(0.0));
+		driverJoystick.ButtonLeftStick().whileHeld(new LimelightTurnTeleop(1.50));
+		driverJoystick.ButtonLeftStick().whenReleased(new DriveWithJoystick());
+
+		driverJoystick.ButtonA().whenPressed(new RunFlashlight(1.0));
+		driverJoystick.ButtonA().whenReleased(new RunFlashlight(-0.5));
 
 		//When the red button on the handle of the controller is pressed get ready to go under the trechn. Lower everything.
 		driverJoystick.ButtonLeftBumper().whileHeld(new DisengageColorWheel());
@@ -211,7 +225,8 @@ public class OI
 		operatorJoystick.ButtonA().whenPressed(new DisengageColorWheel());
 		// operatorJoystick.ButtonA().whenPressed(new MoveToWall());
 
-		operatorJoystick.ButtonStart().whenPressed(new DriveColorWheelXRotations(4.0*8.0));
+		operatorJoystick.ButtonStart().whenPressed(new DriveColorWheelXRotations(-4.0*8.0)); 	//go opposite direction to protect limelight 
+
 
 		// operatorJoystick.ButtonX().whenPressed(new DriveToXSpeed(Shooter.getInstance().WALL_VEL));
 		operatorJoystick.ButtonX().whenPressed(new DriveShooterWithConstant(0.52));
@@ -240,7 +255,7 @@ public class OI
 
 		pidTestJoystick.ButtonX().whenPressed(new ResetClimberPosition());
 		pidTestJoystick.ButtonY().whenPressed(new PrepareToClimb()); 
-		pidTestJoystick.ButtonA().whenPressed(new DriveClimberXPosition(7.0, 0.1));
+		pidTestJoystick.ButtonA().whenPressed(new Climb());
 
 		pidTestJoystick.ButtonUpDPad().whenPressed(new EngageRatchet());
 		pidTestJoystick.ButtonDownDPad().whenPressed(new DisengageRatchet());
@@ -304,7 +319,7 @@ public class OI
 
 	public double getColorWheelJoystick()
 	{
-		return colorWheelInterpolator.interpolate(buttonBox1.getLeftStickRaw_X()); //operatorJoystick.getRightStickRaw_Y();
+		return colorWheelInterpolator.interpolate(buttonBox1.getRightStickRaw_X()); //operatorJoystick.getRightStickRaw_Y();
 	}
 
 	public double getIntakeMotorJoyStick()
@@ -364,6 +379,4 @@ public class OI
 	{
 		return  0.0; //pidTestJoystick.getRightStickRaw_Y();
 	}
-
-	
 }

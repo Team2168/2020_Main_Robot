@@ -7,6 +7,9 @@
 
 package org.team2168.commands.auto;
 
+import org.team2168.Robot;
+import org.team2168.commands.auto.robotFunctions.FireBallsAuto;
+import org.team2168.commands.auto.robotFunctions.FireBallsAutoNoLineBreak;
 import org.team2168.commands.drivetrain.PIDCommands.DriveXDistance;
 import org.team2168.commands.drivetrain.PIDCommands.TurnXAngle;
 import org.team2168.commands.hood_adjust.MoveToFrontTrench;
@@ -16,16 +19,14 @@ import org.team2168.commands.indexer.DriveIndexerWithConstant;
 import org.team2168.commands.intakeMotor.DriveIntakeWithConstant;
 import org.team2168.commands.intakePivot.ExtendIntakePneumatic;
 import org.team2168.commands.intakePivot.RetractIntakePneumatic;
-import org.team2168.commands.shooter.DriveToXSpeed;
-import org.team2168.subsystems.Shooter;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
-public class DefaultTrenchAuto extends CommandGroup {
+public class NearTrenchAutoPush extends CommandGroup {
   /**
    * Add your docs here.
    */
-  public DefaultTrenchAuto() {
+  public NearTrenchAutoPush() {
     // Add Commands here:
     // e.g. addSequential(new Command1());
     // addSequential(new Command2());
@@ -44,44 +45,42 @@ public class DefaultTrenchAuto extends CommandGroup {
     // arm.
 
     addParallel(new MoveToFrontTrench());
-    addParallel(new DriveIntakeWithConstant(1.0));//TODO set
-    addSequential(new ExtendIntakePneumatic());
-    addSequential(new DriveXDistance(-115.0, 0.5), 4.0); 
+    addParallel(new DriveIntakeWithConstant(1.0));
+    addParallel(new ExtendIntakePneumatic()); //switch to parallel because this can happen while we push
+
+    //push robot off line
+    addSequential(new DriveXDistance(4.0, 0.5, 10.0*120.0, 1));
+
+    addSequential(new DriveXDistance(-115.0 - 5.0, 0.5), 4.0); //TODO VERIFY MEASUREMENTS
     addParallel(new DriveIntakeWithConstant(0.3));
     addSequential(new RetractIntakePneumatic());  //want to run the intake constantly during firing... TODO: cleanup
-    addSequential(new TurnXAngle(13.25, 0.4), 2.0); //12.25), 2.0);
+    addSequential(new TurnXAngle(12.25, 0.4), 2.0); //12.25), 2.0);
+    if(Robot.isPracticeBot()) {
     addSequential(new FireBallsAutoNoLineBreak(), 2.0);
-    // addSequential(new FireBallsAuto(5), 2.0);
-
-    // addSequential(new DriveHopperWithConstant(0.0), 0.1);
-    // addParallel(new DriveIndexerWithConstant(0.0), 0.0);
-    // //moves hood down and leaves shooter at speed 
-    // addSequential(new RetractShooterHardstop());
-    // addSequential(new Sleep(), 0.1);
-    // addSequential(new ExtendShooterHood());
-    // addSequential(new Sleep(), 0.1);
+    }
+    else {
+      addSequential(new FireBallsAuto(5), 2.0);
+    }
     addParallel(new MoveToWallNoShoot());
 
-    // addParallel(new DriveToXSpeed(Shooter.getInstance().BACK_TRENCH_VEL));
-
     // //turn straight again
-    addSequential(new TurnXAngle(-12.75, 0.4), 2.0);
+    addSequential(new TurnXAngle(-12.0, 0.4), 2.0);
     addParallel(new DriveIntakeWithConstant(1.0));//TODO set
     addSequential(new ExtendIntakePneumatic());
-    addSequential(new DriveXDistance(-103.0, 0.5, 10.0*12.0), 4.0);
-    addSequential(new DriveXDistance(103.0, 0.5, 10.0*12.0), 4.0);
+    addSequential(new DriveXDistance(-103.0, 0.5), 4.0);
+    addSequential(new DriveXDistance(103.0, 0.5), 4.0);
   
     addParallel(new DriveIntakeWithConstant(0.3));
     addSequential(new RetractIntakePneumatic()); 
 
     addParallel(new MoveToFrontTrench());
-    addSequential(new TurnXAngle(+12.75, 0.4), 2.0);
-    // addSequential(new FireBallsAuto(3), 2.0);
-    // addParallel(new MoveToBackTrench());
-    // addParallel(new DriveIntakeWithConstant(0.3));
-    // addSequential(new RetractIntakePneumatic()); 
-    // addSequential(new TurnXAngle(9.0, 0.3), 2.0);
-    addSequential(new FireBallsAutoNoLineBreak(), 4.0);
+    addSequential(new TurnXAngle(+12.0, 0.4), 2.0);
+    if(Robot.isPracticeBot()) {
+      addSequential(new FireBallsAutoNoLineBreak(), 4.0);
+      }
+      else {
+        addSequential(new FireBallsAuto(3), 2.0);
+      }
     addParallel(new DriveIndexerWithConstant(0.0), 0.0);
     addParallel(new DriveHopperWithConstant(0.0), 0.0);
     addParallel(new DriveIntakeWithConstant(0.0), 0.0);

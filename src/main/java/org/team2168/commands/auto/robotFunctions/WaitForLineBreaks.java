@@ -5,63 +5,65 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package org.team2168.commands.drivetrain;
+package org.team2168.commands.auto.robotFunctions;
 
-import org.team2168.OI;
-import org.team2168.subsystems.Drivetrain;
-import org.team2168.subsystems.Limelight;
+import org.team2168.subsystems.Climber;
+import org.team2168.subsystems.Indexer;
+import org.team2168.subsystems.IntakeMotor;
 
 import edu.wpi.first.wpilibj.command.Command;
 
-public class DriveWithJoystick extends Command 
-{
-  private Drivetrain dt;
-  private Limelight lime;
-  private OI oi;
-  
-  public DriveWithJoystick() 
-  {
-    dt = Drivetrain.getInstance();
-    requires(dt);
+public class WaitForLineBreaks extends Command {
+  private double _indexerSpeed;
+  private int _numBalls;
+  private boolean exitLineBreakLast;
+  private int ballCounter;
+
+  private Indexer indexer;
+  public WaitForLineBreaks(double indexerSpeed, int numBalls) {
+    // Use requires() here to declare subsystem dependencies
+    // eg. requires(chassis);
+    indexer = Indexer.getInstance();
+    requires(indexer);
+    this._indexerSpeed = indexerSpeed;
+
+    this._numBalls = numBalls;
   }
 
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
-    oi = OI.getInstance();
-    lime = Limelight.getInstance();
-    lime.setLedMode(1);
-	}
-
-	/**
-	 * Gets the joystick positions from OI and sends them to the drivetrain
-	 * subsystem.
-	 * 
-	 * @author Liam
-	 */
-  @Override
-  protected void execute() {
-    dt.tankDrive(oi.getGunStyleYValue()+ oi.getGunStyleXValue(),
-      oi.getGunStyleYValue() - oi.getGunStyleXValue());
+    exitLineBreakLast = false;
+    ballCounter = 0;
   }
 
   // Called repeatedly when this Command is scheduled to run
+  @Override
+  protected void execute() {
+    indexer.drive(_indexerSpeed);
+    if (exitLineBreakLast && !indexer.isBallExiting())
+    {
+      ballCounter++;
+    }
+    System.out.println(exitLineBreakLast + " " + !indexer.isBallExiting());
+
+    exitLineBreakLast = indexer.isBallExiting();
+  }
+
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    return false;
+    return ballCounter >= _numBalls;
   }
 
   // Called once after isFinished returns true
   @Override
   protected void end() {
-    dt.tankDrive(0.0, 0.0);
   }
 
   // Called when another command which requires one or more of the same
   // subsystems is scheduled to run
   @Override
   protected void interrupted() {
-    
   }
 }

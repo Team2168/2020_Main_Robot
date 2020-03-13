@@ -5,21 +5,15 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package org.team2168.commands.auto;
-
-import org.team2168.commands.hopper.DriveHopperWithConstant;
-import org.team2168.commands.indexer.DriveIndexerWithConstant;
-import org.team2168.commands.indexer.DriveIndexerWithConstantNoStop;
-import org.team2168.commands.intakeMotor.DriveIntakeWithConstant;
-import org.team2168.commands.shooter.WaitForShooterAtSpeed;
+package org.team2168.commands.climber;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
-public class FireBallsAutoNoLineBreak extends CommandGroup {
+public class Climb extends CommandGroup {
   /**
    * Add your docs here.
    */
-  public FireBallsAutoNoLineBreak() {
+  public Climb() {
     // Add Commands here:
     // e.g. addSequential(new Command1());
     // addSequential(new Command2());
@@ -36,11 +30,7 @@ public class FireBallsAutoNoLineBreak extends CommandGroup {
     // e.g. if Command1 requires chassis, and Command2 requires arm,
     // a CommandGroup containing them would require both the chassis and the
     // arm.
-
-    addSequential(new WaitForShooterAtSpeed());
-    addSequential(new DriveIndexerWithConstantNoStop(1.0), 0.1); 
-    addParallel(new DriveIndexerWithConstant(1.0));
-    addParallel(new DriveHopperWithConstant(0.9));
-    addParallel(new DriveIntakeWithConstant(0.2));
+    addSequential(new EngageRatchet());
+    addSequential(new DriveClimberXPosition(7.0, 1.5));
   }
 }

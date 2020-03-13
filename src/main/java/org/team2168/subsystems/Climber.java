@@ -13,6 +13,7 @@ import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.FollowerType;
 import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
 import com.ctre.phoenix.motorcontrol.LimitSwitchSource;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
@@ -75,6 +76,8 @@ public class Climber extends Subsystem {
   static final Gains kGainsDown = new Gains(1.6, 0.0, 0.0, 0.0, 0, 1.0);
   static final double ARB_FEEDFORWARD_UP = 0.2;
   static final double ARB_FEEDFORWARD_DOWN = 0.0;
+  private static final double MIN_UPWARDS_SPEED = 0.025;
+
 
   /**
    * Convert target RPM to ticks / 100ms.
@@ -95,10 +98,18 @@ public class Climber extends Subsystem {
     climberMotor1 = new TalonSRX(RobotMap.CLIMBER_MOTOR_1_PDP);
     climberMotor2 = new TalonSRX(RobotMap.CLIMBER_MOTOR_2_PDP);
     climberSolenoid = new DoubleSolenoid(RobotMap.CLIMBER_RATCHET_ENGAGE_PCM,RobotMap.CLIMBER_RATCHET_DISENGAGE_PCM);
-    climberMotor1.configForwardLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen);
-    hallEffectSensor = new CanDigitalInput(climberMotor1);
+
     /* Factory Default all hardware to prevent unexpected behaviour */
     climberMotor1.configFactoryDefault();
+    climberMotor2.configFactoryDefault();
+
+    climberMotor1.configForwardLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen);
+    hallEffectSensor = new CanDigitalInput(climberMotor1);
+    
+    climberMotor1.setNeutralMode(NeutralMode.Brake);
+    climberMotor2.setNeutralMode(NeutralMode.Brake);
+
+
     /* Configure the left Talon's selected sensor as local QuadEncoder */
     climberMotor1.configSelectedFeedbackSensor(	FeedbackDevice.QuadEncoder,				// Local Feedback Source
                           kPIDLoopIdx,					// PID Slot for Source [0, 1]
@@ -178,6 +189,11 @@ public class Climber extends Subsystem {
    */
   
   public void driveClimberMotors(double speed){
+    if(speed > MIN_UPWARDS_SPEED) {
+    disengageRatchet();
+    } else {
+     engageRatchet();
+    }
     driveClimberMotor1(speed);
     driveClimberMotor2(speed);
   }

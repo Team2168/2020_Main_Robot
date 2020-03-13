@@ -63,11 +63,10 @@
 
 package org.team2168;
 
-import org.team2168.commands.auto.DefaultTrenchAuto;
 import org.team2168.commands.auto.DoNothing;
-import org.team2168.commands.auto.OppositeTrenchAuto;
+import org.team2168.commands.auto.selector.NearTrenchAuto;
+import org.team2168.commands.auto.selector.OppositeTrenchAuto;
 import org.team2168.commands.drivetrain.PIDCommands.DriveXDistance;
-import org.team2168.commands.drivetrain.PIDCommands.TurnXAngle;
 import org.team2168.commands.hood_adjust.MoveToFiringLocation;
 import org.team2168.subsystems.Balancer;
 import org.team2168.subsystems.Climber;
@@ -79,23 +78,29 @@ import org.team2168.subsystems.Hopper;
 import org.team2168.subsystems.Indexer;
 import org.team2168.subsystems.IntakeMotor;
 import org.team2168.subsystems.IntakePivot;
+import org.team2168.subsystems.Limelight;
 import org.team2168.subsystems.Shooter;
 //import org.team2168.utils.Debouncer;
 import org.team2168.utils.PowerDistribution;
 import org.team2168.utils.consoleprinter.ConsolePrinter;
 
+import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Robot extends TimedRobot {	
   private static final String kDefaultAuto = "Default";
   private static final String kCustomAuto = "My Auto";
   static Command autonomousCommand;
   public static SendableChooser<Command> autoChooser;
+  public static int pushRobot;
+  public static SendableChooser<Number> pushRobotChooser;
 
   // Subsystems
   private static Climber climber;
@@ -109,6 +114,8 @@ public class Robot extends TimedRobot {
   private static Shooter shooter;
   private static HoodAdjust hoodAdjust;
   private static Drivetrain drivetrain;
+  private static Limelight limelight;
+  private static Compressor compressor;
 
   private static OI oi;
 
@@ -154,18 +161,24 @@ public class Robot extends TimedRobot {
     shooter = Shooter.getInstance();
     hoodAdjust = HoodAdjust.getInstance();
     drivetrain = Drivetrain.getInstance();
-    oi = OI.getInstance();
-    
+    limelight = Limelight.getInstance();
+    compressor = new Compressor();
+    oi = OI.getInstance();  
+
     // pdp = new PowerDistribution(RobotMap.PDPThreadPeriod);
     // pdp.startThread();
     ConsolePrinter.init();
     ConsolePrinter.startThread();
 
+    //pick whether or not we want to push a robot off of the line
+    pushRobotSelectInit();
     //Initialize Autonomous Selector Choices
     autoSelectInit();
 
     ConsolePrinter.putBoolean("isPracticeBot", ()->{return isPracticeBot();}, true, false);
-    ConsolePrinter.putSendable("Autonomous Mode Chooser", () -> {return Robot.autoChooser;}, true, false);
+    SmartDashboard.putData("Autonomous Mode Chooser", autoChooser); 
+    SmartDashboard.putData("Push Robot Chooser", pushRobotChooser);
+    ConsolePrinter.putString("AutoName", () -> {return Robot.getAutoName();}, true, false);
 
     drivetrain.setDefaultBrakeMode();
   }
@@ -192,6 +205,7 @@ public class Robot extends TimedRobot {
     autoMode = true;
     drivetrain.setDefaultBrakeMode();
 
+    pushRobot = (int) pushRobotChooser.getSelected();
 		autonomousCommand = (Command) autoChooser.getSelected();
     	
     // schedule the autonomous command
@@ -220,6 +234,7 @@ public class Robot extends TimedRobot {
     // continue until interrupted by another command, remove
     // this line or comment it out.
     if (autonomousCommand != null) autonomousCommand.cancel();
+    indexer.drive(0.0);
   }
 
   /**
@@ -227,7 +242,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
-    boolean buttonBox2_buttonA = oi.buttonBox2.isPressedButtonA();
+    final boolean buttonBox2_buttonA = oi.buttonBox2.isPressedButtonA();
     autoMode = false;
 
     if(!oi.driverJoystick.isPressedButtonLeftBumper()
@@ -267,6 +282,7 @@ public class Robot extends TimedRobot {
     }
 
     lastCallHoodButtonA = false;
+    limelight.setLedMode(1);
   }
 
   @Override
@@ -275,7 +291,11 @@ public class Robot extends TimedRobot {
     //getControlStyleInt();
     //controlStyle = (int) controlStyleChooser.getSelected();
     Scheduler.getInstance().run();
+
+    SmartDashboard.putData("Autonomous Mode Chooser", autoChooser); 
+    SmartDashboard.putData("Push Robot Chooser", pushRobotChooser);
     autonomousCommand = (Command) autoChooser.getSelected();
+    pushRobot = (int) pushRobotChooser.getSelected();
 
   }
 
@@ -285,12 +305,52 @@ public class Robot extends TimedRobot {
      */
     public void autoSelectInit() {
       autoChooser = new SendableChooser<Command>();
-      autoChooser.setDefaultOption("Drive Straight", new DriveXDistance(-60.0));
+      autoChooser.setDefaultOption("Drive Straight", new DriveXDistance(60.0));
       autoChooser.addOption("Do Nothing", new DoNothing());
-      autoChooser.addOption("Opposite Trench Auto ", new OppositeTrenchAuto());
-      autoChooser.addOption("Near Trench Auto", new DefaultTrenchAuto());
-      autoChooser.addOption("Turn 13.25", new TurnXAngle(13.25, 0.3));
+      autoChooser.addOption("Near Trench Auto ", new NearTrenchAuto());
+      autoChooser.addOption("Opposite Trench Auto", new OppositeTrenchAuto());
 
+    }
+
+    /**
+     * Get the name of an autonomous mode command.
+     * 
+     * @return the name of the auto command.
+     */
+    public static String getAutoName() {
+      if (autonomousCommand != null) {
+        return autonomousCommand.getName();
+      } else {
+        return "None";
+      }
+    }
+
+    /**
+     * Adds boolean choice of whether or not to push another robot off the line
+     */
+    public void pushRobotSelectInit() {
+      pushRobotChooser = new SendableChooser<Number>();
+      pushRobotChooser.setDefaultOption("DO NOT push robot", 0);
+      pushRobotChooser.addOption("DO push robot", 1);
+    }
+
+    /**
+     * Returns boolean for whether or not we want to push another robot off the line
+     */
+    public static boolean getPushRobot() {
+      boolean retVal;
+      switch(pushRobot) {
+        case 0 :
+          retVal = false;
+          break;
+        case 1 : 
+          retVal = true;
+          break;
+        default : 
+          retVal = false; 
+          break;
+      }
+      return retVal;
     }
 
   /**
@@ -303,5 +363,18 @@ public class Robot extends TimedRobot {
 
   public static boolean isAutoMode() {
     return autoMode;
+  }
+
+  public static boolean onBlueAlliance() {
+    return DriverStation.getInstance().getAlliance() == Alliance.Blue;
+  }
+
+  public static void setCompressorOn(boolean on) {
+    if(on) {
+      compressor.start();
+    }
+    else {
+      compressor.stop();
+    }
   }
 }

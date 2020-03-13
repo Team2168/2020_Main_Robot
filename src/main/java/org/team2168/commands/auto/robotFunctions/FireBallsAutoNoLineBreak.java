@@ -5,20 +5,21 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package org.team2168.commands.hood_adjust;
+package org.team2168.commands.auto.robotFunctions;
 
-import org.team2168.commands.auto.Sleep;
-import org.team2168.subsystems.HoodAdjust;
-import org.team2168.subsystems.HoodAdjust.HoodPosition;
+import org.team2168.commands.hopper.DriveHopperWithConstant;
+import org.team2168.commands.indexer.DriveIndexerWithConstant;
+import org.team2168.commands.indexer.DriveIndexerWithConstantNoStop;
+import org.team2168.commands.intakeMotor.DriveIntakeWithConstant;
+import org.team2168.commands.shooter.WaitForShooterAtSpeed;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
-public class MoveToWallNoShoot extends CommandGroup {
-  HoodAdjust pos = HoodAdjust.getInstance();
+public class FireBallsAutoNoLineBreak extends CommandGroup {
   /**
    * Add your docs here.
    */
-  public MoveToWallNoShoot() {
+  public FireBallsAutoNoLineBreak() {
     // Add Commands here:
     // e.g. addSequential(new Command1());
     // addSequential(new Command2());
@@ -36,17 +37,10 @@ public class MoveToWallNoShoot extends CommandGroup {
     // a CommandGroup containing them would require both the chassis and the
     // arm.
 
-    //band aid
-    addSequential(new RetractShooterHood());
-    addSequential(new RetractShooterHardstop());
-    addSequential(new ExtendShooterHood());
-    addSequential(new ExtendShooterHardstop());
-    addSequential(new RetractShooterHardstop());
-    addSequential(new RetractShooterHood());
-
-    // addSequential(new RetractShooterHardstop());
-    addSequential(new Sleep(), 0.1);
-    addSequential(new ExtendShooterHood());
-    addSequential(new Sleep(), 0.1);
+    addSequential(new WaitForShooterAtSpeed());
+    addSequential(new DriveIndexerWithConstantNoStop(1.0), 0.1); 
+    addParallel(new DriveIndexerWithConstant(1.0));
+    addParallel(new DriveHopperWithConstant(0.9));
+    addParallel(new DriveIntakeWithConstant(0.2));
   }
 }

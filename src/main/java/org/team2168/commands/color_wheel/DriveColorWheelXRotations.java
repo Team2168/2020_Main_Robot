@@ -19,6 +19,8 @@ public class DriveColorWheelXRotations extends Command {
   private boolean _readPIDFromDashboard = false;
   private double _loopsToSettle = 10;
   private int _withinThresholdLoops = 0;
+  private int counter = 0;
+  private double _targetPosition;
 
   public DriveColorWheelXRotations(double setPoint) {
     // Use requires() here to declare subsystem dependencies
@@ -31,16 +33,21 @@ public class DriveColorWheelXRotations extends Command {
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
+    counter = 0;
+
     if(_readPIDFromDashboard) {
       colorWheel.updatePIDValues();
     }
-    colorWheel.zeroEncoders();
+    _withinThresholdLoops = 0;
+    _targetPosition = _setPoint + colorWheel.getPosition();
+    //System.out.println(_setPoint + " " + colorWheel.getPosition());
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    colorWheel.setPositionSetPoint(_setPoint);
+    counter++;
+    colorWheel.setPositionSetPoint(_targetPosition);
     SmartDashboard.putNumber("SetPoint", _setPoint);
     SmartDashboard.putNumber("CW Velocity", colorWheel.getVelocity());
     SmartDashboard.putNumber("CW Position", colorWheel.getPosition());
@@ -48,12 +55,13 @@ public class DriveColorWheelXRotations extends Command {
     SmartDashboard.putNumber("CW Motor Output Percent", colorWheel.getMotorOutput());
 
     /* Check if closed loop error is within the threshld */
-    if (Math.abs(_setPoint-colorWheel.getPosition()) < colorWheel.getAllowedClosedLoopError()) {
+    if (Math.abs(colorWheel.getPositionError()) < colorWheel.getAllowedClosedLoopError()) {
       ++_withinThresholdLoops;
     } 
     else {
       _withinThresholdLoops = 0;
     }
+    // System.out.println(colorWheel.getPositionError() + " " + counter);
   }
 
   // Make this return true when this Command no longer needs to run execute()

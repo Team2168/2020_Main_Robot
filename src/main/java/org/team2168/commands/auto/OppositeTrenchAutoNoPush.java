@@ -7,25 +7,23 @@
 
 package org.team2168.commands.auto;
 
+import org.team2168.commands.auto.robotFunctions.FireBallsAuto;
 import org.team2168.commands.drivetrain.PIDCommands.DriveXDistance;
 import org.team2168.commands.drivetrain.PIDCommands.TurnXAngle;
-import org.team2168.commands.hood_adjust.MoveToFrontTrench;
-import org.team2168.commands.hood_adjust.MoveToWLNoShoot;
 import org.team2168.commands.hood_adjust.MoveToWhiteLine;
 import org.team2168.commands.hopper.DriveHopperWithConstant;
 import org.team2168.commands.indexer.DriveIndexerWithConstant;
 import org.team2168.commands.intakeMotor.DriveIntakeWithConstant;
 import org.team2168.commands.intakePivot.ExtendIntakePneumatic;
 import org.team2168.commands.intakePivot.RetractIntakePneumatic;
-import org.team2168.commands.shooter.DriveToXSpeed;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
-public class OppositeTrenchAuto extends CommandGroup {
+public class OppositeTrenchAutoNoPush extends CommandGroup {
   /**
    * Add your docs here.
    */
-  public OppositeTrenchAuto() {
+  public OppositeTrenchAutoNoPush() {
     // Add Commands here:
     // e.g. addSequential(new Command1());
     // addSequential(new Command2());
@@ -44,8 +42,9 @@ public class OppositeTrenchAuto extends CommandGroup {
     // arm.
 
     //start shooter
-    addParallel(new MoveToWLNoShoot());
-    addParallel(new DriveToXSpeed(3250.0)); //fix later so this doesn't cancel the hood moving
+    // addParallel(new MoveToWLNoShoot());
+    // addParallel(new DriveToXSpeed(3250.0));
+    addParallel(new MoveToWhiteLine());
     
     //drive and intake
     addParallel(new DriveIntakeWithConstant(0.95));//TODO set
@@ -57,10 +56,11 @@ public class OppositeTrenchAuto extends CommandGroup {
     //turn and drive to firing location 
     addSequential(new TurnXAngle(-63.0, 0.5), 2.0); //68
     addSequential(new DriveXDistance(167.0, 0.5), 4.0);  
-    addSequential(new TurnXAngle(45.5, 0.4), 2.0); //45.8--four inner port, not in line for next pickup
+    addSequential(new TurnXAngle(45.0, 0.4), 2.0); //45.8--four inner port, not in line for next pickup
     
     //Fire 
-    addSequential(new FireBallsAutoNoLineBreak(), 2.0);
+    // addSequential(new FireBallsAutoNoLineBreak(), 2.0);
+    addSequential(new FireBallsAuto(5), 2.0);
     addParallel(new DriveHopperWithConstant(0.0), 0.1);
     addParallel(new DriveIndexerWithConstant(0.0), 0.0);
     // addSequential(new TurnXAngle(-30.0, 0.3), 2.0); //45.8--four inner port, not in line for next pickup
@@ -77,7 +77,9 @@ public class OppositeTrenchAuto extends CommandGroup {
     addSequential(new DriveXDistance(+68.0, 0.5));
 
 
-    addSequential(new FireBallsAutoNoLineBreak(), 2.0);
+    // addSequential(new FireBallsAutoNoLineBreak(), 2.0);
+    addSequential(new FireBallsAuto(2), 2.0);
+
 
     // addSequential(new TurnXAngle(-18.0, 0.3), 2.0);
     // addSequential(new DriveXDistance(-18.0, 0.5), 2.0);

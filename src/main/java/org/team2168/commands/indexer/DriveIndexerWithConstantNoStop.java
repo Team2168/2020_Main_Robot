@@ -7,6 +7,7 @@
 
 package org.team2168.commands.indexer;
 
+import org.team2168.Robot;
 import org.team2168.subsystems.Indexer;
 
 import edu.wpi.first.wpilibj.command.Command;
@@ -28,6 +29,12 @@ public class DriveIndexerWithConstantNoStop extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
+    if(_speed != 0.0) {
+      Robot.setCompressorOn(false);
+    }
+    else {
+      Robot.setCompressorOn(true);
+    }
     _indexer.drive(_speed);
   }
 
@@ -40,6 +47,7 @@ public class DriveIndexerWithConstantNoStop extends Command {
   // Called once after isFinished returns true
   @Override
   protected void end() {
+    Robot.setCompressorOn(true);
   }
 
   // Called when another command which requires one or more of the same

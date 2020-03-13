@@ -5,47 +5,37 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package org.team2168.commands.drivetrain;
+package org.team2168.commands.auto.selector;
 
-import org.team2168.OI;
-import org.team2168.subsystems.Drivetrain;
-import org.team2168.subsystems.Limelight;
+import org.team2168.Robot;
+import org.team2168.commands.auto.NearTrenchAutoNoPush;
+import org.team2168.commands.auto.NearTrenchAutoPush;
 
 import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.command.Scheduler;
 
-public class DriveWithJoystick extends Command 
-{
-  private Drivetrain dt;
-  private Limelight lime;
-  private OI oi;
-  
-  public DriveWithJoystick() 
-  {
-    dt = Drivetrain.getInstance();
-    requires(dt);
+public class NearTrenchAuto extends Command {
+  public NearTrenchAuto() {
+    // Use requires() here to declare subsystem dependencies
+    // eg. requires(chassis);
   }
 
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
-    oi = OI.getInstance();
-    lime = Limelight.getInstance();
-    lime.setLedMode(1);
-	}
-
-	/**
-	 * Gets the joystick positions from OI and sends them to the drivetrain
-	 * subsystem.
-	 * 
-	 * @author Liam
-	 */
-  @Override
-  protected void execute() {
-    dt.tankDrive(oi.getGunStyleYValue()+ oi.getGunStyleXValue(),
-      oi.getGunStyleYValue() - oi.getGunStyleXValue());
+    if (Robot.getPushRobot()) {
+      Scheduler.getInstance().add(new NearTrenchAutoPush());
+    }
+  else {
+    Scheduler.getInstance().add(new NearTrenchAutoNoPush());
+  }
   }
 
   // Called repeatedly when this Command is scheduled to run
+  @Override
+  protected void execute() {
+  }
+
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
@@ -55,13 +45,11 @@ public class DriveWithJoystick extends Command
   // Called once after isFinished returns true
   @Override
   protected void end() {
-    dt.tankDrive(0.0, 0.0);
   }
 
   // Called when another command which requires one or more of the same
   // subsystems is scheduled to run
   @Override
   protected void interrupted() {
-    
   }
 }

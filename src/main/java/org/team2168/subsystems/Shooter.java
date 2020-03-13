@@ -86,10 +86,10 @@ public class Shooter extends Subsystem {
     //in process--kP = 0.8, kF = 0.52*1023.0/10894.0
     private double setPointVelocity_sensorUnits;
 
-    private final double WALL_VEL =2540.0; //
-    private final double WHITE_LINE_VEL = 3240.0; //untuned
-    private final double FRONT_TRENCH_VEL = 3900.0; //steady state: 40 over
-    private final double BACK_TRENCH_VEL = 4540.0; //4540.0; //steady state: 40 over 4500
+    private final double WALL_VEL =2790.0; 
+    private final double WHITE_LINE_VEL = 3440.0; 
+    private final double FRONT_TRENCH_VEL = 4550.0; 
+    private final double BACK_TRENCH_VEL = 4640.0; 
 
     private final double WALL_VEL_PBOT = 2540.0; //new red balls
     private final double WHITE_LINE_VEL_PBOT = 3300.0; //
@@ -100,7 +100,7 @@ public class Shooter extends Subsystem {
     private static double _whiteLineVel;
     private static double _frontTrenchVel;
     private static double _backTrenchVel;
-    private static double velocityAdjustment = 0.0;
+    private static double velocityAdjustment = -100.0;
 
     private Shooter() {
         _motorOne = new TalonFX(RobotMap.SHOOTER_MOTOR_ONE_PDP);
@@ -179,8 +179,10 @@ public class Shooter extends Subsystem {
         ConsolePrinter.putNumber("Shooter Velocity", () -> {return getVelocity();}, true, false);
         ConsolePrinter.putNumber("Shooter Error", () -> {return getError();}, true, false);
         ConsolePrinter.putNumber("Shooter Motor Output Percent", () -> {return _motorOne.getMotorOutputPercent();}, true, false);
+        ConsolePrinter.putNumber("Velocity Adjust", () -> {return velocityAdjustment;}, true, false);
         //ConsolePrinter.putNumber("Shooter Setpoint", () -> {return ticks_per_100ms_to_revs_per_minute( _motorOne.getClosedLoopTarget());}, true, false);
     }
+    
     /**
      * Creates a new Instance of the shooter
      * @return - New shooter instance will be utilized by the commands
@@ -229,6 +231,10 @@ public class Shooter extends Subsystem {
 
     public void decrementSpeed() {
         velocityAdjustment -= 50.0;
+    }
+
+    public void zeroSpeed() {
+        velocityAdjustment = 0.0;
     }
 
     public double getError()

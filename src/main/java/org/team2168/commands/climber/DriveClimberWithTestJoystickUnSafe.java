@@ -18,6 +18,7 @@ public class DriveClimberWithTestJoystickUnSafe extends Command {
   private Climber climber;
   private OI oi;
   private final double MAX_SPEED = 0.8;
+  private final double MIN_UPWARDS_SPEED = 0.05;
   public DriveClimberWithTestJoystickUnSafe() {
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
@@ -34,6 +35,7 @@ public class DriveClimberWithTestJoystickUnSafe extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
+    //System.out.println(oi.getClimberTestJoystickValue());
     if(Math.abs(oi.getClimberTestJoystickValue()) < MAX_SPEED) {
       climber.driveClimberMotors(oi.getClimberTestJoystickValue());
     }
