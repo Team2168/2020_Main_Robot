@@ -1,10 +1,111 @@
+# The code for _FRC_ Team 2168's 2020 Robot, __SPACE BALL 1__
+![2020 robot photo](https://i.imgur.com/mCX4ocX.jpeg)  
+* 2020 Reveal Video: https://www.youtube.com/watch?v=pnHjPJop7GA  
+* Season stats/results: https://www.thebluealliance.com/team/2168/2020
+
+## Robot Subsystems:
+
+## Drivetrain ([Drivetrain.java](src/main/java/org/team2168/subsystems/Drivetrain.java))
+![](images/drivetrain.png)
+
+Approximate top speed of 16.2 ft/s
+
+  * 6x Motors (Falcon 500s - TalonFX) (3 per side)
+  * 2x Rev Hex Encoders
+  * 1x Pigeon IMU
+
+Rev encoder are mounted off a drive axel (1:1 gear ratio), and mounted as a contingency to using the
+internal F500 encoders. The internal F500 encoders were used exclusively for in-season play.
+
+## Shooter ([Shooter.java](src/main/java/org/team2168/subsystems/Shooter.java))
+![](images/shooter.png)
+
+  * 2x Motors (Falcon 500s - TalonFX)
+  * 1x Rev Encoder
+
+## Shooter Hood ([HoodAdjust.java](src/main/java/org/team2168/subsystems/HoodAdjust.java))
+![](images/shooter_hood.png)
+
+  * 2x Pneumatic actuators
+    * One extends/retracts the hood
+    * One activates a hard stop
+
+The two pneumatic actuators can be moved to four uniqe position combinations. Getting to some positions
+requires a series of steps (sequence of pneumatic operations). This allows for four unique shooting
+locations on the field:
+  1. against the wall
+  2. front of the trench
+  3. back of the trench
+  4. far shot (opposing side of the field)
+
+The hood was also machined with a gear profile to allow for continuously variable positioning, but this configuration
+was not fielded.
+
+## Indexer ([Indexer.java](src/main/java/org/team2168/subsystems/Indexer.java))
+A motor controlled roller at the base of the inlet to the shooter assembly. This roller controls the flow of balls
+into the shooter assembly.
+
+  * 1x BAG Motor (TalonSRX)
+  * 2x Line Break (IR) Sensors - these allow balls to be fed into the shooter one at a time, pause between shots
+    if the shooter wheel isn't at speed.
+
+## Intake
+![](images/intake.png)  
+This assembly allows pickup from the floor or loading when extended/retracted at the human loading player loading station.
+
+### Intake - Wheels ([IntakeMotor.java](src/main/java/org/team2168/subsystems/IntakeMotor.java))
+  * 1x NEO Motor (SparkMAX) to spin wheels
+
+### Intake - Extend/Retract ([IntakePivot.java](src/main/java/org/team2168/subsystems/IntakePivot.java))
+  * 1x Pneumatic to move the intake in/out
+
+## Hopper ([Hopper.java](src/main/java/org/team2168/subsystems/Hopper.java))
+![](images/hopper.png)  
+A set of omni-wheels at the base of the hopper can be driven to feed balls into the shooter assembly.
+
+  * 1x BAG Motor (TalonSRX) to spin
+
+## Climber ([Climber.java](src/main/java/org/team2168/subsystems/Climber.java))
+![](images/lift.png)
+
+  * 2x 775 Motors (TalonSRX Motor controllers) to control pulley system to raise/lower the lift
+  * 1x Rev Hex Encoder to measure the lift enxtension
+
+## Balancer (skywalker) ([Balancer.java](src/main/java/org/team2168/subsystems/Balancer.java))
+![](images/balancer.png)  
+This mechanism is mounted at the top of the Climber sub-assembly. When attached to the bar in the rendezvous zone, it can
+be used to manuver the robot left/right allow for active control of balancing ourselves and partners during the endgame.
+
+  * 1x Motor (Neo 550) to move along the bar  
+
+## Color Wheel Manipulator 
+![](images/color_wheel.png)
+
+### Color Wheel - Spin ([ColorWheel.java](src/main/java/org/team2168/subsystems/ColorWheel.java))
+
+  * 1x Motor (Neo 550) to spin wheel
+  
+### Color Wheel - Raise/Lower ([ColorWheelPivot.java](src/main/java/org/team2168/subsystems/ColorWheelPivot.java))
+
+  * 1x Pneumatic to adjust vertical position (rasise/lower) 
+
+## Vision ([Limelight.java](src/main/java/org/team2168/subsystems/Limelight.java))
+
+  * 1x Camera
+
+## Flashlight ([Flashlight.java](src/main/java/org/team2168/subsystems/Flashlight.java))
+
+  * 1x PWM controller mosfet to turn a flashlight on/off
+
+<hr>
+
 # Getting Started with VS Code for 2020 Season
 Installation guide for VS Code with WPILib 2020 can be found here:  
 https://docs.wpilib.org/en/latest/docs/getting-started/getting-started-frc-control-system/wpilib-setup.html
 
 Feel free to uninstall existing VS Code installations.
 
-Brief Synopsis for windows:
+Brief Synopsis for Windows:
 
   1. Download the FRC VS Code installer for your operating system from here: https://github.com/wpilibsuite/allwpilib/releases
   2. Extract the above installer and run it for all users
@@ -228,75 +329,3 @@ When creating commands:
   - Pneumatics:
      - Create a command to extend the pneumatic.
      - Create a command to retract the pneumatic.
-
-## Drivetrain
-### Liam
-  6x Motors (Falcon 500s - TalonFX) (3 per side)
-  2x Rev Encoder
-  1x Pigeon IMU
-
-## Shooter
-### Kaleb
-  2x Motors (Falcon 500s - TalonFX)
-  1x Rev Encoder
-
-## Hood_Adjust
-### Kaleb
-  2x Pneumatics
-   - One pushes the hood
-   - One activates a hard stop
-   - This creates 4 positions to shoot from.
-
-## Intake
-```
-This needs to be two seperate subsystems. e.g.
-  - Raise/lower
-  - motors in/out
-```
-### Ian
-  1x Motor (TalonSRX) to spin wheels  
-  1x Pneumatic to pivot intake
-
-## Hopper
-### Cierra
-  1x Motor (TalonSRX) to spin
-
-## Indexer
-### Nathan K.
-  1x Motor (Spark MAX)
-  2x Line Break (IR) Sensors
-
-## Climber
-### Conor
-  2x Motors (775, use TalonSRX) to control pulley system
-  TBD sensors
-
-## Color Wheel raise/lower
-```
-This needs to be split up into multiple subsystems. E.g.
-  - Raise/lower
-  - rotate
-  - color sense
-  - camera
-```
-### Derek
-  1x Motor (Neo) to spin wheel
-  1x Pneumatic to adjust vertical position (rasise/lower) 
-  1x color sensor to read the color for position control (Sensor comes from vendor)    
-  1x Encoder to read the number of rotations for rotation control
-  1x Camera
-  1x Hall Effect 
-  
-## Balancer
-### Caeden
-  1x Motor (Neo) to move along the bar  
-  1x Pneumatic to brake
-
-## Buddy_Climb
-### TBD
-
-## LEDs
-### Greyson
-  
-## Vision
-  TBD
