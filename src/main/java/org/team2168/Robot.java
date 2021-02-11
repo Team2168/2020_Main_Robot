@@ -67,12 +67,14 @@ import org.team2168.commands.auto.DoNothing;
 import org.team2168.commands.auto.selector.NearTrenchAuto;
 import org.team2168.commands.auto.selector.OppositeTrenchAuto;
 import org.team2168.commands.drivetrain.PIDCommands.DriveXDistance;
+import org.team2168.commands.drivetrain_new.RamseteCommand;
 import org.team2168.commands.hood_adjust.MoveToFiringLocation;
 import org.team2168.subsystems.Balancer;
 import org.team2168.subsystems.Climber;
 import org.team2168.subsystems.ColorWheel;
 import org.team2168.subsystems.ColorWheelPivot;
 import org.team2168.subsystems.Drivetrain;
+import org.team2168.subsystems.DrivetrainNew;
 import org.team2168.subsystems.HoodAdjust;
 import org.team2168.subsystems.Hopper;
 import org.team2168.subsystems.Indexer;
@@ -93,6 +95,7 @@ import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.trajectory.Trajectory;
 
 public class Robot extends TimedRobot {	
   private static final String kDefaultAuto = "Default";
@@ -113,7 +116,7 @@ public class Robot extends TimedRobot {
   private static ColorWheelPivot colorWheelPivot;
   private static Shooter shooter;
   private static HoodAdjust hoodAdjust;
-  private static Drivetrain drivetrain;
+  private static DrivetrainNew drivetrain;
   private static Limelight limelight;
   private static Compressor compressor;
 
@@ -160,7 +163,7 @@ public class Robot extends TimedRobot {
     colorWheelPivot = ColorWheelPivot.getInstance();
     shooter = Shooter.getInstance();
     hoodAdjust = HoodAdjust.getInstance();
-    drivetrain = Drivetrain.getInstance();
+    drivetrain = DrivetrainNew.getInstance();
     limelight = Limelight.getInstance();
     compressor = new Compressor();
     oi = OI.getInstance();  
@@ -180,7 +183,7 @@ public class Robot extends TimedRobot {
     SmartDashboard.putData("Push Robot Chooser", pushRobotChooser);
     ConsolePrinter.putString("AutoName", () -> {return Robot.getAutoName();}, true, false);
 
-    drivetrain.setDefaultBrakeMode();
+    // drivetrain.setDefaultBrakeMode();
   }
 
   @Override
@@ -203,7 +206,7 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     autoMode = true;
-    drivetrain.setDefaultBrakeMode();
+    // drivetrain.setDefaultBrakeMode();
 
     pushRobot = (int) pushRobotChooser.getSelected();
 		autonomousCommand = (Command) autoChooser.getSelected();
@@ -227,7 +230,7 @@ public class Robot extends TimedRobot {
    */
 	public void teleopInit() {
     autoMode = false;
-    drivetrain.setDefaultBrakeMode();
+    // drivetrain.setDefaultBrakeMode();
 
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to 
@@ -278,7 +281,7 @@ public class Robot extends TimedRobot {
 
     if(!DriverStation.getInstance().isFMSAttached()) {
       //If we're not on a real field, let the robot be pushed around if it's disabled.
-      drivetrain.setAllMotorsCoast();
+      // drivetrain.setAllMotorsCoast();
     }
 
     lastCallHoodButtonA = false;
@@ -376,5 +379,20 @@ public class Robot extends TimedRobot {
     else {
       compressor.stop();
     }
+  }
+
+  public static Command generatePath(Trajectory trajectory) {
+    return new RamseteCommand(
+      trajectory, 
+      drivetrain::getPose, 
+      drivetrain.getRamseteController(),
+      drivetrain.getFeedForward(),
+      drivetrain.getDriveKinematics(),
+      drivetrain::getWheelSpeeds,
+      drivetrain.getLeftDriveController(),
+      drivetrain.getRightDriveController(),
+      drivetrain::setOutputVolts, drivetrain
+    );
+    return new RamseteCommand(trajectory, pose, controller, feedforward, kinematics, wheelSpeeds, leftController, rightController, outputVolts, requirements)
   }
 }

@@ -3,6 +3,8 @@
  */
 package org.team2168;
 
+import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
+
 public class Constants {
 	/**
 	 * Number of joystick buttons to poll.
@@ -66,4 +68,27 @@ public class Constants {
 	public final static int kSlot_Turning = SLOT_1;
 	public final static int kSlot_Velocit = SLOT_2;
 	public final static int kSlot_MotProf = SLOT_3;
+
+	/* ------- New drivetrain gains ------ */
+	// TODO all gains are in meters for now, but once I figure out everything I will assess whether this is needed
+	public final static double kDriveS = 0.638;
+	public final static double kDriveV = 4.82;
+	public final static double kDriveA = 0.679;
+	// public final static double kDriveP = 1.71; //1.5 m/s acceptable error
+	public final static double kDriveP = 18.2; // 0.2 m/s acceptable error
+	public final static double kDriveI = 0.0;
+	public final static double kDriveD = 0.0;
+
+	public final static double kTrackWidthMeters = 5.372668791280939;
+	public static final DifferentialDriveKinematics kDriveKinematics = 
+		new DifferentialDriveKinematics(kTrackWidthMeters);
+
+	public static final double kMaxSpeedMetersPerSecond = 3;
+	public static final double kMaxAccelerationMetersPerSecondSquared = 3;
+	
+		
+
+	// Reasonable baseline values for a RAMSETE follower in units of meters and seconds
+    public static final double kRamseteB = 2;
+    public static final double kRamseteZeta = 0.7;
 }

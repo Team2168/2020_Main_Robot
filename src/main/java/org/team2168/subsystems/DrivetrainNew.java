@@ -7,6 +7,7 @@
 
 package org.team2168.subsystems;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.TalonFXInvertType;
@@ -17,18 +18,19 @@ import com.ctre.phoenix.sensors.PigeonIMU;
 import org.team2168.Constants;
 import org.team2168.RobotMap;
 
+import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj.controller.RamseteController;
+import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
 
-/**
- * thanks to 4277 for letting us steal code ;)
- * 
- */
+
 public class DrivetrainNew extends Subsystem {
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
@@ -47,6 +49,13 @@ public class DrivetrainNew extends Subsystem {
 
   private static SpeedControllerGroup _leftMotors;
   private static SpeedControllerGroup _rightMotors;
+
+  // auto control stuff
+  private static RamseteController ramseteController;
+  private static SimpleMotorFeedforward driveFeedforward;
+  private static DifferentialDriveKinematics driveKinematics;
+  private static PIDController leftDriveController;
+  private static PIDController rightDriveController;
 
   private static PigeonIMU _pidgey;
 
@@ -147,7 +156,12 @@ public class DrivetrainNew extends Subsystem {
     _drive = new DifferentialDrive(_leftMotors, _rightMotors);
     _odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()));
 
-
+    // auto
+    ramseteController = new RamseteController();
+    driveFeedforward = new SimpleMotorFeedforward(Constants.kDriveS, Constants.kDriveV, Constants.kDriveA);
+    driveKinematics = new DifferentialDriveKinematics(Constants.kTrackWidthMeters);
+    leftDriveController = new PIDController(Constants.kDriveP, Constants.kDriveI, Constants.kDriveD);
+    rightDriveController = new PIDController(Constants.kDriveP, Constants.kDriveI, Constants.kDriveD);
 
 
     resetEncoders();
@@ -158,6 +172,49 @@ public class DrivetrainNew extends Subsystem {
   public void periodic() {
     //update the odometry
     _odometry.update(Rotation2d.fromDegrees(getHeading()), ticks_to_meters(_leftMotor1.getSelectedSensorPosition()), ticks_to_meters(_rightMotor1.getSelectedSensorPosition()));
+  }
+
+  private void setLeftMotor1(double leftSpeed) {
+    _leftMotor1.set(ControlMode.PercentOutput, leftSpeed);
+  }
+  private void setLeftMotor2(double leftSpeed) {
+    _leftMotor2.set(ControlMode.PercentOutput, leftSpeed);
+  }
+  private void setLeftMotor3(double leftSpeed) {
+    _leftMotor3.set(ControlMode.PercentOutput, leftSpeed);
+  }
+
+  public void setLeftMotors(double leftSpeed) {
+    setLeftMotor1(leftSpeed);
+    setLeftMotor2(leftSpeed);
+    setLeftMotor3(leftSpeed);
+  }
+
+
+  private void setRightMotor1(double rightSpeed) {
+    _rightMotor1.set(ControlMode.PercentOutput, rightSpeed);
+  }
+  private void setRightMotor2(double rightSpeed) {
+    _rightMotor2.set(ControlMode.PercentOutput, rightSpeed);
+  }
+  private void setRightMotor3(double rightSpeed) {
+    _rightMotor3.set(ControlMode.PercentOutput, rightSpeed);
+  }
+
+  public void setRightMotors(double rightSpeed) {
+    setRightMotor1(rightSpeed);
+    setRightMotor2(rightSpeed);
+    setRightMotor3(rightSpeed);
+  }
+
+  public void set(double leftSpeed, double rightSpeed) {
+    setLeftMotors(leftSpeed);
+    setRightMotors(rightSpeed);
+  }
+  
+  public void setVoltage(double leftVolts, double rightVolts) {
+    _leftMotors.setVoltage(leftVolts);
+    _rightMotors.setVoltage(-rightVolts);
   }
 
   public Pose2d getPose() {
@@ -183,6 +240,7 @@ public class DrivetrainNew extends Subsystem {
   public void tankDriveVolts(double leftVolts, double rightVolts) {
     _leftMotors.setVoltage(leftVolts);
     _rightMotors.setVoltage(-rightVolts);
+    _drive.feed();
   }
 
   public void resetEncoders() {
@@ -211,14 +269,20 @@ public class DrivetrainNew extends Subsystem {
     _pidgey.setYaw(0);
   }
 
-  public double getRawYaw() {
-    double[] ypr = {0.0, 0.0, 0.0};
-    _pidgey.getYawPitchRoll(ypr);
-    return ypr[0];
-  }
+  // public double getRawYaw() {
+  //   double[] ypr = {0.0, 0.0, 0.0};
+  //   _pidgey.getYawPitchRoll(ypr);
+  //   return ypr[0];
+    
+  // }
+
   public double getHeading() {
-    return Math.abs(Math.IEEEremainder(getRawYaw()%360, 360)); //TODO seems a bit wierd idk
+    // return Math.abs(Math.IEEEremainder(getRawYaw()%360, 360)); //TODO seems a bit wierd idk
+    return _pidgey.getFusedHeading();
   }
+
+
+  // TODO do I need a get turn rate? 
 
   private int getLeftPosition() {
     return _leftMotor1.getSelectedSensorPosition();
@@ -228,6 +292,28 @@ public class DrivetrainNew extends Subsystem {
     return _rightMotor1.getSelectedSensorPosition();
   }
 
+  public RamseteController getRamseteController() {
+    return ramseteController;
+  }
+
+  public SimpleMotorFeedforward getFeedForward() {
+    return driveFeedforward;
+  }
+
+  public DifferentialDriveKinematics getDriveKinematics() {
+    return driveKinematics;
+  }
+
+  public PIDController getLeftDriveController() {
+    return leftDriveController;
+  }
+
+  public PIDController getRightDriveController() {
+    return rightDriveController;
+  }
+
+  
+  
   // TODO add getTurnRate
   // public double getTurnRate() {
   //   return _pidgey.get
