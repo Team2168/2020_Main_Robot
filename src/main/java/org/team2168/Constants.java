@@ -3,6 +3,8 @@
  */
 package org.team2168;
 
+import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
+
 public class Constants {
 	/**
 	 * Number of joystick buttons to poll.
@@ -44,10 +46,10 @@ public class Constants {
      * Not all set of Gains are used in this project and may be removed as desired.
      * 
 	 * 	                                    			   kP     kI     kD   kF             Iz    PeakOut */
-	public final static Gains kGains_Distance = new Gains( 0.125,  0.00,   0.0, 0.0,            120,  0.75 ); //always used for linear path
-	public final static Gains kGains_Turning  = new Gains( 0.48, 0.00,  0.0, 0.0,            200,  0.5 ); //used to turn during autos
-	public final static Gains kGains_Turning_Straight  = new Gains( 3.9, 0.0, 0.0, 0.0,  300,  0.50 ); //used to maintain heading while auto driving straight
-	public final static Gains kGains_Limelight  = new Gains( 0.55, 0.0,  0.0, 1023.0/6800.0,  200,  0.5 );
+	// public final static Gains kGains_Distance = new Gains( 0.125,  0.00,   0.0, 0.0,            120,  0.75 ); //always used for linear path
+	// public final static Gains kGains_Turning  = new Gains( 0.48, 0.00,  0.0, 0.0,            200,  0.5 ); //used to turn during autos
+	// public final static Gains kGains_Turning_Straight  = new Gains( 3.9, 0.0, 0.0, 0.0,  300,  0.50 ); //used to maintain heading while auto driving straight
+	// public final static Gains kGains_Limelight  = new Gains( 0.55, 0.0,  0.0, 1023.0/6800.0,  200,  0.5 );
 	
 	/** ---- Flat constants, you should not need to change these ---- */
 	/* We allow either a 0 or 1 when selecting an ordinal for remote devices [You can have up to 2 devices assigned remotely to a talon/victor] */
@@ -66,4 +68,27 @@ public class Constants {
 	public final static int kSlot_Turning = SLOT_1;
 	public final static int kSlot_Velocit = SLOT_2;
 	public final static int kSlot_MotProf = SLOT_3;
+
+	/* ------- New drivetrain gains ------ */
+	// TODO all gains are in meters for now, but once I figure out everything I will assess whether this is needed
+	public final static double kDriveS = 0.638;
+	public final static double kDriveV = 4.82;
+	public final static double kDriveA = 0.679;
+	// public final static double kDriveP = 1.71; //1.5 m/s acceptable error
+	public final static double kDriveP = 18.2; // 0.2 m/s acceptable error
+	public final static double kDriveI = 0.0;
+	public final static double kDriveD = 0.0;
+
+	public final static double kTrackWidthMeters = 5.372668791280939;
+	public static final DifferentialDriveKinematics kDriveKinematics = 
+		new DifferentialDriveKinematics(kTrackWidthMeters);
+
+	public static final double kMaxSpeedMetersPerSecond = 3;
+	public static final double kMaxAccelerationMetersPerSecondSquared = 3;
+	
+		
+
+	// Reasonable baseline values for a RAMSETE follower in units of meters and seconds
+    public static final double kRamseteB = 2;
+    public static final double kRamseteZeta = 0.7;
 }
