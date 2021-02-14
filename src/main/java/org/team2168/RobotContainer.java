@@ -33,20 +33,31 @@ import edu.wpi.first.wpilibj2.command.RamseteCommand;
  * (including subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
-  // The robot's subsystems and commands are defined here...
-  // private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
-  private final Drivetrain dt = Drivetrain.getInstance();
+  // The robot's subsystems and commands are defined here:
+  private final Drivetrain dt;
 
   // private final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
+  private Trajectory exampleTrajectory;
 
-
+  // Create a voltage constraint to ensure we don't accelerate too fast
+  private static DifferentialDriveVoltageConstraint autoVoltageConstraint =
+      new DifferentialDriveVoltageConstraint(
+          new SimpleMotorFeedforward(Constants.kDriveS,
+                                      Constants.kDriveV,
+                                      Constants.kDriveA),
+          Constants.kDriveKinematics,
+          10);
 
   /**
    * The container for the robot.  Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
+    dt = Drivetrain.getInstance();
+
     // Configure the button bindings
     configureButtonBindings();
+
+    initialize_trajectories();
   }
 
   /**
@@ -66,40 +77,6 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An ExampleCommand will run in autonomous
-
-    // Create a voltage constraint to ensure we don't accelerate too fast
-    var autoVoltageConstraint =
-        new DifferentialDriveVoltageConstraint(
-            new SimpleMotorFeedforward(Constants.kDriveS,
-                                       Constants.kDriveV,
-                                       Constants.kDriveA),
-            Constants.kDriveKinematics,
-            10);
-
-    // Create config for trajectory
-    TrajectoryConfig config =
-    new TrajectoryConfig(Constants.kMaxSpeedMetersPerSecond,
-                         Constants.kMaxAccelerationMetersPerSecondSquared)
-        // Add kinematics to ensure max speed is actually obeyed
-        .setKinematics(Constants.kDriveKinematics)
-        // Apply the voltage constraint
-        .addConstraint(autoVoltageConstraint);
-
-    // An example trajectory to follow.  All units in meters.
-    // TODO replace with a path weaver thing
-    Trajectory exampleTrajectory = TrajectoryGenerator.generateTrajectory(
-        // Start at the origin facing the +X direction
-        new Pose2d(0, 0, new Rotation2d(0)),
-        // Pass through these two interior waypoints, making an 's' curve path
-        List.of(
-            new Translation2d(1, 1),
-            new Translation2d(2, -1)
-        ),
-        // End 3 meters straight ahead of where we started, facing forward
-        new Pose2d(3, 0, new Rotation2d(0)),
-        // Pass config
-        config
-    );
 
     RamseteCommand ramseteCommand = new RamseteCommand(
         exampleTrajectory,
@@ -122,5 +99,33 @@ public class RobotContainer {
 
     // Run path following command, then stop at the end.
     return ramseteCommand.andThen(() -> dt.tankDriveVolts(0, 0));
+  }
+
+  private static TrajectoryConfig getConfig() {
+    return new TrajectoryConfig(Constants.kMaxSpeedMetersPerSecond,
+                                Constants.kMaxAccelerationMetersPerSecondSquared)
+                                // Add kinematics to ensure max speed is actually obeyed
+                                .setKinematics(Constants.kDriveKinematics)
+                                // Apply the voltage constraint
+                                .addConstraint(autoVoltageConstraint);
+  }
+
+  private void initialize_trajectories() {
+    // An example trajectory to follow.  All units in meters.
+    // TODO replace with a path weaver thing
+    exampleTrajectory = TrajectoryGenerator.generateTrajectory(
+        // Start at the origin facing the +X direction
+        new Pose2d(0, 0, new Rotation2d(0)),
+        // Pass through these two interior waypoints, making an 's' curve path
+        List.of(
+            new Translation2d(2, 0.1),
+            new Translation2d(4, -0.1)
+        ),
+        // End 8 meters straight ahead of where we started, facing forward
+        new Pose2d(8, 0, new Rotation2d(0)),
+        // Pass config
+        getConfig()
+    );
+    System.out.println("Trajectory generation complete.");
   }
 }
