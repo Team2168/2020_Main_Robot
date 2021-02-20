@@ -7,6 +7,8 @@
 
 package org.team2168.subsystems;
 
+import java.util.List;
+
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
@@ -302,6 +304,15 @@ public class Drivetrain extends SubsystemBase {
 
   public PIDController getRightDriveController() {
     return rightDriveController;
+  }
+
+  public List<Double> getVoltages() {
+    return List.of(_leftMotor1.getBusVoltage(),
+    _leftMotor2.getBusVoltage(),
+    _leftMotor3.getBusVoltage(),
+    _rightMotor1.getBusVoltage(),
+    _rightMotor2.getBusVoltage(),
+    _rightMotor3.getBusVoltage());
   }
 
   

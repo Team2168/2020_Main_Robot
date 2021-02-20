@@ -7,6 +7,8 @@
 
 package org.team2168;
 
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.controller.PIDController;
@@ -18,13 +20,38 @@ import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
+import edu.wpi.first.wpilibj.trajectory.TrajectoryUtil;
 import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveVoltageConstraint;
 
+import java.io.IOException;
+import java.nio.file.Path;
 import java.util.List;
 
 import org.team2168.subsystems.Drivetrain;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
+
+/**
+ * TODO pick paths on smart dashboard
+ * TODO fix the dozens of errors about stale sensors
+ * TODO validate why that weird path didn't work (below)
+ *     An example trajectory to follow.  All units in meters.
+    TODO replace with a path weaver thing
+    exampleTrajectory = TrajectoryGenerator.generateTrajectory(
+        // Start at the origin facing the +X direction
+        new Pose2d(0, 0, new Rotation2d(0)),
+        // Pass through these two interior waypoints, making an 's' curve path
+        List.of(
+            new Translation2d(0.5, 0.5)
+        ),
+        // End 8 meters straight ahead of where we started, facing forward
+        new Pose2d(1, 1, new Rotation2d(270)),
+        // Pass config
+        getConfig()
+    );
+ * TODO add the other subsystems
+ * TODO use a fancy dashboard
+ */
 
 /**
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -75,11 +102,11 @@ public class RobotContainer {
    *
    * @return the command to run in autonomous
    */
-  public Command getAutonomousCommand() {
+  public Command getAutonomousCommand(Trajectory trajectory) {
     // An ExampleCommand will run in autonomous
 
     RamseteCommand ramseteCommand = new RamseteCommand(
-        exampleTrajectory,
+        trajectory,
         dt::getPose,
         new RamseteController(Constants.kRamseteB, Constants.kRamseteZeta),
         new SimpleMotorFeedforward(Constants.kDriveS,
@@ -111,21 +138,13 @@ public class RobotContainer {
   }
 
   private void initialize_trajectories() {
-    // An example trajectory to follow.  All units in meters.
-    // TODO replace with a path weaver thing
-    exampleTrajectory = TrajectoryGenerator.generateTrajectory(
-        // Start at the origin facing the +X direction
-        new Pose2d(0, 0, new Rotation2d(0)),
-        // Pass through these two interior waypoints, making an 's' curve path
-        List.of(
-            new Translation2d(2, 0.1),
-            new Translation2d(4, -0.1)
-        ),
-        // End 8 meters straight ahead of where we started, facing forward
-        new Pose2d(8, 0, new Rotation2d(0)),
-        // Pass config
-        getConfig()
-    );
-    System.out.println("Trajectory generation complete.");
+    String trajectoryJson = "paths/Straightline.wpilib.json";
+      try {
+        Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(trajectoryJson);
+        exampleTrajectory = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
+      } catch (IOException ex) {
+        System.out.println("Unable to open trajectory: " + trajectoryJson);
+        System.out.println(ex.getStackTrace());
+      }
   }
 }

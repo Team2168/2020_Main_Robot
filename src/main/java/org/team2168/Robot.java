@@ -7,7 +7,15 @@
 
 package org.team2168;
 
+import java.io.IOException;
+import java.nio.file.Path;
+
+import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.trajectory.Trajectory;
+import edu.wpi.first.wpilibj.trajectory.TrajectoryUtil;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
@@ -21,6 +29,7 @@ public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
 
   private RobotContainer m_robotContainer;
+  public static SendableChooser<String> m_chooser;
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -31,6 +40,12 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
+    m_chooser = new SendableChooser<String>();
+    m_chooser.setDefaultOption("Drive straight", "paths/Straightline.wpilib.json");
+    // m_chooser.addOption("Curvy", "paths/curvy!.json");
+    // m_chooser.addOption("Option 3", "null");
+    // m_chooser.addOption("Do nothing", "null");
+    SmartDashboard.putData("Auto Chooser", m_chooser);
   }
 
   /**
@@ -54,10 +69,12 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void disabledInit() {
+    
   }
 
   @Override
   public void disabledPeriodic() {
+    SmartDashboard.putData("Auto Chooser", m_chooser);
   }
 
   /**
@@ -65,7 +82,15 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
-    m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+    String trajectoryJson = m_chooser.getSelected();
+    try {
+      Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(trajectoryJson);
+      Trajectory trajectory = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
+      m_autonomousCommand = m_robotContainer.getAutonomousCommand(trajectory);
+    } catch (IOException ex) {
+      System.out.println("Unable to open trajectory: " + trajectoryJson);
+      System.out.println(ex.getStackTrace().toString());
+    }
 
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
@@ -78,6 +103,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousPeriodic() {
+    CommandScheduler.getInstance().run();
   }
 
   @Override
