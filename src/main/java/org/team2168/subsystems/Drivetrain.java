@@ -208,7 +208,7 @@ public class Drivetrain extends SubsystemBase {
   
   public void setVoltage(double leftVolts, double rightVolts) {
     _leftMotors.setVoltage(leftVolts);
-    _rightMotors.setVoltage(-rightVolts);
+    _rightMotors.setVoltage(rightVolts);
   }
 
   public Pose2d getPose() {
@@ -248,6 +248,14 @@ public class Drivetrain extends SubsystemBase {
    */
   public double getAverageEncoderDistance() {
     return (_leftMotor1.getSelectedSensorPosition() + _rightMotor1.getSelectedSensorPosition())/2.0;
+  }
+
+  public double getLeftEncoderDistance() {
+    return _leftMotor1.getSelectedSensorPosition();
+  }
+
+  public double getRightEncoderDistance() {
+    return _rightMotor1.getSelectedSensorPosition();
   }
 
   /**

@@ -10,6 +10,8 @@ package org.team2168;
 import java.io.IOException;
 import java.nio.file.Path;
 
+import org.team2168.subsystems.Drivetrain;
+
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -30,6 +32,7 @@ public class Robot extends TimedRobot {
 
   private RobotContainer m_robotContainer;
   public static SendableChooser<String> m_chooser;
+  private Drivetrain dt;
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -39,6 +42,7 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
+    dt = Drivetrain.getInstance();
     m_robotContainer = new RobotContainer();
     m_chooser = new SendableChooser<String>();
     m_chooser.setDefaultOption("Drive straight", "paths/Straightline.wpilib.json");
@@ -62,6 +66,12 @@ public class Robot extends TimedRobot {
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
+
+    SmartDashboard.putNumber("gyro heading", dt.getHeading());
+    SmartDashboard.putNumber("average encoder distance", dt.getAverageEncoderDistance());
+    SmartDashboard.putNumberArray("dtvoltages", dt.getVoltages());
+    SmartDashboard.putNumber("left encoder", dt.getRightEncoderDistance());
+    SmartDashboard.putNumber("right encoder", dt.getLeftEncoderDistance());
   }
 
   /**
