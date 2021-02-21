@@ -132,7 +132,7 @@ public class RobotContainer {
         new PIDController(Constants.kDriveP, Constants.kDriveI, Constants.kDriveD),
         new PIDController(Constants.kDriveP, Constants.kDriveI, Constants.kDriveD),
         // RamseteCommand passes volts to the callback
-        dt::tankDriveVolts,
+        dt::setVolts,
         dt
     );
 

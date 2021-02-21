@@ -29,7 +29,7 @@ public class Drivetrain extends SubsystemBase {
    * Creates a new Drivetrain.
    */
 
-  // Singleton Constructor
+  /* Singleton Constructor */
   public static Drivetrain instance = null;
 
   /* Motor controllers */
@@ -153,53 +153,116 @@ public class Drivetrain extends SubsystemBase {
         ticks_to_meters(_rightMotor1.getSelectedSensorPosition()));
   }
 
+  /**
+   * Sets speed of the left Motors
+   * @param leftSpeed Double between -1.0 and 1.0
+   */
   public void setLeftMotors(double leftSpeed) {
     _leftMotors.set(leftSpeed);
   }
 
-  public void setLeftMotorsVolts(double volts) {
-    _leftMotors.setVoltage(volts);
-  }
-
+  /**
+   * Sets speed of the right motors
+   * @param rightSpeed Double between -1.0 and 1.0
+   */
   public void setRightMotors(double rightSpeed) {
     _rightMotors.set(rightSpeed);
   }
 
+  /**
+   * (From {@link edu.wpi.first.wpilibj.SpeedController})
+   * Sets the voltage output of the SpeedController.  Compensates for the current bus
+   * voltage to ensure that the desired voltage is output even if the battery voltage is below
+   * 12V - highly useful when the voltage outputs are "meaningful" (e.g. they come from a
+   * feedforward calculation).
+   *
+   * <p>NOTE: This function *must* be called regularly in order for voltage compensation to work
+   * properly - unlike the ordinary set function, it is not "set it and forget it."
+   * 
+   * @param volts voltage to set motors
+   */
+  public void setLeftMotorsVolts(double volts) {
+    _leftMotors.setVoltage(volts);
+  }
+
+    /**
+   * (From {@link edu.wpi.first.wpilibj.SpeedController})
+   * Sets the voltage output of the SpeedController.  Compensates for the current bus
+   * voltage to ensure that the desired voltage is output even if the battery voltage is below
+   * 12V - highly useful when the voltage outputs are "meaningful" (e.g. they come from a
+   * feedforward calculation).
+   *
+   * <p>NOTE: This function *must* be called regularly in order for voltage compensation to work
+   * properly - unlike the ordinary set function, it is not "set it and forget it."
+   * 
+   * @param volts voltage to set motors
+   */
   public void setRightMotorsVolts(double volts) {
     _rightMotors.set(volts);
   }
 
+  /**
+   * sets drivetrain speed
+   * @param leftSpeed Double between -1.0 and 1.0
+   * @param rightSpeed Double between -1.0 and 1.0
+   */
   public void set(double leftSpeed, double rightSpeed) {
     setLeftMotors(leftSpeed);
     setRightMotors(rightSpeed);
   }
 
-  public Pose2d getPose() {
-    return _odometry.getPoseMeters();
-  }
-
   /**
-   * returns rate in ticks
+   * (From {@link edu.wpi.first.wpilibj.SpeedController})
+   * Sets the voltage output of the SpeedController.  Compensates for the current bus
+   * voltage to ensure that the desired voltage is output even if the battery voltage is below
+   * 12V - highly useful when the voltage outputs are "meaningful" (e.g. they come from a
+   * feedforward calculation).
+   *
+   * <p>NOTE: This function *must* be called regularly in order for voltage compensation to work
+   * properly - unlike the ordinary set function, it is not "set it and forget it."
    * 
-   * @return
+   * @param leftVolts left voltage
+   * @param rightVolts right voltage
    */
-  public DifferentialDriveWheelSpeeds getWheelSpeeds() {
-    return new DifferentialDriveWheelSpeeds(_leftMotor1.getSelectedSensorVelocity(),
-        _rightMotor1.getSelectedSensorVelocity());
-  }
-
-  public void resetOdometry(Pose2d pose) {
-    resetEncoders();
-    _odometry.resetPosition(pose, Rotation2d.fromDegrees(getHeading()));
-  }
-
-  public void tankDriveVolts(double leftVolts, double rightVolts) {
+  public void setVolts(double leftVolts, double rightVolts) {
     setLeftMotorsVolts(leftVolts);
     setRightMotorsVolts(rightVolts);
     SmartDashboard.putNumber("left volts", leftVolts);
     SmartDashboard.putNumber("right volts", rightVolts);
   }
 
+  /**
+   * Gets the current x, y position and rotation of the robot on the field
+   * This is mostly used for Ramsete command autos
+   * @return Pose2d the current pose of the robot
+   */
+  public Pose2d getPose() {
+    return _odometry.getPoseMeters();
+  }
+
+  /**
+   * returns rate in ticks
+   * This is mainly used for ramsetecommand autos
+   * 
+   * @return DifferentialDriveWheelSpeeds wheel speeds
+   */
+  public DifferentialDriveWheelSpeeds getWheelSpeeds() {
+    return new DifferentialDriveWheelSpeeds(_leftMotor1.getSelectedSensorVelocity(),
+        _rightMotor1.getSelectedSensorVelocity());
+  }
+
+  /**
+   * Resets drivetrain odometry
+   * @param pose Pose2d of the robot
+   */
+  public void resetOdometry(Pose2d pose) {
+    resetEncoders();
+    _odometry.resetPosition(pose, Rotation2d.fromDegrees(getHeading()));
+  }
+
+  /**
+   * Zeroes the drivetrain encoders
+   */
   public void resetEncoders() {
     _leftMotor1.setSelectedSensorPosition(0);
     _rightMotor1.setSelectedSensorPosition(0);
@@ -214,35 +277,51 @@ public class Drivetrain extends SubsystemBase {
     return (_leftMotor1.getSelectedSensorPosition() + _rightMotor1.getSelectedSensorPosition()) / 2.0;
   }
 
+  /**
+   * Gets left encoder position
+   * @return encoder distance in ticks
+   */
   public double getLeftEncoderDistance() {
     return _leftMotor1.getSelectedSensorPosition();
   }
 
+  /**
+   * Gets left encoder position
+   * @return encoder distance in ticks
+   */
   public double getRightEncoderDistance() {
     return _rightMotor1.getSelectedSensorPosition();
   }
 
+  /**
+   * Zeroes imu heading
+   */
   public void zeroHeading() {
     _pidgey.setYaw(0);
   }
 
+  /**
+   * Gets IMU heading
+   * @return IMU heading in degrees
+   */
   public double getHeading() {
     return _pidgey.getFusedHeading();
   }
 
-  private int getLeftPosition() {
-    return _leftMotor1.getSelectedSensorPosition();
-  }
-
-  private int getRightPosition() {
-    return _rightMotor1.getSelectedSensorPosition();
-  }
-
+  /**
+   * Gets motor voltages
+   * Format is {leftMotor1, leftMotor2, leftMotor3, rightMotor1, rightMotor2, rightMotor3}
+   * @return array containing motor bus voltages
+   */
   public Double[] getVoltages() {
     return new Double[] { _leftMotor1.getBusVoltage(), _leftMotor2.getBusVoltage(), _leftMotor3.getBusVoltage(),
         _rightMotor1.getBusVoltage(), _rightMotor2.getBusVoltage(), _rightMotor3.getBusVoltage() };
   }
 
+  /**
+   * Gets drivetrain singleton
+   * @return the instance of Drivetrain
+   */
   public static Drivetrain getInstance() {
     if (instance == null)
       instance = new Drivetrain();
@@ -260,6 +339,12 @@ public class Drivetrain extends SubsystemBase {
     return setpoint * 10.0;
   }
 
+  /**
+   * Converts a setpoint in IMU 'encoder ticks', to degrees
+   * 
+   * @param setpoint
+   * @return
+   */
   private double ticks_to_degrees(double setpoint) {
     // return (setpoint / PIGEON_UNITS_PER_ROTATION) * DEGREES_PER_REV * 2.0;
     return setpoint / 10.0;
