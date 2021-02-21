@@ -13,6 +13,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.TalonFXInvertType;
+import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.sensors.PigeonIMU;
@@ -30,6 +31,7 @@ import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Drivetrain extends SubsystemBase {
@@ -130,13 +132,7 @@ public class Drivetrain extends SubsystemBase {
     _rightMotor2.configSupplyCurrentLimit(talonCurrentLimit);
     _rightMotor3.configSupplyCurrentLimit(talonCurrentLimit);
 
-    // inversion stuff
-    _leftMotor1.setInverted(_leftInvert);
-    _leftMotor2.setInverted(_leftInvert);
-    _leftMotor3.setInverted(_leftInvert);
-    _rightMotor1.setInverted(_rightInvert);
-    _rightMotor2.setInverted(_rightInvert);
-    _rightMotor3.setInverted(_rightInvert);
+
 
     // encoder stuff
     _leftConfig.primaryPID.selectedFeedbackSensor = FeedbackDevice.IntegratedSensor;
@@ -145,8 +141,27 @@ public class Drivetrain extends SubsystemBase {
     _leftConfig.neutralDeadband = Constants.kNeutralDeadband;
     _rightConfig.neutralDeadband = Constants.kNeutralDeadband;
 
-    _leftMotor1.configAllSettings(_leftConfig);
-    _rightMotor1.configAllSettings(_rightConfig);
+    // _leftConfig.
+
+    // _leftMotor1.configAllSettings(_leftConfig);
+    // _rightMotor1.configAllSettings(_rightConfig);
+
+    // inversion stuff
+    _leftMotor1.setInverted(_leftInvert);
+    _leftMotor2.setInverted(_leftInvert);
+    _leftMotor3.setInverted(_leftInvert);
+    _rightMotor1.setInverted(_rightInvert);
+    _rightMotor2.setInverted(_rightInvert);
+    _rightMotor3.setInverted(_rightInvert);
+    _rightMotor4.setInverted(_rightInvert);
+
+    // check inversions
+    System.out.println(_leftMotor1.getInverted());
+    System.out.println(_leftMotor2.getInverted());
+    System.out.println(_leftMotor3.getInverted());
+    System.out.println(_rightMotor1.getInverted());
+    System.out.println(_rightMotor2.getInverted());
+    System.out.println(_rightMotor3.getInverted());
 
     _leftMotors = new SpeedControllerGroup(_leftMotor1, _leftMotor2, _leftMotor3);
     _rightMotors = new SpeedControllerGroup(_rightMotor1, _rightMotor2, _rightMotor3);
@@ -209,6 +224,8 @@ public class Drivetrain extends SubsystemBase {
   public void setVoltage(double leftVolts, double rightVolts) {
     _leftMotors.setVoltage(leftVolts);
     _rightMotors.setVoltage(rightVolts);
+    SmartDashboard.putNumber("left volts", leftVolts);
+    SmartDashboard.putNumber("right volts", rightVolts);
   }
 
   public Pose2d getPose() {
@@ -233,7 +250,7 @@ public class Drivetrain extends SubsystemBase {
 
   public void tankDriveVolts(double leftVolts, double rightVolts) {
     _leftMotors.setVoltage(leftVolts);
-    _rightMotors.setVoltage(-rightVolts);
+    _rightMotors.setVoltage(rightVolts);
     _drive.feed();
   }
 
@@ -314,13 +331,13 @@ public class Drivetrain extends SubsystemBase {
     return rightDriveController;
   }
 
-  public List<Double> getVoltages() {
-    return List.of(_leftMotor1.getBusVoltage(),
+  public Double[] getVoltages() {
+    return new Double[] {_leftMotor1.getBusVoltage(),
     _leftMotor2.getBusVoltage(),
     _leftMotor3.getBusVoltage(),
     _rightMotor1.getBusVoltage(),
     _rightMotor2.getBusVoltage(),
-    _rightMotor3.getBusVoltage());
+    _rightMotor3.getBusVoltage()};
   }
 
   
