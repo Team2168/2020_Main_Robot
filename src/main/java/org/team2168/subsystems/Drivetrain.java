@@ -17,12 +17,8 @@ import org.team2168.Constants;
 import org.team2168.RobotMap;
 
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
-import edu.wpi.first.wpilibj.controller.PIDController;
-import edu.wpi.first.wpilibj.controller.RamseteController;
-import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -32,9 +28,10 @@ public class Drivetrain extends SubsystemBase {
    * Creates a new Drivetrain.
    */
 
-  // there may be only one
+  // Singleton Constructor
   public static Drivetrain instance = null;
 
+  /* Motor controllers */
   private static WPI_TalonFX _leftMotor1;
   private static WPI_TalonFX _leftMotor2;
   private static WPI_TalonFX _leftMotor3;
@@ -42,21 +39,22 @@ public class Drivetrain extends SubsystemBase {
   private static WPI_TalonFX _rightMotor2;
   private static WPI_TalonFX _rightMotor3;
 
+  /* Left/Right drivetrain split into speed contollers */
   private static SpeedControllerGroup _leftMotors;
   private static SpeedControllerGroup _rightMotors;
 
-  // auto control stuff
-  private static RamseteController ramseteController;
-  private static SimpleMotorFeedforward driveFeedforward;
-  private static DifferentialDriveKinematics driveKinematics;
-  private static PIDController leftDriveController;
-  private static PIDController rightDriveController;
-
+  /* IMU */
   private static PigeonIMU _pidgey;
 
-  // private static DifferentialDrive _drive;
+  /* Config Objects for motor controllers */
+  TalonFXConfiguration _leftConfig = new TalonFXConfiguration();
+  TalonFXConfiguration _rightConfig = new TalonFXConfiguration();
 
-  // stuff I yoinked from the old drivetrain (i dunno if it's needed; TODO ?)
+  /* Odometry class for tracking pose */
+  private static DifferentialDriveOdometry _odometry;
+  
+
+  // Local constants and config
   private SupplyCurrentLimitConfiguration talonCurrentLimit;
   private final boolean ENABLE_CURRENT_LIMIT = true;
   private final double CONTINUOUS_CURRENT_LIMIT = 40; // amps
@@ -70,18 +68,6 @@ public class Drivetrain extends SubsystemBase {
   public static final boolean DT_REVERSE_RIGHT3 = true;
   public static final boolean DT_3_MOTORS_PER_SIDE = true;
 
-  /** Invert Directions for Left and Right */
-  // TalonFXInvertType _leftInvert = TalonFXInvertType.CounterClockwise; //Same as
-  // invert = "false"
-  // TalonFXInvertType _rightInvert = TalonFXInvertType.Clockwise; //Same as
-  // invert = "true"
-  Boolean _leftInvert = false;
-  Boolean _rightInvert = true;
-
-  /** Config Objects for motor controllers */
-  TalonFXConfiguration _leftConfig = new TalonFXConfiguration();
-  TalonFXConfiguration _rightConfig = new TalonFXConfiguration();
-
   private static final double TICKS_PER_REV = 2048.0; // one event per edge on each quadrature channel
   private static final double TICKS_PER_100MS = TICKS_PER_REV / 10.0;
   private static final double GEAR_RATIO = (50.0 / 10.0) * (40.0 / 22.0);
@@ -92,12 +78,16 @@ public class Drivetrain extends SubsystemBase {
   private static final double PIGEON_UNITS_PER_DEGREE = PIGEON_UNITS_PER_ROTATION / 360;
   private static final double WHEEL_BASE = 24.0; // distance between wheels (width) in inches
 
-  private double setPointPosition_sensorUnits;
-  private double setPointHeading_sensorUnits;
-  // end of yoinking
+  /** Invert Directions for Left and Right */
+  // TalonFXInvertType _leftInvert = TalonFXInvertType.CounterClockwise; //Same as
+  // invert = "false"
+  // TalonFXInvertType _rightInvert = TalonFXInvertType.Clockwise; //Same as
+  // invert = "true"
+  Boolean _leftInvert = false;
+  Boolean _rightInvert = true;
 
-  // odometry class for tracking pose
-  private static DifferentialDriveOdometry _odometry;
+
+
 
   public Drivetrain() {
     System.out.println("CAN Comp Bot Drivetrain enabled - 6 motors");
@@ -117,7 +107,7 @@ public class Drivetrain extends SubsystemBase {
     _rightMotor3.configFactoryDefault();
     _pidgey.configFactoryDefault();
 
-    // current limit stuff
+    // Current limit
     talonCurrentLimit = new SupplyCurrentLimitConfiguration(ENABLE_CURRENT_LIMIT, CONTINUOUS_CURRENT_LIMIT,
         TRIGGER_THRESHOLD_LIMIT, TRIGGER_THRESHOLD_TIME);
 
@@ -146,31 +136,13 @@ public class Drivetrain extends SubsystemBase {
     // _rightMotor2.setInverted(_rightInvert);
     // _rightMotor3.setInverted(_rightInvert);
 
-    // // check inversions
-    // System.out.println(_leftMotor1.getInverted());
-    // System.out.println(_leftMotor2.getInverted());
-    // System.out.println(_leftMotor3.getInverted());
-    // System.out.println(_rightMotor1.getInverted());
-    // System.out.println(_rightMotor2.getInverted());
-    // System.out.println(_rightMotor3.getInverted());
-
     _odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()));
     _leftMotors = new SpeedControllerGroup(_leftMotor1, _leftMotor2, _leftMotor3);
     _rightMotors = new SpeedControllerGroup(_rightMotor1, _rightMotor2, _rightMotor3);
 
-    // motor controller level inversion doesn't work for some reason
+    // Motor controller level inversion doesn't work for some reason
     _leftMotors.setInverted(_leftInvert);
     _rightMotors.setInverted(_rightInvert);
-
-    // _drive = new DifferentialDrive(_leftMotors, _rightMotors);
-
-    // auto
-    ramseteController = new RamseteController();
-    driveFeedforward = new SimpleMotorFeedforward(Constants.kDriveS, Constants.kDriveV, Constants.kDriveA);
-    driveKinematics = new DifferentialDriveKinematics(Constants.kTrackWidthMeters);
-    leftDriveController = new PIDController(Constants.kDriveP, Constants.kDriveI, Constants.kDriveD);
-    rightDriveController = new PIDController(Constants.kDriveP, Constants.kDriveI, Constants.kDriveD);
-
   }
 
   @Override
@@ -180,22 +152,6 @@ public class Drivetrain extends SubsystemBase {
         ticks_to_meters(_rightMotor1.getSelectedSensorPosition()));
   }
 
-  // private void setLeftMotor1(double leftSpeed) {
-  // _leftMotor1.set(ControlMode.PercentOutput, leftSpeed);
-  // }
-  // private void setLeftMotor2(double leftSpeed) {
-  // _leftMotor2.set(ControlMode.PercentOutput, leftSpeed);
-  // }
-  // private void setLeftMotor3(double leftSpeed) {
-  // _leftMotor3.set(ControlMode.PercentOutput, leftSpeed);
-  // }
-
-  // public void setLeftMotors(double leftSpeed) {
-  // setLeftMotor1(leftSpeed);
-  // setLeftMotor2(leftSpeed);
-  // setLeftMotor3(leftSpeed);
-  // }
-
   public void setLeftMotors(double leftSpeed) {
     _leftMotors.set(leftSpeed);
   }
@@ -203,22 +159,6 @@ public class Drivetrain extends SubsystemBase {
   public void setLeftMotorsVolts(double volts) {
     _leftMotors.setVoltage(volts);
   }
-
-  // private void setRightMotor1(double rightSpeed) {
-  // _rightMotor1.set(ControlMode.PercentOutput, rightSpeed);
-  // }
-  // private void setRightMotor2(double rightSpeed) {
-  // _rightMotor2.set(ControlMode.PercentOutput, rightSpeed);
-  // }
-  // private void setRightMotor3(double rightSpeed) {
-  // _rightMotor3.set(ControlMode.PercentOutput, rightSpeed);
-  // }
-
-  // public void setRightMotors(double rightSpeed) {
-  // setRightMotor1(rightSpeed);
-  // setRightMotor2(rightSpeed);
-  // setRightMotor3(rightSpeed);
-  // }
 
   public void setRightMotors(double rightSpeed) {
     _rightMotors.set(rightSpeed);
@@ -252,14 +192,9 @@ public class Drivetrain extends SubsystemBase {
     _odometry.resetPosition(pose, Rotation2d.fromDegrees(getHeading()));
   }
 
-  // public void arcadeDrive(double fwd, double rot) {
-  // _drive.arcadeDrive(fwd, rot);
-  // }
-
   public void tankDriveVolts(double leftVolts, double rightVolts) {
-    _leftMotors.setVoltage(leftVolts);
-    _rightMotors.setVoltage(rightVolts);
-    // _drive.feed();
+    setLeftMotorsVolts(leftVolts);
+    setRightMotorsVolts(rightVolts);
   }
 
   public void resetEncoders() {
@@ -284,35 +219,13 @@ public class Drivetrain extends SubsystemBase {
     return _rightMotor1.getSelectedSensorPosition();
   }
 
-  /**
-   * sets the max output, used for scaling to drive more slowly just in here
-   * because the docs had it :/
-   * 
-   * @param maxOutput Multiplied with the output percentage computed by the drive
-   *                  functions.
-   */
-  // public void setMaxOutput(double maxOutput) {
-  // _drive.setMaxOutput(maxOutput);
-  // }
-
   public void zeroHeading() {
     _pidgey.setYaw(0);
   }
 
-  // public double getRawYaw() {
-  // double[] ypr = {0.0, 0.0, 0.0};
-  // _pidgey.getYawPitchRoll(ypr);
-  // return ypr[0];
-
-  // }
-
   public double getHeading() {
-    // return Math.abs(Math.IEEEremainder(getRawYaw()%360, 360)); //TODO seems a bit
-    // wierd idk
     return _pidgey.getFusedHeading();
   }
-
-  // TODO do I need a get turn rate?
 
   private int getLeftPosition() {
     return _leftMotor1.getSelectedSensorPosition();
@@ -322,35 +235,10 @@ public class Drivetrain extends SubsystemBase {
     return _rightMotor1.getSelectedSensorPosition();
   }
 
-  public RamseteController getRamseteController() {
-    return ramseteController;
-  }
-
-  public SimpleMotorFeedforward getFeedForward() {
-    return driveFeedforward;
-  }
-
-  public DifferentialDriveKinematics getDriveKinematics() {
-    return driveKinematics;
-  }
-
-  public PIDController getLeftDriveController() {
-    return leftDriveController;
-  }
-
-  public PIDController getRightDriveController() {
-    return rightDriveController;
-  }
-
   public Double[] getVoltages() {
     return new Double[] { _leftMotor1.getBusVoltage(), _leftMotor2.getBusVoltage(), _leftMotor3.getBusVoltage(),
         _rightMotor1.getBusVoltage(), _rightMotor2.getBusVoltage(), _rightMotor3.getBusVoltage() };
   }
-
-  // TODO add getTurnRate
-  // public double getTurnRate() {
-  // return _pidgey.get
-  // }
 
   public static Drivetrain getInstance() {
     if (instance == null)
@@ -391,7 +279,7 @@ public class Drivetrain extends SubsystemBase {
   }
 
   private double ticks_to_meters(double setpoint) {
-    // TODO the best way of accomplishing this?
+    // TODO is this the best way of accomplishing this?
     return (ticks_to_inches(setpoint) / 39.37008);
   }
 
