@@ -43,7 +43,7 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     dt = Drivetrain.getInstance();
-    m_robotContainer = new RobotContainer();
+    m_robotContainer = RobotContainer.getInstance();
     m_chooser = new SendableChooser<String>();
     m_chooser.setDefaultOption("Drive straight", "paths/Straightline.wpilib.json");
     // m_chooser.addOption("Curvy", "paths/curvy!.json");

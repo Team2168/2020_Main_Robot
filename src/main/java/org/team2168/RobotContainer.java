@@ -7,27 +7,24 @@
 
 package org.team2168;
 
-import edu.wpi.first.wpilibj.DriverStation;
+import java.io.IOException;
+import java.nio.file.Path;
+
+import org.team2168.commands.DriveWithConstant;
+import org.team2168.commands.DriveWithJoystick;
+import org.team2168.subsystems.Drivetrain;
+import org.team2168.utils.F310;
+
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.controller.RamseteController;
 import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
-import edu.wpi.first.wpilibj.geometry.Pose2d;
-import edu.wpi.first.wpilibj.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
-import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryUtil;
 import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveVoltageConstraint;
-
-import java.io.IOException;
-import java.nio.file.Path;
-import java.util.List;
-
-import org.team2168.subsystems.Drivetrain;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 
@@ -60,11 +57,16 @@ import edu.wpi.first.wpilibj2.command.RamseteCommand;
  * (including subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
+  public static RobotContainer instance = null;
+
+  public static final Boolean USING_XBOX = false; // I don't have an f310 lol
+
   // The robot's subsystems and commands are defined here:
   private final Drivetrain dt;
+  private static F310 driverJoystick;
 
   // private final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
-  private Trajectory exampleTrajectory;
+  private static Trajectory exampleTrajectory;
 
   // Create a voltage constraint to ensure we don't accelerate too fast
   private static DifferentialDriveVoltageConstraint autoVoltageConstraint =
@@ -78,13 +80,15 @@ public class RobotContainer {
   /**
    * The container for the robot.  Contains subsystems, OI devices, and commands.
    */
-  public RobotContainer() {
+  private RobotContainer() {
     dt = Drivetrain.getInstance();
+    driverJoystick = new F310(RobotMap.DRIVER_JOYSTICK);
 
     // Configure the button bindings
     configureButtonBindings();
 
     initialize_trajectories();
+    dt.setDefaultCommand(new DriveWithJoystick());
   }
 
   /**
@@ -94,6 +98,17 @@ public class RobotContainer {
    * {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
+    driverJoystick.ButtonA().whenHeld(new DriveWithConstant(1.0, 1.0));
+    // driverJoystick.ButtonA().whenReleased(new DriveWithConstant(0.0, 0.0)); //dunno if I need this but just to be safe
+
+  }
+
+  public double getLeftStick() {
+    return driverJoystick.getLeftStickRaw_Y();
+  }
+
+  public double getRightStick() {
+    return (USING_XBOX ? -driverJoystick.getRawAxis(4) : driverJoystick.getRightStickRaw_Y());
   }
 
 
@@ -146,5 +161,11 @@ public class RobotContainer {
         System.out.println("Unable to open trajectory: " + trajectoryJson);
         System.out.println(ex.getStackTrace());
       }
+  }
+
+  public static RobotContainer getInstance() {
+    if (instance == null)
+      instance = new RobotContainer();
+    return instance;
   }
 }
