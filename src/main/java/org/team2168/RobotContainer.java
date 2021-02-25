@@ -88,7 +88,7 @@ public class RobotContainer {
     configureButtonBindings();
 
     initialize_trajectories();
-    dt.setDefaultCommand(new DriveWithJoystick());
+    // dt.setDefaultCommand(new DriveWithJoystick());
   }
 
   /**
@@ -99,7 +99,7 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     driverJoystick.ButtonA().whenHeld(new DriveWithConstant(1.0, 1.0));
-    // driverJoystick.ButtonA().whenReleased(new DriveWithConstant(0.0, 0.0)); //dunno if I need this but just to be safe
+    driverJoystick.ButtonA().whenReleased(new DriveWithConstant(0.0, 0.0)); //dunno if I need this but just to be safe
 
   }
 
@@ -140,7 +140,7 @@ public class RobotContainer {
     dt.resetOdometry(exampleTrajectory.getInitialPose());
 
     // Run path following command, then stop at the end.
-    return ramseteCommand.andThen(() -> dt.tankDriveVolts(0, 0));
+    return ramseteCommand.andThen(() -> dt.setVolts(0, 0));
   }
 
   private static TrajectoryConfig getConfig() {

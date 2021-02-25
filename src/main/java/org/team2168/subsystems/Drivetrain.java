@@ -16,6 +16,7 @@ import com.ctre.phoenix.sensors.PigeonIMU;
 import org.team2168.Constants;
 import org.team2168.RobotMap;
 
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
@@ -55,7 +56,7 @@ public class Drivetrain extends SubsystemBase {
   private static DifferentialDriveOdometry _odometry;
   
 
-  // Local constants and config
+  /* Local constants and config */
   private SupplyCurrentLimitConfiguration talonCurrentLimit;
   private final boolean ENABLE_CURRENT_LIMIT = true;
   private final double CONTINUOUS_CURRENT_LIMIT = 40; // amps
@@ -100,6 +101,7 @@ public class Drivetrain extends SubsystemBase {
     _rightMotor3 = new WPI_TalonFX(RobotMap.DRIVETRAIN_RIGHT_MOTOR_3_PDP);
     _pidgey = new PigeonIMU(17);
 
+    /* Component configuration */
     _leftMotor1.configFactoryDefault();
     _leftMotor2.configFactoryDefault();
     _leftMotor3.configFactoryDefault();
@@ -108,7 +110,6 @@ public class Drivetrain extends SubsystemBase {
     _rightMotor3.configFactoryDefault();
     _pidgey.configFactoryDefault();
 
-    // Current limit
     talonCurrentLimit = new SupplyCurrentLimitConfiguration(ENABLE_CURRENT_LIMIT, CONTINUOUS_CURRENT_LIMIT,
         TRIGGER_THRESHOLD_LIMIT, TRIGGER_THRESHOLD_TIME);
 
@@ -119,7 +120,6 @@ public class Drivetrain extends SubsystemBase {
     _rightMotor2.configSupplyCurrentLimit(talonCurrentLimit);
     _rightMotor3.configSupplyCurrentLimit(talonCurrentLimit);
 
-    // encoder stuff
     _leftConfig.primaryPID.selectedFeedbackSensor = FeedbackDevice.IntegratedSensor;
     _rightConfig.primaryPID.selectedFeedbackSensor = FeedbackDevice.IntegratedSensor;
 
@@ -129,7 +129,6 @@ public class Drivetrain extends SubsystemBase {
     _leftMotor1.configAllSettings(_leftConfig);
     _rightMotor1.configAllSettings(_rightConfig);
 
-    // // inversion stuff
     // _leftMotor1.setInverted(_leftInvert);
     // _leftMotor2.setInverted(_leftInvert);
     // _leftMotor3.setInverted(_leftInvert);
@@ -137,10 +136,14 @@ public class Drivetrain extends SubsystemBase {
     // _rightMotor2.setInverted(_rightInvert);
     // _rightMotor3.setInverted(_rightInvert);
 
+    /* Odometry for pose tracking */
     _odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()));
+
+    /* Component abstraction */
     _leftMotors = new SpeedControllerGroup(_leftMotor1, _leftMotor2, _leftMotor3);
     _rightMotors = new SpeedControllerGroup(_rightMotor1, _rightMotor2, _rightMotor3);
 
+    /* Config for abstracted components */
     // Motor controller level inversion doesn't work for some reason
     _leftMotors.setInverted(_leftInvert);
     _rightMotors.setInverted(_rightInvert);
@@ -180,9 +183,10 @@ public class Drivetrain extends SubsystemBase {
    * properly - unlike the ordinary set function, it is not "set it and forget it."
    * 
    * @param volts voltage to set motors
+   * @param batteryVoltage voltage of the battery.
    */
-  public void setLeftMotorsVolts(double volts) {
-    _leftMotors.setVoltage(volts);
+  public void setLeftMotorsVolts(double volts, double batteryVoltage) {
+    _leftMotors.setVoltage(volts/batteryVoltage);
   }
 
     /**
@@ -196,9 +200,10 @@ public class Drivetrain extends SubsystemBase {
    * properly - unlike the ordinary set function, it is not "set it and forget it."
    * 
    * @param volts voltage to set motors
+   * @param batteryVoltage voltage of the battery.
    */
-  public void setRightMotorsVolts(double volts) {
-    _rightMotors.set(volts);
+  public void setRightMotorsVolts(double volts, double batteryVoltage) {
+    _rightMotors.set(volts/batteryVoltage);
   }
 
   /**
@@ -224,9 +229,16 @@ public class Drivetrain extends SubsystemBase {
    * @param leftVolts left voltage
    * @param rightVolts right voltage
    */
+  // public void setVolts(double leftVolts, double rightVolts) {
+  //   setLeftMotorsVolts(leftVolts);
+  //   setRightMotorsVolts(rightVolts);
+  //   SmartDashboard.putNumber("left volts", leftVolts);
+  //   SmartDashboard.putNumber("right volts", rightVolts);
+  // }
   public void setVolts(double leftVolts, double rightVolts) {
-    setLeftMotorsVolts(leftVolts);
-    setRightMotorsVolts(rightVolts);
+    double voltage = RobotController.getBatteryVoltage();
+    setLeftMotorsVolts(leftVolts, voltage);
+    setRightMotorsVolts(rightVolts, voltage);
     SmartDashboard.putNumber("left volts", leftVolts);
     SmartDashboard.putNumber("right volts", rightVolts);
   }
