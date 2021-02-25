@@ -10,6 +10,7 @@ package org.team2168;
 import java.io.IOException;
 import java.nio.file.Path;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -31,12 +32,16 @@ public class Robot extends TimedRobot {
   private RobotContainer m_robotContainer;
   public static SendableChooser<String> m_chooser;
 
+  private static DigitalInput practiceBot;
+
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
    */
   @Override
   public void robotInit() {
+    practiceBot = new DigitalInput(RobotMap.PRACTICE_BOT_JUMPER);
+
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
@@ -69,7 +74,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void disabledInit() {
-    
+
   }
 
   @Override
@@ -136,4 +141,13 @@ public class Robot extends TimedRobot {
   @Override
   public void testPeriodic() {
   }
+
+  /**
+   * return jumper value from DIO 24
+   */
+  public static boolean isPracticeBot() {
+    // return true;
+    return !practiceBot.get();
+  }
+
 }
