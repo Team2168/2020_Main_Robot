@@ -19,11 +19,11 @@ import org.team2168.RobotMap;
 import org.team2168.commands.color_wheel.DriveColorWheelWithJoystick;
 import org.team2168.utils.consoleprinter.ConsolePrinter;
 
-import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 
-public class ColorWheel extends Subsystem {
+public class ColorWheel extends SubsystemBase {
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
 
@@ -265,10 +265,10 @@ public class ColorWheel extends Subsystem {
     m_encoder.setPosition(0.0);
   }
 
-  @Override
-  public void initDefaultCommand() {
-    // Set the default command for a subsystem here.
-    // setDefaultCommand(new MySpecialCommand());
-    setDefaultCommand(new DriveColorWheelWithJoystick());
-  }
+  // @Override
+  // public void initDefaultCommand() {
+  //   // Set the default command for a subsystem here.
+  //   // setDefaultCommand(new MySpecialCommand());
+  //   setDefaultCommand(new DriveColorWheelWithJoystick());
+  // }
 }

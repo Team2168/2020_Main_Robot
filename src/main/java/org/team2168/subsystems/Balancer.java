@@ -21,10 +21,10 @@ import org.team2168.RobotMap;
 import org.team2168.commands.balancer.DriveBalancerVelocityJoystick;
 import org.team2168.utils.consoleprinter.ConsolePrinter;
 
-import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class Balancer extends Subsystem {
+public class Balancer extends SubsystemBase {
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
   
@@ -274,12 +274,12 @@ public class Balancer extends Subsystem {
     
 
   
-  @Override
-  public void initDefaultCommand() {
-    // Set the default command for a subsystem here.
-    //setDefaultCommand(new DriveBalancerMotorWithJoystick());
-    setDefaultCommand(new DriveBalancerVelocityJoystick());
-    // setDefaultCommand(new DriveBalancerUpdatingPosition());
+  // @Override
+  // public void initDefaultCommand() {
+  //   // Set the default command for a subsystem here.
+  //   //setDefaultCommand(new DriveBalancerMotorWithJoystick());
+  //   setDefaultCommand(new DriveBalancerVelocityJoystick());
+  //   // setDefaultCommand(new DriveBalancerUpdatingPosition());
 
-  }
+  // }
 }

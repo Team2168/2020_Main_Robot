@@ -10,12 +10,12 @@ package org.team2168.subsystems;
 import org.team2168.RobotMap;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
-import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 /**
  * Add your docs here.
  */
-public class HoodAdjust extends Subsystem {
+public class HoodAdjust extends SubsystemBase {
 
   public enum HoodPosition{
     WALL,
@@ -131,8 +131,8 @@ public class HoodAdjust extends Subsystem {
     return hoodPosition;
   }
 
-  @Override
-  public void initDefaultCommand() {
+  // @Override
+  // public void initDefaultCommand() {
     
-  }
+  // }
 }

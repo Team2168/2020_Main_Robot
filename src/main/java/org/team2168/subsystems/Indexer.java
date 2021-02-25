@@ -126,9 +126,9 @@ public class Indexer extends SubsystemBase {
     return !exitLineBreak.get();
   }
 
-  @Override
-  public void initDefaultCommand() {
-    // Set the default command for a subsystem here.
-    // setDefaultCommand(new DriveIndexerWithJoystick());
-  }
+  // @Override
+  // public void initDefaultCommand() {
+  //   // Set the default command for a subsystem here.
+  //   // setDefaultCommand(new DriveIndexerWithJoystick());
+  // }
 }

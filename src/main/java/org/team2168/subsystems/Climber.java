@@ -25,9 +25,9 @@ import org.team2168.commands.climber.DriveClimberWithJoystick;
 import org.team2168.utils.consoleprinter.ConsolePrinter;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
-import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class Climber extends Subsystem {
+public class Climber extends SubsystemBase {
 
   public static Climber instance = null;
 
@@ -334,12 +334,12 @@ public class Climber extends Subsystem {
     lastCall = isLiftDown();
   }
 
-  @Override
-  /**
-   * This sets the default command to drive via a joystick.
-   */
-  public void initDefaultCommand() {
-    setDefaultCommand(new DriveClimberWithJoystick());
-  }
+  // @Override
+  // /**
+  //  * This sets the default command to drive via a joystick.
+  //  */
+  // public void initDefaultCommand() {
+  //   setDefaultCommand(new DriveClimberWithJoystick());
+  // }
 
 }

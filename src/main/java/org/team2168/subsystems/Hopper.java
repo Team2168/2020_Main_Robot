@@ -15,12 +15,12 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import org.team2168.RobotMap;
 import org.team2168.commands.hopper.DriveHopperWithJoystick;
 
-import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 /**
  * Subsystem class for the Hopper
  */
-public class Hopper extends Subsystem {
+public class Hopper extends SubsystemBase {
   public static final boolean HOPPER_MOTOR_INVERTED = true;
   private TalonSRX hopperMotor;
 
@@ -64,9 +64,9 @@ public class Hopper extends Subsystem {
     hopperMotor.set(ControlMode.PercentOutput, speed);
   }
 
-  @Override
-  public void initDefaultCommand() {
-    // Set the default command for a subsystem here.
-    //setDefaultCommand(new DriveHopperWithJoystick());
-  }
+  // @Override
+  // public void initDefaultCommand() {
+  //   // Set the default command for a subsystem here.
+  //   //setDefaultCommand(new DriveHopperWithJoystick());
+  // }
 }

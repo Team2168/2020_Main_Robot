@@ -11,12 +11,12 @@ import org.team2168.RobotMap;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
-import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 /**
  * Add your docs here.
  */
-public class ColorWheelPivot extends Subsystem {
+public class ColorWheelPivot extends SubsystemBase {
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
 
@@ -76,9 +76,9 @@ public class ColorWheelPivot extends Subsystem {
     return colorWheelExtender.get() == Value.kReverse; 
   }
   
-  @Override
-  public void initDefaultCommand() {
-    // Set the default command for a subsystem here.
-    // setDefaultCommand(new MySpecialCommand());
-  }
+  // @Override
+  // public void initDefaultCommand() {
+  //   // Set the default command for a subsystem here.
+  //   // setDefaultCommand(new MySpecialCommand());
+  // }
 }

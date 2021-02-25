@@ -16,9 +16,9 @@ import org.team2168.RobotMap;
 import org.team2168.commands.shooter.DriveShooterWithJoystick;
 import org.team2168.utils.consoleprinter.ConsolePrinter;
 
-import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class Shooter extends Subsystem {
+public class Shooter extends SubsystemBase {
 
     private TalonFX _motorOne;
     private TalonFX _motorTwo;
@@ -286,7 +286,7 @@ public class Shooter extends Subsystem {
         _firingLocation = fl;
     }
 
-    public void initDefaultCommand() {
-        setDefaultCommand(new DriveShooterWithJoystick());
-    }
+    // public void initDefaultCommand() {
+    //     setDefaultCommand(new DriveShooterWithJoystick());
+    // }
 }
