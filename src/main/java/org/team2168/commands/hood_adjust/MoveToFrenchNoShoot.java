@@ -9,11 +9,12 @@ package org.team2168.commands.hood_adjust;
 
 import org.team2168.commands.auto.Sleep;
 import org.team2168.subsystems.HoodAdjust;
-import org.team2168.subsystems.HoodAdjust.HoodPosition;
 
-import edu.wpi.first.wpilibj.command.CommandGroup;
 
-public class MoveToFrenchNoShoot extends CommandGroup {
+
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+
+public class MoveToFrenchNoShoot extends SequentialCommandGroup {
   HoodAdjust pos = HoodAdjust.getInstance();
   /**
    * Add your docs here.
@@ -35,13 +36,26 @@ public class MoveToFrenchNoShoot extends CommandGroup {
     // e.g. if Command1 requires chassis, and Command2 requires arm,
     // a CommandGroup containing them would require both the chassis and the
     // arm.
-    addSequential(new RetractShooterHardstop());
-    addSequential(new Sleep(), 0.1);
-    addSequential(new RetractShooterHood());
-    addSequential(new Sleep(), 0.5); //TODO tune later
-    addSequential(new ExtendShooterHardstop());
-    addSequential(new Sleep(), 0.1);
-    addSequential(new ExtendShooterHood());
-    addSequential(new Sleep(), 0.1);
+
+    addCommands(
+      new RetractShooterHardstop(),
+      new Sleep().withTimeout(0.1),
+      new RetractShooterHood(),
+      new Sleep().withTimeout(0.5), //TODO tune later
+      new ExtendShooterHardstop(),
+      new Sleep().withTimeout(0.1),
+      new ExtendShooterHood(),
+      new Sleep().withTimeout(0.1));
+      
+
+    
+    // addSequential(new RetractShooterHardstop());
+    // addSequential(new Sleep(), 0.1);
+    // addSequential(new RetractShooterHood());
+    // addSequential(new Sleep(), 0.5); //TODO tune later
+    // addSequential(new ExtendShooterHardstop());
+    // addSequential(new Sleep(), 0.1);
+    // addSequential(new ExtendShooterHood());
+    // addSequential(new Sleep(), 0.1);
   }
 }

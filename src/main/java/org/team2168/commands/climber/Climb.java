@@ -7,9 +7,9 @@
 
 package org.team2168.commands.climber;
 
-import edu.wpi.first.wpilibj.command.CommandGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
-public class Climb extends CommandGroup {
+public class Climb extends SequentialCommandGroup {
   /**
    * Add your docs here.
    */
@@ -30,7 +30,12 @@ public class Climb extends CommandGroup {
     // e.g. if Command1 requires chassis, and Command2 requires arm,
     // a CommandGroup containing them would require both the chassis and the
     // arm.
-    addSequential(new EngageRatchet());
-    addSequential(new DriveClimberXPosition(7.0, 1.5));
+    addCommands(
+      new EngageRatchet(),
+      new DriveClimberXPosition(7.0, 1.5)
+    );
+
+    // addSequential(new EngageRatchet());
+    // addSequential(new DriveClimberXPosition(7.0, 1.5));
   }
 }

@@ -10,9 +10,10 @@ package org.team2168.commands.drivetrain;
 import org.team2168.commands.drivetrain.PIDCommands.DriveXDistance;
 import org.team2168.commands.drivetrain.PIDCommands.TurnXAngle;
 
-import edu.wpi.first.wpilibj.command.CommandGroup;
 
-public class FirstPathReverse extends CommandGroup {
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+
+public class FirstPathReverse extends SequentialCommandGroup {
   /**
    * Add your docs here.
    */
@@ -33,8 +34,14 @@ public class FirstPathReverse extends CommandGroup {
     // e.g. if Command1 requires chassis, and Command2 requires arm,
     // a CommandGroup containing them would require both the chassis and the
     // arm.
-    addSequential(new TurnXAngle(36.0));
-    addSequential(new DriveXDistance(104.0)); //-111.52
-    addSequential(new TurnXAngle(-36.0));
+    addCommands(
+      new TurnXAngle(36.0),
+      new DriveXDistance(104.0), //-111.52
+      new TurnXAngle(-36.0)
+    );
+    
+    // addSequential(new TurnXAngle(36.0));
+    // addSequential(new DriveXDistance(104.0)); //-111.52
+    // addSequential(new TurnXAngle(-36.0));
   }
 }

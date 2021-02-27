@@ -7,17 +7,18 @@
 
 package org.team2168.commands.hood_adjust;
 
-import org.team2168.Robot;
 import org.team2168.commands.auto.Sleep;
 import org.team2168.commands.shooter.DriveToXSpeed;
 import org.team2168.subsystems.HoodAdjust;
-import org.team2168.subsystems.HoodAdjust.HoodPosition;
+
 import org.team2168.subsystems.Shooter.FiringLocation;
-import org.team2168.subsystems.Shooter;
 
-import edu.wpi.first.wpilibj.command.CommandGroup;
 
-public class MoveToFrontTrench extends CommandGroup {
+
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+
+public class MoveToFrontTrench extends ParallelCommandGroup {
   HoodAdjust pos = HoodAdjust.getInstance();
   public MoveToFrontTrench() {
    //By not using a break in the switch statement, the cases will
@@ -47,16 +48,30 @@ public class MoveToFrontTrench extends CommandGroup {
     //     break;
     // }
 
-    //updated---allows for any possible position, allows retract pancake under load;
-    addParallel(new DriveToXSpeed(FiringLocation.FRONT_TRENCH));
+    addCommands (
+     new DriveToXSpeed(FiringLocation.FRONT_TRENCH),
+     new SequentialCommandGroup(new RetractShooterHardstop()),
+     
+                                new Sleep().withTimeout(0.1),
+                                new RetractShooterHood(),
+                                new Sleep().withTimeout(0.5),
+                                new ExtendShooterHardstop(),
+                                new Sleep().withTimeout(0.1),
+                                new ExtendShooterHood(),
+                                new Sleep().withTimeout(0.1));
 
-    addSequential(new RetractShooterHardstop());
-    addSequential(new Sleep(), 0.1);
-    addSequential(new RetractShooterHood());
-    addSequential(new Sleep(), 0.5); //TODO tune later
-    addSequential(new ExtendShooterHardstop());
-    addSequential(new Sleep(), 0.1);
-    addSequential(new ExtendShooterHood());
-    addSequential(new Sleep(), 0.1);
+    
+    //updated---allows for any possible position, allows retract pancake under load;
+    // addParallel(new DriveToXSpeed(FiringLocation.FRONT_TRENCH));
+
+    // addSequential(new RetractShooterHardstop());
+    // addSequential(new Sleep(), 0.1);
+    // addSequential(new RetractShooterHood());
+    // addSequential(new Sleep(), 0.5); //TODO tune later
+    // addSequential(new ExtendShooterHardstop());
+    // addSequential(new Sleep(), 0.1);
+    // addSequential(new ExtendShooterHood());
+    // addSequential(new Sleep(), 0.1);
+    // EASY PEEZY *insert cool face*
   }
 }

@@ -7,17 +7,19 @@
 
 package org.team2168.commands.hood_adjust;
 
-import org.team2168.Robot;
+
 import org.team2168.commands.auto.Sleep;
 import org.team2168.commands.shooter.DriveToXSpeed;
 import org.team2168.subsystems.HoodAdjust;
-import org.team2168.subsystems.HoodAdjust.HoodPosition;
+
 import org.team2168.subsystems.Shooter.FiringLocation;
-import org.team2168.subsystems.Shooter;
 
-import edu.wpi.first.wpilibj.command.CommandGroup;
 
-public class MoveToWhiteLine extends CommandGroup {
+
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+
+public class MoveToWhiteLine extends ParallelCommandGroup {
 HoodAdjust pos = HoodAdjust.getInstance();
   public MoveToWhiteLine() {
   //By not using a break in the switch statement, the cases will
@@ -49,15 +51,30 @@ HoodAdjust pos = HoodAdjust.getInstance();
     // }
 
     //updated---allows for any possible position, allows retract pancake under load;
-    addParallel(new DriveToXSpeed(FiringLocation.WHITE_LINE));
+    addCommands(
+      new DriveToXSpeed(FiringLocation.WHITE_LINE),
+                        new SequentialCommandGroup(new RetractShooterHardstop()),
+                        new Sleep().withTimeout(0.1),
+                        new ExtendShooterHood(),
+                        new Sleep().withTimeout(0.5),
+                        new ExtendShooterHardstop(),
+                        new Sleep().withTimeout(0.1),
+                        new RetractShooterHood(),
+                        new Sleep().withTimeout(0.1)
+    );
+
+
+
+    // addParallel(new DriveToXSpeed(FiringLocation.WHITE_LINE));
     
-    addSequential(new RetractShooterHardstop());
-    addSequential(new Sleep(), 0.1);
-    addSequential(new ExtendShooterHood());
-    addSequential(new Sleep(), 0.5); //TODO tune later
-    addSequential(new ExtendShooterHardstop());
-    addSequential(new Sleep(), 0.1);
-    addSequential(new RetractShooterHood());
-    addSequential(new Sleep(), 0.1);
+    // addSequential(new RetractShooterHardstop());
+    // addSequential(new Sleep(), 0.1);
+    // addSequential(new ExtendShooterHood());
+    // addSequential(new Sleep(), 0.5); //TODO tune later
+    // addSequential(new ExtendShooterHardstop());
+    // addSequential(new Sleep(), 0.1);
+    // addSequential(new RetractShooterHood());
+    // addSequential(new Sleep(), 0.1);
+    // Easy peezy - Ted the Code Fixer
   }
 }

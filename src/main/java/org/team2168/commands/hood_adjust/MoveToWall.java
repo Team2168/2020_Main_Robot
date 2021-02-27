@@ -7,17 +7,17 @@
 
 package org.team2168.commands.hood_adjust;
 
-import org.team2168.Robot;
+
 import org.team2168.commands.auto.Sleep;
 import org.team2168.commands.shooter.DriveToXSpeed;
 import org.team2168.subsystems.HoodAdjust;
-import org.team2168.subsystems.Shooter;
-import org.team2168.subsystems.HoodAdjust.HoodPosition;
+
 import org.team2168.subsystems.Shooter.FiringLocation;
 
-import edu.wpi.first.wpilibj.command.CommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
-public class MoveToWall extends CommandGroup {
+public class MoveToWall extends ParallelCommandGroup {
  HoodAdjust pos = HoodAdjust.getInstance();
   public MoveToWall() {
    //By not using a break in the switch statement, the cases will
@@ -44,22 +44,37 @@ public class MoveToWall extends CommandGroup {
     //     break;
     // }
 
-    // updated---allows for any possible position, allows retract pancake under load;
-    addParallel(new DriveToXSpeed(FiringLocation.WALL));
+    addCommands(
+      new DriveToXSpeed(FiringLocation.WALL),
+      new SequentialCommandGroup(new RetractShooterHood(),
+                                 new RetractShooterHardstop(),
+                                 new ExtendShooterHood(),
+                                 new ExtendShooterHardstop(),
+                                 new RetractShooterHardstop(),
+                                 new RetractShooterHood(),
+                                 
+                                 
+                                 new Sleep().withTimeout(0.1),
+                                 new ExtendShooterHood(),
+                                 new Sleep().withTimeout(0.1))
+    );
 
-    //band aid
-    addSequential(new RetractShooterHood());
-    addSequential(new RetractShooterHardstop());
-    addSequential(new ExtendShooterHood());
-    addSequential(new ExtendShooterHardstop());
-    addSequential(new RetractShooterHardstop());
-    addSequential(new RetractShooterHood());
+    // updated---allows for any possible position, allows retract pancake under load;
+    // addParallel(new DriveToXSpeed(FiringLocation.WALL));
+
+    // //band aid
+    // addSequential(new RetractShooterHood());
+    // addSequential(new RetractShooterHardstop());
+    // addSequential(new ExtendShooterHood());
+    // addSequential(new ExtendShooterHardstop());
+    // addSequential(new RetractShooterHardstop());
+    // addSequential(new RetractShooterHood());
 
 
 
     // addSequential(new RetractShooterHardstop());
-    addSequential(new Sleep(), 0.1);
-    addSequential(new ExtendShooterHood());
-    addSequential(new Sleep(), 0.1);
+    // addSequential(new Sleep(), 0.1);
+    // addSequential(new ExtendShooterHood());
+    // addSequential(new Sleep(), 0.1);
   }
 }

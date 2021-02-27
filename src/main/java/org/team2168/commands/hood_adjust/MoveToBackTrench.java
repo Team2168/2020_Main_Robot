@@ -7,17 +7,16 @@
 
 package org.team2168.commands.hood_adjust;
 
-import org.team2168.Robot;
+
 import org.team2168.commands.auto.Sleep;
 import org.team2168.commands.shooter.DriveToXSpeed;
-import org.team2168.subsystems.HoodAdjust;
-import org.team2168.subsystems.Shooter;
-import org.team2168.subsystems.HoodAdjust.HoodPosition;
+
 import org.team2168.subsystems.Shooter.FiringLocation;
 
-import edu.wpi.first.wpilibj.command.CommandGroup;
 
-public class MoveToBackTrench extends CommandGroup {
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+
+public class MoveToBackTrench extends SequentialCommandGroup {
   public MoveToBackTrench() {
     //By not using a break in the switch statement, the cases will
     //follow through, allowing for less lines of code.
@@ -43,11 +42,24 @@ public class MoveToBackTrench extends CommandGroup {
     // }
 
     //updated---allows for any possible position, allows retract pancake under load;
-    addParallel(new DriveToXSpeed(FiringLocation.BACK_TRENCH));
-    addSequential(new ExtendShooterHood());
-    addSequential(new RetractShooterHardstop());
-    addSequential(new Sleep(), 0.1);
-    addSequential(new RetractShooterHood());
-    addSequential(new Sleep(), 0.2);
+    addCommands (
+      new DriveToXSpeed(FiringLocation.BACK_TRENCH),
+      new SequentialCommandGroup(new ExtendShooterHood(),
+                                 new RetractShooterHardstop(),
+                                 new Sleep().withTimeout(0.1),
+                                 new RetractShooterHood(),
+                                 new Sleep().withTimeout(0.2))
+                                 );
+
+    
+      
+      
+    
+    // addParallel(new DriveToXSpeed(FiringLocation.BACK_TRENCH));
+    // addSequential(new ExtendShooterHood());
+    // addSequential(new RetractShooterHardstop());
+    // addSequential(new Sleep(), 0.1);
+    // addSequential(new RetractShooterHood());
+    // addSequential(new Sleep(), 0.2);
   }
 }

@@ -10,15 +10,24 @@ package org.team2168.commands.intakeMotor;
 import org.team2168.commands.auto.Sleep;
 import org.team2168.commands.intakePivot.RetractIntakePneumatic;
 
-import edu.wpi.first.wpilibj.command.CommandGroup;
 
-public class IntakeBallStop extends CommandGroup {
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+
+public class IntakeBallStop extends ParallelCommandGroup {
 
   public IntakeBallStop() {
-    addParallel(new DriveIntakeWithConstant(0.3));
-    addSequential(new RetractIntakePneumatic());
-    addSequential(new Sleep(), 1.5);
-    addSequential(new DriveIntakeWithConstant(0.0));
+    addCommands(
+      new DriveIntakeWithConstant(0.3),
+      new SequentialCommandGroup(new RetractIntakePneumatic(),
+                                 new Sleep().withTimeout(1.5),
+                                 new DriveIntakeWithConstant(0.0))
+      );
+    
+    //   addParallel(new DriveIntakeWithConstant(0.3));
+    // addSequential(new RetractIntakePneumatic());
+    // addSequential(new Sleep(), 1.5);
+    // addSequential(new DriveIntakeWithConstant(0.0));
    
   }
 }
