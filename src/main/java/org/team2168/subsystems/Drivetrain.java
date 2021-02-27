@@ -7,6 +7,7 @@
 
 package org.team2168.subsystems;
 
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
@@ -110,6 +111,8 @@ public class Drivetrain extends SubsystemBase {
     _rightMotor3.configFactoryDefault();
     _pidgey.configFactoryDefault();
 
+
+
     talonCurrentLimit = new SupplyCurrentLimitConfiguration(ENABLE_CURRENT_LIMIT, CONTINUOUS_CURRENT_LIMIT,
         TRIGGER_THRESHOLD_LIMIT, TRIGGER_THRESHOLD_TIME);
 
@@ -147,13 +150,16 @@ public class Drivetrain extends SubsystemBase {
     // Motor controller level inversion doesn't work for some reason
     _leftMotors.setInverted(_leftInvert);
     _rightMotors.setInverted(_rightInvert);
+
+    resetEncoders();
+    zeroHeading();
   }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    _odometry.update(Rotation2d.fromDegrees(getHeading()), ticks_to_meters(_leftMotor1.getSelectedSensorPosition()),
-        ticks_to_meters(_rightMotor1.getSelectedSensorPosition()));
+    _odometry.update(Rotation2d.fromDegrees(getHeading()), ticksToMeters(_leftMotor1.getSelectedSensorPosition()),
+        ticksToMeters(_rightMotor1.getSelectedSensorPosition()));
   }
 
   /**
@@ -259,8 +265,8 @@ public class Drivetrain extends SubsystemBase {
    * @return DifferentialDriveWheelSpeeds wheel speeds
    */
   public DifferentialDriveWheelSpeeds getWheelSpeeds() {
-    return new DifferentialDriveWheelSpeeds(_leftMotor1.getSelectedSensorVelocity(),
-        _rightMotor1.getSelectedSensorVelocity());
+    return new DifferentialDriveWheelSpeeds(ticksToMeters(_leftMotor1.getSelectedSensorVelocity()),
+        ticksToMeters(_rightMotor1.getSelectedSensorVelocity()));
   }
 
   /**
@@ -309,7 +315,7 @@ public class Drivetrain extends SubsystemBase {
    * Zeroes imu heading
    */
   public void zeroHeading() {
-    _pidgey.setYaw(0);
+    _pidgey.setFusedHeading(0);
   }
 
   /**
@@ -338,6 +344,24 @@ public class Drivetrain extends SubsystemBase {
     if (instance == null)
       instance = new Drivetrain();
     return instance;
+  }
+
+  public void setAllMotorsBrake() {
+    _leftMotor1.setNeutralMode(NeutralMode.Brake);
+    _leftMotor2.setNeutralMode(NeutralMode.Brake);
+    _leftMotor3.setNeutralMode(NeutralMode.Brake);
+    _rightMotor1.setNeutralMode(NeutralMode.Brake);
+    _rightMotor2.setNeutralMode(NeutralMode.Brake);
+    _rightMotor3.setNeutralMode(NeutralMode.Brake);
+  }
+
+  public void setAllMotorsCoast() {
+    _leftMotor1.setNeutralMode(NeutralMode.Coast);
+    _leftMotor2.setNeutralMode(NeutralMode.Coast);
+    _leftMotor3.setNeutralMode(NeutralMode.Coast);
+    _rightMotor1.setNeutralMode(NeutralMode.Coast);
+    _rightMotor2.setNeutralMode(NeutralMode.Coast);
+    _rightMotor3.setNeutralMode(NeutralMode.Coast);
   }
 
   /**
@@ -378,7 +402,7 @@ public class Drivetrain extends SubsystemBase {
     return (setpoint * WHEEL_CIRCUMFERENCE) / (TICKS_PER_REV * GEAR_RATIO);
   }
 
-  private double ticks_to_meters(double setpoint) {
+  private double ticksToMeters(double setpoint) {
     // TODO is this the best way of accomplishing this?
     return (ticks_to_inches(setpoint) / 39.37008);
   }

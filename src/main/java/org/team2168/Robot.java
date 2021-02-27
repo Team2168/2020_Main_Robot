@@ -10,6 +10,7 @@ package org.team2168;
 import java.io.IOException;
 import java.nio.file.Path;
 
+import org.team2168.commands.DriveWithConstant;
 import org.team2168.subsystems.Drivetrain;
 
 import edu.wpi.first.wpilibj.Filesystem;
@@ -47,9 +48,11 @@ public class Robot extends TimedRobot {
     m_chooser = new SendableChooser<String>();
     m_chooser.setDefaultOption("Drive straight", "paths/Straightline.wpilib.json");
     m_chooser.addOption("Curvy", "paths/SomeCurve.wpilib.json");
+    m_chooser.addOption("Short Stright", "paths/ShortStraight.wpilib.json");
     // m_chooser.addOption("Option 3", "null");
     // m_chooser.addOption("Do nothing", "null");
     SmartDashboard.putData("Auto Chooser", m_chooser);
+    dt.setAllMotorsBrake();
   }
 
   /**
@@ -92,7 +95,9 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
+    dt.setAllMotorsBrake();  // I don't trust the autos not to coast into something 
     String trajectoryJson = m_chooser.getSelected();
+    System.out.println("Driving path: " + m_chooser.getSelected());
     try {
       Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(trajectoryJson);
       Trajectory trajectory = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
@@ -138,6 +143,7 @@ public class Robot extends TimedRobot {
   public void testInit() {
     // Cancels all running commands at the start of test mode.
     CommandScheduler.getInstance().cancelAll();
+    dt.setAllMotorsCoast();  // set it to test when I need to push around the robot
   }
 
   /**
@@ -145,5 +151,6 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void testPeriodic() {
+    CommandScheduler.getInstance().schedule(new DriveWithConstant(0.0, 0.0));
   }
 }

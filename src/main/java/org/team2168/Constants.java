@@ -75,8 +75,8 @@ public class Constants {
 	public final static double kDriveV = 1.99;
 	public final static double kDriveA = 0.265;
 	// public final static double kDriveP = 1.71; //1.5 m/s acceptable error
-	// public final static double kDriveP = 2.53; // 0.2 m/s acceptable error
-	public static final double kDriveP = 0.0;
+	public final static double kDriveP = 0.0; // 0.2 m/s acceptable error
+	// public static final double kDriveP = 0.0;
 	public final static double kDriveI = 0.0;
 	public final static double kDriveD = 0.0;
 
@@ -84,8 +84,8 @@ public class Constants {
 	public static final DifferentialDriveKinematics kDriveKinematics = 
 		new DifferentialDriveKinematics(kTrackWidthMeters);
 
-	public static final double kMaxSpeedMetersPerSecond = 3;
-	public static final double kMaxAccelerationMetersPerSecondSquared = 3;
+	public static final double kMaxSpeedMetersPerSecond = 0.01;
+	public static final double kMaxAccelerationMetersPerSecondSquared = 0.01;
 	
 		
 

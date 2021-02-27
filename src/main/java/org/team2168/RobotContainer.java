@@ -15,12 +15,16 @@ import org.team2168.commands.DriveWithJoystick;
 import org.team2168.subsystems.Drivetrain;
 import org.team2168.utils.F310;
 
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.controller.RamseteController;
 import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
+import edu.wpi.first.wpilibj.geometry.Pose2d;
+import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryUtil;
@@ -120,19 +124,42 @@ public class RobotContainer {
   public Command getAutonomousCommand(Trajectory trajectory) {
     // An ExampleCommand will run in autonomous
 
+    // Paste this variable in
+    RamseteController disabledRamsete = new RamseteController() {
+      @Override
+      public ChassisSpeeds calculate(Pose2d currentPose, Pose2d poseRef, double linearVelocityRefMeters,
+              double angularVelocityRefRadiansPerSecond) {
+          return new ChassisSpeeds(linearVelocityRefMeters, 0.0, angularVelocityRefRadiansPerSecond);
+      }
+    };
+
+    PIDController leftController = new PIDController(Constants.kDriveP, Constants.kDriveI, Constants.kDriveD);
+    PIDController rightController = new PIDController(Constants.kDriveP, Constants.kDriveI, Constants.kDriveD);
     RamseteCommand ramseteCommand = new RamseteCommand(
         trajectory,
         dt::getPose,
-        new RamseteController(Constants.kRamseteB, Constants.kRamseteZeta),
+        // new RamseteController(Constants.kRamseteB, Constants.kRamseteZeta),
+        disabledRamsete,
         new SimpleMotorFeedforward(Constants.kDriveS,
                                    Constants.kDriveV,
                                    Constants.kDriveA),
         Constants.kDriveKinematics,
         dt::getWheelSpeeds,
-        new PIDController(Constants.kDriveP, Constants.kDriveI, Constants.kDriveD),
-        new PIDController(Constants.kDriveP, Constants.kDriveI, Constants.kDriveD),
+        leftController,
+        rightController,
+        // new PIDController(Constants.kDriveP, Constants.kDriveI, Constants.kDriveD),
+        // new PIDController(Constants.kDriveP, Constants.kDriveI, Constants.kDriveD),
         // RamseteCommand passes volts to the callback
-        dt::setVolts,
+        // dt::setVolts,
+        (leftVolts, rightVolts) -> {
+          dt.setVolts(leftVolts, rightVolts);
+  
+          SmartDashboard.putNumber("left_value", dt.getWheelSpeeds().leftMetersPerSecond);
+          SmartDashboard.putNumber("left reference", leftController.getSetpoint());
+  
+          SmartDashboard.putNumber("right value", dt.getWheelSpeeds().rightMetersPerSecond);
+          SmartDashboard.putNumber("right reference", rightController.getSetpoint());
+      },
         dt
     );
 
