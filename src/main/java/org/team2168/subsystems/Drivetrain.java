@@ -286,7 +286,7 @@ public class Drivetrain extends SubsystemBase {
    * @return average encoder distance in ticks
    */
   public double getAverageEncoderDistance() {
-    return (_leftMotor1.getSelectedSensorPosition() + _rightMotor1.getSelectedSensorPosition()) / 2.0;
+    return (getLeftEncoderDistance() + getRightEncoderDistance()) / 2.0;
   }
 
   /**
@@ -294,7 +294,7 @@ public class Drivetrain extends SubsystemBase {
    * @return encoder distance in ticks
    */
   public double getLeftEncoderDistance() {
-    return _leftMotor1.getSelectedSensorPosition();
+    return (_leftInvert ? -_leftMotor1.getSelectedSensorPosition() : _leftMotor1.getSelectedSensorPosition());
   }
 
   /**
@@ -302,7 +302,7 @@ public class Drivetrain extends SubsystemBase {
    * @return encoder distance in ticks
    */
   public double getRightEncoderDistance() {
-    return _rightMotor1.getSelectedSensorPosition();
+    return (_rightInvert ? -_rightMotor1.getSelectedSensorPosition() : _rightMotor1.getSelectedSensorPosition());
   }
 
   /**
