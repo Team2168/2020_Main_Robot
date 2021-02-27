@@ -46,7 +46,7 @@ public class Robot extends TimedRobot {
     m_robotContainer = RobotContainer.getInstance();
     m_chooser = new SendableChooser<String>();
     m_chooser.setDefaultOption("Drive straight", "paths/Straightline.wpilib.json");
-    // m_chooser.addOption("Curvy", "paths/curvy!.json");
+    m_chooser.addOption("Curvy", "paths/SomeCurve.wpilib.json");
     // m_chooser.addOption("Option 3", "null");
     // m_chooser.addOption("Do nothing", "null");
     SmartDashboard.putData("Auto Chooser", m_chooser);

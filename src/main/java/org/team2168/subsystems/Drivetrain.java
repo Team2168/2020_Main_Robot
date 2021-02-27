@@ -186,7 +186,7 @@ public class Drivetrain extends SubsystemBase {
    * @param batteryVoltage voltage of the battery.
    */
   public void setLeftMotorsVolts(double volts, double batteryVoltage) {
-    _leftMotors.setVoltage(volts/batteryVoltage);
+    _leftMotors.set(volts/batteryVoltage);
   }
 
     /**
