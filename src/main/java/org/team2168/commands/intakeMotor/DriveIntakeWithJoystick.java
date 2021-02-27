@@ -10,20 +10,21 @@ package org.team2168.commands.intakeMotor;
 import org.team2168.OI;
 import org.team2168.subsystems.IntakeMotor;
 
-import edu.wpi.first.wpilibj.command.Command;
 
-public class DriveIntakeWithJoystick extends Command {
+import edu.wpi.first.wpilibj2.command.CommandBase;
+
+public class DriveIntakeWithJoystick extends CommandBase {
   private IntakeMotor intakeMotor;
   private OI oi;
   
   public DriveIntakeWithJoystick() {
     intakeMotor = IntakeMotor.getInstance();
-    requires(intakeMotor);
+    addRequirements(intakeMotor);
   }
 
   // Called just before this Command runs the first time
   @Override
-  protected void initialize() {
+  public void initialize() {
     oi = OI.getInstance();
   }
 
@@ -36,7 +37,7 @@ public class DriveIntakeWithJoystick extends Command {
    * @author Ian
    */
   @Override
-  protected void execute() {
+  public void execute() {
     if (Math.abs(oi.getIntakeMotorJoyStick()) < IntakeMotor.MAX_SPEED)
     {
       intakeMotor.driveMotor(oi.getIntakeMotorJoyStick());
@@ -49,20 +50,17 @@ public class DriveIntakeWithJoystick extends Command {
 
   // Make this return true when this Command no longer needs to run execute()
   @Override
-  protected boolean isFinished() {
+  public boolean isFinished() {
     return false;
   }
 
   // Called once after isFinished returns true
   @Override
-  protected void end() {
+  public void end(boolean interrupted) {
     intakeMotor.driveMotor(0.0);
   }
 
   // Called when another command which requires one or more of the same
   // subsystems is scheduled to run
-  @Override
-  protected void interrupted() {
-    end();
-  }
+ 
 }

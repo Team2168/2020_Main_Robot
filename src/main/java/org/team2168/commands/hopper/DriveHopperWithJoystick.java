@@ -10,45 +10,42 @@ package org.team2168.commands.hopper;
 import org.team2168.subsystems.Hopper;
 import org.team2168.OI;
 
-import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 
-public class DriveHopperWithJoystick extends Command {
+public class DriveHopperWithJoystick extends CommandBase {
   private Hopper hopper;
   private OI oi;
 
   public DriveHopperWithJoystick() {
     hopper = Hopper.getInstance();
-    requires(hopper);
+    addRequirements(hopper);
   }
 
   // Called just before this Command runs the first time
   @Override
-  protected void initialize() {
+  public void initialize() {
     oi = OI.getInstance();
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
-  protected void execute() {
+  public void execute() {
     hopper.drive(oi.getHopperJoystickValue()); // The joystick used will likely change
   }
 
   // Make this return true when this Command no longer needs to run execute()
   @Override
-  protected boolean isFinished() {
+  public boolean isFinished() {
     return false;
   }
 
   // Called once after isFinished returns true
   @Override
-  protected void end() {
+  public void end(boolean interrupted) {
     hopper.drive(0.0);
   }
 
   // Called when another command which requires one or more of the same
   // subsystems is scheduled to run
-  @Override
-  protected void interrupted() {
-    end();
-  }
+  
 }

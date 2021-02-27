@@ -9,10 +9,11 @@ package org.team2168.commands.color_wheel;
 
 import org.team2168.subsystems.ColorWheel;
 
-import edu.wpi.first.wpilibj.command.Command;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-public class DriveColorWheelXRotations extends Command {
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.CommandBase;
+
+public class DriveColorWheelXRotations extends CommandBase {
 
   private static ColorWheel colorWheel;
   private double _setPoint;
@@ -26,13 +27,13 @@ public class DriveColorWheelXRotations extends Command {
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
     colorWheel = ColorWheel.getInstance();
-    requires(colorWheel);
+    addRequirements(colorWheel);
     _setPoint =setPoint;
   }
 
   // Called just before this Command runs the first time
   @Override
-  protected void initialize() {
+  public void initialize() {
     counter = 0;
 
     if(_readPIDFromDashboard) {
@@ -45,7 +46,7 @@ public class DriveColorWheelXRotations extends Command {
 
   // Called repeatedly when this Command is scheduled to run
   @Override
-  protected void execute() {
+  public void execute() {
     counter++;
     colorWheel.setPositionSetPoint(_targetPosition);
     SmartDashboard.putNumber("SetPoint", _setPoint);
@@ -66,21 +67,18 @@ public class DriveColorWheelXRotations extends Command {
 
   // Make this return true when this Command no longer needs to run execute()
   @Override
-  protected boolean isFinished() {
+  public boolean isFinished() {
     return _withinThresholdLoops > _loopsToSettle;
   }
 
   // Called once after isFinished returns true
   @Override
-  protected void end() {
+  public void end(boolean interrupted) {
     colorWheel.drive(0.0);
 
   }
 
   // Called when another command which requires one or more of the same
   // subsystems is scheduled to run
-  @Override
-  protected void interrupted() {
-    end();
-  }
+  
 }

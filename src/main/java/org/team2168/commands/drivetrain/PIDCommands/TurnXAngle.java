@@ -9,9 +9,10 @@ package org.team2168.commands.drivetrain.PIDCommands;
 
 import org.team2168.subsystems.Drivetrain;
 
-import edu.wpi.first.wpilibj.command.Command;
 
-public class TurnXAngle extends Command {
+import edu.wpi.first.wpilibj2.command.CommandBase;
+
+public class TurnXAngle extends CommandBase {
   private Drivetrain dt;
   /**target position */
   private double _targetPos = 0.0;
@@ -37,7 +38,7 @@ public class TurnXAngle extends Command {
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
     dt = Drivetrain.getInstance();
-    requires(dt);
+    addRequirements(dt);
 
     _errorToleranceAngle = errorToleranceAngle;
     _targetAngle = setPoint;
@@ -45,7 +46,7 @@ public class TurnXAngle extends Command {
 
   // Called just before this Command runs the first time
   @Override
-  protected void initialize() {
+  public void initialize() {
     _withinThresholdLoops = 0;
     dt.zeroSensors();
     dt.switchGains(false);
@@ -54,7 +55,7 @@ public class TurnXAngle extends Command {
 
   // Called repeatedly when this Command is scheduled to run
   @Override
-  protected void execute() {
+  public void execute() {
     dt.setSetPointPosition(_targetPos, _targetAngle);
     /* Check if closed loop error is within the threshld */
     if ((Math.abs(dt.getErrorPosition()) < _errorTolerancePosition) && (Math.abs(dt.getErrorHeading()) < _errorToleranceAngle)) 
@@ -68,20 +69,17 @@ public class TurnXAngle extends Command {
 
   // Make this return true when this Command no longer needs to run execute()
   @Override
-  protected boolean isFinished() {
+  public boolean isFinished() {
     return _withinThresholdLoops > _loopsToSettle;
   }
 
   // Called once after isFinished returns true
   @Override
-  protected void end() {
+  public void end(boolean interurpted) {
     dt.tankDrive(0.0, 0.0);
   }
 
   // Called when another command which requires one or more of the same
   // subsystems is scheduled to run
-  @Override
-  protected void interrupted() {
-    end();
-  }
+  
 }

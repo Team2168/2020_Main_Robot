@@ -11,9 +11,10 @@ import org.team2168.OI;
 import org.team2168.subsystems.Drivetrain;
 import org.team2168.subsystems.Limelight;
 
-import edu.wpi.first.wpilibj.command.Command;
 
-public class DriveWithJoystick extends Command 
+import edu.wpi.first.wpilibj2.command.CommandBase;
+
+public class DriveWithJoystick extends CommandBase 
 {
   private Drivetrain dt;
   private Limelight lime;
@@ -22,12 +23,12 @@ public class DriveWithJoystick extends Command
   public DriveWithJoystick() 
   {
     dt = Drivetrain.getInstance();
-    requires(dt);
+    addRequirements(dt);
   }
 
   // Called just before this Command runs the first time
   @Override
-  protected void initialize() {
+  public void initialize() {
     oi = OI.getInstance();
     lime = Limelight.getInstance();
     lime.setLedMode(1);
@@ -40,7 +41,7 @@ public class DriveWithJoystick extends Command
 	 * @author Liam
 	 */
   @Override
-  protected void execute() {
+  public void execute() {
     dt.tankDrive(oi.getGunStyleYValue()+ oi.getGunStyleXValue(),
       oi.getGunStyleYValue() - oi.getGunStyleXValue());
   }
@@ -48,20 +49,17 @@ public class DriveWithJoystick extends Command
   // Called repeatedly when this Command is scheduled to run
   // Make this return true when this Command no longer needs to run execute()
   @Override
-  protected boolean isFinished() {
+  public boolean isFinished() {
     return false;
   }
 
   // Called once after isFinished returns true
   @Override
-  protected void end() {
+  public void end(boolean interrupted) {
     dt.tankDrive(0.0, 0.0);
   }
 
   // Called when another command which requires one or more of the same
   // subsystems is scheduled to run
-  @Override
-  protected void interrupted() {
-    
-  }
+  
 }

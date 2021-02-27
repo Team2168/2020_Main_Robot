@@ -12,9 +12,10 @@ import org.team2168.subsystems.Drivetrain;
 import org.team2168.subsystems.Limelight;
 import org.team2168.subsystems.Shooter;
 
-import edu.wpi.first.wpilibj.command.Command;
 
-public class LimelightTurnTeleop extends Command {
+import edu.wpi.first.wpilibj2.command.CommandBase;
+
+public class LimelightTurnTeleop extends CommandBase {
   private Drivetrain dt;
   private OI oi;
 
@@ -46,16 +47,16 @@ public class LimelightTurnTeleop extends Command {
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
     dt = Drivetrain.getInstance();
-    requires(dt);
+    addRequirements(dt);
 
     lime = Limelight.getInstance();
-    requires(lime);
+    addRequirements(lime);
     _errorToleranceAngle = errorToleranceAngle;
   }
 
   // Called just before this Command runs the first time
   @Override
-  protected void initialize() {
+  public void initialize() {
     oi = OI.getInstance();
     _withinThresholdLoops = 0;
     dt.zeroSensors();
@@ -71,7 +72,7 @@ public class LimelightTurnTeleop extends Command {
 
   // Called repeatedly when this Command is scheduled to run
   @Override
-  protected void execute() {
+  public void execute() {
     double limeAngle = -lime.getPosition();
 
     if ((_targetAngle == 0.0) && (limeAngle != 0.0) ) {
@@ -95,20 +96,17 @@ public class LimelightTurnTeleop extends Command {
 
   // Make this return true when this Command no longer needs to run execute()
   @Override
-  protected boolean isFinished() {
+  public boolean isFinished() {
     return _withinThresholdLoops > _loopsToSettle;
   }
 
   // Called once after isFinished returns true
   @Override
-  protected void end() {
+  public void end(boolean interrupted) {
     //dt.tankDrive(0.0, 0.0);
   }
 
   // Called when another command which requires one or more of the same
   // subsystems is scheduled to run
-  @Override
-  protected void interrupted() {
-    end();
-  }
+  
 }

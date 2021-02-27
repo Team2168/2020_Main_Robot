@@ -1,11 +1,12 @@
 package org.team2168.commands.auto;
 
-import edu.wpi.first.wpilibj.command.Command;
+
+import edu.wpi.first.wpilibj2.command.CommandBase;
 
 /**
  * Does nothing, absolutely nothing
  */
-public class DoNothing extends Command {
+public class DoNothing extends CommandBase {
 
 	public DoNothing() {
 		// Use requires() here to declare subsystem dependencies
@@ -13,24 +14,24 @@ public class DoNothing extends Command {
 	}
 
 	// Called just before this Command runs the first time
-	protected void initialize() {
+	public void initialize() {
 	}
 
 	// Called repeatedly when this Command is scheduled to run
-	protected void execute() {
+	public void execute() {
 	}
 
 	// Make this return true when this Command no longer needs to run execute()
-	protected boolean isFinished() {
+	public boolean isFinished() {
 		return false;
 	}
 
 	// Called once after isFinished returns true
-	protected void end() {
+	public void end(boolean interrupted) {
 	}
 
 	// Called when another command which requires one or more of the same
 	// subsystems is scheduled to run
-	protected void interrupted() {
+	public void interrupted() {
 	}
 }

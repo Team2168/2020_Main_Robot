@@ -9,9 +9,10 @@ package org.team2168.commands.climber;
 
 import org.team2168.subsystems.Climber;
 
-import edu.wpi.first.wpilibj.command.Command;
 
-public class DriveClimberXPosition extends Command {
+import edu.wpi.first.wpilibj2.command.CommandBase;
+
+public class DriveClimberXPosition extends CommandBase {
 
   private Climber climber;
   /**target position */
@@ -30,7 +31,7 @@ public class DriveClimberXPosition extends Command {
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
     climber = Climber.getInstance();
-    requires(climber);
+    addRequirements(climber);
     _errorTolerance = errorTolerance;
     _targetPos = setPoint;
   }
@@ -42,14 +43,14 @@ public class DriveClimberXPosition extends Command {
   
   // Called just before this Command runs the first time
   @Override
-  protected void initialize() {
+  public void initialize() {
     // climber.zeroEncoder(); //don't do this except for testing
     climber.setGains(_targetPos);
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
-  protected void execute() {
+  public void execute() {
     climber.setSetPoint(_targetPos);
     /* Check if closed loop error is within the threshld */
     if (Math.abs(climber.getErrorPosition()) < _errorTolerance) {
@@ -62,20 +63,17 @@ public class DriveClimberXPosition extends Command {
 
   // Make this return true when this Command no longer needs to run execute()
   @Override
-  protected boolean isFinished() {
+  public boolean isFinished() {
     return _withinThresholdLoops > _loopsToSettle;
   }
 
   // Called once after isFinished returns true
   @Override
-  protected void end() {
+  public void end(boolean interrupted) {
     climber.driveClimberMotors(0.0);
   }
 
   // Called when another command which requires one or more of the same
   // subsystems is scheduled to run
-  @Override
-  protected void interrupted() {
-    end();
-  }
+  
 }

@@ -10,9 +10,10 @@ package org.team2168.commands.shooter;
 import org.team2168.subsystems.Shooter;
 import org.team2168.subsystems.Shooter.FiringLocation;
 
-import edu.wpi.first.wpilibj.command.Command;
 
-public class DriveToXSpeed extends Command {
+import edu.wpi.first.wpilibj2.command.CommandBase;
+
+public class DriveToXSpeed extends CommandBase {
 
     private Shooter shooter;
     /**target position */
@@ -23,7 +24,7 @@ public class DriveToXSpeed extends Command {
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
     shooter = Shooter.getInstance();
-    requires(shooter);
+    addRequirements(shooter);
     this._targetVelocity = setPoint;
   }
 
@@ -31,7 +32,7 @@ public class DriveToXSpeed extends Command {
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
     shooter = Shooter.getInstance();
-    requires(shooter);
+    addRequirements(shooter);
     this._fl = setPoint;
     this._targetVelocity = setPoint.getSpeed();
   }
@@ -39,7 +40,7 @@ public class DriveToXSpeed extends Command {
 
   // Called just before this Command runs the first time
   @Override
-  protected void initialize() {
+  public void initialize() {
     if(this._fl != null) {
       shooter.setFiringLocation(_fl);
     }
@@ -47,25 +48,22 @@ public class DriveToXSpeed extends Command {
 
   // Called repeatedly when this Command is scheduled to run
   @Override
-  protected void execute() {
+  public void execute() {
     shooter.setSpeed(_targetVelocity);
   }
 
   // Make this return true when this Command no longer needs to run execute()
   @Override
-  protected boolean isFinished() {
+  public boolean isFinished() {
     return false; 
   }
 
   // Called once after isFinished returns true
   @Override
-  protected void end() {
+  public void end(boolean interrupted) {
   }
 
   // Called when another command which requires one or more of the same
   // subsystems is scheduled to run
-  @Override
-  protected void interrupted() {
-    end();
-  }
+  
 }

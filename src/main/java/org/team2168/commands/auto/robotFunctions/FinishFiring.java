@@ -11,7 +11,8 @@ import org.team2168.commands.hopper.DriveHopperWithConstant;
 import org.team2168.commands.indexer.DriveIndexerWithConstant;
 import org.team2168.commands.intakeMotor.DriveIntakeWithConstant;
 
-import edu.wpi.first.wpilibj.command.CommandGroup;
+
+import edu.wpi.first.wpilibj2.command.CommandGroup;
 
 public class FinishFiring extends CommandGroup {
   /**

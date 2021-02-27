@@ -9,18 +9,19 @@ package org.team2168.commands.intakePivot;
 
 import org.team2168.subsystems.IntakePivot;
 
-import edu.wpi.first.wpilibj.command.Command;
 
-public class RetractIntakePneumatic extends Command {
+import edu.wpi.first.wpilibj2.command.CommandBase;
+
+public class RetractIntakePneumatic extends CommandBase {
   private IntakePivot intakePivot;
   public RetractIntakePneumatic() {
     intakePivot = IntakePivot.getInstance();
-    requires(intakePivot);
+    addRequirements(intakePivot);
   }
 
   // Called just before this Command runs the first time
   @Override
-  protected void initialize() {
+  public void initialize() {
   }
 
   /**
@@ -28,25 +29,22 @@ public class RetractIntakePneumatic extends Command {
    * @author Ian
    */
   @Override
-  protected void execute() {
+  public void execute() {
     intakePivot.retractIntake();
   }
 
   // Make this return true when this Command no longer needs to run execute()
   @Override
-  protected boolean isFinished() {
+  public  boolean isFinished() {
     return intakePivot.isIntakeRetracted(); //checks if intake is retracted
   }
 
   // Called once after isFinished returns true
   @Override
-  protected void end() {
+  public void end(boolean interrupted) {
   }
 
   // Called when another command which requires one or more of the same
   // subsystems is scheduled to run
-  @Override
-  protected void interrupted() {
-    end(); //for if we add things to end()
-  }
+  
 }

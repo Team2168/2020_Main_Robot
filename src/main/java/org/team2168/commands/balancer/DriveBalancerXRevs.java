@@ -10,10 +10,11 @@ package org.team2168.commands.balancer;
 import org.team2168.OI;
 import org.team2168.subsystems.Balancer;
 
-import edu.wpi.first.wpilibj.command.Command;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-public class DriveBalancerXRevs extends Command {
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.CommandBase;
+
+public class DriveBalancerXRevs extends CommandBase {
 
   private static Balancer balancer;
   private static OI oi;
@@ -27,13 +28,13 @@ public class DriveBalancerXRevs extends Command {
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
     balancer = Balancer.getInstance();
-    requires(balancer);
+    addRequirements(balancer);
     _setPoint =setPoint;
   }
 
   // Called just before this Command runs the first time
   @Override
-  protected void initialize() {
+  public void initialize() {
     oi = OI.getInstance();
     if(_readPIDFromDashboard) {
       balancer.updatePIDValues();
@@ -42,7 +43,7 @@ public class DriveBalancerXRevs extends Command {
 
   // Called repeatedly when this Command is scheduled to run
   @Override
-  protected void execute() {
+  public void execute() {
     balancer.setPositionSetPoint(_setPoint);
 
     SmartDashboard.putNumber("SetPoint", _setPoint);
@@ -62,21 +63,18 @@ public class DriveBalancerXRevs extends Command {
 
   // Make this return true when this Command no longer needs to run execute()
   @Override
-  protected boolean isFinished() {
+  public boolean isFinished() {
     return _withinThresholdLoops > _loopsToSettle;
   }
 
   // Called once after isFinished returns true
   @Override
-  protected void end() {
+  public void end(boolean interrupted) {
     balancer.driveMotor(0.0);
 
   }
 
   // Called when another command which requires one or more of the same
   // subsystems is scheduled to run
-  @Override
-  protected void interrupted() {
-    end();
-  }
+  
 }

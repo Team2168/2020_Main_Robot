@@ -10,16 +10,17 @@ package org.team2168.commands.color_wheel;
 import org.team2168.OI;
 import org.team2168.subsystems.ColorWheel;
 
-import edu.wpi.first.wpilibj.command.Command;
 
-public class DriveColorWheelWithJoystick extends Command {
+import edu.wpi.first.wpilibj2.command.CommandBase;
+
+public class DriveColorWheelWithJoystick extends CommandBase {
   private ColorWheel colorWheel;
   private OI oi;
   private final double MAX_SPEED = 0.8;
   public DriveColorWheelWithJoystick() {
     colorWheel = ColorWheel.getInstance();
   
-    requires(colorWheel);
+    addRequirements(colorWheel);
       
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
@@ -27,13 +28,13 @@ public class DriveColorWheelWithJoystick extends Command {
 
   // Called just before this Command runs the first time
   @Override
-  protected void initialize() {
+  public void initialize() {
     oi = OI.getInstance();
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
-  protected void execute() {
+  public void execute() {
     if(Math.abs(oi.getColorWheelJoystick()) < MAX_SPEED) {
       colorWheel.drive(oi.getColorWheelJoystick());
     }
@@ -44,20 +45,17 @@ public class DriveColorWheelWithJoystick extends Command {
 
   // Make this return true when this Command no longer needs to run execute()
   @Override
-  protected boolean isFinished() {
+  public boolean isFinished() {
     return false;
   }
 
   // Called once after isFinished returns true
   @Override
-  protected void end() {
+  public void end(boolean interrupted) {
     colorWheel.drive(0);
   }
 
   // Called when another command which requires one or more of the same
   // subsystems is scheduled to run
-  @Override
-  protected void interrupted() {
-    end();
-  }
+ 
 }

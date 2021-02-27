@@ -9,9 +9,10 @@ package org.team2168.commands.shooter;
 
 import org.team2168.subsystems.Shooter;
 
-import edu.wpi.first.wpilibj.command.Command;
 
-public class WaitForShooterAtSpeed extends Command {
+import edu.wpi.first.wpilibj2.command.CommandBase;
+
+public class WaitForShooterAtSpeed extends CommandBase {
   
   private Shooter shooter;
   private double _errorTolerance;
@@ -30,12 +31,12 @@ public class WaitForShooterAtSpeed extends Command {
   }
   // Called just before this Command runs the first time
   @Override
-  protected void initialize() {
+  public void initialize() {
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
-  protected void execute() {
+  public void execute() {
     /* Check if closed loop error is within the threshld */
     if (Math.abs(shooter.getError()) < _errorTolerance) {
       ++_withinThresholdLoops;
@@ -47,18 +48,16 @@ public class WaitForShooterAtSpeed extends Command {
 
   // Make this return true when this Command no longer needs to run execute()
   @Override
-  protected boolean isFinished() {
+  public boolean isFinished() {
     return _withinThresholdLoops > _loopsToSettle;
   }
 
   // Called once after isFinished returns true
   @Override
-  protected void end() {
+  public void end(boolean interrupted) {
   }
 
   // Called when another command which requires one or more of the same
   // subsystems is scheduled to run
-  @Override
-  protected void interrupted() {
-  }
+  
 }
