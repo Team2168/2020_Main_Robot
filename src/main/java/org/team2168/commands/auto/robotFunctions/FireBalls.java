@@ -13,9 +13,11 @@ import org.team2168.commands.indexer.DriveIndexerWithConstantNoStop;
 import org.team2168.commands.intakeMotor.DriveIntakeWithConstant;
 import org.team2168.commands.shooter.WaitForShooterAtSpeed;
 
-import edu.wpi.first.wpilibj.command.CommandGroup;
 
-public class FireBalls extends CommandGroup {
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+
+public class FireBalls extends ParallelCommandGroup {
   /**
    * Add your docs here.
    */
@@ -37,11 +39,27 @@ public class FireBalls extends CommandGroup {
     // a CommandGroup containing them would require both the chassis and the
     // arm.
 
-    addSequential(new WaitForShooterAtSpeed());
-    addSequential(new DriveIndexerWithConstantNoStop(1.0), 0.5); 
-    addParallel(new DriveIndexerWithConstant(1.0));
-    addParallel(new DriveHopperWithConstant(0.8));
-    addParallel(new DriveIntakeWithConstant(0.2));
+    addCommands(
+      new SequentialCommandGroup(
+        new WaitForShooterAtSpeed(),
+        new DriveIndexerWithConstantNoStop(1.0).withTimeout(0.5),
+        new ParallelCommandGroup(
+          new DriveIndexerWithConstant(1.0),
+          new DriveHopperWithConstant(0.8),
+          new DriveIntakeWithConstant(0.2))
+      )
+        );
+
+    
+      
+      
+    
+
+    // addSequential(new WaitForShooterAtSpeed());
+    // addSequential(new DriveIndexerWithConstantNoStop(1.0), 0.5); 
+    // addParallel(new DriveIndexerWithConstant(1.0));
+    // addParallel(new DriveHopperWithConstant(0.8));
+    // addParallel(new DriveIntakeWithConstant(0.2)); 
   }
 }
 

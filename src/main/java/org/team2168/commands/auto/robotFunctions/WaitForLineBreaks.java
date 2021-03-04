@@ -7,13 +7,14 @@
 
 package org.team2168.commands.auto.robotFunctions;
 
-import org.team2168.subsystems.Climber;
+
 import org.team2168.subsystems.Indexer;
-import org.team2168.subsystems.IntakeMotor;
 
-import edu.wpi.first.wpilibj.command.Command;
 
-public class WaitForLineBreaks extends Command {
+
+import edu.wpi.first.wpilibj2.command.CommandBase;
+
+public class WaitForLineBreaks extends CommandBase {
   private double _indexerSpeed;
   private int _numBalls;
   private boolean exitLineBreakLast;
@@ -24,7 +25,7 @@ public class WaitForLineBreaks extends Command {
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
     indexer = Indexer.getInstance();
-    requires(indexer);
+    addRequirements(indexer);
     this._indexerSpeed = indexerSpeed;
 
     this._numBalls = numBalls;
@@ -32,14 +33,14 @@ public class WaitForLineBreaks extends Command {
 
   // Called just before this Command runs the first time
   @Override
-  protected void initialize() {
+  public void initialize() {
     exitLineBreakLast = false;
     ballCounter = 0;
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
-  protected void execute() {
+  public void execute() {
     indexer.drive(_indexerSpeed);
     if (exitLineBreakLast && !indexer.isBallExiting())
     {
@@ -52,18 +53,17 @@ public class WaitForLineBreaks extends Command {
 
   // Make this return true when this Command no longer needs to run execute()
   @Override
-  protected boolean isFinished() {
+  public boolean isFinished() {
     return ballCounter >= _numBalls;
   }
 
   // Called once after isFinished returns true
   @Override
-  protected void end() {
+  public void end(boolean interrupted) {
+    
   }
 
   // Called when another command which requires one or more of the same
   // subsystems is scheduled to run
-  @Override
-  protected void interrupted() {
-  }
+  
 }

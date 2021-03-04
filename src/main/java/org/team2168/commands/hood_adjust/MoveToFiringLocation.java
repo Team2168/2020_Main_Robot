@@ -7,11 +7,14 @@
 
 package org.team2168.commands.hood_adjust;
 
+
+
 import org.team2168.subsystems.Shooter.FiringLocation;
 
-import edu.wpi.first.wpilibj.command.CommandGroup;
 
-public class MoveToFiringLocation extends CommandGroup {
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+
+public class MoveToFiringLocation extends SequentialCommandGroup {
   /**
    * Add your docs here.
    */
@@ -35,17 +38,22 @@ public class MoveToFiringLocation extends CommandGroup {
     switch(fl) 
     {
       case WALL :
-        addSequential(new MoveToWallNoShoot());
+        addCommands(new MoveToWallNoShoot());
         break;
+
       case WHITE_LINE :
-      addSequential(new MoveToWLNoShoot());
+        addCommands(new MoveToWLNoShoot());
         break;
+
       case FRONT_TRENCH :
-        addSequential(new MoveToFrenchNoShoot());
+        addCommands(new MoveToFrenchNoShoot());
         break;
+
       case BACK_TRENCH :
-        addSequential(new MoveToBenchNoShoot());
-        break;
+        addCommands(new MoveToBenchNoShoot());
+        break; 
     }
+
+    
   }
 }

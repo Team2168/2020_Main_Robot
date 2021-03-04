@@ -11,9 +11,12 @@ import org.team2168.commands.auto.Sleep;
 import org.team2168.commands.hopper.DriveHopperWithConstant;
 import org.team2168.commands.intakeMotor.DriveIntakeWithConstant;
 
-import edu.wpi.first.wpilibj.command.CommandGroup;
 
-public class FiringRunHopperIntake extends CommandGroup {
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+
+public class FiringRunHopperIntake extends SequentialCommandGroup {
   /**
    * Add your docs here.
    */
@@ -34,9 +37,21 @@ public class FiringRunHopperIntake extends CommandGroup {
     // e.g. if Command1 requires chassis, and Command2 requires arm,
     // a CommandGroup containing them would require both the chassis and the
     // arm.
-    addSequential(new Sleep(), 0.1);
-    addSequential(new DriveHopperWithConstant(0.9));
-    addParallel(new DriveIntakeWithConstant(0.2));
+
+    addCommands(
+      new SequentialCommandGroup(
+        new Sleep().withTimeout(0.1),
+        new DriveHopperWithConstant(0.2),
+        new ParallelCommandGroup(
+          new DriveIntakeWithConstant(0.2)
+        )
+      )
+    );
+
+
+    // addSequential(new Sleep(), 0.1);
+    // addSequential(new DriveHopperWithConstant(0.9));
+    // addParallel(new DriveIntakeWithConstant(0.2));
 
   }
 }

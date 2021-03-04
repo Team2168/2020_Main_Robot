@@ -12,9 +12,11 @@ import org.team2168.commands.indexer.DriveIndexerWithConstant;
 import org.team2168.commands.intakeMotor.DriveIntakeWithConstant;
 
 
-import edu.wpi.first.wpilibj2.command.CommandGroup;
 
-public class FinishFiring extends CommandGroup {
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+
+public class FinishFiring extends ParallelCommandGroup {
   /**
    * Add your docs here.
    */
@@ -36,9 +38,16 @@ public class FinishFiring extends CommandGroup {
     // a CommandGroup containing them would require both the chassis and the
     // arm.
     
-    addParallel(new DriveIntakeWithConstant(0.0));
-    addParallel(new DriveIndexerWithConstant(1.0));
-    addSequential(new DriveHopperWithConstant(0.0), 0.5);
-    addSequential(new DriveIndexerWithConstant(0.0));
+    // addParallel(new DriveIntakeWithConstant(0.0));
+    // addParallel(new DriveIndexerWithConstant(1.0));
+    // addSequential(new DriveHopperWithConstant(0.0), 0.5);
+    // addSequential(new DriveIndexerWithConstant(0.0));
+    
+    addCommands(new DriveIntakeWithConstant(0.0),
+                new DriveIndexerWithConstant(1.0),
+                new SequentialCommandGroup(new DriveHopperWithConstant(0.0).withTimeout(0.5),
+                                           new DriveIndexerWithConstant(0.0))
+                );
+    
   }
 }
