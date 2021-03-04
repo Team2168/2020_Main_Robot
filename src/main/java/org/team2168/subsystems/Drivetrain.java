@@ -8,8 +8,11 @@
 package org.team2168.subsystems;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
+import com.ctre.phoenix.motorcontrol.TalonFXInvertType;
+import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.sensors.PigeonIMU;
@@ -35,12 +38,12 @@ public class Drivetrain extends SubsystemBase {
   public static Drivetrain instance = null;
 
   /* Motor controllers */
-  private static WPI_TalonFX _leftMotor1;
-  private static WPI_TalonFX _leftMotor2;
-  private static WPI_TalonFX _leftMotor3;
-  private static WPI_TalonFX _rightMotor1;
-  private static WPI_TalonFX _rightMotor2;
-  private static WPI_TalonFX _rightMotor3;
+  private static TalonFX _leftMotor1;
+  private static TalonFX _leftMotor2;
+  private static TalonFX _leftMotor3;
+  private static TalonFX _rightMotor1;
+  private static TalonFX _rightMotor2;
+  private static TalonFX _rightMotor3;
 
   /* Left/Right drivetrain split into speed contollers */
   private static SpeedControllerGroup _leftMotors;
@@ -82,24 +85,24 @@ public class Drivetrain extends SubsystemBase {
   private static final double WHEEL_BASE = 24.0; // distance between wheels (width) in inches
 
   /** Invert Directions for Left and Right */
-  // TalonFXInvertType _leftInvert = TalonFXInvertType.CounterClockwise; //Same as
+  TalonFXInvertType _leftInvert = TalonFXInvertType.CounterClockwise; //Same as
   // invert = "false"
-  // TalonFXInvertType _rightInvert = TalonFXInvertType.Clockwise; //Same as
+  TalonFXInvertType _rightInvert = TalonFXInvertType.Clockwise; //Same as
   // invert = "true"
-  Boolean _leftInvert = false;
-  Boolean _rightInvert = true;
+  // Boolean _leftInvert = false;
+  // Boolean _rightInvert = true;
 
 
 
 
   public Drivetrain() {
     System.out.println("CAN Comp Bot Drivetrain enabled - 6 motors");
-    _leftMotor1 = new WPI_TalonFX(RobotMap.DRIVETRAIN_LEFT_MOTOR_1_PDP);
-    _leftMotor2 = new WPI_TalonFX(RobotMap.DRIVETRAIN_LEFT_MOTOR_2_PDP);
-    _leftMotor3 = new WPI_TalonFX(RobotMap.DRIVETRAIN_LEFT_MOTOR_3_PDP);
-    _rightMotor1 = new WPI_TalonFX(RobotMap.DRIVETRAIN_RIGHT_MOTOR_1_PDP);
-    _rightMotor2 = new WPI_TalonFX(RobotMap.DRIVETRAIN_RIGHT_MOTOR_2_PDP);
-    _rightMotor3 = new WPI_TalonFX(RobotMap.DRIVETRAIN_RIGHT_MOTOR_3_PDP);
+    _leftMotor1 =  new TalonFX(RobotMap.DRIVETRAIN_LEFT_MOTOR_1_PDP);
+    _leftMotor2 =  new TalonFX(RobotMap.DRIVETRAIN_LEFT_MOTOR_2_PDP);
+    _leftMotor3 =  new TalonFX(RobotMap.DRIVETRAIN_LEFT_MOTOR_3_PDP);
+    _rightMotor1 = new TalonFX(RobotMap.DRIVETRAIN_RIGHT_MOTOR_1_PDP);
+    _rightMotor2 = new TalonFX(RobotMap.DRIVETRAIN_RIGHT_MOTOR_2_PDP);
+    _rightMotor3 = new TalonFX(RobotMap.DRIVETRAIN_RIGHT_MOTOR_3_PDP);
     _pidgey = new PigeonIMU(17);
 
     /* Component configuration */
@@ -132,24 +135,24 @@ public class Drivetrain extends SubsystemBase {
     _leftMotor1.configAllSettings(_leftConfig);
     _rightMotor1.configAllSettings(_rightConfig);
 
-    // _leftMotor1.setInverted(_leftInvert);
-    // _leftMotor2.setInverted(_leftInvert);
-    // _leftMotor3.setInverted(_leftInvert);
-    // _rightMotor1.setInverted(_rightInvert);
-    // _rightMotor2.setInverted(_rightInvert);
-    // _rightMotor3.setInverted(_rightInvert);
+    _leftMotor1.setInverted(_leftInvert);
+    _leftMotor2.setInverted(_leftInvert);
+    _leftMotor3.setInverted(_leftInvert);
+    _rightMotor1.setInverted(_rightInvert);
+    _rightMotor2.setInverted(_rightInvert);
+    _rightMotor3.setInverted(_rightInvert);
 
     /* Odometry for pose tracking */
     _odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()));
 
     /* Component abstraction */
-    _leftMotors = new SpeedControllerGroup(_leftMotor1, _leftMotor2, _leftMotor3);
-    _rightMotors = new SpeedControllerGroup(_rightMotor1, _rightMotor2, _rightMotor3);
+    // _leftMotors = new SpeedControllerGroup(_leftMotor1, _leftMotor2, _leftMotor3);
+    // _rightMotors = new SpeedControllerGroup(_rightMotor1, _rightMotor2, _rightMotor3);
 
     /* Config for abstracted components */
     // Motor controller level inversion doesn't work for some reason
-    _leftMotors.setInverted(_leftInvert);
-    _rightMotors.setInverted(_rightInvert);
+    // _leftMotors.setInverted(_leftInvert);
+    // _rightMotors.setInverted(_rightInvert);
 
     resetEncoders();
     zeroHeading();
@@ -163,19 +166,72 @@ public class Drivetrain extends SubsystemBase {
   }
 
   /**
+   * Sets a motor
+   * @param speed a value between -1 and 1
+   */
+  public void setLeftMotor1(double speed) {
+    _leftMotor1.set(ControlMode.PercentOutput, speed);
+  }
+
+    /**
+   * Sets a motor
+   * @param speed a value between -1 and 1
+   */
+  public void setLeftMotor2(double speed) {
+    _leftMotor2.set(ControlMode.PercentOutput, speed);
+  }
+
+    /**
+   * Sets a motor
+   * @param speed a value between -1 and 1
+   */
+  public void setLeftMotor3(double speed) {
+    _leftMotor3.set(ControlMode.PercentOutput, speed);
+  }
+
+  /**
+   * Sets a motor
+   * @param speed a value between -1 and 1
+   */
+  public void setRightMotor1(double speed) {
+    _rightMotor1.set(ControlMode.PercentOutput, speed);
+  }
+
+    /**
+   * Sets a motor
+   * @param speed a value between -1 and 1
+   */
+  public void setRightMotor2(double speed) {
+    _rightMotor2.set(ControlMode.PercentOutput, speed);
+  }
+
+    /**
+   * Sets a motor
+   * @param speed a value between -1 and 1
+   */
+  public void setRightMotor3(double speed) {
+    _rightMotor3.set(ControlMode.PercentOutput, speed);
+  }
+
+  /**
    * Sets speed of the left Motors
    * @param leftSpeed Double between -1.0 and 1.0
    */
   public void setLeftMotors(double leftSpeed) {
-    _leftMotors.set(leftSpeed);
+    setLeftMotor1(leftSpeed);
+    setLeftMotor2(leftSpeed);
+    setLeftMotor3(leftSpeed);
   }
+
 
   /**
    * Sets speed of the right motors
    * @param rightSpeed Double between -1.0 and 1.0
    */
   public void setRightMotors(double rightSpeed) {
-    _rightMotors.set(rightSpeed);
+    setRightMotor1(rightSpeed);
+    setRightMotor2(rightSpeed);
+    setRightMotor3(rightSpeed);
   }
 
   /**
@@ -192,7 +248,7 @@ public class Drivetrain extends SubsystemBase {
    * @param batteryVoltage voltage of the battery.
    */
   public void setLeftMotorsVolts(double volts, double batteryVoltage) {
-    _leftMotors.set(volts/batteryVoltage);
+    setLeftMotors(volts/batteryVoltage);
   }
 
     /**
@@ -209,7 +265,7 @@ public class Drivetrain extends SubsystemBase {
    * @param batteryVoltage voltage of the battery.
    */
   public void setRightMotorsVolts(double volts, double batteryVoltage) {
-    _rightMotors.set(volts/batteryVoltage);
+    setRightMotors(volts/batteryVoltage);
   }
 
   /**
@@ -247,7 +303,6 @@ public class Drivetrain extends SubsystemBase {
     setRightMotorsVolts(rightVolts, voltage);
     SmartDashboard.putNumber("left volts", leftVolts);
     SmartDashboard.putNumber("right volts", rightVolts);
-    _leftMotors.setVoltage(24);
   }
 
   /**
@@ -303,7 +358,7 @@ public class Drivetrain extends SubsystemBase {
    * @return encoder distance in ticks
    */
   public double getLeftEncoderDistance() {
-    return (_leftInvert ? -_leftMotor1.getSelectedSensorPosition() : _leftMotor1.getSelectedSensorPosition());
+    return _leftMotor1.getSelectedSensorPosition();
   }
 
   /**
@@ -311,7 +366,7 @@ public class Drivetrain extends SubsystemBase {
    * @return encoder distance in ticks
    */
   public double getRightEncoderDistance() {
-    return (_rightInvert ? -_rightMotor1.getSelectedSensorPosition() : _rightMotor1.getSelectedSensorPosition());
+    return _rightMotor1.getSelectedSensorPosition();
   }
 
   /**

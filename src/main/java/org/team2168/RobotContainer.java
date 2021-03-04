@@ -104,6 +104,8 @@ public class RobotContainer {
   private void configureButtonBindings() {
     driverJoystick.ButtonA().whenHeld(new DriveWithConstant(1.0, 1.0));
     driverJoystick.ButtonA().whenReleased(new DriveWithConstant(0.0, 0.0)); //dunno if I need this but just to be safe
+    driverJoystick.ButtonB().whenHeld(new DriveWithConstant(-1.0, -1.0));
+    driverJoystick.ButtonB().whenReleased(new DriveWithConstant(0.0, 0.0));
 
   }
 
@@ -125,21 +127,21 @@ public class RobotContainer {
     // An ExampleCommand will run in autonomous
 
     // Paste this variable in
-    RamseteController disabledRamsete = new RamseteController() {
-      @Override
-      public ChassisSpeeds calculate(Pose2d currentPose, Pose2d poseRef, double linearVelocityRefMeters,
-              double angularVelocityRefRadiansPerSecond) {
-          return new ChassisSpeeds(linearVelocityRefMeters, 0.0, angularVelocityRefRadiansPerSecond);
-      }
-    };
+    // RamseteController disabledRamsete = new RamseteController() {
+    //   @Override
+    //   public ChassisSpeeds calculate(Pose2d currentPose, Pose2d poseRef, double linearVelocityRefMeters,
+    //           double angularVelocityRefRadiansPerSecond) {
+    //       return new ChassisSpeeds(linearVelocityRefMeters, 0.0, angularVelocityRefRadiansPerSecond);
+    //   }
+    // };
 
     PIDController leftController = new PIDController(Constants.kDriveP, Constants.kDriveI, Constants.kDriveD);
     PIDController rightController = new PIDController(Constants.kDriveP, Constants.kDriveI, Constants.kDriveD);
     RamseteCommand ramseteCommand = new RamseteCommand(
         trajectory,
         dt::getPose,
-        // new RamseteController(Constants.kRamseteB, Constants.kRamseteZeta),
-        disabledRamsete,
+        new RamseteController(Constants.kRamseteB, Constants.kRamseteZeta),
+        // disabledRamsete,
         new SimpleMotorFeedforward(Constants.kDriveS,
                                    Constants.kDriveV,
                                    Constants.kDriveA),
