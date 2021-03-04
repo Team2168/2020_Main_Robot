@@ -247,6 +247,7 @@ public class Drivetrain extends SubsystemBase {
     setRightMotorsVolts(rightVolts, voltage);
     SmartDashboard.putNumber("left volts", leftVolts);
     SmartDashboard.putNumber("right volts", rightVolts);
+    _leftMotors.setVoltage(24);
   }
 
   /**
@@ -265,8 +266,10 @@ public class Drivetrain extends SubsystemBase {
    * @return DifferentialDriveWheelSpeeds wheel speeds
    */
   public DifferentialDriveWheelSpeeds getWheelSpeeds() {
-    return new DifferentialDriveWheelSpeeds(ticksToMeters(_leftMotor1.getSelectedSensorVelocity()),
-        ticksToMeters(_rightMotor1.getSelectedSensorVelocity()));
+    var wheelSpeeds =  new DifferentialDriveWheelSpeeds(ticksToMeters(getLeftEncoderDistance()),
+        ticksToMeters(getRightEncoderDistance()));
+
+    return wheelSpeeds;
   }
 
   /**
@@ -402,9 +405,9 @@ public class Drivetrain extends SubsystemBase {
     return (setpoint * WHEEL_CIRCUMFERENCE) / (TICKS_PER_REV * GEAR_RATIO);
   }
 
-  private double ticksToMeters(double setpoint) {
-    // TODO is this the best way of accomplishing this?
-    return (ticks_to_inches(setpoint) / 39.37008);
+  // TODO this is only public for debugging purposes
+  public double ticksToMeters(double setpoint) {
+    return (ticks_to_inches(setpoint) * 0.0254);
   }
 
   private double inches_per_sec_to_ticks_per_100ms(double setpoint) {

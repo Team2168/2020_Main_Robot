@@ -75,6 +75,8 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumberArray("dtvoltages", dt.getVoltages());
     SmartDashboard.putNumber("left encoder", dt.getRightEncoderDistance());
     SmartDashboard.putNumber("right encoder", dt.getLeftEncoderDistance());
+    SmartDashboard.putNumber("left distance", dt.ticksToMeters(dt.getLeftEncoderDistance()));
+    SmartDashboard.putNumber("right distance", dt.ticksToMeters(dt.getLeftEncoderDistance()));
   }
 
   /**
