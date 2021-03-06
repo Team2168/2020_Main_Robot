@@ -158,6 +158,8 @@ public class RobotContainer {
   
           SmartDashboard.putNumber("left_value", dt.getWheelSpeeds().leftMetersPerSecond);
           SmartDashboard.putNumber("left reference", leftController.getSetpoint());
+          SmartDashboard.putNumber("right error", rightController.getPositionError());
+          SmartDashboard.putNumber("left error", leftController.getPositionError());
   
           SmartDashboard.putNumber("right value", dt.getWheelSpeeds().rightMetersPerSecond);
           SmartDashboard.putNumber("right reference", rightController.getSetpoint());

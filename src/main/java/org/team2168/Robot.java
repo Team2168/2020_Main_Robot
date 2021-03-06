@@ -71,12 +71,12 @@ public class Robot extends TimedRobot {
     CommandScheduler.getInstance().run();
 
     SmartDashboard.putNumber("gyro heading", dt.getHeading());
-    SmartDashboard.putNumber("average encoder distance", dt.getAverageEncoderDistance());
+    // SmartDashboard.putNumber("average encoder distance", dt.getAverageEncoderDistance());
     SmartDashboard.putNumberArray("dtvoltages", dt.getVoltages());
     SmartDashboard.putNumber("left encoder", dt.getRightEncoderDistance());
     SmartDashboard.putNumber("right encoder", dt.getLeftEncoderDistance());
-    SmartDashboard.putNumber("left distance", dt.ticksToMeters(dt.getLeftEncoderDistance()));
-    SmartDashboard.putNumber("right distance", dt.ticksToMeters(dt.getLeftEncoderDistance()));
+    // SmartDashboard.putNumber("left distance", dt.ticksToMeters(dt.getLeftEncoderDistance()));
+    // SmartDashboard.putNumber("right distance", dt.ticksToMeters(dt.getLeftEncoderDistance()));
   }
 
   /**
@@ -84,6 +84,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void disabledInit() {
+    dt.setAllMotorsCoast();
     
   }
 

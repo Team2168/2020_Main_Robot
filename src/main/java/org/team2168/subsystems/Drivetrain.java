@@ -7,21 +7,19 @@
 
 package org.team2168.subsystems;
 
-import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.TalonFXInvertType;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.sensors.PigeonIMU;
 
 import org.team2168.Constants;
 import org.team2168.RobotMap;
 
 import edu.wpi.first.wpilibj.RobotController;
-import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
@@ -44,10 +42,6 @@ public class Drivetrain extends SubsystemBase {
   private static TalonFX _rightMotor1;
   private static TalonFX _rightMotor2;
   private static TalonFX _rightMotor3;
-
-  /* Left/Right drivetrain split into speed contollers */
-  private static SpeedControllerGroup _leftMotors;
-  private static SpeedControllerGroup _rightMotors;
 
   /* IMU */
   private static PigeonIMU _pidgey;
@@ -144,15 +138,6 @@ public class Drivetrain extends SubsystemBase {
 
     /* Odometry for pose tracking */
     _odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()));
-
-    /* Component abstraction */
-    // _leftMotors = new SpeedControllerGroup(_leftMotor1, _leftMotor2, _leftMotor3);
-    // _rightMotors = new SpeedControllerGroup(_rightMotor1, _rightMotor2, _rightMotor3);
-
-    /* Config for abstracted components */
-    // Motor controller level inversion doesn't work for some reason
-    // _leftMotors.setInverted(_leftInvert);
-    // _rightMotors.setInverted(_rightInvert);
 
     resetEncoders();
     zeroHeading();

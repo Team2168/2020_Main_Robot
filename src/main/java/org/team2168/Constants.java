@@ -74,9 +74,9 @@ public class Constants {
 	public final static double kDriveS = 0.639;
 	public final static double kDriveV = 1.99;
 	public final static double kDriveA = 0.265;
-	public final static double kDriveP = 1.71; //1.5 m/s acceptable error
+	// public final static double kDriveP = 1.71; //1.5 m/s acceptable error
 	// public final static double kDriveP = 0.0; // 0.2 m/s acceptable error
-	// public static final double kDriveP = 0.0;
+	public static final double kDriveP = 3.1;
 	public final static double kDriveI = 0.0;
 	public final static double kDriveD = 0.0;
 
