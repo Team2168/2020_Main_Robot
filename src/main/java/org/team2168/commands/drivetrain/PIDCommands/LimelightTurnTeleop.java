@@ -64,7 +64,7 @@ public class LimelightTurnTeleop extends Command {
 
     _targetAngle = 0.0;
     if(!lime.isLimelightEnabled()) {
-      lime.enableLimelight(Shooter.getInstance().getFiringLocation());
+      lime.enableLimelight();
     }
     lime.setLedMode(3);
   }

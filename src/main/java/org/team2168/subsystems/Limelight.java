@@ -30,6 +30,7 @@ public class Limelight extends Subsystem {
   private static final int PIPELINE_BACK_TRENCH_BLUE = 1;
   private static final int PIPELINE_BACK_TRENCH_RED = 3;
   private static final int PIPELINE_DRIVER_VIEW = 4;
+  private static final int PIPELINE_IRAH = 9;
 
 
 
@@ -57,66 +58,10 @@ public class Limelight extends Subsystem {
     return limelight.getPos();
   }
 
-  public void enableLimelight(FiringLocation firingLocation) {
+  public void enableLimelight() {
     limelight.setCamMode(0);
     limelight.setLedMode(0);
-    // if(Robot.driverstation.isFMSAttached())
-    // {
-      // if(Robot.onBlueAlliance())
-      // {
-      //   limelight.setPipeline(3);
-      // }
-      // else
-      // {
-      //   limelight.setPipeline(2);
-      // }
-      switch (firingLocation) {
-        case WALL : 
-          if(Robot.onBlueAlliance())
-          {
-            limelight.setPipeline(PIPELINE_FORWARD_BLUE); //TODO deal with this--we can't see from wall??
-          }
-          else
-          {
-            limelight.setPipeline(PIPELINE_FORWARD_RED);
-          }
-          break;
-        case WHITE_LINE :
-          if(Robot.onBlueAlliance())
-          {
-            limelight.setPipeline(PIPELINE_FORWARD_BLUE);
-          }
-          else
-          {
-            limelight.setPipeline(PIPELINE_FORWARD_RED);
-          }
-          break;
-        case FRONT_TRENCH : 
-          if(Robot.onBlueAlliance())
-          {
-            limelight.setPipeline(PIPELINE_FORWARD_BLUE);
-          }
-          else
-          {
-            limelight.setPipeline(PIPELINE_FORWARD_RED);
-          }
-          break;
-        case BACK_TRENCH: 
-          if(Robot.onBlueAlliance())
-          {
-            limelight.setPipeline(PIPELINE_BACK_TRENCH_BLUE);
-          }
-          else
-          {
-            limelight.setPipeline(PIPELINE_BACK_TRENCH_RED);
-          }
-          break;
-      }
-    // }
-    // else
-    // {
-    //   limelight.setPipeline(0);
-    // }
+    limelight.setPipeline(PIPELINE_IRAH);
     isLimelightEnabled = true;
   }
 
