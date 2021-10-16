@@ -64,7 +64,7 @@ public class LimelightTurnTeleop extends Command {
 
     _targetAngle = 0.0;
     if(!lime.isLimelightEnabled()) {
-      lime.enableLimelight(Shooter.getInstance().getFiringLocation());
+      lime.enableLimelight();
     }
     lime.setLedMode(3);
   }
@@ -102,6 +102,7 @@ public class LimelightTurnTeleop extends Command {
   // Called once after isFinished returns true
   @Override
   protected void end() {
+    lime.setLedMode(1);
     //dt.tankDrive(0.0, 0.0);
   }
 

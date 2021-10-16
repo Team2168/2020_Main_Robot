@@ -9,7 +9,6 @@ package org.team2168.subsystems;
 
 import org.team2168.Robot;
 import org.team2168.PID.sensors.LimelightSensor;
-import org.team2168.commands.limelight.UpdatePipeline;
 import org.team2168.subsystems.Shooter.FiringLocation;
 
 import edu.wpi.first.wpilibj.command.Subsystem;
@@ -57,7 +56,7 @@ public class Limelight extends Subsystem {
     return limelight.getPos();
   }
 
-  public void enableLimelight(FiringLocation firingLocation) {
+  public void enableLimelight() {
     limelight.setCamMode(0);
     limelight.setLedMode(0);
     // if(Robot.driverstation.isFMSAttached())
@@ -70,53 +69,54 @@ public class Limelight extends Subsystem {
       // {
       //   limelight.setPipeline(2);
       // }
-      switch (firingLocation) {
-        case WALL : 
-          if(Robot.onBlueAlliance())
-          {
-            limelight.setPipeline(PIPELINE_FORWARD_BLUE); //TODO deal with this--we can't see from wall??
-          }
-          else
-          {
-            limelight.setPipeline(PIPELINE_FORWARD_RED);
-          }
-          break;
-        case WHITE_LINE :
-          if(Robot.onBlueAlliance())
-          {
-            limelight.setPipeline(PIPELINE_FORWARD_BLUE);
-          }
-          else
-          {
-            limelight.setPipeline(PIPELINE_FORWARD_RED);
-          }
-          break;
-        case FRONT_TRENCH : 
-          if(Robot.onBlueAlliance())
-          {
-            limelight.setPipeline(PIPELINE_FORWARD_BLUE);
-          }
-          else
-          {
-            limelight.setPipeline(PIPELINE_FORWARD_RED);
-          }
-          break;
-        case BACK_TRENCH: 
-          if(Robot.onBlueAlliance())
-          {
-            limelight.setPipeline(PIPELINE_BACK_TRENCH_BLUE);
-          }
-          else
-          {
-            limelight.setPipeline(PIPELINE_BACK_TRENCH_RED);
-          }
-          break;
-      }
+      // switch (firingLocation) {
+      //   case WALL : 
+      //     if(Robot.onBlueAlliance())
+      //     {
+      //       limelight.setPipeline(PIPELINE_FORWARD_BLUE); //TODO deal with this--we can't see from wall??
+      //     }
+      //     else
+      //     {
+      //       limelight.setPipeline(PIPELINE_FORWARD_RED);
+      //     }
+      //     break;
+      //   case WHITE_LINE :
+      //     if(Robot.onBlueAlliance())
+      //     {
+      //       limelight.setPipeline(PIPELINE_FORWARD_BLUE);
+      //     }
+      //     else
+      //     {
+      //       limelight.setPipeline(PIPELINE_FORWARD_RED);
+      //     }
+      //     break;
+      //   case FRONT_TRENCH : 
+      //     if(Robot.onBlueAlliance())
+      //     {
+      //       limelight.setPipeline(PIPELINE_FORWARD_BLUE);
+      //     }
+      //     else
+      //     {
+      //       limelight.setPipeline(PIPELINE_FORWARD_RED);
+      //     }
+      //     break;
+      //   case BACK_TRENCH: 
+      //     if(Robot.onBlueAlliance())
+      //     {
+      //       limelight.setPipeline(PIPELINE_BACK_TRENCH_BLUE);
+      //     }
+      //     else
+      //     {
+      //       limelight.setPipeline(PIPELINE_BACK_TRENCH_RED);
+      //     }
+      //     break;
+      // }
     // }
     // else
     // {
     //   limelight.setPipeline(0);
     // }
+    limelight.setPipeline(9);
     isLimelightEnabled = true;
   }
 
@@ -150,6 +150,5 @@ public class Limelight extends Subsystem {
   public void initDefaultCommand() {
     // Set the default command for a subsystem here.
     // setDefaultCommand(new MySpecialCommand());
-    setDefaultCommand(new UpdatePipeline());
   }
 }

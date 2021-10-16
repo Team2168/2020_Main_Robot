@@ -178,6 +178,7 @@ public class Robot extends TimedRobot {
     ConsolePrinter.putBoolean("isPracticeBot", ()->{return isPracticeBot();}, true, false);
     SmartDashboard.putData("Autonomous Mode Chooser", autoChooser); 
     SmartDashboard.putData("Push Robot Chooser", pushRobotChooser);
+    SmartDashboard.putData(Scheduler.getInstance());
     ConsolePrinter.putString("AutoName", () -> {return Robot.getAutoName();}, true, false);
 
     drivetrain.setDefaultBrakeMode();
