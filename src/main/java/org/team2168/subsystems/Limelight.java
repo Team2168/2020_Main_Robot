@@ -56,7 +56,7 @@ public class Limelight extends Subsystem {
     return limelight.getPos();
   }
 
-  public void enableLimelight() {
+  public void enableLimelight() { // enableLimelight changed to always set Pipeline to 9.
     limelight.setCamMode(0);
     limelight.setLedMode(0);
     // if(Robot.driverstation.isFMSAttached())
